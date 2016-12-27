@@ -1,0 +1,31 @@
+{
+	"extends": [
+		"tslint-config-xo/esnext"
+	],
+	"rules": {
+		"object-curly-spacing": false,
+		"ter-arrow-parens": true,
+		"class-name": true,
+		"member-access": true,
+		"member-ordering": [
+			true,
+			"public-before-private",
+			"static-before-instance",
+			"variables-before-functions"
+		],
+		"no-inferrable-types": [
+			true,
+			"ignore-params"
+		],
+		"typedef-whitespace": [
+			true,
+			{
+				"call-signature": "nospace",
+				"index-signature": "nospace",
+				"parameter": "nospace",
+				"property-declaration": "nospace",
+				"variable-declaration": "nospace"
+			}
+		]
+	}
+}

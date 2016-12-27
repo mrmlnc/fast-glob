@@ -1,0 +1,47 @@
+{
+  "name": "fast-glob",
+  "version": "1.0.0",
+  "description": "Is a faster `node-glob` alternative",
+  "license": "MIT",
+  "repository": "mrmlnc/fast-glob",
+  "author": {
+    "name": "Denis Malinochkin",
+    "url": "canonium.com"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "typings": "out/fglob.d.ts",
+  "keywords": [
+    "glob",
+    "patterns",
+    "fast",
+    "implementation"
+  ],
+  "devDependencies": {
+    "@types/micromatch": "^2.3.29",
+    "@types/mocha": "^2.2.34",
+    "@types/node": "^6.0.52",
+    "@types/rimraf": "0.0.28",
+    "fs-extra": "^1.0.0",
+    "glob": "^7.1.1",
+    "mocha": "^3.2.0",
+    "rimraf": "^2.5.4",
+    "tslint-config-xo": "^1.0.0",
+    "typescript": "^2.1.4"
+  },
+  "dependencies": {
+    "glob-parent": "^3.1.0",
+    "micromatch": "^2.3.11",
+    "readdir-enhanced": "^1.4.5"
+  },
+  "scripts": {
+    "clean": "rimraf out",
+    "lint": "tslint src/**/*.ts",
+    "compile": "tsc",
+    "test": "rimraf .tmp && mocha out/**/*.spec.js",
+    "build": "npm run clean && npm run lint && npm run compile && npm test",
+    "watch": "npm run clean && npm run lint && npm run compile -- --sourceMap --watch",
+    "bench": "npm run clean && npm run lint && npm run compile && bash benchmark/benchmark.sh"
+  }
+}

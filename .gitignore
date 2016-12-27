@@ -1,0 +1,16 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE & editors
+.idea
+.vscode
+
+# Dependency directory
+node_modules/
+
+# Compiled and tempory files
+.tmp/
+.bench/
+out/

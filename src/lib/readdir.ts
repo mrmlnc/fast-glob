@@ -1,0 +1,51 @@
+'use strict';
+
+import * as path from 'path';
+
+import * as readdir from 'readdir-enhanced';
+import * as micromatch from 'micromatch';
+
+import { ITask } from './task';
+import { IOptions } from '../fglob';
+
+function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): boolean {
+	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirs && !entry.isDirectory())) {
+		return false;
+	}
+	if (micromatch(entry.path, patterns).length !== 0) {
+		return true;
+	}
+	return false;
+}
+
+export function async(task: ITask, options: IOptions): Promise<string[] | readdir.IEntry[]> {
+	const cwd = path.join(options.cwd, task.base);
+	const entries: (string | readdir.IEntry)[] = [];
+
+	const api = options.stats ? readdir.readdirStreamStat : readdir.stream;
+	const cb = options.transform ? options.transform : (entry) => entry;
+
+	return new Promise((resolve, reject) => {
+		const stream = api(cwd, {
+			filter: (entry) => filter(entry, task.patterns, options),
+			basePath: task.base === '.' ? '' : task.base,
+			deep: options.deep,
+			sep: '/'
+		});
+
+		stream.on('data', (entry) => entries.push(cb(entry)));
+		stream.on('error', (err) => reject(err));
+		stream.on('end', () => resolve(entries));
+	});
+}
+
+export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[] {
+	const cwd = path.join(options.cwd, task.base);
+	const api = options.stats ? readdir.readdirSyncStat : readdir.sync;
+	return api(cwd, {
+		filter: (entry) => filter(entry, task.patterns, options),
+		basePath: task.base === '.' ? '' : task.base,
+		deep: options.deep,
+		sep: '/'
+	});
+}

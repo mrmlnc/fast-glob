@@ -1,0 +1,17 @@
+# files
+
+.editorconfig
+.gitignore
+.travis.yml
+tsconfig.json
+tslint.json
+
+# directories
+
+.tmp
+.bench
+out/**/*.spec.js
+out/**/*.js.map
+src
+types
+node_modules
