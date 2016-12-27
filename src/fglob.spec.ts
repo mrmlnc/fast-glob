@@ -21,7 +21,7 @@ function readFilePromise(filepath: string): Promise<string> {
 				return reject(err);
 			}
 			resolve(data.toString());
-		})
+		});
 	});
 }
 
@@ -30,7 +30,7 @@ describe('fGlob - Async', () => {
 	before(() => {
 		fs.mkdirSync('.tmp');
 		fs.mkdirSync('.tmp/nested');
-		fixtures.forEach(fs.writeFileSync)
+		fixtures.forEach(fs.writeFileSync);
 	});
 
 	it('**/*', () => {

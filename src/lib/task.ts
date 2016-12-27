@@ -54,7 +54,7 @@ export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 		tasks.push({
 			base: parent,
 			patterns: [].concat(parents[parent], negative)
-		})
+		});
 	});
 
 	return tasks;
