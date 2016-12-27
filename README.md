@@ -73,6 +73,14 @@ fastGlob('dir/**/*.txt', { transform: readFilePromise }).then((files) => {
 
 ## Benchmark
 
+**Tech specs:**
+
+ * Intel Core i7-3610QM
+ * RAM 8GB
+ * SSD (555MB/S, 530MB/S)
+ * Windows 10 + Bash on Windows
+ * Node.js v7.3.0
+
 ```
 $ npm run bench
 
