@@ -28,6 +28,10 @@ function benchmark {
 	node $pwd/benchmark/glob.js
 
 	echo
+	echo Node bash-glob timing:
+	node $pwd/benchmark/bash.js
+
+	echo
 	echo Node fast-glob timing:
 	node $pwd/benchmark/fast.js
 }

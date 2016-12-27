@@ -88,57 +88,64 @@ $ npm run bench
 Benchmark for 10 files
 ==============================
 
-bash: 28 ms
-node-glob: 22.456 ms
-fast-glob: 27.127 ms
+bash: 29 ms
+node-glob: 24.792 ms
+bash-glob: 49.349 ms
+fast-glob: 30.634 ms
 
 ==============================
 Benchmark for 50 files
 ==============================
 
-bash: 25 ms
-node-glob: 59.607 ms
-fast-glob: 37.128 ms
+bash: 29 ms
+node-glob: 47.785 ms
+bash-glob: 53.233 ms
+fast-glob: 41.686 ms
 
 ==============================
 Benchmark for 100 files
 ==============================
 
-bash: 32 ms
-node-glob: 44.644 ms
-fast-glob: 41.049 ms
+bash: 37 ms
+node-glob: 47.249 ms
+bash-glob: 52.078 ms
+fast-glob: 42.744 ms
 
 ==============================
 Benchmark for 500 files
 ==============================
 
-bash: 87 ms
-node-glob: 85.773 ms
-fast-glob: 61.341 ms
+bash: 96 ms
+node-glob: 101.044 ms
+bash-glob: 71.519 ms
+fast-glob: 63.216 ms
 
 ==============================
 Benchmark for 1000 files
 ==============================
 
-bash: 150 ms
-node-glob: 148.039 ms
-fast-glob: 79.496 ms
+bash: 175 ms
+node-glob: 163.652 ms
+bash-glob: 105.412 ms
+fast-glob: 79.491 ms
 
 ==============================
 Benchmark for 5000 files
 ==============================
 
-bash: 443 ms
-node-glob: 517.611 ms
-fast-glob: 191.614 ms
+bash: 504 ms
+node-glob: 680.071 ms
+bash-glob: 339.901 ms
+fast-glob: 204.793 ms
 
 ==============================
 Benchmark for 10000 files
 ==============================
 
-bash: 1611 ms
-node-glob: 1027.499 ms
-fast-glob: 310.679 ms
+bash: 1591 ms
+node-glob: 1300.15 ms
+bash-glob: 1246.701 ms
+fast-glob: 365.214 ms
 ```
 
 ## Changelog
