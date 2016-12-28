@@ -23,7 +23,6 @@
     "@types/mocha": "^2.2.34",
     "@types/node": "^6.0.52",
     "@types/rimraf": "0.0.28",
-    "bash-glob": "^0.1.1",
     "fs-extra": "^1.0.0",
     "glob": "^7.1.1",
     "mocha": "^3.2.0",
@@ -33,6 +32,7 @@
     "typescript": "^2.1.4"
   },
   "dependencies": {
+    "bash-glob": "^0.1.1",
     "glob-parent": "^3.1.0",
     "micromatch": "^2.3.11",
     "readdir-enhanced": "^1.4.5"
@@ -41,7 +41,7 @@
     "clean": "rimraf out",
     "lint": "tslint src/**/*.ts",
     "compile": "tsc",
-    "test": "rimraf .tmp && mocha out/**/*.spec.js",
+    "test": "rimraf .tmp && mocha out/{,**/}*.spec.js -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
     "watch": "npm run clean && npm run lint && npm run compile -- --sourceMap --watch",
     "bench": "npm run clean && npm run lint && npm run compile && bash benchmark/benchmark.sh"

@@ -46,15 +46,16 @@ console.log(files); // ['dir/a.txt', ...]
 
 ## options
 
-| Option      | Type              | Default       | Description |
-|:-----------:|:-----------------:|:-------------:|:------------|
-| `cwd`       | `String`          | `process.cwd` | The current working directory in which to search |
-| `deep`      | `Number|Boolean`  | `true`        | The deep option can be set to true to traverse the entire directory structure, or it can be set to a number to only traverse that many levels deep. |
-| `ignore`    | `String|String[]` | `[]`          | Add a pattern or an array of glob patterns to exclude matches. |
-| `stats`     | `Boolean`         | `false`       | Return `fs.Stats` with `path` property instead of file path. |
-| `onlyFiles` | `Boolean`         | `false`       | Return only files. |
-| `onlyDirs`  | `Boolean`         | `false`       | Return only directories. |
-| `transform` | `Function`        | `null`        | Allows you to transform a path or `fs.Stats` object before sending to the array. |
+| Option      | Type              | Default                | Description |
+|:------------:|:-----------------:|:---------------------:|:------------|
+| `cwd`        | `String`          | `process.cwd`         | The current working directory in which to search |
+| `deep`       | `Number|Boolean`  | `true`                | The deep option can be set to true to traverse the entire directory structure, or it can be set to a number to only traverse that many levels deep. |
+| `ignore`     | `String|String[]` | `[]`                  | Add a pattern or an array of glob patterns to exclude matches. |
+| `stats`      | `Boolean`         | `false`               | Return `fs.Stats` with `path` property instead of file path. |
+| `onlyFiles`  | `Boolean`         | `false`               | Return only files. |
+| `onlyDirs`   | `Boolean`         | `false`               | Return only directories. |
+| `useBashFor` | `String[]`        | `['darwin', 'linux']` | Use bash-powered globbing (2-15x faster on Linux). See [available values for array](https://nodejs.org/dist/latest-v7.x/docs/api/process.html#process_process_platform). |
+| `transform`  | `Function`        | `null`                | Allows you to transform a path or `fs.Stats` object before sending to the array. |
 
 ## Compatible with `node-glob`?
 
