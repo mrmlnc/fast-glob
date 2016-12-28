@@ -79,7 +79,7 @@ fastGlob('dir/**/*.txt', { transform: readFilePromise }).then((files) => {
  * Intel Core i7-3610QM
  * RAM 8GB
  * SSD (555MB/S, 530MB/S)
- * Windows 10 + Bash on Windows
+ * Windows 10 + VirtualBox with Manjaro
  * Node.js v7.3.0
 
 ```
@@ -89,64 +89,64 @@ $ npm run bench
 Benchmark for 10 files
 ==============================
 
-bash: 29 ms
-node-glob: 24.792 ms
-bash-glob: 49.349 ms
-fast-glob: 30.634 ms
+bash: 7 ms
+node-glob: 23.306994 ms
+bash-glob: 41.611697 ms
+fast-glob: 39.087715 ms
 
 ==============================
 Benchmark for 50 files
 ==============================
 
-bash: 29 ms
-node-glob: 47.785 ms
-bash-glob: 53.233 ms
-fast-glob: 41.686 ms
+bash: 8 ms
+node-glob: 32.164124 ms
+bash-glob: 28.615256 ms
+fast-glob: 31.96207 ms
 
 ==============================
 Benchmark for 100 files
 ==============================
 
-bash: 37 ms
-node-glob: 47.249 ms
-bash-glob: 52.078 ms
-fast-glob: 42.744 ms
+bash: 19 ms
+node-glob: 39.067372 ms
+bash-glob: 25.896008 ms
+fast-glob: 32.079583 ms
 
 ==============================
 Benchmark for 500 files
 ==============================
 
-bash: 96 ms
-node-glob: 101.044 ms
-bash-glob: 71.519 ms
-fast-glob: 63.216 ms
+bash: 8 ms
+node-glob: 92.279699 ms
+bash-glob: 25.536535 ms
+fast-glob: 34.100112 ms
 
 ==============================
 Benchmark for 1000 files
 ==============================
 
-bash: 175 ms
-node-glob: 163.652 ms
-bash-glob: 105.412 ms
-fast-glob: 79.491 ms
+bash: 12 ms
+node-glob: 156.300739 ms
+bash-glob: 34.344514 ms
+fast-glob: 62.152561 ms
 
 ==============================
 Benchmark for 5000 files
 ==============================
 
-bash: 504 ms
-node-glob: 680.071 ms
-bash-glob: 339.901 ms
-fast-glob: 204.793 ms
+bash: 50 ms
+node-glob: 851.078399 ms
+bash-glob: 97.357015 ms
+fast-glob: 108.100992 ms
 
 ==============================
 Benchmark for 10000 files
 ==============================
 
-bash: 1591 ms
-node-glob: 1300.15 ms
-bash-glob: 1246.701 ms
-fast-glob: 365.214 ms
+bash: 94 ms
+node-glob: 1290.475356 ms
+bash-glob: 177.635399 ms
+fast-glob: 198.216185 ms
 ```
 
 ## Changelog
