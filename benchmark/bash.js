@@ -4,7 +4,6 @@ const perf = require('./perf');
 const bglob = require('bash-glob');
 
 const start = perf();
-bglob('**/*', { dotglob: true }, (err, files) => {
-	console.log(files.length);
-	console.log('time: ' + perf(start) + ' ms');
+bglob('**/*', (err, files) => {
+	console.log('bash-glob (' + files.length + '): ' + perf(start) + ' ms');
 });

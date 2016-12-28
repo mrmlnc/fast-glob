@@ -5,6 +5,5 @@ const glob = require('glob');
 
 const start = perf();
 glob('**/*', { nosort: true }, (err, files) => {
-	console.log(files.length);
-	console.log('time: ' + perf(start) + ' ms');
+	console.log('node-glob (' + files.length + '): ' + perf(start) + ' ms');
 });

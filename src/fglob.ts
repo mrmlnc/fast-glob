@@ -2,8 +2,9 @@
 
 import { IEntry } from 'readdir-enhanced';
 
-import * as task from './lib/task';
-import * as readdir from './lib/readdir';
+import * as task from './utils/task';
+import * as readdir from './providers/readdir';
+import * as bash from './providers/bash';
 
 export interface IOptions {
 	deep?: number | boolean;
@@ -12,6 +13,7 @@ export interface IOptions {
 	ignore?: string | string[];
 	onlyFiles?: boolean;
 	onlyDirs?: boolean;
+	bashNative?: string[];
 	transform?: (entry: string | IEntry) => any;
 }
 
@@ -31,6 +33,7 @@ function prepareInput(source: string | string[], options?: IOptions) {
 		stats: false,
 		onlyFiles: false,
 		onlyDirs: false,
+		bashNative: ['darwin', 'linux'],
 		transform: null
 	}, options);
 
@@ -45,19 +48,22 @@ function prepareInput(source: string | string[], options?: IOptions) {
 
 	return {
 		patterns,
-		options
+		options,
+		api: (options.bashNative.indexOf(process.platform) === -1) ? readdir : bash as any
 	};
 }
 
 export default function async(source: string | string[], options?: IOptions): Promise<(string | IEntry)[]> {
 	const input = prepareInput(source, options);
-	return Promise.all(task.generateTasks(input.patterns, input.options).map((task) => readdir.async(task, input.options)))
+
+	return Promise.all(task.generateTasks(input.patterns, input.options).map((task) => input.api.async(task, input.options)))
 		.then((entries) => entries.reduce((res, to) => [].concat(res, to), []));
 }
 
 export function sync(source: string | string[], options?: IOptions): (string | IEntry)[] {
 	const input = prepareInput(source, options);
+
 	return task.generateTasks(input.patterns, input.options)
-		.map((task) => readdir.sync(task, input.options))
+		.map((task) => input.api.sync(task, input.options))
 		.reduce((res, to) => [].concat(res, to), []);
 }

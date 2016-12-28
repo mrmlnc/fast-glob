@@ -25,7 +25,7 @@ function readFilePromise(filepath: string): Promise<string> {
 	});
 }
 
-describe('fGlob - Async', () => {
+describe('fGlob', () => {
 
 	before(() => {
 		fs.mkdirSync('.tmp');
