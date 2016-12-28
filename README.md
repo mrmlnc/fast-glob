@@ -1,6 +1,6 @@
 # fast-glob
 
-> Is a faster (1.5-3x for most cases) `node-glob` alternative.
+> Is a faster (1.5-8x for most cases) `node-glob` alternative.
 
 ## Install
 
@@ -54,7 +54,7 @@ console.log(files); // ['dir/a.txt', ...]
 | `stats`      | `Boolean`         | `false`               | Return `fs.Stats` with `path` property instead of file path. |
 | `onlyFiles`  | `Boolean`         | `false`               | Return only files. |
 | `onlyDirs`   | `Boolean`         | `false`               | Return only directories. |
-| `bashNative` | `String[]`        | `['darwin', 'linux']` | Use bash-powered globbing (2-15x faster on Linux, but slow on BashOnWindows). See [available values for array](https://nodejs.org/dist/latest-v7.x/docs/api/process.html#process_process_platform). |
+| `bashNative` | `String[]`        | `['darwin', 'linux']` | Use bash-powered globbing (2-15x faster on Linux, but slow on BashOnWindows) for specified platforms. See [available values for array](https://nodejs.org/dist/latest-v7.x/docs/api/process.html#process_process_platform). |
 | `transform`  | `Function`        | `null`                | Allows you to transform a path or `fs.Stats` object before sending to the array. |
 
 ## Compatible with `node-glob`?
