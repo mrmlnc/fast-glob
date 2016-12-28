@@ -46,7 +46,7 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 	const cb = options.transform ? options.transform : (entry) => entry;
 
 	return new Promise((resolve, reject) => {
-		bglob(patterns, { cwd: options.cwd, dotglob: true, extglob: true }, (err, files) => {
+		bglob(patterns, { cwd: options.cwd, dotglob: true }, (err, files) => {
 			if (err) {
 				return reject(err);
 			}
@@ -77,7 +77,7 @@ export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[
 	const patterns = task.patterns.filter((pattern) => !isNegative(pattern));
 	const cb = options.transform ? options.transform : (entry) => entry;
 
-	const files = bglob.sync(patterns, { dotglob: true, extglob: true });
+	const files = bglob.sync(patterns, { dotglob: true });
 	const entries = filterByNegativePatterns(files, task.patterns);
 
 	if (options.stats || options.onlyFiles || options.onlyDirs) {
