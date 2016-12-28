@@ -20,18 +20,37 @@ function fileStat(filepath: string): Promise<readdir.IEntry> {
 	});
 }
 
+function isNegative(pattern: string): boolean {
+	return pattern[0] === '!';
+}
+
+function getNegativeAsPositivePatterns(patterns: string[]) {
+	return patterns.filter((pattern) => isNegative(pattern)).map((pattern) => pattern.slice(1));
+}
+
+function getMatchedFiles(files: string[], patterns: string[]) {
+	const negativePatterns = getNegativeAsPositivePatterns(patterns);
+	const entries = [];
+	for (let i = 0; i < files.length; i++) {
+		if (micromatch(files[i], negativePatterns).length === 0) {
+			entries.push(files[i]);
+		}
+	}
+	return entries;
+}
+
 export function async(task: ITask, options: IOptions): Promise<string[] | readdir.IEntry[]> {
-	const pattern = task.base === '.' ? '**/*' : task.base + '/**/*';
+	const patterns = task.patterns.filter((pattern) => !isNegative(pattern));
 	const cb = options.transform ? options.transform : (entry) => entry;
-	let entries: string[] = [];
 
 	return new Promise((resolve, reject) => {
-		bglob(pattern, { cwd: options.cwd, dotglob: true, extglob: true }, (err, files) => {
+		bglob(patterns, { cwd: options.cwd, dotglob: true, extglob: true }, (err, files) => {
 			if (err) {
 				return reject(err);
 			}
 
-			entries = micromatch(files, task.patterns);
+			const entries = getMatchedFiles(files, task.patterns);
+
 			if (options.stats || options.onlyFiles || options.onlyDirs) {
 				return Promise.all(entries.map(fileStat)).then((stats: any) => {
 					const results: (string | readdir.IEntry)[] = [];
@@ -56,11 +75,11 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 }
 
 export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[] {
-	const pattern = task.base === '.' ? '**/*' : task.base + '/**/*';
+	const patterns = task.patterns.filter((pattern) => !isNegative(pattern));
 	const cb = options.transform ? options.transform : (entry) => entry;
 
-	const files = bglob.sync(pattern, { dotglob: true, extglob: true });
-	const entries = micromatch(files, task.patterns);
+	const files = bglob.sync(patterns, { dotglob: true, extglob: true });
+	const entries = getMatchedFiles(files, task.patterns);
 
 	if (options.stats || options.onlyFiles || options.onlyDirs) {
 		const results: (string | readdir.IEntry)[] = [];
