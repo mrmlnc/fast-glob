@@ -9,7 +9,7 @@ tslint.json
 # directories
 
 .tmp
-.bench
+benchmark
 out/**/*.spec.js
 out/**/*.js.map
 src
