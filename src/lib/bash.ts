@@ -25,7 +25,9 @@ function isNegative(pattern: string): boolean {
 }
 
 function getNegativeAsPositivePatterns(patterns: string[]) {
-	return patterns.filter((pattern) => isNegative(pattern)).map((pattern) => pattern.slice(1));
+	return patterns
+		.filter((pattern) => isNegative(pattern))
+		.map((pattern) => pattern.slice(1));
 }
 
 function filterByNegativePatterns(files: string[], patterns: string[]) {
@@ -50,7 +52,6 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 			}
 
 			const entries = filterByNegativePatterns(files, task.patterns);
-
 			if (options.stats || options.onlyFiles || options.onlyDirs) {
 				return Promise.all(entries.map(fileStat)).then((stats: any) => {
 					const results: (string | readdir.IEntry)[] = [];
@@ -64,11 +65,9 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 						entry.path = entries[i];
 						results.push(cb(options.stats ? entry : entry.path));
 					}
-
 					resolve(results);
 				});
 			}
-
 			resolve(entries.map(cb));
 		});
 	});
