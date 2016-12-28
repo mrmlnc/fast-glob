@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as readdir from 'readdir-enhanced';
 import * as micromatch from 'micromatch';
 
-import { ITask } from './task';
+import { ITask } from '../utils/task';
 import { IOptions } from '../fglob';
 
 function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): boolean {
@@ -41,11 +41,16 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 
 export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[] {
 	const cwd = path.join(options.cwd, task.base);
+
 	const api = options.stats ? readdir.readdirSyncStat : readdir.sync;
-	return api(cwd, {
+	const cb = options.transform ? options.transform : (entry) => entry;
+
+	const entries = api(cwd, {
 		filter: (entry) => filter(entry, task.patterns, options),
 		basePath: task.base === '.' ? '' : task.base,
 		deep: options.deep,
 		sep: '/'
 	});
+
+	return options.transform ? (<any>entries).map(cb) : entries;
 }

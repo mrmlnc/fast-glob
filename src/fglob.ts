@@ -2,9 +2,9 @@
 
 import { IEntry } from 'readdir-enhanced';
 
-import * as task from './lib/task';
-import * as readdir from './lib/readdir';
-import * as bash from './lib/bash';
+import * as task from './utils/task';
+import * as readdir from './providers/readdir';
+import * as bash from './providers/bash';
 
 export interface IOptions {
 	deep?: number | boolean;
