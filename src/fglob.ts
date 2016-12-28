@@ -13,7 +13,7 @@ export interface IOptions {
 	ignore?: string | string[];
 	onlyFiles?: boolean;
 	onlyDirs?: boolean;
-	useBashFor?: string[];
+	bashNative?: string[];
 	transform?: (entry: string | IEntry) => any;
 }
 
@@ -33,7 +33,7 @@ function prepareInput(source: string | string[], options?: IOptions) {
 		stats: false,
 		onlyFiles: false,
 		onlyDirs: false,
-		useBashFor: ['darwin', 'linux'],
+		bashNative: ['darwin', 'linux'],
 		transform: null
 	}, options);
 
@@ -49,7 +49,7 @@ function prepareInput(source: string | string[], options?: IOptions) {
 	return {
 		patterns,
 		options,
-		api: (options.useBashFor.indexOf(process.platform) === -1) ? readdir : bash as any
+		api: (options.bashNative.indexOf(process.platform) === -1) ? readdir : bash as any
 	};
 }
 
