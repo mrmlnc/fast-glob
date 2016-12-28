@@ -5,6 +5,5 @@ const fglob = require('..');
 
 const start = perf();
 fglob('**/*').then((files) => {
-	console.log(files.length);
-	console.log('time: ' + perf(start) + ' ms');
+	console.log('fast-glob (' + files.length + '): ' + perf(start) + ' ms');
 });

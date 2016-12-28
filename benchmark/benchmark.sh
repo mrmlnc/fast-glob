@@ -21,18 +21,10 @@ function benchmark {
 	start=$(date +%s%N)
 	bash -c "shopt -s globstar; echo **/* | wc -w"
 	end=$((($(date +%s%N) - $start) / 1000000))
-	echo time: $end ms
+	echo bash: $end ms
 
-	echo
-	echo Node node-glob timing:
 	node $pwd/benchmark/glob.js
-
-	echo
-	echo Node bash-glob timing:
 	node $pwd/benchmark/bash.js
-
-	echo
-	echo Node fast-glob timing:
 	node $pwd/benchmark/fast.js
 }
 
