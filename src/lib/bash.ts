@@ -28,7 +28,7 @@ function getNegativeAsPositivePatterns(patterns: string[]) {
 	return patterns.filter((pattern) => isNegative(pattern)).map((pattern) => pattern.slice(1));
 }
 
-function getMatchedFiles(files: string[], patterns: string[]) {
+function filterByNegativePatterns(files: string[], patterns: string[]) {
 	const negativePatterns = getNegativeAsPositivePatterns(patterns);
 	const entries = [];
 	for (let i = 0; i < files.length; i++) {
@@ -49,7 +49,7 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 				return reject(err);
 			}
 
-			const entries = getMatchedFiles(files, task.patterns);
+			const entries = filterByNegativePatterns(files, task.patterns);
 
 			if (options.stats || options.onlyFiles || options.onlyDirs) {
 				return Promise.all(entries.map(fileStat)).then((stats: any) => {
@@ -79,7 +79,7 @@ export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[
 	const cb = options.transform ? options.transform : (entry) => entry;
 
 	const files = bglob.sync(patterns, { dotglob: true, extglob: true });
-	const entries = getMatchedFiles(files, task.patterns);
+	const entries = filterByNegativePatterns(files, task.patterns);
 
 	if (options.stats || options.onlyFiles || options.onlyDirs) {
 		const results: (string | readdir.IEntry)[] = [];
