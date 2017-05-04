@@ -1,5 +1,7 @@
 # fast-glob
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mrmlnc/fast-glob.svg)](https://greenkeeper.io/)
+
 > Is a faster (1.5-8x for most cases) `node-glob` alternative.
 
 ## Install
