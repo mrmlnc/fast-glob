@@ -19,7 +19,7 @@ function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): b
 }
 
 export function async(task: ITask, options: IOptions): Promise<string[] | readdir.IEntry[]> {
-	const cwd = path.join(options.cwd, task.base);
+	const cwd = path.resolve(options.cwd, task.base);
 	const entries: (string | readdir.IEntry)[] = [];
 
 	const api = options.stats ? readdir.readdirStreamStat : readdir.stream;
@@ -34,23 +34,37 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 		});
 
 		stream.on('data', (entry) => entries.push(cb(entry)));
-		stream.on('error', (err) => reject(err));
+		stream.on('error', (err) => {
+			if (err.code === 'ENOENT') {
+				resolve([]);
+			} else {
+				reject(err);
+			}
+		});
 		stream.on('end', () => resolve(entries));
 	});
 }
 
 export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[] {
-	const cwd = path.join(options.cwd, task.base);
+	const cwd = path.resolve(options.cwd, task.base);
 
-	const api = options.stats ? readdir.readdirSyncStat : readdir.sync;
-	const cb = options.transform ? options.transform : (entry) => entry;
+	try {
+		const api = options.stats ? readdir.readdirSyncStat : readdir.sync;
+		const cb = options.transform ? options.transform : (entry) => entry;
 
-	const entries = api(cwd, {
-		filter: (entry) => filter(entry, task.patterns, options),
-		basePath: task.base === '.' ? '' : task.base,
-		deep: options.deep,
-		sep: '/'
-	});
+		const entries = api(cwd, {
+			filter: (entry) => filter(entry, task.patterns, options),
+			basePath: task.base === '.' ? '' : task.base,
+			deep: options.deep,
+			sep: '/'
+		});
 
-	return options.transform ? (<any>entries).map(cb) : entries;
+		return options.transform ? (<any>entries).map(cb) : entries;
+	} catch (err) {
+		if (err.code === 'ENOENT') {
+			return [];
+		}
+
+		throw err;
+	}
 }
