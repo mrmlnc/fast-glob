@@ -20,22 +20,22 @@
   ],
   "devDependencies": {
     "@types/micromatch": "^2.3.29",
-    "@types/mocha": "^2.2.34",
-    "@types/node": "^6.0.52",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.21",
     "@types/rimraf": "0.0.28",
-    "fs-extra": "^1.0.0",
-    "glob": "^7.1.1",
-    "mocha": "^3.2.0",
-    "rimraf": "^2.5.4",
-    "tslint": "^4.2.0",
-    "tslint-config-xo": "^1.0.0",
-    "typescript": "^2.1.4"
+    "fs-extra": "^3.0.1",
+    "glob": "^7.1.2",
+    "mocha": "^3.4.1",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.2.0",
+    "tslint-config-xo": "^1.2.0",
+    "typescript": "^2.3.2"
   },
   "dependencies": {
-    "bash-glob": "^0.1.1",
+    "bash-glob": "^1.0.1",
     "glob-parent": "^3.1.0",
     "micromatch": "^2.3.11",
-    "readdir-enhanced": "^1.4.5"
+    "readdir-enhanced": "^1.5.2"
   },
   "scripts": {
     "clean": "rimraf out",
