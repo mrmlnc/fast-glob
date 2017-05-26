@@ -57,7 +57,7 @@ export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[
 	const patterns = task.patterns.filter((pattern) => !isNegative(pattern));
 	const cb = options.transform ? options.transform : (entry) => entry;
 
-	const files = bglob.sync(patterns, { dotglob: true });
+	const files = bglob.sync(patterns, { cwd: options.cwd, dotglob: true });
 	const entries = filterByNegativePatterns(files, task.patterns);
 
 	if (options.stats || options.onlyFiles || options.onlyDirs) {
