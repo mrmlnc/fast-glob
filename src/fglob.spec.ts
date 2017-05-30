@@ -130,106 +130,106 @@ describe('FastGlob', () => {
 				].sort());
 			});
 		});
+	});
 
-		describe('Sync', () => {
-			describe('Patterns', () => {
-				it('Single common pattern', () => {
-					assert.deepEqual(sync('.tmp/**/*').sort(), [
-						'.tmp/.f',
-						'.tmp/c.js',
-						'.tmp/nested',
-						'.tmp/a.txt',
-						'.tmp/e',
-						'.tmp/nested/b.txt',
-						'.tmp/nested/d.ts'
-					].sort());
-				});
-
-				it('Single pattern with specific extension', () => {
-					assert.deepEqual(sync('.tmp/**/*.txt').sort(), [
-						'.tmp/a.txt',
-						'.tmp/nested/b.txt'
-					].sort());
-				});
-
-				it('Multiple patterns with non-positive pattern', () => {
-					assert.deepEqual(sync(['.tmp/**/*', '!.tmp/**/*.txt']).sort(), [
-						'.tmp/.f',
-						'.tmp/c.js',
-						'.tmp/nested',
-						'.tmp/e',
-						'.tmp/nested/d.ts'
-					].sort());
-				});
+	describe('Sync', () => {
+		describe('Patterns', () => {
+			it('Single common pattern', () => {
+				assert.deepEqual(sync('.tmp/**/*').sort(), [
+					'.tmp/.f',
+					'.tmp/c.js',
+					'.tmp/nested',
+					'.tmp/a.txt',
+					'.tmp/e',
+					'.tmp/nested/b.txt',
+					'.tmp/nested/d.ts'
+				].sort());
 			});
 
-			describe('Options', () => {
-				it('ignore', () => {
-					const files = sync('.tmp/**/*', { ignore: '.tmp/**/*.txt' });
+			it('Single pattern with specific extension', () => {
+				assert.deepEqual(sync('.tmp/**/*.txt').sort(), [
+					'.tmp/a.txt',
+					'.tmp/nested/b.txt'
+				].sort());
+			});
 
-					assert.deepEqual(files.sort(), [
-						'.tmp/.f',
-						'.tmp/c.js',
-						'.tmp/nested',
-						'.tmp/e',
-						'.tmp/nested/d.ts'
-					].sort());
-				});
-
-				it('stats', () => {
-					const files = sync('.tmp/**/*', { stats: true });
-
-					assert.deepEqual(files.map((file) => (<any>file).path).sort(), [
-						'.tmp/.f',
-						'.tmp/c.js',
-						'.tmp/nested',
-						'.tmp/a.txt',
-						'.tmp/e',
-						'.tmp/nested/b.txt',
-						'.tmp/nested/d.ts'
-					].sort());
-				});
-
-				it('cwd', () => {
-					const files = sync('**/*', { cwd: process.cwd() + '/.tmp/nested' });
-
-					assert.deepEqual(files.sort(), [
-						'b.txt',
-						'd.ts'
-					].sort());
-				});
-
-				it('onlyFiles', () => {
-					const files = sync('.tmp/**/*', { onlyFiles: true });
-
-					assert.deepEqual(files.sort(), [
-						'.tmp/.f',
-						'.tmp/a.txt',
-						'.tmp/e',
-						'.tmp/c.js',
-						'.tmp/nested/b.txt',
-						'.tmp/nested/d.ts'
-					].sort());
-				});
-
-				it('onlyDirs', () => {
-					const files = sync('.tmp/**/*', { onlyDirs: true });
-
-					assert.deepEqual(files.sort(), [
-						'.tmp/nested'
-					].sort());
-				});
-
-				it('transform', () => {
-					const files = sync('.tmp/**/*.txt', { transform: customTransformer });
-
-					assert.deepEqual(files.sort(), [
-						'[.tmp/a.txt]',
-						'[.tmp/nested/b.txt]'
-					].sort());
-				});
+			it('Multiple patterns with non-positive pattern', () => {
+				assert.deepEqual(sync(['.tmp/**/*', '!.tmp/**/*.txt']).sort(), [
+					'.tmp/.f',
+					'.tmp/c.js',
+					'.tmp/nested',
+					'.tmp/e',
+					'.tmp/nested/d.ts'
+				].sort());
 			});
 		});
 
+		describe('Options', () => {
+			it('ignore', () => {
+				const files = sync('.tmp/**/*', { ignore: '.tmp/**/*.txt' });
+
+				assert.deepEqual(files.sort(), [
+					'.tmp/.f',
+					'.tmp/c.js',
+					'.tmp/nested',
+					'.tmp/e',
+					'.tmp/nested/d.ts'
+				].sort());
+			});
+
+			it('stats', () => {
+				const files = sync('.tmp/**/*', { stats: true });
+
+				assert.deepEqual(files.map((file) => (<any>file).path).sort(), [
+					'.tmp/.f',
+					'.tmp/c.js',
+					'.tmp/nested',
+					'.tmp/a.txt',
+					'.tmp/e',
+					'.tmp/nested/b.txt',
+					'.tmp/nested/d.ts'
+				].sort());
+			});
+
+			it('cwd', () => {
+				const files = sync('**/*', { cwd: process.cwd() + '/.tmp/nested' });
+
+				assert.deepEqual(files.sort(), [
+					'b.txt',
+					'd.ts'
+				].sort());
+			});
+
+			it('onlyFiles', () => {
+				const files = sync('.tmp/**/*', { onlyFiles: true });
+
+				assert.deepEqual(files.sort(), [
+					'.tmp/.f',
+					'.tmp/a.txt',
+					'.tmp/e',
+					'.tmp/c.js',
+					'.tmp/nested/b.txt',
+					'.tmp/nested/d.ts'
+				].sort());
+			});
+
+			it('onlyDirs', () => {
+				const files = sync('.tmp/**/*', { onlyDirs: true });
+
+				assert.deepEqual(files.sort(), [
+					'.tmp/nested'
+				].sort());
+			});
+
+			it('transform', () => {
+				const files = sync('.tmp/**/*.txt', { transform: customTransformer });
+
+				assert.deepEqual(files.sort(), [
+					'[.tmp/a.txt]',
+					'[.tmp/nested/b.txt]'
+				].sort());
+			});
+		});
 	});
+
 });
