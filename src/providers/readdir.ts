@@ -8,6 +8,10 @@ import * as micromatch from 'micromatch';
 import { ITask } from '../utils/task';
 import { IOptions } from '../fglob';
 
+function isEnoentCodeError(err: any): boolean {
+	return err.code === 'ENOENT';
+}
+
 function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): boolean {
 	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirs && !entry.isDirectory())) {
 		return false;
@@ -34,13 +38,7 @@ export function async(task: ITask, options: IOptions): Promise<string[] | readdi
 		});
 
 		stream.on('data', (entry) => entries.push(cb(entry)));
-		stream.on('error', (err) => {
-			if (err.code === 'ENOENT') {
-				resolve([]);
-			} else {
-				reject(err);
-			}
-		});
+		stream.on('error', (err) => isEnoentCodeError(err) ? resolve([]) : reject(err));
 		stream.on('end', () => resolve(entries));
 	});
 }
@@ -61,7 +59,7 @@ export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[
 
 		return options.transform ? (<any>entries).map(cb) : entries;
 	} catch (err) {
-		if (err.code === 'ENOENT') {
+		if (isEnoentCodeError(err)) {
 			return [];
 		}
 
