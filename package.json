@@ -21,20 +21,20 @@
   "devDependencies": {
     "@types/micromatch": "^2.3.29",
     "@types/mocha": "^2.2.41",
-    "@types/node": "^7.0.22",
+    "@types/node": "^7.0.27",
     "@types/rimraf": "0.0.28",
     "fs-extra": "^3.0.1",
     "glob": "^7.1.2",
     "mocha": "^3.4.2",
     "rimraf": "^2.6.1",
-    "tslint": "^5.3.2",
+    "tslint": "^5.4.2",
     "tslint-config-xo": "^1.2.0",
-    "typescript": "^2.3.3"
+    "typescript": "^2.3.4"
   },
   "dependencies": {
     "bash-glob": "^1.0.1",
     "glob-parent": "^3.1.0",
-    "micromatch": "^3.0.1",
+    "micromatch": "^3.0.3",
     "readdir-enhanced": "^1.5.2"
   },
   "scripts": {
