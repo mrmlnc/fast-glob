@@ -33,7 +33,7 @@ function prepareInput(source: string | string[], options?: IOptions) {
 		stats: false,
 		onlyFiles: false,
 		onlyDirs: false,
-		bashNative: ['darwin', 'linux'],
+		bashNative: ['linux'],
 		transform: null
 	}, options);
 
