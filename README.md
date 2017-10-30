@@ -13,7 +13,7 @@ $ npm i -S fast-glob
   * Fast by using Streams, Promises and Bash Globbing on Linux machines. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced), [micromatch](https://github.com/jonschlinkert/micromatch) and [bash-glob](https://github.com/jonschlinkert/bash-glob).
   * You can limit the depth of your search (only for non-Bash mode).
   * You can get not only file paths, but also their `fs.Stats` objects with the additional `path` property.
-  * You can transform file path or `fs.Stats` object before sending it to an array.
+  * You can transform file path or `fs.Stats` object before sending it to an array of results.
 
 ## Usage
 
