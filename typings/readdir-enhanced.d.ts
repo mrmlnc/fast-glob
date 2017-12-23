@@ -5,6 +5,7 @@ declare module "readdir-enhanced" {
 	namespace readdir {
 		interface IEntry extends fs.Stats {
 			path: string;
+			depth: number;
 		}
 
 		type TFilterFunction = (stat: IEntry) => boolean;
