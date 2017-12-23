@@ -4,6 +4,14 @@ pwd=$PWD
 tmp=${TMPDIR:-/tmp}
 fixtures=$tmp/fast-glob-benchmark-fixtures
 
+function get_current_time_in_ns {
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		echo $(gdate +%s%N)
+	else
+		echo $(date +%s%N)
+	fi
+}
+
 bash benchmark/fixtures.sh
 
 # Run benchmark for pattern
@@ -18,10 +26,12 @@ function benchmark {
 
 	echo
 	echo Bash timing:
-	start=$(date +%s%N)
+	start=$(get_current_time_in_ns)
 	bash -c "shopt -s globstar; echo **/* | wc -w"
-	end=$((($(date +%s%N) - $start) / 1000000))
-	echo bash: $end ms
+	end=$(get_current_time_in_ns)
+	runtime=$(((end - start) / 1000000))
+	files=$(shopt -s globstar; echo **/* | wc -w)
+	echo bash "($files)": $runtime ms
 
 	node $pwd/benchmark/glob.js
 	node $pwd/benchmark/fast.js
