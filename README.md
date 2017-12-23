@@ -13,7 +13,7 @@ If you want to thank me, or promote your Issue.
 ## Install
 
 ```
-$ npm i -S fast-glob
+$ npm i fast-glob
 ```
 
 ## Why?
