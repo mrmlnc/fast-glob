@@ -24,8 +24,6 @@ function benchmark {
 	echo bash: $end ms
 
 	node $pwd/benchmark/glob.js
-	node $pwd/benchmark/bash.js
-	node $pwd/benchmark/fast.js "native"
 	node $pwd/benchmark/fast.js
 }
 

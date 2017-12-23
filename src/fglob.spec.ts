@@ -23,7 +23,7 @@ describe('FastGlob', () => {
 	before(() => {
 		fs.mkdirSync('.tmp');
 		fs.mkdirSync('.tmp/nested');
-		fixtures.forEach(fs.writeFileSync);
+		fixtures.forEach((fixture) => fs.writeFileSync(fixture, ''));
 	});
 
 	describe('Async', () => {

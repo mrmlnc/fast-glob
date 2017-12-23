@@ -22,7 +22,7 @@ function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): b
 	return false;
 }
 
-export function async(task: ITask, options: IOptions): Promise<string[] | readdir.IEntry[]> {
+export function async(task: ITask, options: IOptions): Promise<(string | readdir.IEntry)[]> {
 	const cwd = path.resolve(options.cwd, task.base);
 	const entries: (string | readdir.IEntry)[] = [];
 

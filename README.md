@@ -10,8 +10,8 @@ $ npm i -S fast-glob
 
 ## Why?
 
-  * Fast by using Streams, Promises and Bash Globbing on Linux machines. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced), [micromatch](https://github.com/jonschlinkert/micromatch) and [bash-glob](https://github.com/jonschlinkert/bash-glob).
-  * You can limit the depth of your search (only for non-Bash mode).
+  * Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
+  * You can limit the depth of your search.
   * You can get not only file paths, but also their `fs.Stats` objects with the additional `path` property.
   * You can transform file path or `fs.Stats` object before sending it to an array of results.
 
@@ -54,7 +54,6 @@ console.log(files); // ['dir/a.txt', ...]
 | `stats`      | `Boolean`         | `false`               | Return `fs.Stats` with `path` property instead of file path. |
 | `onlyFiles`  | `Boolean`         | `false`               | Return only files. |
 | `onlyDirs`   | `Boolean`         | `false`               | Return only directories. |
-| `bashNative` | `String[]`        | `['darwin', 'linux']` | Use bash-powered globbing (2-15x faster on Linux, but slow on BashOnWindows) for specified platforms. See [available values for array](https://nodejs.org/dist/latest-v7.x/docs/api/process.html#process_process_platform). |
 | `transform`  | `Function`        | `null`                | Allows you to transform a path or `fs.Stats` object before sending to the array. |
 
 ## Compatible with `node-glob`?

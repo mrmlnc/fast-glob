@@ -4,7 +4,6 @@ import { IEntry } from 'readdir-enhanced';
 
 import * as task from './utils/task';
 import * as readdir from './providers/readdir';
-import * as bash from './providers/bash';
 
 export interface IOptions {
 	deep?: number | boolean;
@@ -13,7 +12,6 @@ export interface IOptions {
 	ignore?: string | string[];
 	onlyFiles?: boolean;
 	onlyDirs?: boolean;
-	bashNative?: string[];
 	transform?: (entry: string | IEntry) => any;
 }
 
@@ -33,7 +31,6 @@ function prepareInput(source: string | string[], options?: IOptions) {
 		stats: false,
 		onlyFiles: false,
 		onlyDirs: false,
-		bashNative: ['darwin', 'linux'],
 		transform: null
 	}, options);
 
@@ -49,7 +46,7 @@ function prepareInput(source: string | string[], options?: IOptions) {
 	return {
 		patterns,
 		options,
-		api: (options.bashNative.indexOf(process.platform) === -1) ? readdir : bash as any
+		api: readdir
 	};
 }
 

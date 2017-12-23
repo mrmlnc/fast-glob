@@ -1,6 +1,7 @@
 'use strict';
 
-import * as globParent from 'glob-parent';
+import globParent = require('glob-parent');
+
 import { IOptions } from '../fglob';
 
 export interface ITask {
