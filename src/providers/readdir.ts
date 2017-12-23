@@ -7,6 +7,7 @@ import * as micromatch from 'micromatch';
 
 import { ITask } from '../utils/task';
 import { IOptions } from '../fglob';
+import { TEntryItem } from '../types/entries';
 
 function isEnoentCodeError(err: any): boolean {
 	return err.code === 'ENOENT';
@@ -22,9 +23,9 @@ function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): b
 	return false;
 }
 
-export function async(task: ITask, options: IOptions): Promise<(string | readdir.IEntry)[]> {
+export function async(task: ITask, options: IOptions): Promise<TEntryItem[]> {
 	const cwd = path.resolve(options.cwd, task.base);
-	const entries: (string | readdir.IEntry)[] = [];
+	const entries: TEntryItem[] = [];
 
 	const api = options.stats ? readdir.readdirStreamStat : readdir.stream;
 	const cb = options.transform ? options.transform : (entry) => entry;
@@ -43,7 +44,7 @@ export function async(task: ITask, options: IOptions): Promise<(string | readdir
 	});
 }
 
-export function sync(task: ITask, options: IOptions): (string | readdir.IEntry)[] {
+export function sync(task: ITask, options: IOptions): TEntryItem[] {
 	const cwd = path.resolve(options.cwd, task.base);
 
 	try {

@@ -1,9 +1,8 @@
-'use strict';
-
-import { IEntry } from 'readdir-enhanced';
-
 import * as task from './utils/task';
 import * as readdir from './providers/readdir';
+
+import { IEntry } from 'readdir-enhanced';
+import { TEntryItem } from './types/entries';
 
 export interface IOptions {
 	deep?: number | boolean;
@@ -50,14 +49,14 @@ function prepareInput(source: string | string[], options?: IOptions) {
 	};
 }
 
-export default function async(source: string | string[], options?: IOptions): Promise<(string | IEntry)[]> {
+export default function async(source: string | string[], options?: IOptions): Promise<TEntryItem[]> {
 	const input = prepareInput(source, options);
 
 	return Promise.all(task.generateTasks(input.patterns, input.options).map((task) => input.api.async(task, input.options)))
 		.then((entries) => entries.reduce((res, to) => [].concat(res, to), []));
 }
 
-export function sync(source: string | string[], options?: IOptions): (string | IEntry)[] {
+export function sync(source: string | string[], options?: IOptions): TEntryItem[] {
 	const input = prepareInput(source, options);
 
 	return task.generateTasks(input.patterns, input.options)
