@@ -1,6 +1,6 @@
 # fast-glob
 
-> Is a faster (1.5-8x for most cases) `node-glob` alternative.
+> Is a faster (1.5-4x for most cases) `node-glob` alternative.
 
 ## Donate
 
