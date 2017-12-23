@@ -17,6 +17,7 @@ export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 	patterns.forEach((pattern) => {
 		if (pattern[0] === '!') {
 			negativePatterns.push(pattern.slice(1));
+
 			return;
 		}
 

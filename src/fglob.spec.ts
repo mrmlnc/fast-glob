@@ -1,7 +1,9 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import fglob, { sync, IOptions } from './fglob';
+import fglob, { IOptions, sync } from './fglob';
+
+import { TEntry } from './types/entries';
 
 const fixtures = [
 	'.tmp/a.txt',
@@ -64,7 +66,7 @@ describe('FastGlob', () => {
 
 		describe('Options', () => {
 			it('ignore', async () => {
-				const files = await fglob('.tmp/**/*', { ignore: '.tmp/**/*.txt' });
+				const files = await fglob('.tmp/**/*', { ignore: '.tmp/**/*.txt' } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
@@ -76,9 +78,9 @@ describe('FastGlob', () => {
 			});
 
 			it('stats', async () => {
-				const files = await fglob('.tmp/**/*', { stats: true });
+				const files = await fglob('.tmp/**/*', { stats: true } as IOptions);
 
-				assert.deepEqual(files.map((file) => (<any>file).path).sort(), [
+				assert.deepEqual(files.map((file) => (file as TEntry).path).sort(), [
 					'.tmp/.f',
 					'.tmp/c.js',
 					'.tmp/nested',
@@ -90,7 +92,7 @@ describe('FastGlob', () => {
 			});
 
 			it('cwd', async () => {
-				const files = await fglob('**/*', { cwd: process.cwd() + '/.tmp/nested' });
+				const files = await fglob('**/*', { cwd: process.cwd() + '/.tmp/nested' } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'b.txt',
@@ -99,7 +101,7 @@ describe('FastGlob', () => {
 			});
 
 			it('onlyFiles', async () => {
-				const files = await fglob('.tmp/**/*', { onlyFiles: true });
+				const files = await fglob('.tmp/**/*', { onlyFiles: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
@@ -112,7 +114,7 @@ describe('FastGlob', () => {
 			});
 
 			it('onlyDirs', async () => {
-				const files = await fglob('.tmp/**/*', { onlyDirs: true });
+				const files = await fglob('.tmp/**/*', { onlyDirs: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/nested'
@@ -164,7 +166,7 @@ describe('FastGlob', () => {
 
 		describe('Options', () => {
 			it('ignore', () => {
-				const files = sync('.tmp/**/*', { ignore: '.tmp/**/*.txt' });
+				const files = sync('.tmp/**/*', { ignore: '.tmp/**/*.txt' } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
@@ -176,9 +178,9 @@ describe('FastGlob', () => {
 			});
 
 			it('stats', () => {
-				const files = sync('.tmp/**/*', { stats: true });
+				const files = sync('.tmp/**/*', { stats: true } as IOptions);
 
-				assert.deepEqual(files.map((file) => (<any>file).path).sort(), [
+				assert.deepEqual(files.map((file) => (file as TEntry).path).sort(), [
 					'.tmp/.f',
 					'.tmp/c.js',
 					'.tmp/nested',
@@ -190,7 +192,7 @@ describe('FastGlob', () => {
 			});
 
 			it('cwd', () => {
-				const files = sync('**/*', { cwd: process.cwd() + '/.tmp/nested' });
+				const files = sync('**/*', { cwd: process.cwd() + '/.tmp/nested' } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'b.txt',
@@ -199,7 +201,7 @@ describe('FastGlob', () => {
 			});
 
 			it('onlyFiles', () => {
-				const files = sync('.tmp/**/*', { onlyFiles: true });
+				const files = sync('.tmp/**/*', { onlyFiles: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
@@ -212,7 +214,7 @@ describe('FastGlob', () => {
 			});
 
 			it('onlyDirs', () => {
-				const files = sync('.tmp/**/*', { onlyDirs: true });
+				const files = sync('.tmp/**/*', { onlyDirs: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/nested'

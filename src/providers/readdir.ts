@@ -1,13 +1,13 @@
 import * as path from 'path';
 
-import * as readdir from 'readdir-enhanced';
 import * as micromatch from 'micromatch';
+import * as readdir from 'readdir-enhanced';
 
-import { ITask } from '../utils/task';
 import { IOptions } from '../fglob';
 import { TEntryItem } from '../types/entries';
+import { ITask } from '../utils/task';
 
-function isEnoentCodeError(err: any): boolean {
+function isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
 	return err.code === 'ENOENT';
 }
 
@@ -18,6 +18,7 @@ function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): b
 	if (micromatch([entry.path], patterns).length !== 0) {
 		return true;
 	}
+
 	return false;
 }
 
@@ -54,7 +55,7 @@ export function sync(task: ITask, options: IOptions): TEntryItem[] {
 			sep: '/'
 		});
 
-		return options.transform ? (entries as TEntryItem[]).map(options.transform) : entries;
+		return options.transform ? (entries as TEntryItem[]).map((entry) => options.transform(entry)) : entries;
 	} catch (err) {
 		if (isEnoentCodeError(err)) {
 			return [];

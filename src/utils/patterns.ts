@@ -2,12 +2,14 @@ export function isNegative(pattern: string): boolean {
 	return pattern[0] === '!';
 }
 
-export function getNegativeAsPositive(patterns: string[]) {
+export function getNegativeAsPositive(patterns: string[]): string[] {
 	const results: string[] = [];
-	for (let i = 0; i < patterns.length; i++) {
-		if (isNegative(patterns[i])) {
-			results.push(patterns[i].slice(1));
+
+	for (const pattern of patterns) {
+		if (isNegative(pattern)) {
+			results.push(pattern.slice(1));
 		}
 	}
+
 	return results;
 }

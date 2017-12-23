@@ -1,50 +1,58 @@
-import * as task from './utils/task';
 import * as readdir from './providers/readdir';
+import * as task from './utils/task';
 
 import { IEntry } from 'readdir-enhanced';
 import { TEntryItem } from './types/entries';
 
 export interface IOptions {
-	deep?: number | boolean;
-	cwd?: string;
-	stats?: boolean;
-	ignore?: string | string[];
-	onlyFiles?: boolean;
-	onlyDirs?: boolean;
-	transform?: null | ((entry: string | IEntry) => any);
+	deep: number | boolean;
+	cwd: string;
+	stats: boolean;
+	ignore: string | string[];
+	onlyFiles: boolean;
+	onlyDirs: boolean;
+	transform: <T>(entry: string | IEntry) => T;
 }
 
-function assertPatternsInput(patterns: string[]) {
+export type IPartialOptions = Partial<IOptions>;
+
+interface IInputAPI {
+	patterns: string[];
+	options: IOptions;
+	api: typeof readdir;
+}
+
+function assertPatternsInput(patterns: string[]): void | never {
 	if (!patterns.every((pattern) => typeof pattern === 'string')) {
 		throw new TypeError('patterns must be a string or an array of strings');
 	}
 }
 
-function prepareInput(source: string | string[], options?: IOptions) {
+function prepareInput(source: string | string[], options?: IPartialOptions): IInputAPI {
 	const patterns: string[] = ([] as string[]).concat(source);
 	assertPatternsInput(patterns);
 
-	options = Object.assign(<IOptions>{
+	const opts: IOptions = Object.assign({
 		cwd: process.cwd(),
 		deep: true,
 		stats: false,
 		onlyFiles: false,
 		onlyDirs: false,
-		transform: null
-	}, options);
+		transform: undefined
+	}, options) as IOptions;
 
-	if (!options.cwd) {
-		options.cwd = process.cwd();
+	if (!opts.cwd) {
+		opts.cwd = process.cwd();
 	}
-	if (!options.ignore) {
-		options.ignore = [];
-	} else if (options.ignore) {
-		options.ignore = ([] as string[]).concat(options.ignore);
+	if (!opts.ignore) {
+		opts.ignore = [];
+	} else if (opts.ignore) {
+		opts.ignore = ([] as string[]).concat(opts.ignore);
 	}
 
 	return {
 		patterns,
-		options,
+		options: opts,
 		api: readdir
 	};
 }
