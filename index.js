@@ -1,4 +1,5 @@
-const fGlob = require('./out/fglob');
-module.exports = fGlob.default;
-module.exports.default = fGlob.default;
-module.exports.sync = fGlob.sync;
+const pkg = require('./out/fglob');
+
+module.exports = pkg.default;
+module.exports.default = pkg.default;
+module.exports.sync = pkg.sync;
