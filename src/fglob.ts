@@ -22,15 +22,8 @@ interface IInputAPI {
 	api: typeof readdir;
 }
 
-function assertPatternsInput(patterns: string[]): void | never {
-	if (!patterns.every((pattern) => typeof pattern === 'string')) {
-		throw new TypeError('patterns must be a string or an array of strings');
-	}
-}
-
 function prepareInput(source: string | string[], options?: IPartialOptions): IInputAPI {
 	const patterns: string[] = ([] as string[]).concat(source);
-	assertPatternsInput(patterns);
 
 	const opts: IOptions = Object.assign({
 		cwd: process.cwd(),
