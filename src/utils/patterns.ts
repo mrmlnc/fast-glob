@@ -1,5 +1,3 @@
-'use strict';
-
 export function isNegative(pattern: string): boolean {
 	return pattern[0] === '!';
 }

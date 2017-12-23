@@ -1,5 +1,3 @@
-'use strict';
-
 import * as path from 'path';
 
 import * as readdir from 'readdir-enhanced';

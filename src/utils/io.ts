@@ -1,5 +1,3 @@
-'use strict';
-
 import * as fs from 'fs';
 
 export function statFile(filepath: string): Promise<fs.Stats> {
