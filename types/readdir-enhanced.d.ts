@@ -1,38 +1,38 @@
 declare module "readdir-enhanced" {
 
-	import fs = require('fs');
+	import * as fs from 'fs';
 
 	namespace readdir {
-		interface IFilterFunction {
-			(stat: IEntry): boolean;
-		}
-
-		interface IOptions {
-			filter?: string | RegExp | IFilterFunction;
-			deep?: boolean | number;
-			sep?: string;
-			basePath?: string;
-		}
-
 		interface IEntry extends fs.Stats {
 			path: string;
 		}
 
+		type TFilterFunction = (stat: IEntry) => boolean;
+		type TReaddirFilterOption = string | RegExp | TFilterFunction;
+		type TReaddirDeepOption = boolean | number | RegExp | TFilterFunction;
+
+		interface IReaddirOptions {
+			filter?: TReaddirFilterOption;
+			deep?: TReaddirDeepOption;
+			sep?: string;
+			basePath?: string;
+		}
+
 		// Sync
-		function sync(root: string, options?: IOptions): string[];
-		function readdirSyncStat(root: string, options?: IOptions): IEntry[];
+		function sync(root: string, options?: IReaddirOptions): string[];
+		function readdirSyncStat(root: string, options?: IReaddirOptions): IEntry[];
 
 		// Promise
-		function async(root: string, options?: IOptions): Promise<string[]>;
-		function readdirAsyncStat(root: string, options?: IOptions): Promise<IEntry[]>;
+		function async(root: string, options?: IReaddirOptions): Promise<string[]>;
+		function readdirAsyncStat(root: string, options?: IReaddirOptions): Promise<IEntry[]>;
 
 		// Callback
-		function async(root: string, cb: (err, files: string[]) => void): void;
-		function async(root: string, options: IOptions, cb: (err, files: string[]) => void): void;
+		function async(root: string, cb: (err: Error, files: string[]) => void): void;
+		function async(root: string, options: IReaddirOptions, cb: (err: Error, files: string[]) => void): void;
 
 		// Stream
-		function stream(root: string, options?: IOptions): NodeJS.ReadableStream;
-		function readdirStreamStat(root: string, options?: IOptions): NodeJS.ReadableStream;
+		function stream(root: string, options?: IReaddirOptions): NodeJS.ReadableStream;
+		function readdirStreamStat(root: string, options?: IReaddirOptions): NodeJS.ReadableStream;
 	}
 
 	export = readdir;

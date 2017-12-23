@@ -16,7 +16,7 @@ function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): b
 	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirs && !entry.isDirectory())) {
 		return false;
 	}
-	if (micromatch(entry.path, patterns).length !== 0) {
+	if (micromatch([entry.path], patterns).length !== 0) {
 		return true;
 	}
 	return false;
