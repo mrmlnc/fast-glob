@@ -1,6 +1,12 @@
+build: off
+
+matrix:
+  fast_finish: true
+
 environment:
   matrix:
-  - nodejs_version: "Stable"
+  - nodejs_version: "" # Latest version of Node.js
+  - nodejs_version: "8"
   - nodejs_version: "6"
   - nodejs_version: "4"
 
@@ -15,8 +21,3 @@ install:
 test_script:
   - node --version && npm --version
   - npm run build
-
-build: off
-
-matrix:
-  fast_finish: true
