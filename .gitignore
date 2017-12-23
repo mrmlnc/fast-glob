@@ -10,6 +10,11 @@ npm-debug.log*
 # Dependency directory
 node_modules/
 
-# Compiled and tempory files
+# Compiled and temporary files
 .tmp/
+.benchmark/
 out/
+
+# Other files
+package-lock.json
+yarn.lock
