@@ -75,11 +75,10 @@ fastGlob('dir/**/*.txt', { transform: readFilePromise }).then((files) => {
 
 **Tech specs:**
 
- * Intel Core i7-3610QM
- * RAM 8GB
- * SSD (555MB/S, 530MB/S)
- * Windows 10 + VirtualBox with Manjaro
- * Node.js v7.3.0
+  * MacBook Pro (Retina, 13-inch, Early 2015)
+    * Intel Core i5
+    * RAM 16GB
+    * Node.js v9.3.0
 
 ```shell
 $ npm run bench
@@ -88,71 +87,57 @@ $ npm run bench
 Benchmark for 10 files
 ==============================
 
-bash: 6 ms
-node-glob (10): 19.47606 ms
-bash-glob (10): 23.406374 ms
-fast-glob (10) as native: 25.359293 ms
-fast-glob (10) as fast: 33.696387 ms
+bash (     10): 16 ms
+node-glob (10): 6.149452 ms
+fast-glob (10): 16.535819 ms
 
 ==============================
 Benchmark for 50 files
 ==============================
 
-bash: 6 ms
-node-glob (54): 28.43855 ms
-bash-glob (54): 20.731202 ms
-fast-glob (54) as native: 22.709236 ms
-fast-glob (54) as fast: 25.057461 ms
+bash (     54): 13 ms
+node-glob (54): 14.236377 ms
+fast-glob (54): 20.976846 ms
 
 ==============================
 Benchmark for 100 files
 ==============================
 
-bash: 5 ms
-node-glob (109): 34.811618 ms
-bash-glob (109): 21.624256 ms
-fast-glob (109) as native: 26.291311 ms
-fast-glob (109) as fast: 29.61791 ms
+bash (     109): 12 ms
+node-glob (109): 23.248501 ms
+fast-glob (109): 18.061438 ms
 
 ==============================
 Benchmark for 500 files
 ==============================
 
-bash: 7 ms
-node-glob (549): 90.513766 ms
-bash-glob (549): 23.116938 ms
-fast-glob (549) as native: 30.978642 ms
-fast-glob (549) as fast: 61.367613 ms
+bash (     549): 21 ms
+node-glob (549): 63.018853 ms
+fast-glob (549): 33.51311 ms
 
 ==============================
 Benchmark for 1000 files
 ==============================
 
-bash: 11 ms
-node-glob (1099): 139.44816 ms
-bash-glob (1099): 35.691985 ms
-fast-glob (1099) as native: 36.770455 ms
-fast-glob (1099) as fast: 84.387065 ms
+bash (     1099): 22 ms
+node-glob (1099): 117.887727 ms
+fast-glob (1099): 53.68764 ms
 
 ==============================
 Benchmark for 5000 files
 ==============================
 
-bash: 43 ms
-node-glob (5499): 584.910373 ms
-bash-glob (5499): 90.38803 ms
-fast-glob (5499) as native: 97.143759 ms
-fast-glob (5499) as fast: 233.977073 ms
+bash (     5499): 62 ms
+node-glob (5499): 541.683609 ms
+fast-glob (5499): 195.488406 ms
 
 ==============================
 Benchmark for 10000 files
 ==============================
 
-bash: 96 ms
-node-glob (10999): 1143.377267 ms
-bash-glob (10999): 169.416486 ms
-fast-glob (10999) as native: 198.930152 ms
-fast-glob (10999) as fast: 531.693878 ms
+bash (     10999): 118 ms
+node-glob (10999): 1074.123839 ms
+fast-glob (10999): 319.520454 ms
 ```
 
 ## Changelog
