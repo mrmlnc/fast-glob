@@ -26,7 +26,6 @@ export function async(task: ITask, options: IOptions): Promise<TEntryItem[]> {
 	const entries: TEntryItem[] = [];
 
 	const api = options.stats ? readdir.readdirStreamStat : readdir.stream;
-	const cb = options.transform ? options.transform : (entry) => entry;
 
 	return new Promise((resolve, reject) => {
 		const stream = api(cwd, {
@@ -36,7 +35,7 @@ export function async(task: ITask, options: IOptions): Promise<TEntryItem[]> {
 			sep: '/'
 		});
 
-		stream.on('data', (entry) => entries.push(cb(entry)));
+		stream.on('data', (entry) => entries.push(options.transform ? options.transform(entry) : entry));
 		stream.on('error', (err) => isEnoentCodeError(err) ? resolve([]) : reject(err));
 		stream.on('end', () => resolve(entries));
 	});
@@ -47,7 +46,6 @@ export function sync(task: ITask, options: IOptions): TEntryItem[] {
 
 	try {
 		const api = options.stats ? readdir.readdirSyncStat : readdir.sync;
-		const cb = options.transform ? options.transform : (entry) => entry;
 
 		const entries = api(cwd, {
 			filter: (entry) => filter(entry, task.patterns, options),
@@ -56,7 +54,7 @@ export function sync(task: ITask, options: IOptions): TEntryItem[] {
 			sep: '/'
 		});
 
-		return options.transform ? (<any>entries).map(cb) : entries;
+		return options.transform ? (entries as TEntryItem[]).map(options.transform) : entries;
 	} catch (err) {
 		if (isEnoentCodeError(err)) {
 			return [];

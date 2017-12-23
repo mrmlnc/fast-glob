@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import fglob, { sync } from './fglob';
+import fglob, { sync, IOptions } from './fglob';
 
 const fixtures = [
 	'.tmp/a.txt',
@@ -120,7 +120,7 @@ describe('FastGlob', () => {
 			});
 
 			it('transform', async () => {
-				const files = await fglob('.tmp/**/*.txt', { transform: customTransformer });
+				const files = await fglob('.tmp/**/*.txt', { transform: customTransformer } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'[.tmp/a.txt]',
@@ -220,7 +220,7 @@ describe('FastGlob', () => {
 			});
 
 			it('transform', () => {
-				const files = sync('.tmp/**/*.txt', { transform: customTransformer });
+				const files = sync('.tmp/**/*.txt', { transform: customTransformer } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'[.tmp/a.txt]',

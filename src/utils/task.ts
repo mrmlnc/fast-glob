@@ -9,7 +9,7 @@ export interface ITask {
 
 export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 	const tasks: ITask[] = [];
-	const parents = {};
+	const parents: Record<string, string[]> = {};
 
 	const negativePatterns: string[] = (<string[]>options.ignore);
 
@@ -52,7 +52,7 @@ export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 
 		tasks.push({
 			base: parent,
-			patterns: [].concat(parents[parent], negative)
+			patterns: ([] as string[]).concat(parents[parent], negative)
 		});
 	});
 
