@@ -1,17 +1,23 @@
-# files
-
+# Common files
 .editorconfig
 .gitignore
 .travis.yml
-tsconfig.json
+appveyor.yml
+tconfig.json
 tslint.json
 
-# directories
-
-.tmp
-benchmark
-out/**/*.spec.js
+# Builded files
+out/benchmark
+out/tests
 out/**/*.js.map
+out/**/*.spec.js
+
+# Editor directories
+.vscode
+
+# Other directories
+.tmp
+.benchmark
 src
-types
+typings
 node_modules
