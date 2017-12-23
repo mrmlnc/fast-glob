@@ -19,6 +19,7 @@
     "implementation"
   ],
   "devDependencies": {
+    "@types/glob-parent": "^3.1.0",
     "@types/micromatch": "^2.3.29",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.27",
