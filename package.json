@@ -20,12 +20,23 @@
     "implementation"
   ],
   "devDependencies": {
+    "@types/compute-stdev": "^1.0.0",
+    "@types/execa": "^0.8.0",
+    "@types/fs-extra": "^5.0.0",
     "@types/glob-parent": "^3.1.0",
+    "@types/globby": "^6.1.0",
     "@types/micromatch": "^3.1.0",
+    "@types/minimist": "^1.2.0",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.5.2",
     "@types/rimraf": "2.0.2",
+    "compute-stdev": "^1.0.0",
+    "execa": "^0.8.0",
+    "fast-glob": "^1.0.1",
+    "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
+    "globby": "^7.1.1",
+    "minimist": "^1.2.0",
     "mocha": "^4.0.1",
     "rimraf": "^2.6.2",
     "tslint": "^5.8.0",
@@ -43,7 +54,10 @@
     "compile": "tsc",
     "test": "rimraf .tmp && mocha out/{,**/}*.spec.js -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
-    "watch": "npm run clean && npm run lint && npm run compile -- --sourceMap --watch",
-    "bench": "npm run clean && npm run lint && npm run compile && bash benchmark/benchmark.sh"
+    "watch": "npm run clean && npm run lint & npm run compile -- --sourceMap --watch",
+    "bench-10": "node ./out/benchmark --level 10",
+    "bench-100": "node ./out/benchmark --level 100",
+    "bench-200": "node ./out/benchmark --level 200",
+    "bench": "npm run build && npm run bench-10 && npm run bench-100 && npm run bench-200"
   }
 }
