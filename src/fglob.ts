@@ -50,14 +50,14 @@ function prepareInput(source: string | string[], options?: IPartialOptions): IIn
 	};
 }
 
-export default function async(source: string | string[], options?: IOptions): Promise<TEntryItem[]> {
+export default function async(source: string | string[], options?: IPartialOptions): Promise<TEntryItem[]> {
 	const input = prepareInput(source, options);
 
 	return Promise.all(task.generateTasks(input.patterns, input.options).map((work) => input.api.async(work, input.options)))
 		.then((entries) => entries.reduce((res, to) => ([] as TEntryItem[]).concat(res, to), []));
 }
 
-export function sync(source: string | string[], options?: IOptions): TEntryItem[] {
+export function sync(source: string | string[], options?: IPartialOptions): TEntryItem[] {
 	const input = prepareInput(source, options);
 
 	return task.generateTasks(input.patterns, input.options)
