@@ -3,7 +3,7 @@ import * as path from 'path';
 import fs = require('fs-extra');
 
 function writeFixtureFiles(basedir: string): void {
-	['txt', 'md'].forEach((extension) => fs.writeFileSync(`${basedir}/file.${extension}`, ''));
+	['a.txt', 'b.md', 'c.txt', 'd.md', 'e.txt'].forEach((extension) => fs.writeFileSync(`${basedir}/file.${extension}`, ''));
 }
 
 export function makeFixtures(basedir: string, levelOfNesting: number): void {
