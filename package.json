@@ -20,6 +20,7 @@
     "implementation"
   ],
   "devDependencies": {
+    "@types/bash-glob": "^2.0.0",
     "@types/compute-stdev": "^1.0.0",
     "@types/execa": "^0.8.0",
     "@types/fs-extra": "^5.0.0",
@@ -31,6 +32,7 @@
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.5.2",
     "@types/rimraf": "2.0.2",
+    "bash-glob": "^2.0.0",
     "compute-stdev": "^1.0.0",
     "execa": "^0.8.0",
     "fast-glob": "^1.0.1",
