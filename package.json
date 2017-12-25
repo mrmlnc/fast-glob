@@ -23,6 +23,7 @@
     "@types/compute-stdev": "^1.0.0",
     "@types/execa": "^0.8.0",
     "@types/fs-extra": "^5.0.0",
+    "@types/glob": "^5.0.34",
     "@types/glob-parent": "^3.1.0",
     "@types/globby": "^6.1.0",
     "@types/micromatch": "^3.1.0",
