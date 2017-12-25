@@ -55,9 +55,11 @@
     "test": "rimraf .tmp && mocha out/{,**/}*.spec.js -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
     "watch": "npm run clean && npm run lint & npm run compile -- --sourceMap --watch",
+    "bench-1": "node ./out/benchmark --level 1",
+    "bench-5": "node ./out/benchmark --level 5",
     "bench-10": "node ./out/benchmark --level 10",
+    "bench-50": "node ./out/benchmark --level 50",
     "bench-100": "node ./out/benchmark --level 100",
-    "bench-200": "node ./out/benchmark --level 200",
-    "bench": "npm run build && npm run bench-10 && npm run bench-100 && npm run bench-200"
+    "bench": "npm run build && npm run bench-1 && npm run bench-5 && npm run bench-10 && npm run bench-50 && npm run bench-100"
   }
 }
