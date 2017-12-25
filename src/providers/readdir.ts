@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import * as micromatch from 'micromatch';
-import * as readdir from 'readdir-enhanced';
+import micromatch = require('micromatch');
+import readdir = require('readdir-enhanced');
 
 import { IOptions } from '../fglob';
 import { TEntryItem } from '../types/entries';

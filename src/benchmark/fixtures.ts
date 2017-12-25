@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as fs from 'fs-extra';
+import fs = require('fs-extra');
 
 function writeFixtureFiles(basedir: string): void {
 	['txt', 'md'].forEach((extension) => fs.writeFileSync(`${basedir}/file.${extension}`, ''));

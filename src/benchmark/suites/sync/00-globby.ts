@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as globby from 'globby';
+import globby = require('globby');
 
 import { IOptions } from 'glob';
 

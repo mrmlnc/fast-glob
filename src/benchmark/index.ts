@@ -1,5 +1,5 @@
-import * as minimist from 'minimist';
-import * as rimraf from 'rimraf';
+import minimist = require('minimist');
+import rimraf = require('rimraf');
 
 import * as fixtures from './fixtures';
 import * as logger from './logger';

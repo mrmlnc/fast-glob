@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import * as glob from 'bash-glob';
-import * as micromatch from 'micromatch';
+import glob = require('bash-glob');
+import micromatch = require('micromatch');
 
 const patterns: string[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
 
