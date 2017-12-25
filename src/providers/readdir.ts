@@ -5,13 +5,14 @@ import readdir = require('readdir-enhanced');
 
 import { IOptions } from '../managers/options';
 import { TEntryItem } from '../types/entries';
+import { TPattern } from '../types/patterns';
 import { ITask } from '../utils/task';
 
 function isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
 	return err.code === 'ENOENT';
 }
 
-function filter(entry: readdir.IEntry, patterns: string[], options: IOptions): boolean {
+function filter(entry: readdir.IEntry, patterns: TPattern[], options: IOptions): boolean {
 	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirs && !entry.isDirectory())) {
 		return false;
 	}

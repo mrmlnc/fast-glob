@@ -1,17 +1,18 @@
 import globParent = require('glob-parent');
 
 import { IOptions } from '../managers/options';
+import { TPattern, TPatternsGroup } from '../types/patterns';
 
 export interface ITask {
 	base: string;
-	patterns: string[];
+	patterns: TPattern[];
 }
 
-export function generateTasks(patterns: string[], options: IOptions): ITask[] {
+export function generateTasks(patterns: TPattern[], options: IOptions): ITask[] {
 	const tasks: ITask[] = [];
-	const parents: Record<string, string[]> = {};
+	const parents: TPatternsGroup = {};
 
-	const negativePatterns: string[] = (<string[]>options.ignore);
+	const negativePatterns: TPattern[] = (<TPattern[]>options.ignore);
 
 	// Compose patterns by common grounds
 	patterns.forEach((pattern) => {
@@ -37,7 +38,7 @@ export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 	});
 
 	Object.keys(parents).forEach((parent) => {
-		const negative: string[] = [];
+		const negative: TPattern[] = [];
 
 		negativePatterns.forEach((pattern) => {
 			let gPattern = pattern;
@@ -53,7 +54,7 @@ export function generateTasks(patterns: string[], options: IOptions): ITask[] {
 
 		tasks.push({
 			base: parent,
-			patterns: ([] as string[]).concat(parents[parent], negative)
+			patterns: ([] as TPattern[]).concat(parents[parent], negative)
 		});
 	});
 

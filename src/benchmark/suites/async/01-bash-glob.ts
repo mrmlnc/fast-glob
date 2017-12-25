@@ -3,7 +3,9 @@ import * as path from 'path';
 import glob = require('bash-glob');
 import micromatch = require('micromatch');
 
-const patterns: string[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
+import { TPattern } from '../../../types/patterns';
+
+const patterns: TPattern[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
 
 const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),

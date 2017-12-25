@@ -47,7 +47,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 	} as IOptions, options);
 
 	if (!Array.isArray(opts.ignore)) {
-		opts.ignore = ([] as string[]).concat(opts.ignore);
+		opts.ignore = ([] as TPattern[]).concat(opts.ignore);
 	}
 
 	return opts;

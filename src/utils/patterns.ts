@@ -1,9 +1,11 @@
-export function isNegative(pattern: string): boolean {
+import { TPattern } from '../types/patterns';
+
+export function isNegative(pattern: TPattern): boolean {
 	return pattern[0] === '!';
 }
 
-export function getNegativeAsPositive(patterns: string[]): string[] {
-	const results: string[] = [];
+export function getNegativeAsPositive(patterns: TPattern[]): TPattern[] {
+	const results: TPattern[] = [];
 
 	for (const pattern of patterns) {
 		if (isNegative(pattern)) {
