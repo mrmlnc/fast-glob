@@ -27,7 +27,7 @@ interface ISuitePackResults {
 
 type TMatches = number;
 type TTime = number;
-type TSuiteResults = [TTime, TMatches];
+type TSuiteResults = [TMatches, TTime];
 
 function getPaddedSuiteName(maxSuitePathLength: number, suite: string): string {
 	return suite + ' '.repeat(maxSuitePathLength - suite.length);
