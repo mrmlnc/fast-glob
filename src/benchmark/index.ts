@@ -21,11 +21,11 @@ logger.head('Create fixtures');
 fixtures.makeFixtures(BASE_BENCHMARK_PATH, LEVEL);
 logger.newline();
 
-logger.head(`Benchmark (runs: ${RUNS}) (async)`);
+logger.head(`Benchmark for ${LEVEL} levels (runs: ${RUNS}) (async)`);
 runner.runSuites(BASE_BENCHMARK_PATH, 'async', RUNS, MAX_STDEV, MAX_RETRIES);
 logger.newline();
 
-logger.head(`Benchmark (runs: ${RUNS}) (sync)`);
+logger.head(`Benchmark for ${LEVEL} levels (runs: ${RUNS}) (sync)`);
 runner.runSuites(BASE_BENCHMARK_PATH, 'sync', RUNS, MAX_STDEV, MAX_RETRIES);
 logger.newline();
 
