@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as task from './task';
 
-import { IOptions } from '../fglob';
+import { IOptions } from '../managers/options';
 
 describe('Utils/Task', () => {
 

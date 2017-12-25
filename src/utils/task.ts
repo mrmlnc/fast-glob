@@ -1,6 +1,6 @@
 import globParent = require('glob-parent');
 
-import { IOptions } from '../fglob';
+import { IOptions } from '../managers/options';
 
 export interface ITask {
 	base: string;

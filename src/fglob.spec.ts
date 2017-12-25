@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import fglob, { IOptions, sync } from './fglob';
+import fglob, { sync } from './fglob';
 
+import { IOptions } from './managers/options';
 import { TEntry } from './types/entries';
 
 const fixtures = [

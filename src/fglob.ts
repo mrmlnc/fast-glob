@@ -1,20 +1,10 @@
+import * as optionsManager from './managers/options';
 import * as readdir from './providers/readdir';
 import * as task from './utils/task';
 
-import { IEntry } from 'readdir-enhanced';
 import { TEntryItem } from './types/entries';
 
-export interface IOptions {
-	deep: number | boolean;
-	cwd: string;
-	stats: boolean;
-	ignore: string | string[];
-	onlyFiles: boolean;
-	onlyDirs: boolean;
-	transform: <T>(entry: string | IEntry) => T;
-}
-
-export type IPartialOptions = Partial<IOptions>;
+import { IOptions, IPartialOptions } from './managers/options';
 
 interface IInputAPI {
 	patterns: string[];
@@ -23,29 +13,9 @@ interface IInputAPI {
 }
 
 function prepareInput(source: string | string[], options?: IPartialOptions): IInputAPI {
-	const patterns: string[] = ([] as string[]).concat(source);
-
-	const opts: IOptions = Object.assign({
-		cwd: process.cwd(),
-		deep: true,
-		stats: false,
-		onlyFiles: false,
-		onlyDirs: false,
-		transform: undefined
-	}, options) as IOptions;
-
-	if (!opts.cwd) {
-		opts.cwd = process.cwd();
-	}
-	if (!opts.ignore) {
-		opts.ignore = [];
-	} else if (opts.ignore) {
-		opts.ignore = ([] as string[]).concat(opts.ignore);
-	}
-
 	return {
-		patterns,
-		options: opts,
+		patterns: ([] as string[]).concat(source),
+		options: optionsManager.prepare(options),
 		api: readdir
 	};
 }

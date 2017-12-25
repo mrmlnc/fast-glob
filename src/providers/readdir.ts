@@ -3,7 +3,7 @@ import * as path from 'path';
 import micromatch = require('micromatch');
 import readdir = require('readdir-enhanced');
 
-import { IOptions } from '../fglob';
+import { IOptions } from '../managers/options';
 import { TEntryItem } from '../types/entries';
 import { ITask } from '../utils/task';
 
@@ -55,7 +55,7 @@ export function sync(task: ITask, options: IOptions): TEntryItem[] {
 			sep: '/'
 		});
 
-		return options.transform ? (entries as TEntryItem[]).map((entry) => options.transform(entry)) : entries;
+		return (entries as TEntryItem[]).map((entry) => options.transform ? options.transform(entry) : entry);
 	} catch (err) {
 		if (isEnoentCodeError(err)) {
 			return [];

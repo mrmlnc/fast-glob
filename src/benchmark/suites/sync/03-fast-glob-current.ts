@@ -1,6 +1,8 @@
 import * as path from 'path';
 
-import { IPartialOptions, sync } from '../../../fglob';
+import { sync } from '../../../fglob';
+
+import { IPartialOptions } from '../../../managers/options';
 
 const options: IPartialOptions = {
 	onlyFiles: true,
