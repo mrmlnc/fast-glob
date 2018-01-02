@@ -4,9 +4,9 @@ import micromatch = require('micromatch');
 import readdir = require('readdir-enhanced');
 
 import { IOptions } from '../managers/options';
+import { ITask } from '../managers/tasks';
 import { TEntryItem } from '../types/entries';
 import { TPattern } from '../types/patterns';
-import { ITask } from '../utils/task';
 
 function isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
 	return err.code === 'ENOENT';
