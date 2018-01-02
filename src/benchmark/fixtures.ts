@@ -1,21 +1,25 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
-import fs = require('fs-extra');
-
 function writeFixtureFiles(basedir: string): void {
-	['a.txt', 'b.md', 'c.txt', 'd.md', 'e.txt'].forEach((extension) => fs.writeFileSync(`${basedir}/file.${extension}`, ''));
+	for (let i = 0; i < 5; i++) {
+		const extension = i % 2 === 0 ? 'txt' : 'md';
+
+		fs.writeFileSync(`${basedir}/file-${i}.${extension}`, '');
+	}
 }
 
-export function makeFixtures(basedir: string, levelOfNesting: number): void {
+export function makeFixtures(basedir: string, depth: number): void {
 	let currentLevelDir = basedir;
 
 	fs.mkdirSync(currentLevelDir);
 
-	for (let level = 0; level < levelOfNesting; level++) {
+	for (let level = 0; level < depth; level++) {
 		currentLevelDir = path.join(currentLevelDir, level.toString());
 
-		fs.mkdirpSync(currentLevelDir + '-a');
-		fs.mkdirpSync(currentLevelDir + '-b');
+		fs.mkdirSync(currentLevelDir);
+		fs.mkdirSync(currentLevelDir + '-a');
+		fs.mkdirSync(currentLevelDir + '-b');
 
 		writeFixtureFiles(currentLevelDir + '-a');
 		writeFixtureFiles(currentLevelDir + '-b');

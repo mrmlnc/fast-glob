@@ -1,116 +1,166 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import stdev = require('compute-stdev');
 import execa = require('execa');
 
-const FRACTION_DIGITS: number = 3;
+import Reporter from './reporter';
+import * as utils from './utils';
 
-interface ISuiteMeasures {
-	min: number;
-	max: number;
-	raw: number[];
+export interface IRunnerOptions {
+	/**
+	 * The directory from which you want to take suites.
+	 */
+	type: 'sync' | 'async';
+	/**
+	 * The number of nested directories.
+	 */
+	depth: number;
+	/**
+	 * The number of runs for each suite.
+	 */
+	launches: number;
+	/**
+	 * The maximum allowable deviation in percent.
+	 */
+	maxStdev: number;
+	/**
+	 * The number of retries before giving the result, if the current deviation is greater than specified in `maxStdev`.
+	 */
+	retries: number;
 }
 
-interface ISuiteTimes extends ISuiteMeasures {
+export interface ISuiteMeasures {
+	matches: number;
+	time: number;
+	memory: number;
+}
+
+export interface IMeasure {
+	units: string;
+	raw: number[];
 	average: number;
 	stdev: number;
 }
 
-interface ISuitePackResults {
-	suite: string;
+export interface ISuitePackMeasures extends Record<string, IMeasure> {
+	time: IMeasure;
+	memory: IMeasure;
+}
+
+export interface ISuitePackResult {
+	name: string;
 	errors: number;
-	times: ISuiteTimes;
-	matches: ISuiteMeasures;
-	index: number;
+	entries: number;
+	retries: number;
+	measures: ISuitePackMeasures;
 }
 
-type TMatches = number;
-type TTime = number;
-type TSuiteResults = [TMatches, TTime];
+export default class Runner {
+	constructor(private readonly basedir: string, private readonly options: IRunnerOptions) { }
 
-function getPaddedSuiteName(maxSuitePathLength: number, suite: string): string {
-	return suite + ' '.repeat(maxSuitePathLength - suite.length);
-}
-
-function runSuiteOnce(cwd: string, suiteModulePath: string): TSuiteResults {
-	const env = {
-		NODE_ENV: 'production',
-		BENCHMARK_CWD: cwd
-	};
-
-	const { stdout } = execa.sync('node', [suiteModulePath], { env, extendEnv: true });
-
-	const matches = stdout.match(/(\d+(\.\d+)?)/g);
-
-	if (!matches) {
-		throw TypeError('Ops! Broken suite run.');
+	/**
+	 * Runs child process.
+	 */
+	public execNodeProcess(args: string[], options: Partial<execa.SyncOptions>): string {
+		return execa.sync('node', args, options).stdout;
 	}
 
-	return [parseFloat(matches[0]), parseFloat(matches[1])];
-}
+	/**
+	 * Runs a single suite in the child process and returns the measurements of his work.
+	 */
+	public suite(suitePath: string): ISuiteMeasures {
+		const env: Record<string, string> = {
+			NODE_ENV: 'production',
+			BENCHMARK_CWD: this.basedir
+		};
 
-function runSuitePack(cwd: string, suite: string, suiteModulePath: string, countOfRuns: number, launches: number): ISuitePackResults {
-	const results: ISuitePackResults = {
-		suite,
-		errors: 0,
-		matches: { min: 0, max: 0, raw: [] },
-		times: { min: 0, max: 0, average: 0, stdev: 0, raw: [] },
-		index: launches + 1
-	};
+		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
 
-	for (let i = 0; i < countOfRuns; i++) {
 		try {
-			const result = runSuiteOnce(cwd, suiteModulePath);
-
-			results.matches.raw.push(result[0]);
-			results.times.raw.push(result[1]);
+			return JSON.parse(stdout) as ISuiteMeasures;
 		} catch {
-			results.errors++;
-
-			results.matches.raw.push(0);
-			results.times.raw.push(0);
+			throw new TypeError('Ops! Broken suite run.');
 		}
 	}
 
-	results.matches.min = Math.min.apply(null, results.matches.raw);
-	results.matches.max = Math.max.apply(null, results.matches.raw);
+	/**
+	 * Runs a pack of suites.
+	 */
+	public suitePack(suitePath: string, retries: number): ISuitePackResult {
+		const results: ISuitePackResult = {
+			name: path.basename(suitePath),
+			errors: 0,
+			entries: 0,
+			retries: retries + 1,
+			measures: this.getSuitePackMeasures()
+		};
 
-	results.times.min = Math.min.apply(null, results.times.raw);
-	results.times.max = Math.max.apply(null, results.times.raw);
+		for (let i = 0; i < this.options.launches; i++) {
+			try {
+				const { matches, time, memory } = this.suite(suitePath);
 
-	results.times.average = results.times.raw.reduce((a, b) => a + b, 0) / countOfRuns;
-	results.times.stdev = stdev(results.times.raw);
+				results.entries = matches;
 
-	return results;
-}
+				results.measures.time.raw.push(time);
+				results.measures.memory.raw.push(memory);
+			} catch {
+				results.errors++;
 
-export function runSuites(basedir: string, mode: 'async' | 'sync', countOfRuns: number, maxStdev: number, retries: number): void {
-	const suitesPath = path.join(__dirname, 'suites', mode);
-	const suites = fs.readdirSync(suitesPath).filter((suite) => suite.endsWith('.js'));
-
-	const maxSuitePathLength = Math.max.apply(null, suites.map((suite) => suite.length));
-
-	for (const filepath of suites) {
-		const suiteName = path.basename(filepath);
-		const suitePath = path.join(suitesPath, filepath);
-
-		let result = runSuitePack(basedir, suiteName, suitePath, countOfRuns, 0);
-
-		const paddedSuiteName = getPaddedSuiteName(maxSuitePathLength, result.suite);
-		const isBrokenSuite: boolean = result.matches.min !== result.matches.max;
-
-		while (result.times.stdev > maxStdev && result.index < retries) {
-			result = runSuitePack(basedir, suiteName, suitePath, countOfRuns, result.index);
+				results.measures.time.raw.push(0);
+				results.measures.memory.raw.push(0);
+			}
 		}
 
-		const report = [
-			`${isBrokenSuite ? 'x ' : ''}SUITE ${paddedSuiteName} –`,
-			`${result.times.average.toFixed(FRACTION_DIGITS)}ms \xb1${result.times.stdev.toFixed(FRACTION_DIGITS)}%`,
-			`(min: ${result.times.min.toFixed(FRACTION_DIGITS)}ms) (max: ${result.times.max.toFixed(FRACTION_DIGITS)}ms)`,
-			`(matches: ${result.matches.min}) (launches: ${result.index}) (err: ${result.errors})`
-		].join(' ');
+		results.measures = {
+			time: this.getMeasures(results.measures.time.raw, 'ms'),
+			memory: this.getMeasures(results.measures.memory.raw, 'MB')
+		};
+
+		return results;
+	}
+
+	public report(result: ISuitePackResult): void {
+		const reporter = new Reporter(result);
+
+		const report = reporter.toString();
 
 		console.log(report);
+	}
+
+	public packs(): void {
+		const suitesPath: string = path.join(__dirname, 'suites', this.options.type);
+		const suites: string[] = this.getSuites(suitesPath);
+
+		for (const filepath of suites) {
+			const suitePath: string = path.join(suitesPath, filepath);
+
+			let result = this.suitePack(suitePath, 0);
+
+			while (result.measures.time.stdev > this.options.maxStdev && result.retries < this.options.retries) {
+				result = this.suitePack(suitePath, result.retries);
+			}
+
+			this.report(result);
+		}
+	}
+
+	public getSuites(suitesPath: string): string[] {
+		return fs.readdirSync(suitesPath).filter((suite) => suite.endsWith('.js'));
+	}
+
+	private getMeasures(raw: number[], units: string): IMeasure {
+		return {
+			units,
+			raw,
+			average: utils.getAverageValue(raw),
+			stdev: utils.getStdev(raw)
+		};
+	}
+
+	private getSuitePackMeasures(): ISuitePackMeasures {
+		return {
+			time: this.getMeasures([], 'ms'),
+			memory: this.getMeasures([], 'MB')
+		};
 	}
 }

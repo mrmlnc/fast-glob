@@ -3,37 +3,36 @@ import rimraf = require('rimraf');
 
 import * as fixtures from './fixtures';
 import * as logger from './logger';
-import * as runner from './runner';
+import Runner, { IRunnerOptions } from './runner';
 
-const argv = minimist(process.argv.slice(2));
+interface IArgv extends IRunnerOptions {
+	basedir: string;
+}
 
-const BASE_BENCHMARK_PATH: string = '.benchmark';
-const LEVEL: number = argv.level || 50;
-const RUNS: number = argv.runs || 100;
-const MAX_STDEV: number = argv.stdev || 5;
-const MAX_RETRIES: number = argv.retries || 5;
-const ASYNC_MODE: number = argv.sync || true;
-const SYNC_MODE: number = argv.sync || false;
+const argv = minimist<IArgv>(process.argv.slice(2), {
+	default: {
+		basedir: '.benchmark',
+		type: 'async',
+		depth: 1,
+		launches: 10,
+		maxStdev: 3,
+		retries: 5
+	} as IArgv
+});
+
+const runner = new Runner(argv.basedir, argv);
 
 logger.head('Remove olded fixtures');
-rimraf.sync(BASE_BENCHMARK_PATH);
+rimraf.sync(argv.basedir);
 logger.newline();
 
 logger.head('Create fixtures');
-fixtures.makeFixtures(BASE_BENCHMARK_PATH, LEVEL);
+fixtures.makeFixtures(argv.basedir, argv.depth);
 logger.newline();
 
-if (ASYNC_MODE) {
-	logger.head(`Benchmark for ${LEVEL} levels (runs: ${RUNS}) (async)`);
-	runner.runSuites(BASE_BENCHMARK_PATH, 'async', RUNS, MAX_STDEV, MAX_RETRIES);
-	logger.newline();
-}
-
-if (SYNC_MODE) {
-	logger.head(`Benchmark for ${LEVEL} levels (runs: ${RUNS}) (sync)`);
-	runner.runSuites(BASE_BENCHMARK_PATH, 'sync', RUNS, MAX_STDEV, MAX_RETRIES);
-	logger.newline();
-}
+logger.head(`Benchmark for ${argv.depth} depth and ${argv.launches} launches (${argv.type})`);
+logger.newline();
+runner.packs();
 
 logger.head('Remove fixtures');
-rimraf.sync(BASE_BENCHMARK_PATH);
+rimraf.sync(argv.basedir);

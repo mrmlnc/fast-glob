@@ -2,6 +2,8 @@ import * as path from 'path';
 
 import { sync } from '../../../fglob';
 
+import * as utils from '../../utils';
+
 import { IPartialOptions } from '../../../managers/options';
 
 const options: IPartialOptions = {
@@ -9,14 +11,15 @@ const options: IPartialOptions = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string)
 };
 
-console.time('timer');
+const timeStart = utils.timeStart();
 
 try {
 	const matches = sync(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options);
+	const memory = utils.getMemory();
+	const time = utils.timeEnd(timeStart);
+	const measures = utils.getMeasures(matches.length, time, memory);
 
-	console.info('files: ' + matches.length);
-	console.timeEnd('timer');
-} catch (err) {
-	console.error(err);
+	console.info(measures);
+} catch {
 	process.exit(0);
 }

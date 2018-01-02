@@ -2,20 +2,24 @@ import * as path from 'path';
 
 import glob, { IOptions } from 'fast-glob';
 
+import * as utils from '../../utils';
+
 const options: IOptions = {
 	bashNative: [],
 	onlyFiles: true,
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string)
 };
 
-console.time('timer');
+const timeStart = utils.timeStart();
 
 glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
 	.then((matches) => {
-		console.info('files: ' + matches.length);
-		console.timeEnd('timer');
+		const memory = utils.getMemory();
+		const time = utils.timeEnd(timeStart);
+		const measures = utils.getMeasures(matches.length, time, memory);
+
+		console.info(measures);
 	})
-	.catch((err) => {
-		console.error(err);
+	.catch(() => {
 		process.exit(0);
 	});

@@ -3,6 +3,8 @@ import * as path from 'path';
 import glob = require('bash-glob');
 import micromatch = require('micromatch');
 
+import * as utils from '../../utils';
+
 import { TPattern } from '../../../types/patterns';
 
 const patterns: TPattern[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
@@ -12,17 +14,20 @@ const options: glob.Options = {
 	globstar: true
 };
 
-console.time('timer');
+const timeStart = utils.timeStart();
 
-glob(patterns, options, (err, matches) => {
+glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options, (err, matches) => {
+	const memory = utils.getMemory();
+
 	if (err) {
-		console.error(err);
 		process.exit(0);
 	}
 
 	// The bash-glob package does not support negative patterns
 	const entries = micromatch(matches, patterns);
 
-	console.info('files: ' + entries.length);
-	console.timeEnd('timer');
+	const time = utils.timeEnd(timeStart);
+	const measures = utils.getMeasures(entries.length, time, memory);
+
+	console.info(measures);
 });
