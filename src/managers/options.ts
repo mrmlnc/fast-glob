@@ -26,7 +26,7 @@ export interface IOptions {
 	/**
 	 * Return only directories.
 	 */
-	onlyDirs: boolean;
+	onlyDirectories: boolean;
 	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
@@ -42,7 +42,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		ignore: [],
 		stats: false,
 		onlyFiles: false,
-		onlyDirs: false,
+		onlyDirectories: false,
 		transform: null
 	}, options);
 }

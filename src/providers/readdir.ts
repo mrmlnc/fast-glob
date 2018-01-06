@@ -13,7 +13,7 @@ function isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
 }
 
 function filter(entry: readdir.IEntry, patterns: TPattern[], options: IOptions): boolean {
-	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirs && !entry.isDirectory())) {
+	if ((options.onlyFiles && !entry.isFile()) || (options.onlyDirectories && !entry.isDirectory())) {
 		return false;
 	}
 	if (micromatch([entry.path], patterns).length !== 0) {

@@ -114,8 +114,8 @@ describe('FastGlob', () => {
 				].sort());
 			});
 
-			it('onlyDirs', async () => {
-				const files = await fglob('.tmp/**/*', { onlyDirs: true } as IOptions);
+			it('onlyDirectories', async () => {
+				const files = await fglob('.tmp/**/*', { onlyDirectories: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/nested'
@@ -214,8 +214,8 @@ describe('FastGlob', () => {
 				].sort());
 			});
 
-			it('onlyDirs', () => {
-				const files = sync('.tmp/**/*', { onlyDirs: true } as IOptions);
+			it('onlyDirectories', () => {
+				const files = sync('.tmp/**/*', { onlyDirectories: true } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/nested'

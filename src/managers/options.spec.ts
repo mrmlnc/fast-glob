@@ -11,7 +11,7 @@ describe('Managers → Options', () => {
 				ignore: [],
 				stats: false,
 				onlyFiles: false,
-				onlyDirs: false,
+				onlyDirectories: false,
 				transform: null
 			};
 
@@ -27,7 +27,7 @@ describe('Managers → Options', () => {
 				ignore: [],
 				stats: true,
 				onlyFiles: false,
-				onlyDirs: false,
+				onlyDirectories: false,
 				transform: null
 			};
 
