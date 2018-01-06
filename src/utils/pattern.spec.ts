@@ -4,7 +4,7 @@ import * as util from './pattern';
 
 import { TPattern } from '../types/patterns';
 
-describe('Utils → Patterns', () => {
+describe('Utils → Pattern', () => {
 	describe('.convertToPositivePattern', () => {
 		it('should returns converted positive pattern', () => {
 			const expected: TPattern = '*.js';
