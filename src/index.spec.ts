@@ -62,4 +62,47 @@ describe('Package', () => {
 			assert.deepEqual(actual.sort(), expected);
 		});
 	});
+
+	describe('.stream', () => {
+		it('should retruns entries', (done) => {
+			const expected: TEntryItem[] = [
+				'fixtures/file.md',
+				'fixtures/first/file.md',
+				'fixtures/first/nested/file.md',
+				'fixtures/second/file.md',
+				'fixtures/second/nested/file.md'
+			];
+
+			const actual: TEntryItem[] = [];
+
+			const stream = pkg.stream(['fixtures/**/*.md']);
+
+			stream.on('data', (entry) => actual.push(entry));
+			stream.on('error', (err) => assert.fail(err));
+			stream.on('end', () => {
+				assert.deepEqual(actual.sort(), expected);
+				done();
+			});
+		});
+
+		it('should retruns entries (two sources)', (done) => {
+			const expected: TEntryItem[] = [
+				'fixtures/first/file.md',
+				'fixtures/first/nested/file.md',
+				'fixtures/second/file.md',
+				'fixtures/second/nested/file.md'
+			];
+
+			const actual: TEntryItem[] = [];
+
+			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
+
+			stream.on('data', (entry) => actual.push(entry));
+			stream.on('error', (err) => assert.fail(err));
+			stream.on('end', () => {
+				assert.deepEqual(actual.sort(), expected);
+				done();
+			});
+		});
+	});
 });

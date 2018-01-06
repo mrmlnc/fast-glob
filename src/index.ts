@@ -1,8 +1,11 @@
+import merge2 = require('merge2');
+
 import * as optionsManager from './managers/options';
 import * as taskManager from './managers/tasks';
 
 import Reader from './providers/reader';
 import ReaderAsync from './providers/reader-async';
+import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 
 import { IOptions, IPartialOptions } from './managers/options';
@@ -45,4 +48,13 @@ export function async(source: TPattern | TPattern[], opts?: IPartialOptions): Pr
 	const works = getWorks<Promise<TEntryItem[]>>(source, ReaderAsync, opts);
 
 	return Promise.all(works).then(flatten);
+}
+
+/**
+ * Stream API.
+ */
+export function stream(source: TPattern | TPattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
+	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
+
+	return merge2(works);
 }
