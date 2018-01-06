@@ -12,9 +12,9 @@ export interface IOptions {
 	 */
 	deep: number | boolean;
 	/**
-	 * Add a pattern or an array of glob patterns to exclude matches.
+	 * Add an array of glob patterns to exclude matches.
 	 */
-	ignore: TPattern | TPattern[];
+	ignore: TPattern[];
 	/**
 	 * Return `fs.Stats` with `path` property instead of file path.
 	 */
@@ -36,7 +36,7 @@ export interface IOptions {
 export type IPartialOptions = Partial<IOptions>;
 
 export function prepare(options?: IPartialOptions): IOptions {
-	const opts: IOptions = Object.assign({
+	return Object.assign({
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
@@ -44,11 +44,5 @@ export function prepare(options?: IPartialOptions): IOptions {
 		onlyFiles: false,
 		onlyDirs: false,
 		transform: null
-	} as IOptions, options);
-
-	if (!Array.isArray(opts.ignore)) {
-		opts.ignore = ([] as TPattern[]).concat(opts.ignore);
-	}
-
-	return opts;
+	}, options);
 }

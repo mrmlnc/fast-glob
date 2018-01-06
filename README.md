@@ -58,7 +58,7 @@ console.log(files); // ['dir/a.txt', ...]
 |:------------:|:-----------------:|:---------------------:|:------------|
 | `cwd`        | `String`          | `process.cwd`         | The current working directory in which to search |
 | `deep`       | `Number\|Boolean`  | `true`                | The deep option can be set to true to traverse the entire directory structure, or it can be set to a number to only traverse that many levels deep. |
-| `ignore`     | `String\|String[]` | `[]`                  | Add a pattern or an array of glob patterns to exclude matches. |
+| `ignore`     | `String[]` | `[]`                  | Add an array of glob patterns to exclude matches. |
 | `stats`      | `Boolean`         | `false`               | Return `fs.Stats` with `path` property instead of file path. |
 | `onlyFiles`  | `Boolean`         | `false`               | Return only files. |
 | `onlyDirs`   | `Boolean`         | `false`               | Return only directories. |

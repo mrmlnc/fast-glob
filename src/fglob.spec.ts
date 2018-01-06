@@ -67,7 +67,7 @@ describe('FastGlob', () => {
 
 		describe('Options', () => {
 			it('ignore', async () => {
-				const files = await fglob('.tmp/**/*', { ignore: '.tmp/**/*.txt' } as IOptions);
+				const files = await fglob('.tmp/**/*', { ignore: ['.tmp/**/*.txt'] } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
@@ -167,7 +167,7 @@ describe('FastGlob', () => {
 
 		describe('Options', () => {
 			it('ignore', () => {
-				const files = sync('.tmp/**/*', { ignore: '.tmp/**/*.txt' } as IOptions);
+				const files = sync('.tmp/**/*', { ignore: ['.tmp/**/*.txt'] } as IOptions);
 
 				assert.deepEqual(files.sort(), [
 					'.tmp/.f',
