@@ -41,6 +41,7 @@ console.log(files); // ['dir/a.txt', ...]
 ## API
 
 ### fastGlob(patterns, [options])
+### fastGlob.async(patterns, [options])
 
   * patterns `String|String[]` Patterns to be matched
   * options `Object`

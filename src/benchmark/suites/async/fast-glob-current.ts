@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import glob from '../../../fglob';
+import * as glob from '../../../fglob';
 
 import * as utils from '../../utils';
 
@@ -13,7 +13,7 @@ const options: IPartialOptions = {
 
 const timeStart = utils.timeStart();
 
-glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
+glob.async(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

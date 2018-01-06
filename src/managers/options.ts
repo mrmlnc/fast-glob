@@ -1,6 +1,8 @@
 import { TEntryItem } from '../types/entries';
 import { TPattern } from '../types/patterns';
 
+export type TTransformFunction<T> = (entry: TEntryItem) => T;
+
 export interface IOptions {
 	/**
 	 * The current working directory in which to search.
@@ -30,7 +32,7 @@ export interface IOptions {
 	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
-	transform: (<T>(entry: TEntryItem) => T) | null;
+	transform: TTransformFunction<TEntryItem> | null;
 }
 
 export type IPartialOptions = Partial<IOptions>;
