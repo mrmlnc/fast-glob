@@ -36,7 +36,7 @@ export interface IOptions {
 export type IPartialOptions = Partial<IOptions>;
 
 export function prepare(options?: IPartialOptions): IOptions {
-	return Object.assign({
+	return Object.assign<IOptions, IPartialOptions | undefined>({
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
