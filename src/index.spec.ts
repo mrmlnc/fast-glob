@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import * as pkg from './fglob';
+import * as pkg from './index';
 
 import { TEntryItem } from './types/entries';
 

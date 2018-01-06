@@ -1,4 +1,4 @@
-const pkg = require('./out/fglob');
+const pkg = require('./out/index');
 
 module.exports = pkg.async;
 module.exports.default = pkg.async;

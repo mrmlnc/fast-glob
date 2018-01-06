@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as glob from '../../../fglob';
+import * as glob from '../../../index';
 
 import * as utils from '../../utils';
 
