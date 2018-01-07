@@ -182,7 +182,26 @@ However, be aware that it may not work as you expect in case where inside the `s
 
 ## Compatible with `node-glob`?
 
-Not fully, because `fast-glob` not implements all options of `node-glob`.
+Not fully, because `fast-glob` not implements all options of `node-glob`. See table below.
+
+| node-glob    | fast-glob |
+| :----------: | :-------: |
+| `cwd`        | [`cwd`](https://github.com/mrmlnc/fast-glob#cwd) |
+| `root`       | – |
+| `dot`        | [`dot`](https://github.com/mrmlnc/fast-glob#dot) |
+| `nomount`    | – |
+| `nosort`     | – |
+| `nounique`   | – |
+| `nobrace`    | – |
+| `noglobstar` | – |
+| `noext`      | – |
+| `nocase`     | – |
+| `matchBase`  | – |
+| `nodir`      | [`onlyFiles`](https://github.com/mrmlnc/fast-glob#onlyfiles) |
+| `ignore`     | [`ignore`](https://github.com/mrmlnc/fast-glob#ignore) |
+| `follow`     | – |
+| `realpath`   | – |
+| `absolute`   | – |
 
 ## Benchmarks
 
