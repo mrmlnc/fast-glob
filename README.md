@@ -154,6 +154,23 @@ console.log(entries1); // ['a.scss', 'b.scss']
 console.log(entries2); // ['_a.scss', '_b.scss']
 ```
 
+**TypeScript Example**
+
+If you are using TypeScript, you probably want to specify your own type of the returned array.
+
+```ts
+import * as fg from 'fast-glob';
+
+interface IEntry {
+	path: string;
+}
+
+const entries: IEntry[] = fg.sync<IEntry>(['*.md'], {
+	transform: (entry) => typeof entry === 'string' ? { path: entry } : { path: entry.path }
+	// Will throw compilation error for non-IEntry types (boolean, for example)
+});
+```
+
 ## How to exclude directory from reading?
 
 You can use a negative pattern like this: `!**/node_modules`. Also you can use `ignore` option. Just look at the example below.

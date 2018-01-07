@@ -1,19 +1,22 @@
-/// <reference path="./typings/readdir-enhanced.d.ts" />
-
-import { IPartialOptions } from './out/managers/options';
-import { TEntryItem } from './out/types/entries';
+import { TTransformFunction, IPartialOptions } from './out/managers/options';
+import { TEntry, TEntryItem } from './out/types/entries';
 import { TPattern } from './out/types/patterns';
 
 declare namespace FastGlob {
-	export interface IApi {
-		(patterns: TPattern | TPattern[], options?: IPartialOptions): Promise<TEntryItem[]>;
+	type Entry = TEntry;
+	type EntryItem = TEntryItem;
+	type TransformFunction<T> = TTransformFunction<T>;
 
-		async(patterns: TPattern | TPattern[], options?: IPartialOptions): Promise<TEntryItem[]>;
-		sync(patterns:TPattern |  TPattern[], options?: IPartialOptions): TEntryItem[];
+	interface IApi {
+		<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): Promise<T[]>;
+
+		async<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): Promise<T[]>;
+		sync<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): T[];
 		stream(patterns: TPattern | TPattern[], options?: IPartialOptions): NodeJS.ReadableStream;
 	}
 }
 
-declare const api: FastGlob.IApi;
+declare const FastGlob: FastGlob.IApi;
 
-export = api;
+export = FastGlob;
+export as namespace FastGlob;

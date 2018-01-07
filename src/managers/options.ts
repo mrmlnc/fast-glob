@@ -3,7 +3,7 @@ import { TPattern } from '../types/patterns';
 
 export type TTransformFunction<T> = (entry: TEntryItem) => T;
 
-export interface IOptions {
+export interface IOptions<T = TEntryItem> {
 	/**
 	 * The current working directory in which to search.
 	 */
@@ -37,10 +37,10 @@ export interface IOptions {
 	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
-	transform: TTransformFunction<TEntryItem> | null;
+	transform: TTransformFunction<T> | null;
 }
 
-export type IPartialOptions = Partial<IOptions>;
+export type IPartialOptions<T = TEntryItem> = Partial<IOptions<T>>;
 
 export function prepare(options?: IPartialOptions): IOptions {
 	return Object.assign<IOptions, IPartialOptions | undefined>({
