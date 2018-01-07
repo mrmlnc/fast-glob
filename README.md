@@ -154,9 +154,7 @@ console.log(entries1); // ['a.scss', 'b.scss']
 console.log(entries2); // ['_a.scss', '_b.scss']
 ```
 
-**TypeScript Example**
-
-If you are using TypeScript, you probably want to specify your own type of the returned array.
+If you are using **TypeScript**, you probably want to specify your own type of the returned array.
 
 ```ts
 import * as fg from 'fast-glob';
