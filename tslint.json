@@ -2,6 +2,7 @@
 	"extends": ["tslint-config-mrmlnc"],
 	"rules": {
 		"no-require-imports": false,
-		"match-default-export-name": false
+		"match-default-export-name": false,
+		"max-file-line-count": false
 	}
 }
