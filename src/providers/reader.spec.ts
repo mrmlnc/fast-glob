@@ -178,6 +178,34 @@ describe('Providers → Reader', () => {
 
 			assert.ok(actual);
 		});
+
+		it('should returns false for files that starting with a period', () => {
+			const options: IOptions = optionsManager.prepare();
+			const reader = new TestReader(options);
+
+			const entry = getEntry({
+				path: 'fixtures/.file.md',
+				isFile: () => true
+			});
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(!actual);
+		});
+
+		it('should returns true for files that starting with a period if set "dot" option', () => {
+			const options: IOptions = optionsManager.prepare({ dot: true });
+			const reader = new TestReader(options);
+
+			const entry = getEntry({
+				path: 'fixtures/.file.md',
+				isFile: () => true
+			});
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(actual);
+		});
 	});
 
 	describe('.deep', () => {
@@ -233,6 +261,34 @@ describe('Providers → Reader', () => {
 			const actual = reader.deep(entry, ['**/nested']);
 
 			assert.ok(!actual);
+		});
+
+		it('should returns false for directories that starting with a period', () => {
+			const options: IOptions = optionsManager.prepare();
+			const reader = new TestReader(options);
+
+			const entry = getEntry({
+				path: 'fixtures/.dot',
+				isDirectory: () => true
+			});
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(!actual);
+		});
+
+		it('should returns true for directories that starting with a period if set "dot" option', () => {
+			const options: IOptions = optionsManager.prepare({ dot: true });
+			const reader = new TestReader(options);
+
+			const entry = getEntry({
+				path: 'fixtures/.dot',
+				isDirectory: () => true
+			});
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(actual);
 		});
 	});
 

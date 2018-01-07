@@ -18,6 +18,11 @@ export interface IOptions {
 	 */
 	ignore: TPattern[];
 	/**
+	 * Allow patterns to match filenames starting with a period (files & directories),
+	 * even if the pattern does not explicitly have a period in that spot.
+	 */
+	dot: boolean;
+	/**
 	 * Return `fs.Stats` with `path` property instead of file path.
 	 */
 	stats: boolean;
@@ -42,6 +47,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
+		dot: false,
 		stats: false,
 		onlyFiles: true,
 		onlyDirectories: false,

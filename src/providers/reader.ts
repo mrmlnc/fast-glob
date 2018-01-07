@@ -50,7 +50,9 @@ export default abstract class Reader {
 		}
 
 		// Filter by patterns
-		return micromatch([entry.path], patterns).length !== 0;
+		const entries = micromatch([entry.path], patterns, { dot: this.options.dot });
+
+		return entries.length !== 0;
 	}
 
 	/**

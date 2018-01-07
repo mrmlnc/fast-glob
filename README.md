@@ -109,6 +109,13 @@ The deep option can be set to `true` to traverse the entire directory structure,
 
 An array of glob patterns to exclude matches.
 
+#### dot
+
+  * Type: `boolean`
+  * Default: `false`
+
+Allow patterns to match filenames starting with a period (files & directories), even if the pattern does not explicitly have a period in that spot.
+
 #### stats
 
   * Type: `number|boolean`
