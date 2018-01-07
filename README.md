@@ -1,6 +1,17 @@
-# fast-glob
+# :rocket: fast-glob
 
-> Is a faster (1.5-4x for most cases) `node-glob` alternative.
+> Is a faster [`node-glob`](https://github.com/isaacs/node-glob) alternative.
+
+[![Build Status](https://travis-ci.org/mrmlnc/fast-glob.svg?branch=master)](https://travis-ci.org/mrmlnc/fast-glob)
+[![Build status](https://ci.appveyor.com/api/projects/status/i4xqijtq26qf6o9d?svg=true)](https://ci.appveyor.com/project/mrmlnc/fast-glob)
+
+## :bulb: Highlights
+
+  * :rocket: Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
+  * :beginner: User-friendly by supports multiple and negated patterns (`['*', '!*.md']`).
+  * :vertical_traffic_light: Rational, because it doesn't read excluded directories (`!**/node_modules`).
+  * :gear: Universal, because it supports Synchronous, Promise and Stream API.
+  * :money_with_wings: Economy, because it provides `fs.Stats` for matched path if you wanted.
 
 ## Donate
 
@@ -13,141 +24,176 @@ If you want to thank me, or promote your Issue.
 ## Install
 
 ```
-$ npm i fast-glob
+$ npm install --save fast-glob
 ```
-
-## Why?
-
-  * Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
-  * You can limit the depth of your search.
-  * You can get not only file paths, but also their `fs.Stats` objects with the additional `path` property.
-  * You can transform file path or `fs.Stats` object before sending it to an array of results.
 
 ## Usage
 
+#### Asynchronous
+
 ```js
-const fastGlob = require('fast-glob');
+const fg = require('fast-glob');
 
-// Async
-fastGlob('dir/**/*.txt').then((files) => {
-  console.log(files); // ['dir/a.txt', ...]
-});
+fg(['src/**/*.js', '!src/**/*.spec.js']).then((entries) => console.log(entries));
+fg.async(['src/**/*.js', '!src/**/*.spec.js']).then((entries) => console.log(entries));
+```
 
-// Sync
-const files = fastGlob.sync('dir/**/*.txt');
-console.log(files); // ['dir/a.txt', ...]
+#### Synchronous
+
+```js
+const fg = require('fast-glob');
+
+const entries = fg.sync(['src/**/*.js', '!src/**/*.spec.js']);
+console.log(entries);
+```
+
+#### Stream
+
+```js
+const fg = require('fast-glob');
+
+const stream = fg.stream(['src/**/*.js', '!src/**/*.spec.js']);
+
+const entries = [];
+
+stream.on('data', (entry) => entries.push(entry));
+stream.once('error', console.log);
+stream.once('end', () => console.log(entries));
 ```
 
 ## API
 
-### fastGlob(patterns, [options])
-### fastGlob.async(patterns, [options])
+### fg(patterns, [options])
+### fg.async(patterns, [options])
 
-  * patterns `String|String[]` Patterns to be matched
-  * options `Object`
-  * return `String[]` or `fs.Stats[]` with `path` property
+Returns a `Promise<Array>` of matching entries.
 
-### fastGlob.sync(patterns, [options]) => []
+#### patterns
 
-  * patterns `String|String[]` Patterns to be matched
-  * options `Object`
-  * return `String[]` or `fs.Stats[]` with `path` property
+  * Type: `string|string[]`
 
-## options
+#### options
 
-| Option            | Type              | Default       | Description |
-|:-----------------:|:-----------------:|:-------------:|:------------|
-| `cwd`             | `String`          | `process.cwd` | The current working directory in which to search |
-| `deep`            | `Number\|Boolean` | `true`        | The deep option can be set to true to traverse the entire directory structure, or it can be set to a number to only traverse that many levels deep. |
-| `ignore`          | `String[]` | `[]`                 | Add an array of glob patterns to exclude matches. |
-| `stats`           | `Boolean`         | `false`       | Return `fs.Stats` with `path` property instead of file path. |
-| `onlyFiles`       | `Boolean`         | `false`       | Return only files. |
-| `onlyDirectories` | `Boolean`         | `false`       | Return only directories. |
-| `transform`       | `Function`        | `null`        | Allows you to transform a path or `fs.Stats` object before sending to the array. |
+  * Type: `Object`
+
+See [options](https://github.com/mrmlnc/fast-glob#Options) section for more detailed information.
+
+### fg.sync(patterns, [options])
+
+Returns a `Array` of matching entries.
+
+### fg.stream(patterns, [options])
+
+Returns a [`ReadableStream`](https://nodejs.org/api/stream.html#stream_readable_streams).
+
+## Options
+
+#### cwd
+
+  * Type: `string`
+  * Default: `process.cwd()`
+
+The current working directory in which to search.
+
+#### deep
+
+  * Type: `number|boolean`
+  * Default: `true`
+
+The deep option can be set to `true` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep.
+
+#### ignore
+
+  * Type: `string[]`
+  * Default: `[]`
+
+An array of glob patterns to exclude matches.
+
+#### stats
+
+  * Type: `number|boolean`
+  * Default: `false`
+
+Return `fs.Stats` with `path` property instead of file path.
+
+#### onlyFiles
+
+  * Type: `boolean`
+  * Default: `false`
+
+Return only files.
+
+#### onlyDirectories
+
+  * Type: `boolean`
+  * Default: `false`
+
+Return only directories.
+
+#### transform
+
+  * Type: `Function`
+  * Default: `null`
+
+Allows you to transform a path or `fs.Stats` object before sending to the array.
+
+```js
+const fg = require('fast-glob');
+
+const entries1 = fg.sync(['**/*.scss']);
+const entries2 = fg.sync(['**/*.scss'], { transform: (entry) => '_' + entry });
+
+console.log(entries1); // ['a.scss', 'b.scss']
+console.log(entries2); // ['_a.scss', '_b.scss']
+```
+
+## How to exclude directory from reading?
+
+You can use a negative pattern like this: `!**/node_modules`. Also you can use `ignore` option. Just look at the example below.
+
+  * **first/**
+    * **second/**
+      * file.md
+    * file.md
+
+If you don't want to read the `second` directory, you must write the following pattern: `!**/second`.
+
+```js
+fg.sync(['**/*.md', '!**/second']); // ['first/file.txt']
+fg.sync(['**/*.md'], { ignore: '**/second' }); // ['first/file.txt']
+```
+
+> :warning: When you write `!**/second/**` it means that the directory will be **read**, but all the entries will not be included in the results.
+
+You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
+
+```js
+fg.sync(['**/*.txt', '!**/second', 'first/second/**/*.txt']); // ['first/file.txt', 'first/second/file.txt']
+```
+
+However, be aware that it may not work as you expect in case where inside the `second` directory there is a directory matching to the pattern for exluding directory. Yes, sounds complicated. Simpler: the `second` directory inside the `second` directory.
 
 ## Compatible with `node-glob`?
 
 Not fully, because `fast-glob` not implements all options of `node-glob`.
 
-## Example for `transform` option
-
-```js
-fastGlob('dir/**/*.txt', { transform: readFilePromise }).then((files) => {
-  console.log(files); // ['dir/a.txt', ...]
-  return Promise.all(files);
-}).then((files) => {
-  console.log(files); // ['content from dir/a.txt', ...]
-});
-```
-
-## Benchmark
+## Benchmarks
 
 **Tech specs:**
 
-  * MacBook Pro (Retina, 13-inch, Early 2015)
-    * Intel Core i5
-    * RAM 16GB
-    * Node.js v9.3.0
+  * Processor: 2 ⅹ E5-2660 (32 core)
+  * RAM: 64GB
+  * Disk: RAMDisk
 
-```shell
-$ npm run bench
+You can see results [here](https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c) for latest release.
 
-==============================
-Benchmark for 10 files
-==============================
+## Related
 
-bash (     10): 16 ms
-node-glob (10): 6.149452 ms
-fast-glob (10): 16.535819 ms
-
-==============================
-Benchmark for 50 files
-==============================
-
-bash (     54): 13 ms
-node-glob (54): 14.236377 ms
-fast-glob (54): 20.976846 ms
-
-==============================
-Benchmark for 100 files
-==============================
-
-bash (     109): 12 ms
-node-glob (109): 23.248501 ms
-fast-glob (109): 18.061438 ms
-
-==============================
-Benchmark for 500 files
-==============================
-
-bash (     549): 21 ms
-node-glob (549): 63.018853 ms
-fast-glob (549): 33.51311 ms
-
-==============================
-Benchmark for 1000 files
-==============================
-
-bash (     1099): 22 ms
-node-glob (1099): 117.887727 ms
-fast-glob (1099): 53.68764 ms
-
-==============================
-Benchmark for 5000 files
-==============================
-
-bash (     5499): 62 ms
-node-glob (5499): 541.683609 ms
-fast-glob (5499): 195.488406 ms
-
-==============================
-Benchmark for 10000 files
-==============================
-
-bash (     10999): 118 ms
-node-glob (10999): 1074.123839 ms
-fast-glob (10999): 319.520454 ms
-```
+  * [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) – Fast functional replacement for `fs.readdir()`.
+  * [globby](https://github.com/sindresorhus/globby) – User-friendly glob matching.
+  * [node-glob](https://github.com/isaacs/node-glob) – «Standard» glob functionality for Node.js
+  * [bash-glob](https://github.com/micromatch/bash-glob) – Bash-powered globbing for node.js.
+  * [glob-stream](https://github.com/gulpjs/glob-stream) – A Readable Stream interface over node-glob that used in the [gulpjs](https://github.com/gulpjs/gulp).
 
 ## Changelog
 
