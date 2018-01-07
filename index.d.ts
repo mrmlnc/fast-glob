@@ -1,3 +1,5 @@
+/// <reference path="./typings/readdir-enhanced.d.ts" />
+
 import { IPartialOptions } from './out/managers/options';
 import { TEntryItem } from './out/types/entries';
 import { TPattern } from './out/types/patterns';
