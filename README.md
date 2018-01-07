@@ -214,7 +214,7 @@ Not fully, because `fast-glob` not implements all options of `node-glob`. See ta
 | `matchBase`  | – |
 | `nodir`      | [`onlyFiles`](https://github.com/mrmlnc/fast-glob#onlyfiles) |
 | `ignore`     | [`ignore`](https://github.com/mrmlnc/fast-glob#ignore) |
-| `follow`     | – |
+| `follow`     | by default |
 | `realpath`   | – |
 | `absolute`   | – |
 
