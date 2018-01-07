@@ -19,5 +19,4 @@ out/**/*.spec.js
 .tmp
 .benchmark
 src
-typings
 node_modules
