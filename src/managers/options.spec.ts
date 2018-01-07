@@ -10,7 +10,7 @@ describe('Managers → Options', () => {
 				deep: true,
 				ignore: [],
 				stats: false,
-				onlyFiles: false,
+				onlyFiles: true,
 				onlyDirectories: false,
 				transform: null
 			};
@@ -26,7 +26,7 @@ describe('Managers → Options', () => {
 				deep: true,
 				ignore: [],
 				stats: true,
-				onlyFiles: false,
+				onlyFiles: true,
 				onlyDirectories: false,
 				transform: null
 			};

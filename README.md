@@ -119,7 +119,7 @@ Return `fs.Stats` with `path` property instead of file path.
 #### onlyFiles
 
   * Type: `boolean`
-  * Default: `false`
+  * Default: `true`
 
 Return only files.
 

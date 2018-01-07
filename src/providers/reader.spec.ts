@@ -106,6 +106,21 @@ describe('Providers → Reader', () => {
 			assert.ok(!actual);
 		});
 
+		it('should returns true for directories if "onlyFiles" option is disabled', () => {
+			const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+			const reader = new TestReader(options);
+
+			const entry = getEntry({
+				path: 'fixtures/nested',
+				isFile: () => false,
+				isDirectory: () => true
+			});
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(actual);
+		});
+
 		it('should returns false for directories if set "onlyFiles" options', () => {
 			const options: IOptions = optionsManager.prepare({ onlyFiles: true });
 			const reader = new TestReader(options);

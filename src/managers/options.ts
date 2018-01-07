@@ -43,7 +43,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		deep: true,
 		ignore: [],
 		stats: false,
-		onlyFiles: false,
+		onlyFiles: true,
 		onlyDirectories: false,
 		transform: null
 	}, options);
