@@ -47,10 +47,10 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
-    "glob-parent": "^3.1.0",
-    "merge2": "^1.2.1",
-    "micromatch": "^3.1.5",
-    "readdir-enhanced": "^2.2.0"
+    "glob-parent": "3.1.0",
+    "merge2": "1.2.1",
+    "micromatch": "3.1.5",
+    "readdir-enhanced": "2.2.0"
   },
   "scripts": {
     "clean": "rimraf out",
