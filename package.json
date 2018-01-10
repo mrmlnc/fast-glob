@@ -22,7 +22,7 @@
   "devDependencies": {
     "@types/bash-glob": "^2.0.0",
     "@types/compute-stdev": "^1.0.0",
-    "@types/execa": "^0.8.0",
+    "@types/execa": "^0.8.1",
     "@types/glob": "^5.0.34",
     "@types/glob-parent": "^3.1.0",
     "@types/glob-stream": "^6.1.0",
@@ -30,8 +30,8 @@
     "@types/merge2": "^1.1.4",
     "@types/micromatch": "^3.1.0",
     "@types/minimist": "^1.2.0",
-    "@types/mocha": "^2.2.44",
-    "@types/node": "^8.5.2",
+    "@types/mocha": "^2.2.46",
+    "@types/node": "^9.3.0",
     "@types/rimraf": "2.0.2",
     "bash-glob": "^2.0.0",
     "compute-stdev": "^1.0.0",
@@ -40,7 +40,7 @@
     "glob-stream": "^6.1.0",
     "globby": "^7.1.1",
     "minimist": "^1.2.0",
-    "mocha": "^4.0.1",
+    "mocha": "^4.1.0",
     "rimraf": "^2.6.2",
     "tslint": "^5.8.0",
     "tslint-config-mrmlnc": "^1.0.0",
@@ -48,9 +48,9 @@
   },
   "dependencies": {
     "glob-parent": "^3.1.0",
-    "merge2": "^1.2.0",
-    "micromatch": "^3.1.4",
-    "readdir-enhanced": "^2.1.0"
+    "merge2": "^1.2.1",
+    "micromatch": "^3.1.5",
+    "readdir-enhanced": "^2.2.0"
   },
   "scripts": {
     "clean": "rimraf out",
