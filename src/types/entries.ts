@@ -1,7 +1,10 @@
-/* tslint:disable-next-line: no-reference */
-/// <reference path="../../typings/readdir-enhanced.d.ts" />
+import * as fs from 'fs';
 
-import { IEntry } from 'readdir-enhanced';
+// Must be synchronized with readdir-enhanced
+export interface IEntry extends fs.Stats {
+	path: string;
+	depth: number;
+}
 
 export type TEntryItem = string | IEntry;
 export type TEntry = IEntry;

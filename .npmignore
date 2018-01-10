@@ -20,3 +20,4 @@ out/**/*.spec.js
 .benchmark
 src
 node_modules
+typings
