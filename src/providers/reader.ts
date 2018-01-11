@@ -45,7 +45,7 @@ export default abstract class Reader {
 		}
 
 		// Filter files and directories by options
-		if ((this.options.onlyFiles && !entry.isFile()) || (this.options.onlyDirectories && !entry.isDirectory())) {
+		if (this.filterByFileType(entry) || this.filterByDirectoryType(entry)) {
 			return false;
 		}
 
@@ -93,5 +93,19 @@ export default abstract class Reader {
 		const lastPathPartial: string = pathPartials[pathPartials.length - 1];
 
 		return lastPathPartial.startsWith('.');
+	}
+
+	/**
+	 * Returns true for directories if the «onlyFiles» option is enabled.
+	 */
+	private filterByFileType(entry: IEntry): boolean {
+		return this.options.onlyFiles && !entry.isFile();
+	}
+
+	/**
+	 * Returns true for files if the «onlyDirectories» option is enabled.
+	 */
+	private filterByDirectoryType(entry: IEntry): boolean {
+		return this.options.onlyDirectories && !entry.isDirectory();
 	}
 }
