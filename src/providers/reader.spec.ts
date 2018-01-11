@@ -289,25 +289,25 @@ describe('Providers → Reader', () => {
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
-				path: 'fixtures/.dot',
+				path: 'fixtures/.directory',
 				isDirectory: () => true
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			const actual = reader.deep(entry, []);
 
 			assert.ok(!actual);
 		});
 
-		it('should returns true for directories that starting with a period if set "dot" option', () => {
-			const options: IOptions = optionsManager.prepare({ dot: true, onlyFiles: false });
+		it('should returns true for directories that starting with a period if «dot» option is enabled', () => {
+			const options: IOptions = optionsManager.prepare({ dot: true });
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
-				path: 'fixtures/.dot',
+				path: 'fixtures/.directory',
 				isDirectory: () => true
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			const actual = reader.deep(entry, []);
 
 			assert.ok(actual);
 		});
@@ -329,6 +329,33 @@ describe('Providers → Reader', () => {
 			const error = new Error();
 
 			const actual = reader.isEnoentCodeError(error);
+
+			assert.ok(!actual);
+		});
+	});
+
+	describe('.isDotDirectory', () => {
+		const options: IOptions = optionsManager.prepare();
+		const reader = new TestReader(options);
+
+		it('should returns true', () => {
+			const entry = getEntry({
+				path: 'fixtures/.directory',
+				isDirectory: () => true
+			});
+
+			const actual = reader.isDotDirectory(entry);
+
+			assert.ok(actual);
+		});
+
+		it('should returns false', () => {
+			const entry = getEntry({
+				path: 'fixtures/directory',
+				isDirectory: () => true
+			});
+
+			const actual = reader.isDotDirectory(entry);
 
 			assert.ok(!actual);
 		});
