@@ -14,8 +14,9 @@ import { Entry } from '../types/entries';
 
 function getEntry(entry?: Partial<Entry>): Entry {
 	return Object.assign({
+		isFile: () => false,
 		isDirectory: () => false,
-		isFile: () => true,
+		isSymbolicLink: () => false,
 		path: 'path',
 		depth: 1
 	} as Entry, entry);
@@ -112,7 +113,6 @@ describe('Providers → Reader', () => {
 
 			const entry = getEntry({
 				path: 'fixtures/nested',
-				isFile: () => false,
 				isDirectory: () => true
 			});
 
@@ -127,21 +127,24 @@ describe('Providers → Reader', () => {
 
 			const entry = getEntry({
 				path: 'fixtures/nested',
-				isFile: () => false
+				isDirectory: () => true
 			});
 
-			const actual = reader.filter(entry, [], []);
+			const actual = reader.filter(entry, ['**/*'], []);
 
 			assert.ok(!actual);
 		});
 
 		it('should returns false for files if set "onlyDirectories" options', () => {
-			const options: IOptions = optionsManager.prepare({ onlyDirectories: true });
+			const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: true });
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested' });
+			const entry = getEntry({
+				path: 'fixtures/nested',
+				isFile: () => true
+			});
 
-			const actual = reader.filter(entry, [], []);
+			const actual = reader.filter(entry, ['**/*'], []);
 
 			assert.ok(!actual);
 		});
@@ -150,7 +153,10 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested/file.md' });
+			const entry = getEntry({
+				path: 'fixtures/nested/file.md',
+				isFile: () => true
+			});
 
 			const actual = reader.filter(entry, ['**/*.txt'], []);
 
@@ -161,7 +167,10 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested/file.md' });
+			const entry = getEntry({
+				path: 'fixtures/nested/file.md',
+				isFile: () => true
+			});
 
 			const actual = reader.filter(entry, ['**/*', '!**/*.md'], ['**/*.md']);
 
@@ -172,7 +181,10 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested/file.md' });
+			const entry = getEntry({
+				path: 'fixtures/nested/file.md',
+				isFile: () => true
+			});
 
 			const actual = reader.filter(entry, ['**/*.md'], []);
 
@@ -214,7 +226,7 @@ describe('Providers → Reader', () => {
 			const reader = new TestReader(options);
 
 			const entry = getEntry();
-			const actual = reader.deep(entry, []);
+			const actual = reader.deep(entry, ['**/*']);
 
 			assert.ok(!actual);
 		});
@@ -225,10 +237,11 @@ describe('Providers → Reader', () => {
 
 			const entry = getEntry({
 				path: 'a/b/c',
+				isDirectory: () => true,
 				depth: 3
 			});
 
-			const actual = reader.deep(entry, []);
+			const actual = reader.deep(entry, ['**/*']);
 
 			assert.ok(!actual);
 		});
@@ -247,7 +260,11 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested' });
+			const entry = getEntry({
+				path: 'fixtures/nested',
+				isDirectory: () => true
+			});
+
 			const actual = reader.deep(entry, ['**/nested/**']);
 
 			assert.ok(actual);
@@ -257,7 +274,11 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry({ path: 'fixtures/nested' });
+			const entry = getEntry({
+				path: 'fixtures/nested',
+				isDirectory: () => true
+			});
+
 			const actual = reader.deep(entry, ['**/nested']);
 
 			assert.ok(!actual);
@@ -278,7 +299,7 @@ describe('Providers → Reader', () => {
 		});
 
 		it('should returns true for directories that starting with a period if set "dot" option', () => {
-			const options: IOptions = optionsManager.prepare({ dot: true });
+			const options: IOptions = optionsManager.prepare({ dot: true, onlyFiles: false });
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
