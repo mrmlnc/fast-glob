@@ -3,13 +3,13 @@ import * as assert from 'assert';
 import * as optionsManager from './options';
 import * as manager from './tasks';
 
-import { TPatternsGroup } from '../types/patterns';
-import { ITask, TTaskGroup } from './tasks';
+import { PatternsGroup } from '../types/patterns';
+import { ITask, TaskGroup } from './tasks';
 
 describe('Managers → Task', () => {
 	describe('.groupPatternsByParentDirectory', () => {
 		it('should returns grouped patterns by base directory', () => {
-			const expected: TPatternsGroup = {
+			const expected: PatternsGroup = {
 				'.': ['*.js'],
 				root: ['root/*.md']
 			};
@@ -22,7 +22,7 @@ describe('Managers → Task', () => {
 
 	describe('.makePositiveTaskGroup', () => {
 		it('should returns positive task group', () => {
-			const expected: TTaskGroup = {
+			const expected: TaskGroup = {
 				a: {
 					base: 'a',
 					patterns: ['a/*.txt', 'a/*.md'],
@@ -39,7 +39,7 @@ describe('Managers → Task', () => {
 
 	describe('.makeNegativeTaskGroup', () => {
 		it('should returns positive task group', () => {
-			const expected: TTaskGroup = {
+			const expected: TaskGroup = {
 				a: {
 					base: 'a',
 					patterns: ['!a/*.txt', '!a/*.md'],
@@ -56,7 +56,7 @@ describe('Managers → Task', () => {
 
 	describe('.mergeTaskGroups', () => {
 		it('should returns merged positive and negative task group', () => {
-			const positive: TTaskGroup = {
+			const positive: TaskGroup = {
 				a: {
 					base: 'a',
 					patterns: ['a/**/*'],
@@ -65,7 +65,7 @@ describe('Managers → Task', () => {
 				}
 			};
 
-			const negative: TTaskGroup = {
+			const negative: TaskGroup = {
 				a: {
 					base: 'a',
 					patterns: ['!a/**/*.txt'],
@@ -74,7 +74,7 @@ describe('Managers → Task', () => {
 				}
 			};
 
-			const expected: TTaskGroup = {
+			const expected: TaskGroup = {
 				a: {
 					base: 'a',
 					patterns: ['a/**/*', '!a/**/*.txt'],

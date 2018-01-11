@@ -10,15 +10,15 @@ import * as optionsManager from '../managers/options';
 import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
-import { TEntry } from '../types/entries';
+import { Entry } from '../types/entries';
 
-function getEntry(entry?: Partial<TEntry>): TEntry {
+function getEntry(entry?: Partial<Entry>): Entry {
 	return Object.assign({
 		isDirectory: () => false,
 		isFile: () => true,
 		path: 'path',
 		depth: 1
-	} as TEntry, entry);
+	} as Entry, entry);
 }
 
 class TestReader extends Reader {

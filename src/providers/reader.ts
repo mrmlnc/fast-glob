@@ -6,7 +6,7 @@ import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
 import { IEntry, IReaddirOptions } from 'readdir-enhanced';
-import { TPattern } from '../types/patterns';
+import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
 	constructor(public readonly options: IOptions) { }
@@ -38,7 +38,7 @@ export default abstract class Reader {
 	/**
 	 * Returns true if entry must be added to result.
 	 */
-	public filter(entry: IEntry, patterns: TPattern[], negative: TPattern[]): boolean {
+	public filter(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
 		// Filter directories that will be excluded by deep filter
 		if (entry.isDirectory() && micromatch.any(entry.path, negative)) {
 			return false;
@@ -58,7 +58,7 @@ export default abstract class Reader {
 	/**
 	 * Returns true if directory must be read.
 	 */
-	public deep(entry: IEntry, negative: TPattern[]): boolean {
+	public deep(entry: IEntry, negative: Pattern[]): boolean {
 		if (this.options.deep === false) {
 			return false;
 		}

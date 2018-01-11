@@ -9,8 +9,8 @@ import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 
 import { IOptions, IPartialOptions } from './managers/options';
-import { TEntryItem } from './types/entries';
-import { TPattern } from './types/patterns';
+import { EntryItem } from './types/entries';
+import { Pattern } from './types/patterns';
 
 /**
  * Flatten nested arrays (max depth is 2) into a non-nested array of non-array items.
@@ -22,8 +22,8 @@ export function flatten<T>(items: T[][]): T[] {
 /**
  * Returns a set of works based on provided tasks and class of the reader.
  */
-function getWorks<T>(source: TPattern | TPattern[], _Reader: new (options: IOptions) => Reader, opts?: IPartialOptions): T[] {
-	const patterns = ([] as TPattern[]).concat(source);
+function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader, opts?: IPartialOptions): T[] {
+	const patterns = ([] as Pattern[]).concat(source);
 	const options = optionsManager.prepare(opts);
 
 	const tasks = taskManager.generate(patterns, options);
@@ -35,8 +35,8 @@ function getWorks<T>(source: TPattern | TPattern[], _Reader: new (options: IOpti
 /**
  * Synchronous API.
  */
-export function sync(source: TPattern | TPattern[], opts?: IPartialOptions): TEntryItem[] {
-	const works = getWorks<TEntryItem[]>(source, ReaderSync, opts);
+export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
+	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
 
 	return flatten(works);
 }
@@ -44,8 +44,8 @@ export function sync(source: TPattern | TPattern[], opts?: IPartialOptions): TEn
 /**
  * Asynchronous API.
  */
-export function async(source: TPattern | TPattern[], opts?: IPartialOptions): Promise<TEntryItem[]> {
-	const works = getWorks<Promise<TEntryItem[]>>(source, ReaderAsync, opts);
+export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Promise<EntryItem[]> {
+	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, opts);
 
 	return Promise.all(works).then(flatten);
 }
@@ -53,7 +53,7 @@ export function async(source: TPattern | TPattern[], opts?: IPartialOptions): Pr
 /**
  * Stream API.
  */
-export function stream(source: TPattern | TPattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
+export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
 
 	return merge2(works);

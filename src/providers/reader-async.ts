@@ -3,7 +3,7 @@ import * as readdir from 'readdir-enhanced';
 import Reader from './reader';
 
 import { ITask } from '../managers/tasks';
-import { TEntryItem } from '../types/entries';
+import { EntryItem } from '../types/entries';
 
 export default class ReaderAsync extends Reader {
 	/**
@@ -34,11 +34,11 @@ export default class ReaderAsync extends Reader {
 	/**
 	 * Use sync API to read entries for Task.
 	 */
-	public read(task: ITask): Promise<TEntryItem[]> {
+	public read(task: ITask): Promise<EntryItem[]> {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
 
-		const entries: TEntryItem[] = [];
+		const entries: EntryItem[] = [];
 
 		return new Promise((resolve, reject) => {
 			const stream: NodeJS.ReadableStream = this.getStream(root, options);

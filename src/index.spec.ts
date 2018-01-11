@@ -2,12 +2,12 @@ import * as assert from 'assert';
 
 import * as pkg from './index';
 
-import { TEntryItem } from './types/entries';
+import { EntryItem } from './types/entries';
 
 describe('Package', () => {
 	describe('.sync', () => {
 		it('should returns entries', () => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
@@ -21,7 +21,7 @@ describe('Package', () => {
 		});
 
 		it('should returns entries (two sources)', () => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
@@ -36,7 +36,7 @@ describe('Package', () => {
 
 	describe('.async', () => {
 		it('should returns entries', async () => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
@@ -50,7 +50,7 @@ describe('Package', () => {
 		});
 
 		it('should returns entries (two sources)', async () => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
@@ -65,7 +65,7 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should retruns entries', (done) => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
@@ -73,7 +73,7 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: TEntryItem[] = [];
+			const actual: EntryItem[] = [];
 
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
@@ -86,14 +86,14 @@ describe('Package', () => {
 		});
 
 		it('should retruns entries (two sources)', (done) => {
-			const expected: TEntryItem[] = [
+			const expected: EntryItem[] = [
 				'fixtures/first/file.md',
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: TEntryItem[] = [];
+			const actual: EntryItem[] = [];
 
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 

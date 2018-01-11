@@ -2,12 +2,12 @@ import * as assert from 'assert';
 
 import * as util from './pattern';
 
-import { TPattern } from '../types/patterns';
+import { Pattern } from '../types/patterns';
 
 describe('Utils → Pattern', () => {
 	describe('.convertToPositivePattern', () => {
 		it('should returns converted positive pattern', () => {
-			const expected: TPattern = '*.js';
+			const expected: Pattern = '*.js';
 
 			const actual = util.convertToPositivePattern('!*.js');
 
@@ -17,7 +17,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.convertToNegativePattern', () => {
 		it('should returns converted negative pattern', () => {
-			const expected: TPattern = '!*.js';
+			const expected: Pattern = '!*.js';
 
 			const actual = util.convertToNegativePattern('*.js');
 
@@ -55,7 +55,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.getNegativePatterns', () => {
 		it('should returns only negative patterns', () => {
-			const expected: TPattern[] = ['!*.spec.js'];
+			const expected: Pattern[] = ['!*.spec.js'];
 
 			const actual = util.getNegativePatterns(['*.js', '!*.spec.js', '*.ts']);
 
@@ -63,7 +63,7 @@ describe('Utils → Pattern', () => {
 		});
 
 		it('should returns empty array', () => {
-			const expected: TPattern[] = [];
+			const expected: Pattern[] = [];
 
 			const actual = util.getNegativePatterns(['*.js', '*.ts']);
 
@@ -73,7 +73,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.getPositivePatterns', () => {
 		it('should returns only positive patterns', () => {
-			const expected: TPattern[] = ['*.js', '*.ts'];
+			const expected: Pattern[] = ['*.js', '*.ts'];
 
 			const actual = util.getPositivePatterns(['*.js', '!*.spec.js', '*.ts']);
 
@@ -81,7 +81,7 @@ describe('Utils → Pattern', () => {
 		});
 
 		it('should returns empty array', () => {
-			const expected: TPattern[] = [];
+			const expected: Pattern[] = [];
 
 			const actual = util.getPositivePatterns(['!*.js', '!*.ts']);
 

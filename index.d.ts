@@ -1,18 +1,16 @@
 import { TTransformFunction, IPartialOptions } from './out/managers/options';
-import { TEntry, TEntryItem } from './out/types/entries';
-import { TPattern } from './out/types/patterns';
+import { Entry, EntryItem } from './out/types/entries';
+import { Pattern } from './out/types/patterns';
 
 declare namespace FastGlob {
-	type Entry = TEntry;
-	type EntryItem = TEntryItem;
 	type TransformFunction<T> = TTransformFunction<T>;
 
 	interface IApi {
-		<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): Promise<T[]>;
+		<T = EntryItem>(patterns: Pattern | Pattern[], options?: IPartialOptions<T>): Promise<T[]>;
 
-		async<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): Promise<T[]>;
-		sync<T = EntryItem>(patterns: TPattern | TPattern[], options?: IPartialOptions<T>): T[];
-		stream(patterns: TPattern | TPattern[], options?: IPartialOptions): NodeJS.ReadableStream;
+		async<T = EntryItem>(patterns: Pattern | Pattern[], options?: IPartialOptions<T>): Promise<T[]>;
+		sync<T = EntryItem>(patterns: Pattern | Pattern[], options?: IPartialOptions<T>): T[];
+		stream(patterns: Pattern | Pattern[], options?: IPartialOptions): NodeJS.ReadableStream;
 	}
 }
 

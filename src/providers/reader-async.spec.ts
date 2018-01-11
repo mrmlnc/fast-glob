@@ -9,18 +9,18 @@ import ReaderAsync from './reader-async';
 import * as optionsManager from '../managers/options';
 
 import { ITask } from '../managers/tasks';
-import { TEntry, TEntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/entries';
 
 class ReaderAsyncFake extends ReaderAsync {
 	public apiWithStat(): NodeJS.ReadableStream {
-		return this.fake({ path: 'fake' } as TEntry);
+		return this.fake({ path: 'fake' } as Entry);
 	}
 
 	public api(): NodeJS.ReadableStream {
 		return this.fake('fake');
 	}
 
-	public fake(value: TEntryItem, error?: Error | null): NodeJS.ReadableStream {
+	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
 		return new tests.FakeStream(value, error ? error : null, { encoding: 'utf-8', objectMode: true });
 	}
 }
@@ -70,7 +70,7 @@ describe('Providers → ReaderAsync', () => {
 			const options = optionsManager.prepare({ stats: true });
 			const reader = new ReaderAsyncFake(options);
 
-			const expected: TEntry[] = [{ path: 'fake' } as TEntry];
+			const expected: Entry[] = [{ path: 'fake' } as Entry];
 
 			const actual = await reader.read(task);
 

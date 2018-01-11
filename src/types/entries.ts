@@ -6,5 +6,5 @@ export interface IEntry extends fs.Stats {
 	depth: number;
 }
 
-export type TEntryItem = string | IEntry;
-export type TEntry = IEntry;
+export type EntryItem = string | IEntry;
+export type Entry = IEntry;

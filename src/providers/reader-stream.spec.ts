@@ -10,18 +10,18 @@ import * as optionsManager from '../managers/options';
 
 import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
-import { TEntry, TEntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/entries';
 
 class ReaderStreamFake extends ReaderStream {
 	public apiWithStat(): NodeJS.ReadableStream {
-		return this.fake({ path: 'fake' } as TEntry);
+		return this.fake({ path: 'fake' } as Entry);
 	}
 
 	public api(): NodeJS.ReadableStream {
 		return this.fake('fake');
 	}
 
-	public fake(value: TEntryItem, error?: Error | null): NodeJS.ReadableStream {
+	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
 		return new tests.FakeStream(value, error ? error : null, { encoding: 'utf-8', objectMode: true });
 	}
 }
@@ -41,16 +41,16 @@ class ReaderStreamFakeThrowErrno extends ReaderStreamFake {
 /**
  * Wrapper for easily testing Stream API.
  */
-const getEntries = (options: IOptions, task: ITask, api: typeof ReaderStreamFake): Promise<TEntryItem[]> => {
+const getEntries = (options: IOptions, task: ITask, api: typeof ReaderStreamFake): Promise<EntryItem[]> => {
 	return new Promise((resolve, reject) => {
-		const entries: TEntryItem[] = [];
+		const entries: EntryItem[] = [];
 
 		const reader = new api(options);
 
 		const stream = reader.read(task);
 
 		stream.on('error', reject);
-		stream.on('data', (entry: TEntryItem) => entries.push(entry));
+		stream.on('data', (entry: EntryItem) => entries.push(entry));
 		stream.on('end', () => resolve(entries));
 	});
 };
@@ -86,7 +86,7 @@ describe('Providers → ReaderStream', () => {
 		it('should returns entries (stats)', async () => {
 			const options = optionsManager.prepare({ stats: true });
 
-			const expected: TEntry[] = [{ path: 'fake' } as TEntry];
+			const expected: Entry[] = [{ path: 'fake' } as Entry];
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 

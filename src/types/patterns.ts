@@ -1,2 +1,2 @@
-export type TPattern = string;
-export type TPatternsGroup = Record<string, TPattern[]>;
+export type Pattern = string;
+export type PatternsGroup = Record<string, Pattern[]>;

@@ -1,52 +1,52 @@
 import globParent = require('glob-parent');
 
-import { TPattern } from '../types/patterns';
+import { Pattern } from '../types/patterns';
 
 /**
  * Returns negative pattern as positive pattern.
  */
-export function convertToPositivePattern(pattern: TPattern): TPattern {
+export function convertToPositivePattern(pattern: Pattern): Pattern {
 	return pattern.slice(1);
 }
 
 /**
  * Returns positive pattern as negative pattern.
  */
-export function convertToNegativePattern(pattern: TPattern): TPattern {
+export function convertToNegativePattern(pattern: Pattern): Pattern {
 	return '!' + pattern;
 }
 
 /**
  * Return true if provided pattern is negative pattern.
  */
-export function isNegativePattern(pattern: TPattern): boolean {
+export function isNegativePattern(pattern: Pattern): boolean {
 	return pattern.startsWith('!');
 }
 
 /**
  * Return true if provided pattern is positive pattern.
  */
-export function isPositivePattern(pattern: TPattern): boolean {
+export function isPositivePattern(pattern: Pattern): boolean {
 	return !isNegativePattern(pattern);
 }
 
 /**
  * Extracts negative patterns from array of patterns.
  */
-export function getNegativePatterns(patterns: TPattern[]): TPattern[] {
+export function getNegativePatterns(patterns: Pattern[]): Pattern[] {
 	return patterns.filter(isNegativePattern);
 }
 
 /**
  * Extracts positive patterns from array of patterns.
  */
-export function getPositivePatterns(patterns: TPattern[]): TPattern[] {
+export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 	return patterns.filter(isPositivePattern);
 }
 
 /**
  * Extract base directory from provided pattern.
  */
-export function getBaseDirectory(pattern: TPattern): string {
+export function getBaseDirectory(pattern: Pattern): string {
 	return globParent(pattern);
 }

@@ -6,13 +6,13 @@ import ReaderSync from './reader-sync';
 
 import * as optionsManager from '../managers/options';
 
-import { TTransformFunction } from '../managers/options';
+import { TransformFunction } from '../managers/options';
 import { ITask } from '../managers/tasks';
-import { TEntry } from '../types/entries';
+import { Entry } from '../types/entries';
 
 class ReaderSyncFake extends ReaderSync {
-	public apiWithStat(): TEntry[] {
-		return [{ path: 'fake' } as TEntry];
+	public apiWithStat(): Entry[] {
+		return [{ path: 'fake' } as Entry];
 	}
 
 	public api(): string[] {
@@ -65,7 +65,7 @@ describe('Providers → ReaderSync', () => {
 			const options = optionsManager.prepare({ stats: true });
 			const reader = new ReaderSyncFake(options);
 
-			const expected: TEntry[] = [{ path: 'fake' } as TEntry];
+			const expected: Entry[] = [{ path: 'fake' } as Entry];
 
 			const actual = reader.read(task);
 
@@ -73,7 +73,7 @@ describe('Providers → ReaderSync', () => {
 		});
 
 		it('should returns transformed entries', () => {
-			const transform: TTransformFunction<string> = () => 'cake';
+			const transform: TransformFunction<string> = () => 'cake';
 
 			const options = optionsManager.prepare({ transform });
 			const reader = new ReaderSyncFake(options);

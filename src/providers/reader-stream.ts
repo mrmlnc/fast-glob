@@ -6,7 +6,7 @@ import Reader from './reader';
 
 import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
-import { TEntryItem } from '../types/entries';
+import { EntryItem } from '../types/entries';
 
 class TransformStream extends stream.Transform {
 	constructor(private readonly options: IOptions) {
@@ -14,7 +14,7 @@ class TransformStream extends stream.Transform {
 	}
 
 	public _transform(chunk: string | Buffer, _encoding: string, callback: Function): void {
-		const entry: TEntryItem = Buffer.isBuffer(chunk) ? chunk.toString() : chunk;
+		const entry: EntryItem = Buffer.isBuffer(chunk) ? chunk.toString() : chunk;
 
 		callback(null, this.options.transform === null ? entry : this.options.transform(entry));
 	}

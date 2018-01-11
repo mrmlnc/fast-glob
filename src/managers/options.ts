@@ -1,9 +1,9 @@
-import { TEntryItem } from '../types/entries';
-import { TPattern } from '../types/patterns';
+import { EntryItem } from '../types/entries';
+import { Pattern } from '../types/patterns';
 
-export type TTransformFunction<T> = (entry: TEntryItem) => T;
+export type TransformFunction<T> = (entry: EntryItem) => T;
 
-export interface IOptions<T = TEntryItem> {
+export interface IOptions<T = EntryItem> {
 	/**
 	 * The current working directory in which to search.
 	 */
@@ -16,7 +16,7 @@ export interface IOptions<T = TEntryItem> {
 	/**
 	 * Add an array of glob patterns to exclude matches.
 	 */
-	ignore: TPattern[];
+	ignore: Pattern[];
 	/**
 	 * Allow patterns to match filenames starting with a period (files & directories),
 	 * even if the pattern does not explicitly have a period in that spot.
@@ -37,10 +37,10 @@ export interface IOptions<T = TEntryItem> {
 	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
-	transform: TTransformFunction<T> | null;
+	transform: TransformFunction<T> | null;
 }
 
-export type IPartialOptions<T = TEntryItem> = Partial<IOptions<T>>;
+export type IPartialOptions<T = EntryItem> = Partial<IOptions<T>>;
 
 export function prepare(options?: IPartialOptions): IOptions {
 	return Object.assign<IOptions, IPartialOptions | undefined>({

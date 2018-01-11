@@ -3,11 +3,11 @@ declare module "readdir-enhanced" {
 	import * as fs from 'fs';
 
 	namespace readdir {
-		type TFilterFunction = (stat: IEntry) => boolean;
-		type TReaddirFilterOption = string | RegExp | TFilterFunction;
-		type TReaddirDeepOption = boolean | number | RegExp | TFilterFunction;
+		type FilterFunction = (stat: IEntry) => boolean;
+		type ReaddirFilterOption = string | RegExp | FilterFunction;
+		type ReaddirDeepOption = boolean | number | RegExp | FilterFunction;
 
-		type TCallback<T> = null | undefined | ((err: NodeJS.ErrnoException, result: T) => void)
+		type Callback<T> = null | undefined | ((err: NodeJS.ErrnoException, result: T) => void)
 
 		interface IEntry extends fs.Stats {
 			path: string;
@@ -15,14 +15,14 @@ declare module "readdir-enhanced" {
 		}
 
 		interface IFileSystem {
-			readdir?: (path: string, callback: TCallback<string[]>) => void;
-			lstat?: (path: string, callback: TCallback<fs.Stats>) => void;
-			stat?: (path: string, callback: TCallback<fs.Stats>) => void;
+			readdir?: (path: string, callback: Callback<string[]>) => void;
+			lstat?: (path: string, callback: Callback<fs.Stats>) => void;
+			stat?: (path: string, callback: Callback<fs.Stats>) => void;
 		}
 
 		interface IReaddirOptions<T = any> {
-			filter?: TReaddirFilterOption;
-			deep?: TReaddirDeepOption;
+			filter?: ReaddirFilterOption;
+			deep?: ReaddirDeepOption;
 			sep?: string;
 			basePath?: string;
 			fs?: IFileSystem;
@@ -43,8 +43,8 @@ declare module "readdir-enhanced" {
 		}
 
 		// Callback
-		function async(root: string, callback: TCallback<string[]>): void;
-		function async(root: string, options: IReaddirOptions, callback: TCallback<string[]>): void;
+		function async(root: string, callback: Callback<string[]>): void;
+		function async(root: string, options: IReaddirOptions, callback: Callback<string[]>): void;
 
 		// Stream
 		function stream(root: string, options?: IReaddirOptions): NodeJS.ReadableStream;

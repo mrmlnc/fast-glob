@@ -5,9 +5,9 @@ import micromatch = require('micromatch');
 
 import * as utils from '../../utils';
 
-import { TPattern } from '../../../types/patterns';
+import { Pattern } from '../../../types/patterns';
 
-const patterns: TPattern[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
+const patterns: Pattern[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
 
 const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
