@@ -93,130 +93,250 @@ describe('Providers → Reader', () => {
 	});
 
 	describe('.filter', () => {
-		it('should returns false for excluded directory', () => {
-			const options: IOptions = optionsManager.prepare();
-			const reader = new TestReader(options);
+		describe('Excluding nested directories', () => {
+			it('should returns false for excluded directory', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			const entry = getEntry({
-				path: 'fixtures/nested',
-				isDirectory: () => true
+				const entry = getEntry({
+					path: 'fixtures/directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*', '!**/directory'], ['**/directory']);
+
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['!**/nested'], ['**/nested']);
+			it('should returns false for files in excluded directory', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
+				const entry = getEntry({
+					path: 'fixtures/directory/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*', '!**/directory/**'], ['**/directory/**']);
+
+				assert.ok(!actual);
+			});
 		});
 
-		it('should returns true for directories if "onlyFiles" option is disabled', () => {
-			const options: IOptions = optionsManager.prepare({ onlyFiles: false });
-			const reader = new TestReader(options);
+		describe('Excluding by «onlyFiles» options', () => {
+			it('should returns true for file when the «onlyFiles» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare();
+				const reader = new TestReader(options);
 
-			const entry = getEntry({
-				path: 'fixtures/nested',
-				isDirectory: () => true
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.txt'], []);
+
+				assert.ok(actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			it('should returns true for file when the «onlyFiles» option is disabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(actual);
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.txt'], []);
+
+				assert.ok(actual);
+			});
+
+			it('should returns false for directory when the «onlyFiles» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: true });
+				const reader = new TestReader(options);
+
+				const entry = getEntry({
+					path: 'fixtures/directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.txt'], []);
+
+				assert.ok(!actual);
+			});
+
+			it('should returns true for directory when the «onlyFiles» option is disabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
+
+				const entry = getEntry({
+					path: 'fixtures/directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
 		});
 
-		it('should returns false for directories if set "onlyFiles" options', () => {
-			const options: IOptions = optionsManager.prepare({ onlyFiles: true });
-			const reader = new TestReader(options);
+		describe('Excluding by «onlyDirectories» options', () => {
+			it('should returns false for file when the «onlyDirectories» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: true });
+				const reader = new TestReader(options);
 
-			const entry = getEntry({
-				path: 'fixtures/nested',
-				isDirectory: () => true
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.txt'], []);
+
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			it('should returns true for file when the «onlyDirectories» option is disabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: false });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.txt'], []);
+
+				assert.ok(actual);
+			});
+
+			it('should returns true for directory when the «onlyDirectories» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: true });
+				const reader = new TestReader(options);
+
+				const entry = getEntry({
+					path: 'fixtures/directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
+
+			it('should returns true for directory when «onlyFiles» and «onlyDirectoryies» options is disabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: false });
+				const reader = new TestReader(options);
+
+				const entry = getEntry({
+					path: 'fixtures/directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
 		});
 
-		it('should returns false for files if set "onlyDirectories" options', () => {
-			const options: IOptions = optionsManager.prepare({ onlyFiles: false, onlyDirectories: true });
-			const reader = new TestReader(options);
+		describe('Patterns', () => {
+			it('should returns false if patterns not a matched', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			const entry = getEntry({
-				path: 'fixtures/nested',
-				isFile: () => true
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*.md'], []);
+
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			it('should returns false by negative patterns', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
-		});
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
 
-		it('should returns false if patterns not a matched', () => {
-			const options: IOptions = optionsManager.prepare();
-			const reader = new TestReader(options);
+				const actual = reader.filter(entry, ['**/*', '!**/*.txt'], ['**/*.txt']);
 
-			const entry = getEntry({
-				path: 'fixtures/nested/file.md',
-				isFile: () => true
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*.txt'], []);
+			it('should returns true by matched patterns', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
-		});
+				const entry = getEntry({
+					path: 'fixtures/file.txt',
+					isFile: () => true
+				});
 
-		it('should returns false by negative patterns', () => {
-			const options: IOptions = optionsManager.prepare();
-			const reader = new TestReader(options);
+				const actual = reader.filter(entry, ['**/*.txt'], []);
 
-			const entry = getEntry({
-				path: 'fixtures/nested/file.md',
-				isFile: () => true
+				assert.ok(actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*', '!**/*.md'], ['**/*.md']);
+			it('should returns false for files that starting with a period', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
-		});
+				const entry = getEntry({
+					path: 'fixtures/.file.md',
+					isFile: () => true
+				});
 
-		it('should returns true by matched patterns', () => {
-			const options: IOptions = optionsManager.prepare();
-			const reader = new TestReader(options);
+				const actual = reader.filter(entry, ['**/*'], []);
 
-			const entry = getEntry({
-				path: 'fixtures/nested/file.md',
-				isFile: () => true
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*.md'], []);
+			it('should returns false for directories that starting with a period', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false });
+				const reader = new TestReader(options);
 
-			assert.ok(actual);
-		});
+				const entry = getEntry({
+					path: 'fixtures/.directory',
+					isDirectory: () => true
+				});
 
-		it('should returns false for files that starting with a period', () => {
-			const options: IOptions = optionsManager.prepare();
-			const reader = new TestReader(options);
+				const actual = reader.filter(entry, ['**/*'], []);
 
-			const entry = getEntry({
-				path: 'fixtures/.file.md',
-				isFile: () => true
+				assert.ok(!actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			it('should returns true for files that starting with a period if the «dot» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, dot: true });
+				const reader = new TestReader(options);
 
-			assert.ok(!actual);
-		});
+				const entry = getEntry({
+					path: 'fixtures/.file.md',
+					isFile: () => true
+				});
 
-		it('should returns true for files that starting with a period if set "dot" option', () => {
-			const options: IOptions = optionsManager.prepare({ dot: true });
-			const reader = new TestReader(options);
+				const actual = reader.filter(entry, ['**/*'], []);
 
-			const entry = getEntry({
-				path: 'fixtures/.file.md',
-				isFile: () => true
+				assert.ok(actual);
 			});
 
-			const actual = reader.filter(entry, ['**/*'], []);
+			it('should returns true for directories that starting with a period if the «dot» option is enabled', () => {
+				const options: IOptions = optionsManager.prepare({ onlyFiles: false, dot: true });
+				const reader = new TestReader(options);
 
-			assert.ok(actual);
+				const entry = getEntry({
+					path: 'fixtures/.directory',
+					isDirectory: () => true
+				});
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
 		});
 	});
 
