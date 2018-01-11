@@ -221,27 +221,31 @@ describe('Providers → Reader', () => {
 	});
 
 	describe('.deep', () => {
-		it('should returns false if deep options is disabled', () => {
+		it('should returns false if «deep» option is disabled', () => {
 			const options: IOptions = optionsManager.prepare({ deep: false });
 			const reader = new TestReader(options);
 
-			const entry = getEntry();
-			const actual = reader.deep(entry, ['**/*']);
+			const entry = getEntry({
+				path: 'fixtures/directory',
+				isDirectory: () => true
+			});
+
+			const actual = reader.deep(entry, []);
 
 			assert.ok(!actual);
 		});
 
-		it('should returns false if specified a limit of depth', () => {
+		it('should returns false if specified a limit of depth for «deep» option ', () => {
 			const options: IOptions = optionsManager.prepare({ deep: 2 });
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
-				path: 'a/b/c',
+				path: 'fixtures/directory/directory',
 				isDirectory: () => true,
 				depth: 3
 			});
 
-			const actual = reader.deep(entry, ['**/*']);
+			const actual = reader.deep(entry, []);
 
 			assert.ok(!actual);
 		});
@@ -250,7 +254,11 @@ describe('Providers → Reader', () => {
 			const options: IOptions = optionsManager.prepare();
 			const reader = new TestReader(options);
 
-			const entry = getEntry();
+			const entry = getEntry({
+				path: 'fixtures/directory',
+				isDirectory: () => true
+			});
+
 			const actual = reader.deep(entry, []);
 
 			assert.ok(actual);
@@ -261,11 +269,11 @@ describe('Providers → Reader', () => {
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
-				path: 'fixtures/nested',
+				path: 'fixtures/directory',
 				isDirectory: () => true
 			});
 
-			const actual = reader.deep(entry, ['**/nested/**']);
+			const actual = reader.deep(entry, ['**/directory/**']);
 
 			assert.ok(actual);
 		});
@@ -275,11 +283,11 @@ describe('Providers → Reader', () => {
 			const reader = new TestReader(options);
 
 			const entry = getEntry({
-				path: 'fixtures/nested',
+				path: 'fixtures/directory',
 				isDirectory: () => true
 			});
 
-			const actual = reader.deep(entry, ['**/nested']);
+			const actual = reader.deep(entry, ['**/directory']);
 
 			assert.ok(!actual);
 		});
@@ -298,7 +306,7 @@ describe('Providers → Reader', () => {
 			assert.ok(!actual);
 		});
 
-		it('should returns true for directories that starting with a period if «dot» option is enabled', () => {
+		it('should returns true for directories that starting with a period if the «dot» option is enabled', () => {
 			const options: IOptions = optionsManager.prepare({ dot: true });
 			const reader = new TestReader(options);
 
