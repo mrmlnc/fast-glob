@@ -137,6 +137,13 @@ Return only files.
 
 Return only directories.
 
+#### followSymlinkedDirectories
+
+  * Type: `boolean`
+  * Default: `true`
+
+Follow symlinked directories when expanding `**` patterns.
+
 #### transform
 
   * Type: `Function`
@@ -214,7 +221,7 @@ Not fully, because `fast-glob` not implements all options of `node-glob`. See ta
 | `matchBase`  | – |
 | `nodir`      | [`onlyFiles`](https://github.com/mrmlnc/fast-glob#onlyfiles) |
 | `ignore`     | [`ignore`](https://github.com/mrmlnc/fast-glob#ignore) |
-| `follow`     | by default |
+| `follow`     | [`followSymlinkedDirectories`](https://github.com/mrmlnc/fast-glob#followsymlinkeddirectories) |
 | `realpath`   | – |
 | `absolute`   | – |
 

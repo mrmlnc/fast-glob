@@ -304,6 +304,26 @@ describe('Providers → Reader', () => {
 			assert.ok(!actual);
 		});
 
+		it('should returns true for symlinked directory when the «followSymlinkedDirectories» option is enabled', () => {
+			const reader = getReader();
+
+			const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+			const actual = reader.deep(entry, []);
+
+			assert.ok(actual);
+		});
+
+		it('should returns false for symlinked directory when the «followSymlinkedDirectories» option is disabled', () => {
+			const reader = getReader({ followSymlinkedDirectories: false });
+
+			const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+			const actual = reader.deep(entry, []);
+
+			assert.ok(!actual);
+		});
+
 		it('should returns false if specified a limit of depth for «deep» option ', () => {
 			const reader = getReader({ deep: 2 });
 
