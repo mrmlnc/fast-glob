@@ -39,6 +39,11 @@ export default abstract class Reader {
 	 * Returns true if entry must be added to result.
 	 */
 	public filter(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
+		// Mark directory by the final slash. Need to micromatch to support «directory/**» patterns
+		if (entry.isDirectory()) {
+			entry.path += '/';
+		}
+
 		// Filter directories that will be excluded by deep filter
 		if (entry.isDirectory() && micromatch.any(entry.path, negative)) {
 			return false;
