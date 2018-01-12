@@ -35,6 +35,10 @@ export interface IOptions<T = EntryItem> {
 	 */
 	onlyDirectories: boolean;
 	/**
+	 * Follow symlinked directories when expanding `**` patterns.
+	 */
+	followSymlinkedDirectories: boolean;
+	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
 	transform: TransformFunction<T> | null;
@@ -51,6 +55,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		stats: false,
 		onlyFiles: true,
 		onlyDirectories: false,
+		followSymlinkedDirectories: true,
 		transform: null
 	}, options);
 }
