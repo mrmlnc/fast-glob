@@ -243,20 +243,20 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 
 | node-glob    | fast-glob |
 | :----------: | :-------: |
-| `cwd`        | [`cwd`](https://github.com/mrmlnc/fast-glob#cwd) |
+| `cwd`        | [`cwd`](#cwd) |
 | `root`       | – |
-| `dot`        | [`dot`](https://github.com/mrmlnc/fast-glob#dot) |
+| `dot`        | [`dot`](#dot) |
 | `nomount`    | – |
 | `nosort`     | – |
 | `nounique`   | – |
-| `nobrace`    | [`nobrace`](https://github.com/mrmlnc/fast-glob#nobrace) |
-| `noglobstar` | [`noglobstar`](https://github.com/mrmlnc/fast-glob#noglobstar) |
-| `noext`      | [`noext`](https://github.com/mrmlnc/fast-glob#noext) |
-| `nocase`     | [`nocase`](https://github.com/mrmlnc/fast-glob#nocase) |
-| `matchBase`  | [`matchbase`](https://github.com/mrmlnc/fast-glob#matchbase) |
-| `nodir`      | [`onlyFiles`](https://github.com/mrmlnc/fast-glob#onlyfiles) |
-| `ignore`     | [`ignore`](https://github.com/mrmlnc/fast-glob#ignore) |
-| `follow`     | [`followSymlinkedDirectories`](https://github.com/mrmlnc/fast-glob#followsymlinkeddirectories) |
+| `nobrace`    | [`nobrace`](#nobrace) |
+| `noglobstar` | [`noglobstar`](#noglobstar) |
+| `noext`      | [`noext`](#noext) |
+| `nocase`     | [`nocase`](#nocase) |
+| `matchBase`  | [`matchbase`](#matchbase) |
+| `nodir`      | [`onlyFiles`](#onlyfiles) |
+| `ignore`     | [`ignore`](#ignore) |
+| `follow`     | [`followSymlinkedDirectories`](#followsymlinkeddirectories) |
 | `realpath`   | – |
 | `absolute`   | – |
 
