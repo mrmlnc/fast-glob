@@ -75,6 +75,11 @@ export default abstract class Reader {
 			}
 		}
 
+		// Skip reading if the directory is symlink and we don't want expand symlinks
+		if (this.isFollowedSymlink(entry)) {
+			return false;
+		}
+
 		// Skip reading if the directory name starting with a period and is not expected
 		if (this.isFollowedDotDirectory(entry)) {
 			return false;
@@ -119,5 +124,12 @@ export default abstract class Reader {
 	 */
 	private isFollowedDotDirectory(entry: IEntry): boolean {
 		return !this.options.dot && this.isDotDirectory(entry);
+	}
+
+	/**
+	 * Returns true for symlinked directories if the «followSymlinks» option is enabled.
+	 */
+	private isFollowedSymlink(entry: IEntry): boolean {
+		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
 	}
 }

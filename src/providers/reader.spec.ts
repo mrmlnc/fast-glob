@@ -345,6 +345,28 @@ describe('Providers → Reader', () => {
 			});
 		});
 
+		describe('Filter by «followSymlinkedDirectories» option', () => {
+			it('should return true for symlinked directory when option is enabled', () => {
+				const reader = getReader();
+
+				const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+				const actual = reader.deep(entry, []);
+
+				assert.ok(actual);
+			});
+
+			it('should return false for symlinked directory when option is disabled', () => {
+				const reader = getReader({ followSymlinkedDirectories: false });
+
+				const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+				const actual = reader.deep(entry, []);
+
+				assert.ok(!actual);
+			});
+		});
+
 		describe('Filter by «dot» option', () => {
 			it('should return true for directory that starting with a period when option is enabled', () => {
 				const reader = getReader({ onlyFiles: false, dot: true });
