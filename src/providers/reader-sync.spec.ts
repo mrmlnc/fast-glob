@@ -41,6 +41,7 @@ describe('Providers → ReaderSync', () => {
 	describe('.read', () => {
 		const task: ITask = {
 			base: 'fixtures',
+			globstar: true,
 			patterns: ['**/*'],
 			positive: ['**/*'],
 			negative: []
