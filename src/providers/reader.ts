@@ -122,6 +122,10 @@ export default abstract class Reader {
 	 * Returns transformed entry.
 	 */
 	public transform(entry: Entry): EntryItem {
+		if (this.options.markDirectories && entry.isDirectory()) {
+			entry.path += '/';
+		}
+
 		const item: EntryItem = this.options.stats ? entry : entry.path;
 
 		if (this.options.transform === null) {
