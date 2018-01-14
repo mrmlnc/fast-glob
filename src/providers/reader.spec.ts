@@ -538,6 +538,32 @@ describe('Providers → Reader', () => {
 			});
 		});
 
+		describe('The «absolute» option', () => {
+			it('should return transformed entry when option is provided', () => {
+				const reader = getReader({ absolute: true });
+
+				const entry = getFileEntry(false /** dot */);
+
+				const expected: string = path.join(process.cwd(), 'fixtures/file.txt');
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+
+			it('should return do nothing when option is not provided', () => {
+				const reader = getReader();
+
+				const entry = getFileEntry(false /** dot */);
+
+				const expected: string = 'fixtures/file.txt';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+		});
+
 		describe('The «transform» option', () => {
 			it('should return transformed entry when option is provided', () => {
 				const reader = getReader({ transform: () => 'cake' });

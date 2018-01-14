@@ -47,6 +47,10 @@ export interface IOptions<T = EntryItem> {
 	 */
 	markDirectories: boolean;
 	/**
+	 * Return absolute paths for matched entries.
+	 */
+	absolute: boolean;
+	/**
 	 * Disable expansion of brace patterns.
 	 */
 	nobrace: boolean;
@@ -87,6 +91,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		followSymlinkedDirectories: true,
 		unique: true,
 		markDirectories: false,
+		absolute: false,
 		nobrace: false,
 		noglobstar: false,
 		noext: false,
