@@ -240,8 +240,9 @@ describe('Providers → Reader', () => {
 					assert.ok(!actual);
 				});
 			});
+		});
 
-			describe('The «dot» option', () => {
+		describe('Filter by «dot» option', () => {
 				it('should return true for file that starting with a period when option is enabled', () => {
 					const reader = getReader({ onlyFiles: false, dot: true });
 
@@ -335,7 +336,6 @@ describe('Providers → Reader', () => {
 				assert.ok(!actual);
 			});
 		});
-	});
 
 	describe('.deep', () => {
 		describe('Filter by «deep» option', () => {
