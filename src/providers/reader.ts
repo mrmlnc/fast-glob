@@ -50,7 +50,7 @@ export default abstract class Reader {
 		}
 
 		// Filter files and directories by options
-		if ((this.options.onlyFiles && !entry.isFile()) || (this.options.onlyDirectories && !entry.isDirectory())) {
+		if (this.onlyFileFilter(entry) || this.onlyDirectoryFilter(entry)) {
 			return false;
 		}
 
@@ -75,8 +75,13 @@ export default abstract class Reader {
 			}
 		}
 
+		// Skip reading if the directory is symlink and we don't want expand symlinks
+		if (this.isFollowedSymlink(entry)) {
+			return false;
+		}
+
 		// Skip reading if the directory name starting with a period and is not expected
-		if (!this.options.dot && this.isDotDirectory(entry)) {
+		if (this.isFollowedDotDirectory(entry)) {
 			return false;
 		}
 
@@ -98,5 +103,33 @@ export default abstract class Reader {
 		const lastPathPartial: string = pathPartials[pathPartials.length - 1];
 
 		return lastPathPartial.startsWith('.');
+	}
+
+	/**
+	 * Returns true for non-files if the «onlyFiles» option is enabled.
+	 */
+	private onlyFileFilter(entry: IEntry): boolean {
+		return this.options.onlyFiles && !entry.isFile();
+	}
+
+	/**
+	 * Returns true for non-directories if the «onlyDirectories» option is enabled.
+	 */
+	private onlyDirectoryFilter(entry: IEntry): boolean {
+		return this.options.onlyDirectories && !entry.isDirectory();
+	}
+
+	/**
+	 * Returns true for dot directories if the «dot» option is enabled.
+	 */
+	private isFollowedDotDirectory(entry: IEntry): boolean {
+		return !this.options.dot && this.isDotDirectory(entry);
+	}
+
+	/**
+	 * Returns true for symlinked directories if the «followSymlinks» option is enabled.
+	 */
+	private isFollowedSymlink(entry: IEntry): boolean {
+		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
 	}
 }

@@ -13,6 +13,7 @@ describe('Managers → Options', () => {
 				stats: false,
 				onlyFiles: true,
 				onlyDirectories: false,
+				followSymlinkedDirectories: true,
 				transform: null
 			};
 
@@ -30,6 +31,7 @@ describe('Managers → Options', () => {
 				stats: true,
 				onlyFiles: true,
 				onlyDirectories: false,
+				followSymlinkedDirectories: true,
 				transform: null
 			};
 
