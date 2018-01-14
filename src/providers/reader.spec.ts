@@ -114,6 +114,25 @@ describe('Providers → Reader', () => {
 		});
 	});
 
+	describe('.getMicromatchOptions', () => {
+		it('should return options for micromatch', () => {
+			const reader = getReader();
+
+			const expected: micromatch.Options = {
+				dot: false,
+				matchBase: false,
+				nobrace: false,
+				nocase: false,
+				noext: false,
+				noglobstar: false
+			};
+
+			const actual = reader.getMicromatchOptions();
+
+			assert.deepEqual(actual, expected);
+		});
+	});
+
 	describe('.filter', () => {
 		describe('Filter by excluded directories', () => {
 			it('should return false for excluded directory', () => {

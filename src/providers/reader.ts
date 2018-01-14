@@ -9,7 +9,11 @@ import { IEntry, IReaddirOptions } from 'readdir-enhanced';
 import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
-	constructor(public readonly options: IOptions) { }
+	private readonly micromatchOptions: micromatch.Options;
+
+	constructor(public readonly options: IOptions) {
+		this.micromatchOptions = this.getMicromatchOptions();
+	}
 
 	/**
 	 * The main logic of reading the directories that must be implemented by each providers.
@@ -36,6 +40,20 @@ export default abstract class Reader {
 	}
 
 	/**
+	 * Returns options for micromatch.
+	 */
+	public getMicromatchOptions(): micromatch.Options {
+		return {
+			dot: this.options.dot,
+			nobrace: this.options.nobrace,
+			noglobstar: this.options.noglobstar,
+			noext: this.options.noext,
+			nocase: this.options.nocase,
+			matchBase: this.options.matchBase
+		};
+	}
+
+	/**
 	 * Returns true if entry must be added to result.
 	 */
 	public filter(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
@@ -45,7 +63,7 @@ export default abstract class Reader {
 		}
 
 		// Filter directories that will be excluded by deep filter
-		if (entry.isDirectory() && micromatch.any(entry.path, negative)) {
+		if (entry.isDirectory() && micromatch.any(entry.path, negative, this.micromatchOptions)) {
 			return false;
 		}
 
@@ -55,7 +73,7 @@ export default abstract class Reader {
 		}
 
 		// Filter by patterns
-		const entries = micromatch([entry.path], patterns, { dot: this.options.dot });
+		const entries = micromatch([entry.path], patterns, this.micromatchOptions);
 
 		return entries.length !== 0;
 	}
@@ -85,7 +103,7 @@ export default abstract class Reader {
 			return false;
 		}
 
-		return !micromatch.any(entry.path, negative);
+		return !micromatch.any(entry.path, negative, this.micromatchOptions);
 	}
 
 	/**

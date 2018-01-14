@@ -39,6 +39,27 @@ export interface IOptions<T = EntryItem> {
 	 */
 	followSymlinkedDirectories: boolean;
 	/**
+	 * Disable expansion of brace patterns.
+	 */
+	nobrace: boolean;
+	/**
+	 * Disable matching with globstars (`**`).
+	 */
+	noglobstar: boolean;
+	/**
+	 * Disable extglob support, so that extglobs are regarded as literal characters.
+	 */
+	noext: boolean;
+	/**
+	 * Use a case-insensitive regex for matching files.
+	 */
+	nocase: boolean;
+	/**
+	 * Allow glob patterns without slashes to match a file path based on its basename.
+	 * For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
+	 */
+	matchBase: boolean;
+	/**
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
 	transform: TransformFunction<T> | null;
@@ -56,6 +77,11 @@ export function prepare(options?: IPartialOptions): IOptions {
 		onlyFiles: true,
 		onlyDirectories: false,
 		followSymlinkedDirectories: true,
+		nobrace: false,
+		noglobstar: false,
+		noext: false,
+		nocase: false,
+		matchBase: false,
 		transform: null
 	}, options);
 }
