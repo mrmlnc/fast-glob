@@ -134,6 +134,54 @@ describe('Providers → Reader', () => {
 	});
 
 	describe('.filter', () => {
+		describe('Filter by «unique» option', () => {
+			it('should return true for unique entry when option is enabled', () => {
+				const reader = getReader({ onlyFiles: false });
+
+				const entry = getFileEntry(false /** dot */);
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
+
+			it('should return false for non-unique entry when option is enabled', () => {
+				const reader = getReader({ onlyFiles: false });
+
+				const entry = getFileEntry(false /** dot */);
+
+				// Create index record
+				reader.filter(entry, ['**/*'], []);
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(!actual);
+			});
+
+			it('should return true for non-unique entry when option is disabled', () => {
+				const reader = getReader({ onlyFiles: false, unique: false });
+
+				const entry = getFileEntry(false /** dot */);
+
+				// Create index record
+				reader.filter(entry, ['**/*'], []);
+
+				const actual = reader.filter(entry, ['**/*'], []);
+
+				assert.ok(actual);
+			});
+
+			it('should not build the index when option is disabled', () => {
+				const reader = getReader({ onlyFiles: false, unique: false });
+
+				const entry = getFileEntry(false /** dot */);
+
+				reader.filter(entry, ['**/*'], []);
+
+				assert.equal(reader.index.size, 0);
+			});
+		});
+
 		describe('Filter by excluded directories', () => {
 			it('should return false for excluded directory', () => {
 				const reader = getReader({ onlyFiles: false });
@@ -240,100 +288,100 @@ describe('Providers → Reader', () => {
 					assert.ok(!actual);
 				});
 			});
-
-			describe('The «dot» option', () => {
-				it('should return true for file that starting with a period when option is enabled', () => {
-					const reader = getReader({ onlyFiles: false, dot: true });
-
-					const entry = getFileEntry(true /** dot */);
-
-					const actual = reader.filter(entry, ['**/*'], []);
-
-					assert.ok(actual);
-				});
-
-				it('should return false for file that starting with a period when option is disabled', () => {
-					const reader = getReader({ onlyFiles: false });
-
-					const entry = getFileEntry(true /** dot */);
-
-					const actual = reader.filter(entry, ['**/*'], []);
-
-					assert.ok(!actual);
-				});
-
-				it('should return true for directory that starting with a period when option is enabled', () => {
-					const reader = getReader({ onlyFiles: false, dot: true });
-
-					const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
-
-					const actual = reader.filter(entry, ['**/*'], []);
-
-					assert.ok(actual);
-				});
-
-				it('should return false for directory that starting with a period when option is disabled', () => {
-					const reader = getReader();
-
-					const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
-
-					const actual = reader.filter(entry, ['**/*'], []);
-
-					assert.ok(!actual);
-				});
-			});
 		});
 
-		describe('Filter by patterns', () => {
-			it('should return true for file that matched to patterns', () => {
-				const reader = getReader({ onlyFiles: false });
+		describe('Filter by «dot» option', () => {
+			it('should return true for file that starting with a period when option is enabled', () => {
+				const reader = getReader({ onlyFiles: false, dot: true });
 
-				const entry = getFileEntry(false /** dot */);
+				const entry = getFileEntry(true /** dot */);
 
 				const actual = reader.filter(entry, ['**/*'], []);
 
 				assert.ok(actual);
 			});
 
-			it('should return false for file that not matched to patterns', () => {
+			it('should return false for file that starting with a period when option is disabled', () => {
 				const reader = getReader({ onlyFiles: false });
 
-				const entry = getFileEntry(false /** dot */);
+				const entry = getFileEntry(true /** dot */);
 
-				const actual = reader.filter(entry, ['**/*.md'], []);
+				const actual = reader.filter(entry, ['**/*'], []);
 
 				assert.ok(!actual);
 			});
 
-			it('should return false for file that excluded by negative patterns', () => {
-				const reader = getReader({ onlyFiles: false });
+			it('should return true for directory that starting with a period when option is enabled', () => {
+				const reader = getReader({ onlyFiles: false, dot: true });
 
-				const entry = getFileEntry(false /** dot */);
+				const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.filter(entry, ['**/*', '!**/*.txt'], ['**/*.txt']);
-
-				assert.ok(!actual);
-			});
-
-			it('should return true for directory that matched to patterns', () => {
-				const reader = getReader({ onlyFiles: false });
-
-				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = reader.filter(entry, ['**/directory/**'], []);
+				const actual = reader.filter(entry, ['**/*'], []);
 
 				assert.ok(actual);
 			});
 
-			it('should return false for directory that not matched to patterns', () => {
-				const reader = getReader({ onlyFiles: false });
+			it('should return false for directory that starting with a period when option is disabled', () => {
+				const reader = getReader();
 
-				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.filter(entry, ['**/super_directory/**'], []);
+				const actual = reader.filter(entry, ['**/*'], []);
 
 				assert.ok(!actual);
 			});
+		});
+	});
+
+	describe('Filter by patterns', () => {
+		it('should return true for file that matched to patterns', () => {
+			const reader = getReader({ onlyFiles: false });
+
+			const entry = getFileEntry(false /** dot */);
+
+			const actual = reader.filter(entry, ['**/*'], []);
+
+			assert.ok(actual);
+		});
+
+		it('should return false for file that not matched to patterns', () => {
+			const reader = getReader({ onlyFiles: false });
+
+			const entry = getFileEntry(false /** dot */);
+
+			const actual = reader.filter(entry, ['**/*.md'], []);
+
+			assert.ok(!actual);
+		});
+
+		it('should return false for file that excluded by negative patterns', () => {
+			const reader = getReader({ onlyFiles: false });
+
+			const entry = getFileEntry(false /** dot */);
+
+			const actual = reader.filter(entry, ['**/*', '!**/*.txt'], ['**/*.txt']);
+
+			assert.ok(!actual);
+		});
+
+		it('should return true for directory that matched to patterns', () => {
+			const reader = getReader({ onlyFiles: false });
+
+			const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+			const actual = reader.filter(entry, ['**/directory/**'], []);
+
+			assert.ok(actual);
+		});
+
+		it('should return false for directory that not matched to patterns', () => {
+			const reader = getReader({ onlyFiles: false });
+
+			const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+			const actual = reader.filter(entry, ['**/super_directory/**'], []);
+
+			assert.ok(!actual);
 		});
 	});
 
