@@ -394,7 +394,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(!actual);
 			});
@@ -408,7 +408,7 @@ describe('Providers → Reader', () => {
 					isDirectory: () => true
 				});
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(!actual);
 			});
@@ -420,7 +420,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(actual);
 			});
@@ -430,7 +430,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(!actual);
 			});
@@ -442,7 +442,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(actual);
 			});
@@ -452,7 +452,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(!actual);
 			});
@@ -464,7 +464,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, []);
+				const actual = reader.deep(entry, [], true /** globstar */);
 
 				assert.ok(actual);
 			});
@@ -474,7 +474,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, ['**/pony/**']);
+				const actual = reader.deep(entry, ['**/pony/**'], true /** globstar */);
 
 				assert.ok(actual);
 			});
@@ -484,7 +484,7 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, ['**/directory/**']);
+				const actual = reader.deep(entry, ['**/directory/**'], true /** globstar */);
 
 				assert.ok(actual);
 			});
@@ -494,7 +494,29 @@ describe('Providers → Reader', () => {
 
 				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = reader.deep(entry, ['**/directory']);
+				const actual = reader.deep(entry, ['**/directory'], true /** globstar */);
+
+				assert.ok(!actual);
+			});
+		});
+
+		describe('Filter by «globstar» parameter', () => {
+			it('should return true by globstar parameter', () => {
+				const reader = getReader();
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = reader.deep(entry, [], true /** globstar */);
+
+				assert.ok(actual);
+			});
+
+			it('should return false by globstar parameter', () => {
+				const reader = getReader();
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = reader.deep(entry, [], false /** globstar */);
 
 				assert.ok(!actual);
 			});

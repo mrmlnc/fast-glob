@@ -6,7 +6,7 @@ import { IOptions } from './options';
 
 export interface ITask {
 	base: string;
-	globstar: boolean | undefined;
+	globstar: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
