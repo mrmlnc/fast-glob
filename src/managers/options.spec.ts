@@ -14,6 +14,11 @@ describe('Managers → Options', () => {
 				onlyFiles: true,
 				onlyDirectories: false,
 				followSymlinkedDirectories: true,
+				nobrace: false,
+				noglobstar: false,
+				noext: false,
+				nocase: false,
+				matchBase: false,
 				transform: null
 			};
 
@@ -32,6 +37,11 @@ describe('Managers → Options', () => {
 				onlyFiles: true,
 				onlyDirectories: false,
 				followSymlinkedDirectories: true,
+				nobrace: false,
+				noglobstar: false,
+				noext: false,
+				nocase: false,
+				matchBase: false,
 				transform: null
 			};
 

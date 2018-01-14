@@ -144,6 +144,41 @@ Return only directories.
 
 Follow symlinked directories when expanding `**` patterns.
 
+#### nobrace
+
+  * Type: `boolean`
+  * Default: `false`
+
+Disable expansion of brace patterns (`{a,b}`, `{1..3}`).
+
+#### noglobstar
+
+  * Type: `boolean`
+  * Default: `false`
+
+Disable matching with globstars (`**`).
+
+#### noext
+
+  * Type: `boolean`
+  * Default: `false`
+
+Disable extglob support (patterns like `+(a|b)`), so that extglobs are regarded as literal characters.
+
+#### nocase
+
+  * Type: `boolean`
+  * Default: `false`
+
+Use a case-insensitive regex for matching files.
+
+#### matchBase
+
+  * Type: `boolean`
+  * Default: `false`
+
+Allow glob patterns without slashes to match a file path based on its basename. For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
+
 #### transform
 
   * Type: `Function`
@@ -208,20 +243,20 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 
 | node-glob    | fast-glob |
 | :----------: | :-------: |
-| `cwd`        | [`cwd`](https://github.com/mrmlnc/fast-glob#cwd) |
+| `cwd`        | [`cwd`](#cwd) |
 | `root`       | – |
-| `dot`        | [`dot`](https://github.com/mrmlnc/fast-glob#dot) |
+| `dot`        | [`dot`](#dot) |
 | `nomount`    | – |
 | `nosort`     | – |
 | `nounique`   | – |
-| `nobrace`    | – |
-| `noglobstar` | – |
-| `noext`      | – |
-| `nocase`     | – |
-| `matchBase`  | – |
-| `nodir`      | [`onlyFiles`](https://github.com/mrmlnc/fast-glob#onlyfiles) |
-| `ignore`     | [`ignore`](https://github.com/mrmlnc/fast-glob#ignore) |
-| `follow`     | [`followSymlinkedDirectories`](https://github.com/mrmlnc/fast-glob#followsymlinkeddirectories) |
+| `nobrace`    | [`nobrace`](#nobrace) |
+| `noglobstar` | [`noglobstar`](#noglobstar) |
+| `noext`      | [`noext`](#noext) |
+| `nocase`     | [`nocase`](#nocase) |
+| `matchBase`  | [`matchbase`](#matchbase) |
+| `nodir`      | [`onlyFiles`](#onlyfiles) |
+| `ignore`     | [`ignore`](#ignore) |
+| `follow`     | [`followSymlinkedDirectories`](#followsymlinkeddirectories) |
 | `realpath`   | – |
 | `absolute`   | – |
 
