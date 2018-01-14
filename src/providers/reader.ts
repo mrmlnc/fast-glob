@@ -126,6 +126,10 @@ export default abstract class Reader {
 			entry.path += '/';
 		}
 
+		if (this.options.absolute && !path.isAbsolute(entry.path)) {
+			entry.path = path.resolve(this.options.cwd, entry.path);
+		}
+
 		const item: EntryItem = this.options.stats ? entry : entry.path;
 
 		if (this.options.transform === null) {

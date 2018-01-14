@@ -158,6 +158,13 @@ Prevent duplicate results.
 
 Add a `/` character to directory entries.
 
+#### absolute
+
+  * Type: `boolean`
+  * Default: `false`
+
+Return absolute paths for matched entries.
+
 #### nobrace
 
   * Type: `boolean`
