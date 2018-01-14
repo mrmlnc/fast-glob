@@ -59,14 +59,20 @@ export default abstract class Reader {
 	 * Returns true if directory must be read.
 	 */
 	public deep(entry: IEntry, negative: Pattern[]): boolean {
-		if (this.options.deep === false) {
+		if (!this.options.deep) {
 			return false;
 		}
 
+		// Skip reading, depending on the nesting level
 		if (typeof this.options.deep === 'number') {
 			if (entry.depth > this.options.deep) {
 				return false;
 			}
+		}
+
+		// Skip reading if the directory name starting with a period and is not expected
+		if (!this.options.dot && this.isDotDirectory(entry)) {
+			return false;
 		}
 
 		return !micromatch.any(entry.path, negative);
@@ -77,5 +83,15 @@ export default abstract class Reader {
 	 */
 	public isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
 		return err.code === 'ENOENT';
+	}
+
+	/**
+	 * Returns true if the last partial of the path starting with a period.
+	 */
+	public isDotDirectory(entry: IEntry): boolean {
+		const pathPartials = entry.path.split('/');
+		const lastPathPartial: string = pathPartials[pathPartials.length - 1];
+
+		return lastPathPartial.startsWith('.');
 	}
 }
