@@ -41,7 +41,7 @@ export default class ReaderSync extends Reader {
 		try {
 			const entries: EntryItem[] = this.getEntries(root, options);
 
-			return this.options.transform === null ? entries : entries.map<EntryItem>(this.options.transform);
+			return this.options.transform === null ? entries : entries.map<EntryItem>(this.transform, this);
 		} catch (err) {
 			if (this.isEnoentCodeError(err)) {
 				return [];

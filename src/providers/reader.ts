@@ -6,6 +6,7 @@ import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
 import { IEntry, IReaddirOptions } from 'readdir-enhanced';
+import { EntryItem } from '../types/entries';
 import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
@@ -115,6 +116,13 @@ export default abstract class Reader {
 		}
 
 		return !micromatch.any(entry.path, negative, this.micromatchOptions);
+	}
+
+	/**
+	 * Returns transformed entry.
+	 */
+	public transform(entry: EntryItem): EntryItem {
+		return this.options.transform ? this.options.transform(entry) : entry;
 	}
 
 	/**

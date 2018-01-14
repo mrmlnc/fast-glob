@@ -48,7 +48,7 @@ export default class ReaderAsync extends Reader {
 				stream.pause();
 			});
 
-			stream.on('data', (entry) => entries.push(this.options.transform ? this.options.transform(entry) : entry));
+			stream.on('data', (entry: EntryItem) => entries.push(this.transform(entry)));
 			stream.on('end', () => resolve(entries));
 		});
 	}

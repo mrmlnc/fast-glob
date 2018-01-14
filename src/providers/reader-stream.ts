@@ -9,14 +9,14 @@ import { ITask } from '../managers/tasks';
 import { EntryItem } from '../types/entries';
 
 class TransformStream extends stream.Transform {
-	constructor(private readonly options: IOptions) {
+	constructor(private readonly reader: ReaderStream, readonly options: IOptions) {
 		super(options.stats ? { objectMode: true } : { encoding: 'utf-8' });
 	}
 
 	public _transform(chunk: string | Buffer, _encoding: string, callback: Function): void {
 		const entry: EntryItem = Buffer.isBuffer(chunk) ? chunk.toString() : chunk;
 
-		callback(null, this.options.transform === null ? entry : this.options.transform(entry));
+		callback(null, this.reader.transform(entry));
 	}
 }
 
@@ -52,7 +52,7 @@ export default class ReaderStream extends Reader {
 	public read(task: ITask): NodeJS.ReadableStream {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
-		const transform = new TransformStream(this.options);
+		const transform = new TransformStream(this, this.options);
 
 		const readable: NodeJS.ReadableStream = this.getStream(root, options);
 
