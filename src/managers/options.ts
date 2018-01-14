@@ -39,6 +39,10 @@ export interface IOptions<T = EntryItem> {
 	 */
 	followSymlinkedDirectories: boolean;
 	/**
+	 * Prevent duplicate results.
+	 */
+	unique: boolean;
+	/**
 	 * Disable expansion of brace patterns.
 	 */
 	nobrace: boolean;
@@ -77,6 +81,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		onlyFiles: true,
 		onlyDirectories: false,
 		followSymlinkedDirectories: true,
+		unique: true,
 		nobrace: false,
 		noglobstar: false,
 		noext: false,

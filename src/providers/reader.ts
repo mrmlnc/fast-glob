@@ -9,6 +9,8 @@ import { IEntry, IReaddirOptions } from 'readdir-enhanced';
 import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
+	public readonly index: Map<string, undefined> = new Map();
+
 	private readonly micromatchOptions: micromatch.Options;
 
 	constructor(public readonly options: IOptions) {
@@ -57,6 +59,15 @@ export default abstract class Reader {
 	 * Returns true if entry must be added to result.
 	 */
 	public filter(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
+		// Exclude duplicate results
+		if (this.options.unique) {
+			if (this.isDuplicateEntry(entry)) {
+				return false;
+			}
+
+			this.createIndexRecord(entry);
+		}
+
 		// Mark directory by the final slash. Need to micromatch to support «directory/**» patterns
 		if (entry.isDirectory()) {
 			entry.path += '/';
@@ -121,6 +132,20 @@ export default abstract class Reader {
 		const lastPathPartial: string = pathPartials[pathPartials.length - 1];
 
 		return lastPathPartial.startsWith('.');
+	}
+
+	/**
+	 * Return true if the entry already has in the cross reader index.
+	 */
+	public isDuplicateEntry(entry: IEntry): boolean {
+		return this.index.has(entry.path);
+	}
+
+	/**
+	 * Create record in the cross reader index.
+	 */
+	private createIndexRecord(entry: IEntry): void {
+		this.index.set(entry.path, undefined);
 	}
 
 	/**

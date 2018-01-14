@@ -144,6 +144,13 @@ Return only directories.
 
 Follow symlinked directories when expanding `**` patterns.
 
+#### unique
+
+  * Type: `boolean`
+  * Default: `true`
+
+Prevent duplicate results.
+
 #### nobrace
 
   * Type: `boolean`
@@ -248,7 +255,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `dot`        | [`dot`](#dot) |
 | `nomount`    | – |
 | `nosort`     | – |
-| `nounique`   | – |
+| `nounique`   | [`unique`](#unique) |
 | `nobrace`    | [`nobrace`](#nobrace) |
 | `noglobstar` | [`noglobstar`](#noglobstar) |
 | `noext`      | [`noext`](#noext) |
