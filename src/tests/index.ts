@@ -1,6 +1,6 @@
 import * as stream from 'stream';
 
-import { EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/entries';
 
 export class FakeStream extends stream.Readable {
 	constructor(private readonly value: EntryItem, private readonly error: Error | null, opts?: stream.ReadableOptions) {
@@ -23,4 +23,29 @@ export class EnoentErrnoException extends Error {
 	constructor() {
 		super();
 	}
+}
+
+export function getEntry(entry?: Partial<Entry>): Entry {
+	return Object.assign({
+		isFile: () => false,
+		isDirectory: () => false,
+		isSymbolicLink: () => false,
+		path: 'path',
+		depth: 1
+	} as Entry, entry);
+}
+
+export function getFileEntry(dot: boolean): Entry {
+	return getEntry({
+		path: dot ? 'fixtures/.file.txt' : 'fixtures/file.txt',
+		isFile: () => true
+	});
+}
+
+export function getDirectoryEntry(dot: boolean, isSymbolicLink: boolean): Entry {
+	return getEntry({
+		path: dot ? 'fixtures/.directory' : 'fixtures/directory',
+		isDirectory: () => true,
+		isSymbolicLink: () => isSymbolicLink
+	});
 }
