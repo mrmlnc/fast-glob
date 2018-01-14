@@ -6,6 +6,7 @@ import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
 import { IEntry, IReaddirOptions } from 'readdir-enhanced';
+import { Entry, EntryItem } from '../types/entries';
 import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
@@ -115,6 +116,23 @@ export default abstract class Reader {
 		}
 
 		return !micromatch.any(entry.path, negative, this.micromatchOptions);
+	}
+
+	/**
+	 * Returns transformed entry.
+	 */
+	public transform(entry: Entry): EntryItem {
+		if (this.options.markDirectories && entry.isDirectory()) {
+			entry.path += '/';
+		}
+
+		const item: EntryItem = this.options.stats ? entry : entry.path;
+
+		if (this.options.transform === null) {
+			return item;
+		}
+
+		return this.options.transform(item);
 	}
 
 	/**

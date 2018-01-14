@@ -43,6 +43,10 @@ export interface IOptions<T = EntryItem> {
 	 */
 	unique: boolean;
 	/**
+	 * Add a `/` character to directory entries.
+	 */
+	markDirectories: boolean;
+	/**
 	 * Disable expansion of brace patterns.
 	 */
 	nobrace: boolean;
@@ -82,6 +86,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		onlyDirectories: false,
 		followSymlinkedDirectories: true,
 		unique: true,
+		markDirectories: false,
 		nobrace: false,
 		noglobstar: false,
 		noext: false,

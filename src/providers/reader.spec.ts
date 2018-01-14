@@ -499,6 +499,72 @@ describe('Providers → Reader', () => {
 		});
 	});
 
+	describe('.transform', () => {
+		describe('The «markDirectories» option', () => {
+			it('should return mark directory when option is enabled', () => {
+				const reader = getReader({ markDirectories: true });
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const expected: string = 'fixtures/directory/';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+
+			it('should do nothing with file when option is enabled', () => {
+				const reader = getReader({ markDirectories: true });
+
+				const entry = getFileEntry(false /** dot */);
+
+				const expected: string = 'fixtures/file.txt';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+
+			it('should return non-marked directory when option is disabled', () => {
+				const reader = getReader();
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const expected: string = 'fixtures/directory';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+		});
+
+		describe('The «transform» option', () => {
+			it('should return transformed entry when option is provided', () => {
+				const reader = getReader({ transform: () => 'cake' });
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const expected: string = 'cake';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+
+			it('should return do nothing when option is not provided', () => {
+				const reader = getReader();
+
+				const entry = getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const expected: string = 'fixtures/directory';
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+		});
+	});
+
 	describe('.isEnoentCodeError', () => {
 		it('should return true for ENOENT error', () => {
 			const reader = getReader();

@@ -11,12 +11,8 @@ import { ITask } from '../managers/tasks';
 import { Entry } from '../types/entries';
 
 class ReaderSyncFake extends ReaderSync {
-	public apiWithStat(): Entry[] {
+	public api(): Entry[] {
 		return [{ path: 'fake' } as Entry];
-	}
-
-	public api(): string[] {
-		return ['fake'];
 	}
 }
 

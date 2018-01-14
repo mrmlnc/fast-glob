@@ -151,6 +151,13 @@ Follow symlinked directories when expanding `**` patterns.
 
 Prevent duplicate results.
 
+#### markDirectories
+
+  * Type: `boolean`
+  * Default: `false`
+
+Add a `/` character to directory entries.
+
 #### nobrace
 
   * Type: `boolean`
@@ -254,6 +261,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `root`       | – |
 | `dot`        | [`dot`](#dot) |
 | `nomount`    | – |
+| `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
 | `nobrace`    | [`nobrace`](#nobrace) |
