@@ -8,16 +8,11 @@ import ReaderAsync from './providers/reader-async';
 import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 
+import * as arrayUtils from './utils/array';
+
 import { IOptions, IPartialOptions } from './managers/options';
 import { EntryItem } from './types/entries';
 import { Pattern } from './types/patterns';
-
-/**
- * Flatten nested arrays (max depth is 2) into a non-nested array of non-array items.
- */
-export function flatten<T>(items: T[][]): T[] {
-	return items.reduce((collection, item) => ([] as T[]).concat(collection, item), [] as T[]);
-}
 
 /**
  * Returns a set of works based on provided tasks and class of the reader.
@@ -38,7 +33,7 @@ function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOption
 export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
 	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
 
-	return flatten(works);
+	return arrayUtils.flatten(works);
 }
 
 /**
@@ -47,7 +42,7 @@ export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): Entry
 export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Promise<EntryItem[]> {
 	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, opts);
 
-	return Promise.all(works).then(flatten);
+	return Promise.all(works).then(arrayUtils.flatten);
 }
 
 /**
