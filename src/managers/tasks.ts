@@ -59,7 +59,7 @@ export function makeNegativeTaskGroup(negative: PatternsGroup): TaskGroup {
 
 		collection[base] = {
 			base,
-			globstar: false,
+			globstar: false, // Group of negative patterns is not an independent group (property is ignored)
 			patterns: negativePatterns.map(patternUtils.convertToNegativePattern),
 			positive: [],
 			negative: negativePatterns
