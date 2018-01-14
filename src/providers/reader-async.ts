@@ -3,32 +3,14 @@ import * as readdir from 'readdir-enhanced';
 import Reader from './reader';
 
 import { ITask } from '../managers/tasks';
-import { EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/entries';
 
 export default class ReaderAsync extends Reader {
-	/**
-	 * Returns founded paths with fs.Stats.
-	 */
-	public apiWithStat(root: string, options: readdir.IReaddirOptions): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
 	/**
 	 * Returns founded paths.
 	 */
 	public api(root: string, options: readdir.IReaddirOptions): NodeJS.ReadableStream {
-		return readdir.stream(root, options);
-	}
-
-	/**
-	 * Returns stream.
-	 */
-	public getStream(root: string, options: readdir.IReaddirOptions): NodeJS.ReadableStream {
-		if (this.options.stats) {
-			return this.apiWithStat(root, options);
-		}
-
-		return this.api(root, options);
+		return readdir.readdirStreamStat(root, options);
 	}
 
 	/**
@@ -41,14 +23,14 @@ export default class ReaderAsync extends Reader {
 		const entries: EntryItem[] = [];
 
 		return new Promise((resolve, reject) => {
-			const stream: NodeJS.ReadableStream = this.getStream(root, options);
+			const stream: NodeJS.ReadableStream = this.api(root, options);
 
 			stream.on('error', (err) => {
 				this.isEnoentCodeError(err) ? resolve([]) : reject(err);
 				stream.pause();
 			});
 
-			stream.on('data', (entry: EntryItem) => entries.push(this.transform(entry)));
+			stream.on('data', (entry: Entry) => entries.push(this.transform(entry)));
 			stream.on('end', () => resolve(entries));
 		});
 	}

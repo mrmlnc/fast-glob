@@ -6,7 +6,7 @@ import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
 import { IEntry, IReaddirOptions } from 'readdir-enhanced';
-import { EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/entries';
 import { Pattern } from '../types/patterns';
 
 export default abstract class Reader {
@@ -121,8 +121,14 @@ export default abstract class Reader {
 	/**
 	 * Returns transformed entry.
 	 */
-	public transform(entry: EntryItem): EntryItem {
-		return this.options.transform ? this.options.transform(entry) : entry;
+	public transform(entry: Entry): EntryItem {
+		const item: EntryItem = this.options.stats ? entry : entry.path;
+
+		if (this.options.transform === null) {
+			return item;
+		}
+
+		return this.options.transform(item);
 	}
 
 	/**

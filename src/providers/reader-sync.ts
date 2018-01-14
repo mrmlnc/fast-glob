@@ -7,28 +7,10 @@ import { Entry, EntryItem } from '../types/entries';
 
 export default class ReaderSync extends Reader {
 	/**
-	 * Returns founded paths with fs.Stats.
-	 */
-	public apiWithStat(root: string, options: readdir.IReaddirOptions): Entry[] {
-		return readdir.readdirSyncStat(root, options);
-	}
-
-	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, options: readdir.IReaddirOptions): string[] {
-		return readdir.sync(root, options);
-	}
-
-	/**
-	 * Returns entries.
-	 */
-	public getEntries(root: string, options: readdir.IReaddirOptions): EntryItem[] {
-		if (this.options.stats) {
-			return this.apiWithStat(root, options);
-		}
-
-		return this.api(root, options);
+	public api(root: string, options: readdir.IReaddirOptions): Entry[] {
+		return readdir.readdirSyncStat(root, options);
 	}
 
 	/**
@@ -39,9 +21,9 @@ export default class ReaderSync extends Reader {
 		const options = this.getReaderOptions(task);
 
 		try {
-			const entries: EntryItem[] = this.getEntries(root, options);
+			const entries: Entry[] = this.api(root, options);
 
-			return this.options.transform === null ? entries : entries.map<EntryItem>(this.transform, this);
+			return entries.map<EntryItem>(this.transform, this);
 		} catch (err) {
 			if (this.isEnoentCodeError(err)) {
 				return [];

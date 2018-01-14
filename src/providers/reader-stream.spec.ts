@@ -13,12 +13,8 @@ import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 
 class ReaderStreamFake extends ReaderStream {
-	public apiWithStat(): NodeJS.ReadableStream {
-		return this.fake({ path: 'fake' } as Entry);
-	}
-
 	public api(): NodeJS.ReadableStream {
-		return this.fake('fake');
+		return this.fake({ path: 'fake' } as Entry);
 	}
 
 	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
