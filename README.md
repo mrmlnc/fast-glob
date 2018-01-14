@@ -8,7 +8,7 @@
 ## :bulb: Highlights
 
   * :rocket: Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
-  * :beginner: User-friendly by supports multiple and negated patterns (`['*', '!*.md']`).
+  * :beginner: User-friendly, since it supports multiple and negated patterns (`['*', '!*.md']`).
   * :vertical_traffic_light: Rational, because it doesn't read excluded directories (`!**/node_modules`).
   * :gear: Universal, because it supports Synchronous, Promise and Stream API.
   * :money_with_wings: Economy, because it provides `fs.Stats` for matched path if you wanted.
