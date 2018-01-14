@@ -98,4 +98,18 @@ describe('Utils → Pattern', () => {
 			assert.equal(actual, expected);
 		});
 	});
+
+	describe('.hasGlobStar', () => {
+		it('should returns true', () => {
+			const actual = util.hasGlobStar('**/*.js');
+
+			assert.ok(actual);
+		});
+
+		it('should returns false', () => {
+			const actual = util.hasGlobStar('*.js');
+
+			assert.ok(!actual);
+		});
+	});
 });

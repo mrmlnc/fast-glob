@@ -6,6 +6,7 @@ import { IOptions } from './options';
 
 export interface ITask {
 	base: string;
+	globstar: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
@@ -39,6 +40,7 @@ export function makePositiveTaskGroup(positive: PatternsGroup): TaskGroup {
 
 		collection[base] = {
 			base,
+			globstar: positivePatterns.some(patternUtils.hasGlobStar),
 			patterns: positivePatterns,
 			positive: positivePatterns,
 			negative: []
@@ -57,6 +59,7 @@ export function makeNegativeTaskGroup(negative: PatternsGroup): TaskGroup {
 
 		collection[base] = {
 			base,
+			globstar: false,
 			patterns: negativePatterns.map(patternUtils.convertToNegativePattern),
 			positive: [],
 			negative: negativePatterns
@@ -124,6 +127,7 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	if ('.' in positiveGroup) {
 		const task: ITask = {
 			base: '.',
+			globstar: positive.some(patternUtils.hasGlobStar),
 			patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern)),
 			positive,
 			negative

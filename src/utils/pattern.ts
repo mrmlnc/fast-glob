@@ -50,3 +50,10 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 export function getBaseDirectory(pattern: Pattern): string {
 	return globParent(pattern);
 }
+
+/**
+ * Return true if provided pattern has globstar.
+ */
+export function hasGlobStar(pattern: Pattern): boolean {
+	return pattern.indexOf('**') !== -1;
+}

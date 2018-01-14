@@ -37,7 +37,7 @@ export default abstract class Reader {
 		return {
 			basePath: task.base === '.' ? '' : task.base,
 			filter: (entry) => this.filter(entry, task.patterns, task.negative),
-			deep: (entry) => this.deep(entry, task.negative),
+			deep: (entry) => this.deep(entry, task.negative, task.globstar),
 			sep: '/'
 		};
 	}
@@ -93,7 +93,7 @@ export default abstract class Reader {
 	/**
 	 * Returns true if directory must be read.
 	 */
-	public deep(entry: IEntry, negative: Pattern[]): boolean {
+	public deep(entry: IEntry, negative: Pattern[], globstar: boolean): boolean {
 		if (!this.options.deep) {
 			return false;
 		}
@@ -115,7 +115,11 @@ export default abstract class Reader {
 			return false;
 		}
 
-		return !micromatch.any(entry.path, negative, this.micromatchOptions);
+		if (micromatch.any(entry.path, negative, this.micromatchOptions)) {
+			return false;
+		}
+
+		return globstar;
 	}
 
 	/**
