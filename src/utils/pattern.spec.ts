@@ -112,4 +112,57 @@ describe('Utils → Pattern', () => {
 			assert.ok(!actual);
 		});
 	});
+
+	describe('.makePatternRe', () => {
+		it('should return regexp for provided pattern', () => {
+			const expected: RegExp = /^(?:(?:(?:\.(?:\/|\\))(?=.))?(?!\/)(?!\.)(?=.)[^\/]*?\.js(?:(?:\/|\\)|$))$/;
+
+			const actual = util.makeRe('*.js', {});
+
+			assert.equal(actual.source, expected.source);
+		});
+	});
+
+	describe('.convertPatternsToRe', () => {
+		it('should return regexps for provided patterns', () => {
+			const expected: RegExp = /^(?:(?:(?:\.(?:\/|\\))(?=.))?(?!\/)(?!\.)(?=.)[^\/]*?\.js(?:(?:\/|\\)|$))$/;
+
+			const [actual] = util.convertPatternsToRe(['*.js'], {});
+
+			assert.equal(actual.source, expected.source);
+		});
+	});
+	describe('.matchAny', () => {
+		it('should return true', () => {
+			const actual = util.matchAny('fixtures/file.txt', [/fixture/, /fixtures\/file/]);
+
+			assert.ok(actual);
+		});
+
+		it('should return false', () => {
+			const actual = util.matchAny('fixtures/directory', [/fixtures\/file/]);
+
+			assert.ok(!actual);
+		});
+	});
+
+	describe('.match', () => {
+		it('should return false by negative patterns', () => {
+			const actual = util.match('fixtures/file.txt', [], [/fixtures\/file/]);
+
+			assert.ok(!actual);
+		});
+
+		it('should return false by positive patterns', () => {
+			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.md/], []);
+
+			assert.ok(!actual);
+		});
+
+		it('should return true', () => {
+			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.txt/], []);
+
+			assert.ok(actual);
+		});
+	});
 });

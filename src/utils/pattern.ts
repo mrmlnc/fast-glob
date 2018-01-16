@@ -1,6 +1,7 @@
 import globParent = require('glob-parent');
+import micromatch = require('micromatch');
 
-import { Pattern } from '../types/patterns';
+import { Pattern, PatternRe } from '../types/patterns';
 
 /**
  * Returns negative pattern as positive pattern.
@@ -56,4 +57,38 @@ export function getBaseDirectory(pattern: Pattern): string {
  */
 export function hasGlobStar(pattern: Pattern): boolean {
 	return pattern.indexOf('**') !== -1;
+}
+
+/**
+ * Make RegExp for provided pattern.
+ */
+export function makeRe(pattern: Pattern, options: micromatch.Options): PatternRe {
+	return micromatch.makeRe(pattern, options);
+}
+
+/**
+ * Convert patterns to regexps.
+ */
+export function convertPatternsToRe(patterns: Pattern[], options: micromatch.Options): PatternRe[] {
+	return patterns.map((pattern) => makeRe(pattern, options));
+}
+
+/**
+ * Returns true if the entry match any of the given RegExp's.
+ */
+export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
+	for (const regexp of patternsRe) {
+		if (regexp.test(entry)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Returns true if the entry doesn't match any of the given negative RegExp's and match any of the given positive RegExp's.
+ */
+export function match(entry: string, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	return matchAny(entry, negativeRe) ? false : matchAny(entry, positiveRe);
 }

@@ -1,27 +1,30 @@
 import micromatch = require('micromatch');
 
 import * as pathUtils from '../../utils/path';
+import * as patternUtils from '../../utils/pattern';
 
 import { IOptions } from '../../managers/options';
 
 import { FilterFunction } from 'readdir-enhanced';
 import { IEntry } from '../../types/entries';
-import { Pattern } from '../../types/patterns';
+import { Pattern, PatternRe } from '../../types/patterns';
 
 export default class DeepFilter {
 	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
-	 * Return filter for directories.
+	 * Returns filter for directories.
 	 */
 	public getFilter(negative: Pattern[], globstar: boolean): FilterFunction {
-		return (entry: IEntry) => this.filter(entry, negative, globstar);
+		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+
+		return (entry: IEntry) => this.filter(entry, negativeRe, globstar);
 	}
 
 	/**
 	 * Returns true if directory must be read.
 	 */
-	private filter(entry: IEntry, negative: Pattern[], globstar: boolean): boolean {
+	private filter(entry: IEntry, negativeRe: PatternRe[], globstar: boolean): boolean {
 		if (!this.options.deep) {
 			return false;
 		}
@@ -43,7 +46,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		if (micromatch.any(entry.path, negative, this.micromatchOptions)) {
+		if (patternUtils.matchAny(entry.path, negativeRe)) {
 			return false;
 		}
 
