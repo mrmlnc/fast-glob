@@ -2,6 +2,7 @@ import micromatch = require('micromatch');
 
 import { IOptions } from '../../managers/options';
 
+import { FilterFunction } from 'readdir-enhanced';
 import { IEntry } from '../../types/entries';
 import { Pattern } from '../../types/patterns';
 
@@ -11,9 +12,16 @@ export default class DeepFilter {
 	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
+	 * Return filter for directories.
+	 */
+	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
+		return (entry: IEntry) => this.filter(entry, positive, negative);
+	}
+
+	/**
 	 * Returns true if entry must be added to result.
 	 */
-	public call(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
+	private filter(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
 		// Exclude duplicate results
 		if (this.options.unique) {
 			if (this.isDuplicateEntry(entry)) {
