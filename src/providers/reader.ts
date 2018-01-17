@@ -42,8 +42,8 @@ export default abstract class Reader {
 	public getReaderOptions(task: ITask): IReaddirOptions {
 		return {
 			basePath: task.base === '.' ? '' : task.base,
-			filter: (entry) => this.entryFilter.call(entry, task.patterns, task.negative),
-			deep: (entry) => this.deepFilter.call(entry, task.negative, task.globstar),
+			filter: this.entryFilter.getFilter(task.positive, task.negative),
+			deep: this.deepFilter.getFilter(task.negative, task.globstar),
 			sep: '/'
 		};
 	}

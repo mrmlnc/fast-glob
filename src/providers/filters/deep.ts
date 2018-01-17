@@ -1,17 +1,30 @@
 import micromatch = require('micromatch');
 
+import * as pathUtils from '../../utils/path';
+import * as patternUtils from '../../utils/pattern';
+
 import { IOptions } from '../../managers/options';
 
+import { FilterFunction } from 'readdir-enhanced';
 import { IEntry } from '../../types/entries';
-import { Pattern } from '../../types/patterns';
+import { Pattern, PatternRe } from '../../types/patterns';
 
 export default class DeepFilter {
 	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
+	 * Returns filter for directories.
+	 */
+	public getFilter(negative: Pattern[], globstar: boolean): FilterFunction {
+		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+
+		return (entry: IEntry) => this.filter(entry, negativeRe, globstar);
+	}
+
+	/**
 	 * Returns true if directory must be read.
 	 */
-	public call(entry: IEntry, negative: Pattern[], globstar: boolean): boolean {
+	private filter(entry: IEntry, negativeRe: PatternRe[], globstar: boolean): boolean {
 		if (!this.options.deep) {
 			return false;
 		}
@@ -33,7 +46,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		if (micromatch.any(entry.path, negative, this.micromatchOptions)) {
+		if (patternUtils.matchAny(entry.path, negativeRe)) {
 			return false;
 		}
 
@@ -41,20 +54,10 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns true if the last partial of the path starting with a period.
-	 */
-	public isDotDirectory(entry: IEntry): boolean {
-		const pathPartials = entry.path.split('/');
-		const lastPathPartial: string = pathPartials[pathPartials.length - 1];
-
-		return lastPathPartial.startsWith('.');
-	}
-
-	/**
 	 * Returns true for dot directories if the «dot» option is enabled.
 	 */
 	private isFollowedDotDirectory(entry: IEntry): boolean {
-		return !this.options.dot && this.isDotDirectory(entry);
+		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
 	}
 
 	/**

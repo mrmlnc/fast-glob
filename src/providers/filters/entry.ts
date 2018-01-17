@@ -1,9 +1,12 @@
 import micromatch = require('micromatch');
 
+import * as patternUtils from '../../utils/pattern';
+
 import { IOptions } from '../../managers/options';
 
+import { FilterFunction } from 'readdir-enhanced';
 import { IEntry } from '../../types/entries';
-import { Pattern } from '../../types/patterns';
+import { Pattern, PatternRe } from '../../types/patterns';
 
 export default class DeepFilter {
 	public readonly index: Map<string, undefined> = new Map();
@@ -11,9 +14,19 @@ export default class DeepFilter {
 	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
+	 * Returns filter for directories.
+	 */
+	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
+		const positiveRe: PatternRe[] = patternUtils.convertPatternsToRe(positive, this.micromatchOptions);
+		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+
+		return (entry: IEntry) => this.filter(entry, positiveRe, negativeRe);
+	}
+
+	/**
 	 * Returns true if entry must be added to result.
 	 */
-	public call(entry: IEntry, patterns: Pattern[], negative: Pattern[]): boolean {
+	private filter(entry: IEntry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
 		// Exclude duplicate results
 		if (this.options.unique) {
 			if (this.isDuplicateEntry(entry)) {
@@ -29,7 +42,7 @@ export default class DeepFilter {
 		}
 
 		// Filter directories that will be excluded by deep filter
-		if (entry.isDirectory() && micromatch.any(entry.path, negative, this.micromatchOptions)) {
+		if (entry.isDirectory() && patternUtils.matchAny(entry.path, negativeRe)) {
 			return false;
 		}
 
@@ -38,10 +51,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		// Filter by patterns
-		const entries = micromatch([entry.path], patterns, this.micromatchOptions);
-
-		return entries.length !== 0;
+		return patternUtils.match(entry.path, positiveRe, negativeRe);
 	}
 
 	/**

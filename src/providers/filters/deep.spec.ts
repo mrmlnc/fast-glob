@@ -6,9 +6,11 @@ import DeepFilter from './deep';
 
 import * as optionsManager from '../../managers/options';
 
+import { FilterFunction } from 'readdir-enhanced';
 import { IOptions, IPartialOptions } from '../../managers/options';
+import { Pattern } from '../../types/patterns';
 
-function getFilter(options?: IPartialOptions): DeepFilter {
+function getDeepFilterInstance(options?: IPartialOptions): DeepFilter {
 	const preparedOptions: IOptions = optionsManager.prepare(options);
 
 	return new DeepFilter(preparedOptions, {
@@ -16,10 +18,14 @@ function getFilter(options?: IPartialOptions): DeepFilter {
 	});
 }
 
+function getFilter(patterns: Pattern[], globstar: boolean, options?: IPartialOptions): FilterFunction {
+	return getDeepFilterInstance(options).getFilter(patterns, globstar);
+}
+
 describe('Providers → Filters → Deep', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const filter = getFilter();
+			const filter = getDeepFilterInstance();
 
 			assert.ok(filter instanceof DeepFilter);
 		});
@@ -28,17 +34,17 @@ describe('Providers → Filters → Deep', () => {
 	describe('.call', () => {
 		describe('Filter by «deep» option', () => {
 			it('should return false for nested directory when option is disabled', () => {
-				const filter = getFilter({ deep: false });
+				const filter = getFilter([], true /** globstar */, { deep: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
 
 			it('should return false for nested directory when option has specified level', () => {
-				const filter = getFilter({ deep: 2 });
+				const filter = getFilter([], true /** globstar */, { deep: 2 });
 
 				const entry = tests.getEntry({
 					path: 'fixtures/directory/directory',
@@ -46,7 +52,7 @@ describe('Providers → Filters → Deep', () => {
 					isDirectory: () => true
 				});
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
@@ -54,21 +60,21 @@ describe('Providers → Filters → Deep', () => {
 
 		describe('Filter by «followSymlinkedDirectories» option', () => {
 			it('should return true for symlinked directory when option is enabled', () => {
-				const filter = getFilter();
+				const filter = getFilter([], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return false for symlinked directory when option is disabled', () => {
-				const filter = getFilter({ followSymlinkedDirectories: false });
+				const filter = getFilter([], true /** globstar */, { followSymlinkedDirectories: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
@@ -76,21 +82,21 @@ describe('Providers → Filters → Deep', () => {
 
 		describe('Filter by «dot» option', () => {
 			it('should return true for directory that starting with a period when option is enabled', () => {
-				const filter = getFilter({ onlyFiles: false, dot: true });
+				const filter = getFilter([], true /** globstar */, { onlyFiles: false, dot: true });
 
 				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return false for directory that starting with a period when option is disabled', () => {
-				const filter = getFilter();
+				const filter = getFilter([], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
@@ -98,41 +104,41 @@ describe('Providers → Filters → Deep', () => {
 
 		describe('Filter by patterns', () => {
 			it('should return true for directory when negative patterns is not defined', () => {
-				const filter = getFilter();
+				const filter = getFilter([], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return true for directory that not matched to negative patterns', () => {
-				const filter = getFilter();
+				const filter = getFilter(['**/pony/**'], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, ['**/pony/**'], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return true for directory when negative patterns has globstar after directory name', () => {
-				const filter = getFilter();
+				const filter = getFilter(['**/directory/**'], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, ['**/directory/**'], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return false for directory that matched to negative patterns', () => {
-				const filter = getFilter();
+				const filter = getFilter(['**/directory'], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, ['**/directory'], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
@@ -140,46 +146,24 @@ describe('Providers → Filters → Deep', () => {
 
 		describe('Filter by «globstar» parameter', () => {
 			it('should return true by globstar parameter', () => {
-				const filter = getFilter();
+				const filter = getFilter([], true /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], true /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(actual);
 			});
 
 			it('should return false by globstar parameter', () => {
-				const filter = getFilter();
+				const filter = getFilter([], false /** globstar */);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter.call(entry, [], false /** globstar */);
+				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
-		});
-	});
-
-	describe('.isDotDirectory', () => {
-		it('should return true for dot directory', () => {
-			const filter = getFilter();
-
-			const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
-
-			const actual = filter.isDotDirectory(entry);
-
-			assert.ok(actual);
-		});
-
-		it('should return false for non-dot directory', () => {
-			const filter = getFilter();
-
-			const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-			const actual = filter.isDotDirectory(entry);
-
-			assert.ok(!actual);
 		});
 	});
 });
