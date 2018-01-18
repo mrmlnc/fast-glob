@@ -7,11 +7,15 @@ describe('Benchmark → Utils', () => {
 	const oldProcessMemoryUsage = process.memoryUsage;
 
 	before(() => {
+		process.env.FG_TEST_ENV_INTEGER = '1';
+
 		process.hrtime = () => [0, 1e7];
 		process.memoryUsage = () => ({ rss: 0, heapTotal: 0, heapUsed: 10 * 1024 * 1024 });
 	});
 
 	after(() => {
+		delete process.env.FG_TEST_ENV_INTEGER;
+
 		process.hrtime = oldProcessHrtime;
 		process.memoryUsage = oldProcessMemoryUsage;
 	});
@@ -93,6 +97,24 @@ describe('Benchmark → Utils', () => {
 			const expected = 1;
 
 			const actual = utils.getStdev([1, 2, 3]);
+
+			assert.equal(actual, expected);
+		});
+	});
+
+	describe('.getEnvAsInteger', () => {
+		it('should returns integer', () => {
+			const expected: number = 1;
+
+			const actual = utils.getEnvAsInteger('FG_TEST_ENV_INTEGER');
+
+			assert.equal(actual, expected);
+		});
+
+		it('should returns undefined', () => {
+			const expected: undefined = undefined;
+
+			const actual = utils.getEnvAsInteger('NON_EXIST_ENV_VARIABLE');
 
 			assert.equal(actual, expected);
 		});

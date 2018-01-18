@@ -37,3 +37,9 @@ export function getAverageValue(raw: number[]): number {
 export function getStdev(raw: number[]): number {
 	return stdev(raw);
 }
+
+export function getEnvAsInteger(name: string): number | undefined {
+	const env = process.env[name];
+
+	return env ? parseInt(env, 10) : undefined;
+}

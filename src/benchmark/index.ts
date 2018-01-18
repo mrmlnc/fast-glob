@@ -4,20 +4,23 @@ import rimraf = require('rimraf');
 import * as fixtures from './fixtures';
 import * as logger from './logger';
 import Runner, { IRunnerOptions } from './runner';
+import * as utils from './utils';
 
 interface IArgv extends IRunnerOptions {
 	basedir: string;
 }
 
+const defaultArgv: IArgv = {
+	basedir: '.benchmark',
+	type: 'async',
+	depth: utils.getEnvAsInteger('BENCHMARK_DEPTH') || 1,
+	launches: utils.getEnvAsInteger('BENCHMARK_LAUNCHES') || 10,
+	maxStdev: utils.getEnvAsInteger('BENCHMARK_MAX_STDEV') || 3,
+	retries: utils.getEnvAsInteger('BENCHMARK_RETRIES') || 5
+};
+
 const argv = minimist<IArgv>(process.argv.slice(2), {
-	default: {
-		basedir: '.benchmark',
-		type: 'async',
-		depth: 1,
-		launches: 10,
-		maxStdev: 3,
-		retries: 5
-	} as IArgv
+	default: defaultArgv
 });
 
 const runner = new Runner(argv.basedir, argv);
