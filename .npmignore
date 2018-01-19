@@ -18,6 +18,7 @@ out/**/*.spec.js
 # Other directories
 .tmp
 .benchmark
+.github
 fixtures
 src
 node_modules
