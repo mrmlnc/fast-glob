@@ -280,7 +280,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `ignore`     | [`ignore`](#ignore) |
 | `follow`     | [`followSymlinkedDirectories`](#followsymlinkeddirectories) |
 | `realpath`   | – |
-| `absolute`   | – |
+| `absolute`   | [`absolute`](#absolute) |
 
 ## Benchmarks
 
