@@ -15,16 +15,16 @@ export default class DeepFilter {
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(negative: Pattern[], globstar: boolean): FilterFunction {
+	public getFilter(negative: Pattern[], recursive: boolean): FilterFunction {
 		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
 
-		return (entry: IEntry) => this.filter(entry, negativeRe, globstar);
+		return (entry: IEntry) => this.filter(entry, negativeRe, recursive);
 	}
 
 	/**
 	 * Returns true if directory must be read.
 	 */
-	private filter(entry: IEntry, negativeRe: PatternRe[], globstar: boolean): boolean {
+	private filter(entry: IEntry, negativeRe: PatternRe[], recursive: boolean): boolean {
 		if (!this.options.deep) {
 			return false;
 		}
@@ -50,7 +50,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		return globstar;
+		return recursive;
 	}
 
 	/**

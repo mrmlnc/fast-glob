@@ -99,15 +99,21 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.hasGlobStar', () => {
-		it('should returns true', () => {
-			const actual = util.hasGlobStar('**/*.js');
+	describe('.isRecursive', () => {
+		it('should returns true for globstar', () => {
+			const actual = util.isRecursive('**/*.js');
+
+			assert.ok(actual);
+		});
+
+		it('should returns true for star with slash', () => {
+			const actual = util.isRecursive('*/*.js');
 
 			assert.ok(actual);
 		});
 
 		it('should returns false', () => {
-			const actual = util.hasGlobStar('*.js');
+			const actual = util.isRecursive('*.js');
 
 			assert.ok(!actual);
 		});
