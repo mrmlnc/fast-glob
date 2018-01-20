@@ -55,8 +55,8 @@ export function getBaseDirectory(pattern: Pattern): string {
 /**
  * Return true if provided pattern has globstar.
  */
-export function hasGlobStar(pattern: Pattern): boolean {
-	return pattern.indexOf('**') !== -1;
+export function isRecursive(pattern: Pattern): boolean {
+	return pattern.indexOf('**') !== -1 || pattern.indexOf('*/') !== -1;
 }
 
 /**

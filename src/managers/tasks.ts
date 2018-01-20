@@ -40,7 +40,7 @@ export function makePositiveTaskGroup(positive: PatternsGroup): TaskGroup {
 
 		collection[base] = {
 			base,
-			recursive: positivePatterns.some(patternUtils.hasGlobStar),
+			recursive: positivePatterns.some(patternUtils.isRecursive),
 			patterns: positivePatterns,
 			positive: positivePatterns,
 			negative: []
@@ -127,7 +127,7 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	if ('.' in positiveGroup) {
 		const task: ITask = {
 			base: '.',
-			recursive: positive.some(patternUtils.isDeep),
+			recursive: positive.some(patternUtils.isRecursive),
 			patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern)),
 			positive,
 			negative
