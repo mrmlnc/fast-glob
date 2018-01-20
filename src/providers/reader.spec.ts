@@ -59,7 +59,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getReaderOptions({
 				base: '.',
-				globstar: true,
+				recursive: true,
 				patterns: ['**/*'],
 				positive: ['**/*'],
 				negative: []
@@ -76,7 +76,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getReaderOptions({
 				base: 'fixtures',
-				globstar: true,
+				recursive: true,
 				patterns: ['**/*'],
 				positive: ['**/*'],
 				negative: []
