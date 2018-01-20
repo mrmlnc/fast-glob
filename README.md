@@ -286,9 +286,11 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 
 **Tech specs:**
 
-  * Processor: 2 ⅹ E5-2660 (32 core)
-  * RAM: 64GB
-  * Disk: RAMDisk
+Server: [Vultr Bare Metal](https://www.vultr.com/pricing/baremetal)
+
+  * Processor: E3-1270v6 (8 CPU)
+  * RAM: 32GB
+  * Disk: SSD
 
 You can see results [here](https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c) for latest release.
 
