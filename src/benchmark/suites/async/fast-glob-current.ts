@@ -7,7 +7,8 @@ import * as utils from '../../utils';
 import { IPartialOptions } from '../../../managers/options';
 
 const options: IPartialOptions = {
-	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string)
+	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
+	unique: false
 };
 
 const timeStart = utils.timeStart();
