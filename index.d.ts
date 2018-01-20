@@ -1,9 +1,9 @@
-import { TTransformFunction, IPartialOptions } from './out/managers/options';
+import { TransformFunction as Transform, IPartialOptions } from './out/managers/options';
 import { Entry, EntryItem } from './out/types/entries';
 import { Pattern } from './out/types/patterns';
 
 declare namespace FastGlob {
-	type TransformFunction<T> = TTransformFunction<T>;
+	type TransformFunction<T> = Transform<T>;
 
 	interface IApi {
 		<T = EntryItem>(patterns: Pattern | Pattern[], options?: IPartialOptions<T>): Promise<T[]>;
