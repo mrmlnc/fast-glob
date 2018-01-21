@@ -10,7 +10,7 @@ tslint.json
 out/benchmark
 out/tests
 out/**/*.js.map
-out/**/*.spec.js
+out/**/*.spec.{d.ts,js}
 
 # Editor directories
 .vscode
