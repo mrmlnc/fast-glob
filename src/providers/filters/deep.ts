@@ -16,9 +16,8 @@ export default class DeepFilter {
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(positive: Pattern[], negative: Pattern[], globstar: boolean): FilterFunction {
-		const depth = this.getMaxDeth(positive, globstar);
-
+	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
+		const depth = this.getMaxDeth(positive);
 		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
 
 		return (entry: IEntry) => this.filter(entry, negativeRe, depth);
@@ -54,10 +53,11 @@ export default class DeepFilter {
 	/**
 	 * Returns max depth for reading.
 	 */
-	private getMaxDeth(positive: Pattern[], globstar: boolean): number {
-		const positiveDepths = positive.map(patternUtils.getDepth);
+	private getMaxDeth(positive: Pattern[]): number {
+		const globstar = positive.some(patternUtils.hasGlobStar);
+		const patternDepths = positive.map(patternUtils.getDepth);
 
-		return globstar ? Infinity : arrayUtils.max(positiveDepths);
+		return globstar ? Infinity : arrayUtils.max(patternDepths);
 	}
 
 	/**

@@ -43,7 +43,7 @@ export default abstract class Reader {
 		return {
 			basePath: task.base === '.' ? '' : task.base,
 			filter: this.entryFilter.getFilter(task.positive, task.negative),
-			deep: this.deepFilter.getFilter(task.positive, task.negative, task.globstar),
+			deep: this.deepFilter.getFilter(task.positive, task.negative),
 			sep: '/'
 		};
 	}

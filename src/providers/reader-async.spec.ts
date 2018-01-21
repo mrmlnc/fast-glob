@@ -46,7 +46,6 @@ describe('Providers → ReaderAsync', () => {
 	describe('.read', () => {
 		const task: ITask = {
 			base: 'fixtures',
-			globstar: true,
 			patterns: ['**/*'],
 			positive: ['**/*'],
 			negative: []

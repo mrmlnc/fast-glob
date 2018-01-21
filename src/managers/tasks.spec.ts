@@ -25,7 +25,6 @@ describe('Managers → Task', () => {
 			const expected: TaskGroup = {
 				a: {
 					base: 'a',
-					globstar: false,
 					patterns: ['a/*.txt', 'a/*.md'],
 					positive: ['a/*.txt', 'a/*.md'],
 					negative: []
@@ -43,7 +42,6 @@ describe('Managers → Task', () => {
 			const expected: TaskGroup = {
 				a: {
 					base: 'a',
-					globstar: false,
 					patterns: ['!a/*.txt', '!a/*.md'],
 					positive: [],
 					negative: ['a/*.txt', 'a/*.md']
@@ -61,7 +59,6 @@ describe('Managers → Task', () => {
 			const positive: TaskGroup = {
 				a: {
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*'],
 					positive: ['a/**/*'],
 					negative: []
@@ -71,7 +68,6 @@ describe('Managers → Task', () => {
 			const negative: TaskGroup = {
 				a: {
 					base: 'a',
-					globstar: false,
 					patterns: ['!a/**/*.txt'],
 					positive: [],
 					negative: ['a/**/*.txt']
@@ -81,7 +77,6 @@ describe('Managers → Task', () => {
 			const expected: TaskGroup = {
 				a: {
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*', '!a/**/*.txt'],
 					positive: ['a/**/*'],
 					negative: ['a/**/*.txt']
@@ -98,7 +93,6 @@ describe('Managers → Task', () => {
 		it('should returns tasks', () => {
 			const expected: ITask[] = [{
 				base: 'a',
-				globstar: true,
 				patterns: ['a/**/*', '!a/**/*.txt'],
 				positive: ['a/**/*'],
 				negative: ['a/**/*.txt']
@@ -124,7 +118,6 @@ describe('Managers → Task', () => {
 			it('should returns one global task', () => {
 				const expected: manager.ITask[] = [{
 					base: '.',
-					globstar: true,
 					patterns: ['**/*'],
 					positive: ['**/*'],
 					negative: []
@@ -139,7 +132,6 @@ describe('Managers → Task', () => {
 			it('should returns one global task with negative patterns', () => {
 				const expected: manager.ITask[] = [{
 					base: '.',
-					globstar: true,
 					patterns: ['**/*', '!**/*.md'],
 					positive: ['**/*'],
 					negative: ['**/*.md']
@@ -154,7 +146,6 @@ describe('Managers → Task', () => {
 			it('should returns one global task with negative patterns from options', () => {
 				const expected: manager.ITask[] = [{
 					base: '.',
-					globstar: true,
 					patterns: ['**/*', '!**/*.md'],
 					positive: ['**/*'],
 					negative: ['**/*.md']
@@ -171,7 +162,6 @@ describe('Managers → Task', () => {
 			it('should returns one task', () => {
 				const expected: manager.ITask[] = [{
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*'],
 					positive: ['a/**/*'],
 					negative: []
@@ -186,7 +176,6 @@ describe('Managers → Task', () => {
 			it('should returns one task with negative patterns', () => {
 				const expected: manager.ITask[] = [{
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*', '!a/*.md'],
 					positive: ['a/**/*'],
 					negative: ['a/*.md']
@@ -201,7 +190,6 @@ describe('Managers → Task', () => {
 			it('should returns one task without unused negative patterns', () => {
 				const expected: manager.ITask[] = [{
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*'],
 					positive: ['a/**/*'],
 					negative: []
@@ -216,7 +204,6 @@ describe('Managers → Task', () => {
 			it('should returns one task with negative patterns from options', () => {
 				const expected: manager.ITask[] = [{
 					base: 'a',
-					globstar: true,
 					patterns: ['a/**/*', '!a/*.md'],
 					positive: ['a/**/*'],
 					negative: ['a/*.md']
@@ -234,14 +221,14 @@ describe('Managers → Task', () => {
 				const expected: manager.ITask[] = [
 					{
 						base: 'a',
-						globstar: false,
+
 						patterns: ['a/*', '!a/*.md'],
 						positive: ['a/*'],
 						negative: ['a/*.md']
 					},
 					{
 						base: 'b',
-						globstar: false,
+
 						patterns: ['b/*'],
 						positive: ['b/*'],
 						negative: []
@@ -258,14 +245,14 @@ describe('Managers → Task', () => {
 				const expected: manager.ITask[] = [
 					{
 						base: 'a',
-						globstar: false,
+
 						patterns: ['a/*', '!a/*.md', '!**/*.txt'],
 						positive: ['a/*'],
 						negative: ['a/*.md', '**/*.txt']
 					},
 					{
 						base: 'b',
-						globstar: false,
+
 						patterns: ['b/*', '!**/*.txt'],
 						positive: ['b/*'],
 						negative: ['**/*.txt']
@@ -282,14 +269,14 @@ describe('Managers → Task', () => {
 				const expected: manager.ITask[] = [
 					{
 						base: 'a',
-						globstar: false,
+
 						patterns: ['a/*', '!a/*.md', '!**/*.txt'],
 						positive: ['a/*'],
 						negative: ['a/*.md', '**/*.txt']
 					},
 					{
 						base: 'b',
-						globstar: false,
+
 						patterns: ['b/*', '!**/*.txt'],
 						positive: ['b/*'],
 						negative: ['**/*.txt']
