@@ -3,7 +3,7 @@
 .gitignore
 .travis.yml
 appveyor.yml
-tconfig.json
+tsconfig.json
 tslint.json
 
 # Builded files
