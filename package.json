@@ -36,7 +36,7 @@
     "bash-glob": "^2.0.0",
     "compute-stdev": "^1.0.0",
     "execa": "^0.8.0",
-    "fast-glob": "^1.0.1",
+    "fast-glob": "^2.0.0",
     "glob-stream": "^6.1.0",
     "globby": "^7.1.1",
     "minimist": "^1.2.0",
