@@ -32,6 +32,7 @@
     "@types/minimist": "^1.2.0",
     "@types/mocha": "^2.2.46",
     "@types/node": "^9.3.0",
+    "@types/readdir-enhanced": "^2.2.0",
     "@types/rimraf": "2.0.2",
     "bash-glob": "^2.0.0",
     "compute-stdev": "^1.0.0",

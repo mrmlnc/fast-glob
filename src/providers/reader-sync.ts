@@ -9,7 +9,7 @@ export default class ReaderSync extends Reader {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, options: readdir.IReaddirOptions): Entry[] {
+	public api(root: string, options: readdir.Options): Entry[] {
 		return readdir.readdirSyncStat(root, options);
 	}
 

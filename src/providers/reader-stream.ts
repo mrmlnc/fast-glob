@@ -21,7 +21,7 @@ export default class ReaderStream extends Reader {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, options: readdir.IReaddirOptions): NodeJS.ReadableStream {
+	public api(root: string, options: readdir.Options): NodeJS.ReadableStream {
 		return readdir.readdirStreamStat(root, options);
 	}
 

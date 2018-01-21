@@ -8,7 +8,7 @@ import EntryFilter from './filters/entry';
 import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
-import { IReaddirOptions } from 'readdir-enhanced';
+import { Options as IReaddirOptions } from 'readdir-enhanced';
 import { Entry, EntryItem } from '../types/entries';
 
 export default abstract class Reader {
