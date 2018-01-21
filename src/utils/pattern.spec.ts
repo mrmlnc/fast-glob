@@ -113,6 +113,16 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	describe('.getDepth', () => {
+		it('should returns 3', () => {
+			const expected: number = 4;
+
+			const actual = util.getDepth('a/b/*/*.js');
+
+			assert.equal(actual, expected);
+		});
+	});
+
 	describe('.makePatternRe', () => {
 		it('should return regexp for provided pattern', () => {
 			const expected: RegExp = /^(?:(?:(?:\.(?:\/|\\))(?=.))?(?!\/)(?!\.)(?=.)[^\/]*?\.js(?:(?:\/|\\)|$))$/;
