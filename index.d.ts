@@ -3,6 +3,7 @@ import { Entry, EntryItem } from './out/types/entries';
 import { Pattern } from './out/types/patterns';
 
 declare namespace FastGlob {
+	type Options<T = EntryItem> = IPartialOptions<T>;
 	type TransformFunction<T> = Transform<T>;
 
 	interface IApi {
