@@ -60,6 +60,13 @@ export function hasGlobStar(pattern: Pattern): boolean {
 }
 
 /**
+ * Return naive depth of provided pattern.
+ */
+export function getDepth(pattern: Pattern): number {
+	return pattern.split('/').length;
+}
+
+/**
  * Make RegExp for provided pattern.
  */
 export function makeRe(pattern: Pattern, options: micromatch.Options): PatternRe {
