@@ -283,5 +283,19 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 		});
+
+		describe('Idempotence', () => {
+			it('should return the data without changing', () => {
+				const filter = getFilter(['**/*'], [], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const expected = entry.path;
+
+				filter(entry);
+
+				assert.equal(entry.path, expected);
+			});
+		});
 	});
 });
