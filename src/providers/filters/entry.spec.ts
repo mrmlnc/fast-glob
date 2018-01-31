@@ -231,58 +231,57 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 		});
+
+		describe('Filter by patterns', () => {
+			it('should return true for file that matched to patterns', () => {
+				const filter = getFilter(['**/*'], [], { onlyFiles: false });
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return false for file that not matched to patterns', () => {
+				const filter = getFilter(['**/*.md'], [], { onlyFiles: false });
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return false for file that excluded by negative patterns', () => {
+				const filter = getFilter(['**/*', '!**/*.txt'], ['**/*.txt'], { onlyFiles: false });
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return true for directory that matched to patterns', () => {
+				const filter = getFilter(['**/directory/**'], [], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return false for directory that not matched to patterns', () => {
+				const filter = getFilter(['**/super_directory/**'], [], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
 	});
-
-	describe('Filter by patterns', () => {
-		it('should return true for file that matched to patterns', () => {
-			const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-			const entry = tests.getFileEntry(false /** dot */);
-
-			const actual = filter(entry);
-
-			assert.ok(actual);
-		});
-
-		it('should return false for file that not matched to patterns', () => {
-			const filter = getFilter(['**/*.md'], [], { onlyFiles: false });
-
-			const entry = tests.getFileEntry(false /** dot */);
-
-			const actual = filter(entry);
-
-			assert.ok(!actual);
-		});
-
-		it('should return false for file that excluded by negative patterns', () => {
-			const filter = getFilter(['**/*', '!**/*.txt'], ['**/*.txt'], { onlyFiles: false });
-
-			const entry = tests.getFileEntry(false /** dot */);
-
-			const actual = filter(entry);
-
-			assert.ok(!actual);
-		});
-
-		it('should return true for directory that matched to patterns', () => {
-			const filter = getFilter(['**/directory/**'], [], { onlyFiles: false });
-
-			const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-			const actual = filter(entry);
-
-			assert.ok(actual);
-		});
-
-		it('should return false for directory that not matched to patterns', () => {
-			const filter = getFilter(['**/super_directory/**'], [], { onlyFiles: false });
-
-			const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-			const actual = filter(entry);
-
-			assert.ok(!actual);
-		});
-	});
-
 });
