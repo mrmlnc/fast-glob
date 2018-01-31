@@ -27,6 +27,8 @@ export default class DeepFilter {
 	 * Returns true if entry must be added to result.
 	 */
 	private filter(entry: IEntry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+		let entryPath: string = entry.path;
+
 		// Exclude duplicate results
 		if (this.options.unique) {
 			if (this.isDuplicateEntry(entry)) {
@@ -38,11 +40,11 @@ export default class DeepFilter {
 
 		// Mark directory by the final slash. Need to micromatch to support «directory/**» patterns
 		if (entry.isDirectory()) {
-			entry.path += '/';
+			entryPath += '/';
 		}
 
 		// Filter directories that will be excluded by deep filter
-		if (entry.isDirectory() && patternUtils.matchAny(entry.path, negativeRe)) {
+		if (entry.isDirectory() && patternUtils.matchAny(entryPath, negativeRe)) {
 			return false;
 		}
 
@@ -51,7 +53,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		return patternUtils.match(entry.path, positiveRe, negativeRe);
+		return patternUtils.match(entryPath, positiveRe, negativeRe);
 	}
 
 	/**
