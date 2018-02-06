@@ -123,8 +123,8 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return true for directory when negative patterns has globstar after directory name', () => {
-				const filter = getFilter(['**/*'], ['**/directory/**']);
+			it('should return true for directory when negative patterns has globstar and star after directory name', () => {
+				const filter = getFilter(['**/*'], ['**/directory/**/*']);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
