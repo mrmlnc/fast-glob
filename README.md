@@ -250,7 +250,7 @@ fg.sync(['**/*.md'], { ignore: '**/second/**' }); // ['first/file.txt']
 
 > :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
 
-You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
+You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. This package does not respect the order of patterns. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
 
 ```js
 fg.sync(['**/*.txt', '!**/second/**', 'first/second/**/*.txt']); // ['first/file.txt', 'first/second/file.txt']
