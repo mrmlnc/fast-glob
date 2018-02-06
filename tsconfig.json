@@ -14,6 +14,7 @@
 		"alwaysStrict": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
 
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitAny": true,
