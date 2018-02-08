@@ -3,6 +3,8 @@ import micromatch = require('micromatch');
 
 import { Pattern, PatternRe } from '../types/patterns';
 
+const GLOBSTAR = '**';
+
 /**
  * Returns negative pattern as positive pattern.
  */
@@ -56,7 +58,21 @@ export function getBaseDirectory(pattern: Pattern): string {
  * Return true if provided pattern has globstar.
  */
 export function hasGlobStar(pattern: Pattern): boolean {
-	return pattern.indexOf('**') !== -1;
+	return pattern.indexOf(GLOBSTAR) !== -1;
+}
+
+/**
+ * Return true if provided pattern ends with slash and globstar.
+ */
+export function endsWithSlashGlobStar(pattern: Pattern): boolean {
+	return pattern.endsWith('/' + GLOBSTAR);
+}
+
+/**
+ * Trim trailing globstar if provided pattern ends with slash and globstar.
+ */
+export function trimTrailingSlashGlobStar(pattern: Pattern): Pattern {
+	return endsWithSlashGlobStar(pattern) ? pattern.slice(0, -3) : pattern;
 }
 
 /**

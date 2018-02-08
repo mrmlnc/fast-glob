@@ -115,7 +115,10 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	}
 
 	const ignore: Pattern[] = options.ignore;
-	const negative: Pattern[] = patternUtils.getNegativePatterns(patterns).map(patternUtils.convertToPositivePattern).concat(ignore);
+	const negative: Pattern[] = patternUtils.getNegativePatterns(patterns)
+		.map(patternUtils.convertToPositivePattern)
+		.concat(ignore)
+		.map(patternUtils.trimTrailingSlashGlobStar);
 
 	const positiveGroup: PatternsGroup = groupPatternsByParentDirectory(positive);
 	const negativeGroup: PatternsGroup = groupPatternsByParentDirectory(negative);

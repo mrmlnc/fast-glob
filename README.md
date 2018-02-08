@@ -234,26 +234,26 @@ const entries: IEntry[] = fg.sync<IEntry>(['*.md'], {
 
 ## How to exclude directory from reading?
 
-You can use a negative pattern like this: `!**/node_modules`. Also you can use `ignore` option. Just look at the example below.
+You can use a negative pattern like this: `!**/node_modules` or `!**/node_modules/**`. Also you can use `ignore` option. Just look at the example below.
 
   * **first/**
     * **second/**
       * file.md
     * file.md
 
-If you don't want to read the `second` directory, you must write the following pattern: `!**/second`.
+If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
 
 ```js
 fg.sync(['**/*.md', '!**/second']); // ['first/file.txt']
-fg.sync(['**/*.md'], { ignore: '**/second' }); // ['first/file.txt']
+fg.sync(['**/*.md'], { ignore: '**/second/**' }); // ['first/file.txt']
 ```
 
-> :warning: When you write `!**/second/**` it means that the directory will be **read**, but all the entries will not be included in the results.
+> :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
 
-You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
+You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. This package does not respect the order of patterns. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
 
 ```js
-fg.sync(['**/*.txt', '!**/second', 'first/second/**/*.txt']); // ['first/file.txt', 'first/second/file.txt']
+fg.sync(['**/*.txt', '!**/second/**', 'first/second/**/*.txt']); // ['first/file.txt', 'first/second/file.txt']
 ```
 
 However, be aware that it may not work as you expect in case where inside the `second` directory there is a directory matching to the pattern for exluding directory. Yes, sounds complicated. Simpler: the `second` directory inside the `second` directory.

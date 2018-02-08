@@ -214,6 +214,20 @@ describe('Managers → Task', () => {
 
 				assert.deepEqual(actual, expected);
 			});
+
+			it('should returns one task with expanded negative patterns that ends with globstar', () => {
+				const expected: manager.ITask[] = [{
+					base: 'a',
+					patterns: ['a/**/*', '!a'],
+					positive: ['a/**/*'],
+					negative: ['a']
+				}];
+
+				const options = optionsManager.prepare({ ignore: ['a/**'] });
+				const actual = manager.generate(['a/**/*'], options);
+
+				assert.deepEqual(actual, expected);
+			});
 		});
 
 		describe('Tasks', () => {
