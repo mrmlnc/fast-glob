@@ -9,7 +9,7 @@
 
   * :rocket: Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
   * :beginner: User-friendly, since it supports multiple and negated patterns (`['*', '!*.md']`).
-  * :vertical_traffic_light: Rational, because it doesn't read excluded directories (`!**/node_modules`).
+  * :vertical_traffic_light: Rational, because it doesn't read excluded directories (`!**/node_modules/**`).
   * :gear: Universal, because it supports Synchronous, Promise and Stream API.
   * :money_with_wings: Economy, because it provides `fs.Stats` for matched path if you wanted.
 
@@ -71,6 +71,8 @@ Returns a `Promise<Array>` of matching entries.
 #### patterns
 
   * Type: `string|string[]`
+
+This package does not respect the order of patterns. First, all the negative patterns are applied, and only then the positive patterns.
 
 #### options
 
@@ -250,13 +252,7 @@ fg.sync(['**/*.md'], { ignore: '**/second/**' }); // ['first/file.txt']
 
 > :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
 
-You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances. This package does not respect the order of patterns. But… you can specify a more meaningful pattern, which will be launched in parallel with the first.
-
-```js
-fg.sync(['**/*.txt', '!**/second/**', 'first/second/**/*.txt']); // ['first/file.txt', 'first/second/file.txt']
-```
-
-However, be aware that it may not work as you expect in case where inside the `second` directory there is a directory matching to the pattern for exluding directory. Yes, sounds complicated. Simpler: the `second` directory inside the `second` directory.
+You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
 
 ## Compatible with `node-glob`?
 
