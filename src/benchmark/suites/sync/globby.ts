@@ -4,13 +4,9 @@ import glob = require('globby');
 
 import * as utils from '../../utils';
 
-import { IOptions } from 'glob';
-
-const options: IOptions = {
+const options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
-	nosort: true,
-	nounique: true,
-	nodir: true
+	unique: false
 };
 
 const timeStart = utils.timeStart();
