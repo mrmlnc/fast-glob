@@ -5,6 +5,16 @@ import * as util from './pattern';
 import { Pattern } from '../types/patterns';
 
 describe('Utils → Pattern', () => {
+	describe('.unixifyPattern', () => {
+		it('should convert backslashes to forward slashes', () => {
+			const expected: Pattern = '**/*';
+
+			const actual = util.unixifyPattern('**\\*');
+
+			assert.equal(actual, expected);
+		});
+	});
+
 	describe('.convertToPositivePattern', () => {
 		it('should returns converted positive pattern', () => {
 			const expected: Pattern = '*.js';

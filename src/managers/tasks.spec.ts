@@ -129,6 +129,20 @@ describe('Managers → Task', () => {
 				assert.deepEqual(actual, expected);
 			});
 
+			it('should returns one global task with converted slashes in the patterns', () => {
+				const expected: manager.ITask[] = [{
+					base: '.',
+					patterns: ['**/*'],
+					positive: ['**/*'],
+					negative: []
+				}];
+
+				const options = optionsManager.prepare({ ignore: [] });
+				const actual = manager.generate(['**\\*'], options);
+
+				assert.deepEqual(actual, expected);
+			});
+
 			it('should returns one global task with negative patterns', () => {
 				const expected: manager.ITask[] = [{
 					base: '.',
