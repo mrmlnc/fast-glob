@@ -109,13 +109,15 @@ export function makeTasks(positive: PatternsGroup, negative: PatternsGroup): ITa
  * Generate tasks for provided patterns based on base directory of each pattern.
  */
 export function generate(patterns: Pattern[], options: IOptions): ITask[] {
-	const positive: Pattern[] = patternUtils.getPositivePatterns(patterns);
+	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
+
+	const positive: Pattern[] = patternUtils.getPositivePatterns(unixPatterns);
 	if (positive.length === 0) {
 		return [];
 	}
 
 	const ignore: Pattern[] = options.ignore;
-	const negative: Pattern[] = patternUtils.getNegativePatterns(patterns)
+	const negative: Pattern[] = patternUtils.getNegativePatterns(unixPatterns)
 		.map(patternUtils.convertToPositivePattern)
 		.concat(ignore)
 		.map(patternUtils.trimTrailingSlashGlobStar);
