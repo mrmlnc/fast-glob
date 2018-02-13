@@ -6,7 +6,7 @@ import DeepFilter from './deep';
 
 import * as optionsManager from '../../managers/options';
 
-import { FilterFunction } from 'readdir-enhanced';
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import { IOptions, IPartialOptions } from '../../managers/options';
 import { Pattern } from '../../types/patterns';
 

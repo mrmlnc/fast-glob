@@ -4,7 +4,7 @@ import * as patternUtils from '../../utils/pattern';
 
 import { IOptions } from '../../managers/options';
 
-import { FilterFunction } from 'readdir-enhanced';
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import { IEntry } from '../../types/entries';
 import { Pattern, PatternRe } from '../../types/patterns';
 
