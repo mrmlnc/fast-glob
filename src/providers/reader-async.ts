@@ -1,4 +1,4 @@
-import * as readdir from 'readdir-enhanced';
+import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import Reader from './reader';
 
