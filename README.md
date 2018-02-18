@@ -78,7 +78,7 @@ This package does not respect the order of patterns. First, all the negative pat
 
   * Type: `Object`
 
-See [options](https://github.com/mrmlnc/fast-glob#Options) section for more detailed information.
+See [options](#options-1) section for more detailed information.
 
 ### fg.sync(patterns, [options])
 
