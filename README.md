@@ -174,12 +174,26 @@ Return absolute paths for matched entries.
 
 Disable expansion of brace patterns (`{a,b}`, `{1..3}`).
 
+#### brace
+
+  * Type: `boolean`
+  * Default: `true`
+
+The [`nobrace`](#nobrace) option without double-negation. This option has a higher priority then `nobrace`.
+
 #### noglobstar
 
   * Type: `boolean`
   * Default: `false`
 
 Disable matching with globstars (`**`).
+
+#### globstar
+
+  * Type: `boolean`
+  * Default: `true`
+
+The [`noglobstar`](#noglobstar) option without double-negation. This option has a higher priority then `noglobstar`.
 
 #### noext
 
@@ -188,12 +202,26 @@ Disable matching with globstars (`**`).
 
 Disable extglob support (patterns like `+(a|b)`), so that extglobs are regarded as literal characters.
 
+#### extension
+
+  * Type: `boolean`
+  * Default: `true`
+
+The [`noext`](#noext) option without double-negation. This option has a higher priority then `noext`.
+
 #### nocase
 
   * Type: `boolean`
   * Default: `false`
 
-Use a case-insensitive regex for matching files.
+Disable a case-insensitive regex for matching files.
+
+#### case
+
+  * Type: `boolean`
+  * Default: `true`
+
+The [`nocase`](#nocase) option without double-negation. This option has a higher priority then `nocase`.
 
 #### matchBase
 
@@ -267,10 +295,10 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
-| `nobrace`    | [`nobrace`](#nobrace) |
-| `noglobstar` | [`noglobstar`](#noglobstar) |
-| `noext`      | [`noext`](#noext) |
-| `nocase`     | [`nocase`](#nocase) |
+| `nobrace`    | [`nobrace`](#nobrace) or [`brace`](#brace) |
+| `noglobstar` | [`noglobstar`](#noglobstar) or [`globstar`](#globstar) |
+| `noext`      | [`noext`](#noext) or [`extension`](#extension) |
+| `nocase`     | [`nocase`](#nocase) or [`case`](#case) |
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |

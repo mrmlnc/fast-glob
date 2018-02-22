@@ -54,10 +54,10 @@ export default abstract class Reader {
 	public getMicromatchOptions(): micromatch.Options {
 		return {
 			dot: this.options.dot,
-			nobrace: this.options.nobrace,
-			noglobstar: this.options.noglobstar,
-			noext: this.options.noext,
-			nocase: this.options.nocase,
+			nobrace: !this.options.brace,
+			noglobstar: !this.options.globstar,
+			noext: !this.options.extension,
+			nocase: !this.options.case,
 			matchBase: this.options.matchBase
 		};
 	}
