@@ -181,7 +181,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.makePatternRe', () => {
 		it('should return regexp for provided pattern', () => {
-			const expected: RegExp = /^(?:(?:(?:\.(?:\/|\\))(?=.))?(?!\/)(?!\.)(?=.)[^\/]*?\.js(?:(?:\/|\\)|$))$/;
+			const expected: RegExp = /^(?:(?:\.[\\/](?=.))?(?![\\/])(?!\.)(?=.)[^\\/]*?\.js(?:[\\/]|$))$/;
 
 			const actual = util.makeRe('*.js', {});
 
@@ -191,7 +191,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.convertPatternsToRe', () => {
 		it('should return regexps for provided patterns', () => {
-			const expected: RegExp = /^(?:(?:(?:\.(?:\/|\\))(?=.))?(?!\/)(?!\.)(?=.)[^\/]*?\.js(?:(?:\/|\\)|$))$/;
+			const expected: RegExp = /^(?:(?:\.[\\/](?=.))?(?![\\/])(?!\.)(?=.)[^\\/]*?\.js(?:[\\/]|$))$/;
 
 			const [actual] = util.convertPatternsToRe(['*.js'], {});
 
