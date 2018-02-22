@@ -48,9 +48,9 @@
   },
   "dependencies": {
     "@mrmlnc/readdir-enhanced": "^2.2.1",
-    "glob-parent": "3.1.0",
-    "merge2": "1.2.1",
-    "micromatch": "3.1.8"
+    "glob-parent": "^3.1.0",
+    "merge2": "^1.2.1",
+    "micromatch": "^3.1.8"
   },
   "scripts": {
     "clean": "rimraf out",
