@@ -16,4 +16,14 @@ describe('Utils → Path', () => {
 			assert.ok(!actual);
 		});
 	});
+
+	describe('.getDepth', () => {
+		it('should returns 4', () => {
+			const expected: number = 4;
+
+			const actual = util.getDepth('a/b/c/d.js');
+
+			assert.equal(actual, expected);
+		});
+	});
 });

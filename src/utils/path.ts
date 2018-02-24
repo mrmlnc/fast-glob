@@ -7,3 +7,10 @@ export function isDotDirectory(path: string): boolean {
 
 	return lastPathPartial.startsWith('.');
 }
+
+/**
+ * Return naive depth of provided filepath.
+ */
+export function getDepth(filepath: string): number {
+	return filepath.split('/').length;
+}
