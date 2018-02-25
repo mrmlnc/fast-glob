@@ -17,7 +17,7 @@ class TransformStream extends stream.Transform {
 	}
 }
 
-export default class ReaderStream extends Reader {
+export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Returns founded paths.
 	 */

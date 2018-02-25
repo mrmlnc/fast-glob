@@ -5,7 +5,7 @@ import Reader from './reader';
 import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 
-export default class ReaderSync extends Reader {
+export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Returns founded paths.
 	 */

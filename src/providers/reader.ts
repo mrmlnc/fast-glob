@@ -11,7 +11,7 @@ import { ITask } from '../managers/tasks';
 import { Options as IReaddirOptions } from '@mrmlnc/readdir-enhanced';
 import { Entry, EntryItem } from '../types/entries';
 
-export default abstract class Reader {
+export default abstract class Reader<T> {
 	private readonly micromatchOptions: micromatch.Options;
 
 	private readonly entryFilter: EntryFilter;
@@ -27,7 +27,7 @@ export default abstract class Reader {
 	/**
 	 * The main logic of reading the directories that must be implemented by each providers.
 	 */
-	public abstract read(_task: ITask): any; /* tslint:disable-line no-any */
+	public abstract read(_task: ITask): T;
 
 	/**
 	 * Returns root path to scanner.

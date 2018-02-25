@@ -5,7 +5,7 @@ import Reader from './reader';
 import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 
-export default class ReaderAsync extends Reader {
+export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
 	/**
 	 * Returns founded paths.
 	 */

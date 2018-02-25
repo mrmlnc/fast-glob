@@ -44,7 +44,7 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
 /**
  * Returns a set of works based on provided tasks and class of the reader.
  */
-function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader, opts?: IPartialOptions): T[] {
+function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader<T>, opts?: IPartialOptions): T[] {
 	const patterns = ([] as Pattern[]).concat(source);
 	const options = optionsManager.prepare(opts);
 

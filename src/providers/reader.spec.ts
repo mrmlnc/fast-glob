@@ -10,7 +10,7 @@ import * as optionsManager from '../managers/options';
 import { IOptions, IPartialOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
-export class TestReader extends Reader {
+export class TestReader extends Reader<Array<{}>> {
 	public read(_task: ITask): Array<{}> {
 		return [];
 	}
