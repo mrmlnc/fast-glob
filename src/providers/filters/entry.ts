@@ -5,7 +5,7 @@ import * as patternUtils from '../../utils/pattern';
 import { IOptions } from '../../managers/options';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import { IEntry } from '../../types/entries';
+import { Entry } from '../../types/entries';
 import { Pattern, PatternRe } from '../../types/patterns';
 
 export default class DeepFilter {
@@ -20,13 +20,13 @@ export default class DeepFilter {
 		const positiveRe: PatternRe[] = patternUtils.convertPatternsToRe(positive, this.micromatchOptions);
 		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
 
-		return (entry: IEntry) => this.filter(entry, positiveRe, negativeRe);
+		return (entry: Entry) => this.filter(entry, positiveRe, negativeRe);
 	}
 
 	/**
 	 * Returns true if entry must be added to result.
 	 */
-	private filter(entry: IEntry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	private filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
 		let entryPath: string = entry.path;
 
 		// Exclude duplicate results
@@ -59,28 +59,28 @@ export default class DeepFilter {
 	/**
 	 * Return true if the entry already has in the cross reader index.
 	 */
-	private isDuplicateEntry(entry: IEntry): boolean {
+	private isDuplicateEntry(entry: Entry): boolean {
 		return this.index.has(entry.path);
 	}
 
 	/**
 	 * Create record in the cross reader index.
 	 */
-	private createIndexRecord(entry: IEntry): void {
+	private createIndexRecord(entry: Entry): void {
 		this.index.set(entry.path, undefined);
 	}
 
 	/**
 	 * Returns true for non-files if the «onlyFiles» option is enabled.
 	 */
-	private onlyFileFilter(entry: IEntry): boolean {
+	private onlyFileFilter(entry: Entry): boolean {
 		return this.options.onlyFiles && !entry.isFile();
 	}
 
 	/**
 	 * Returns true for non-directories if the «onlyDirectories» option is enabled.
 	 */
-	private onlyDirectoryFilter(entry: IEntry): boolean {
+	private onlyDirectoryFilter(entry: Entry): boolean {
 		return this.options.onlyDirectories && !entry.isDirectory();
 	}
 }

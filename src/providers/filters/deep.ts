@@ -7,7 +7,7 @@ import * as patternUtils from '../../utils/pattern';
 import { IOptions } from '../../managers/options';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import { IEntry } from '../../types/entries';
+import { Entry } from '../../types/entries';
 import { Pattern, PatternRe } from '../../types/patterns';
 
 export default class DeepFilter {
@@ -20,13 +20,13 @@ export default class DeepFilter {
 		const depth = this.getMaxDeth(positive);
 		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
 
-		return (entry: IEntry) => this.filter(entry, negativeRe, depth);
+		return (entry: Entry) => this.filter(entry, negativeRe, depth);
 	}
 
 	/**
 	 * Returns true if directory must be read.
 	 */
-	private filter(entry: IEntry, negativeRe: PatternRe[], depth: number): boolean {
+	private filter(entry: Entry, negativeRe: PatternRe[], depth: number): boolean {
 		// Skip reading, depending on the nesting level
 		if (!this.options.deep || this.skipByDeepOption(entry) || this.skipByPatternDepth(entry, depth)) {
 			return false;
@@ -63,28 +63,28 @@ export default class DeepFilter {
 	/**
 	 * Returns true for dot directories if the «dot» option is enabled.
 	 */
-	private isFollowedDotDirectory(entry: IEntry): boolean {
+	private isFollowedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
 	}
 
 	/**
 	 * Returns true for symlinked directories if the «followSymlinks» option is enabled.
 	 */
-	private isFollowedSymlink(entry: IEntry): boolean {
+	private isFollowedSymlink(entry: Entry): boolean {
 		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
 	}
 
 	/**
 	 * Returns true when the «deep» options is number and entry depth greater that the option value.
 	 */
-	private skipByDeepOption(entry: IEntry): boolean {
+	private skipByDeepOption(entry: Entry): boolean {
 		return typeof this.options.deep === 'number' && entry.depth > this.options.deep;
 	}
 
 	/**
 	 * Return true when depth parameter is not an Infinity and entry depth greater that the parameter value.
 	 */
-	private skipByPatternDepth(entry: IEntry, depth: number): boolean {
+	private skipByPatternDepth(entry: Entry, depth: number): boolean {
 		return depth !== Infinity && entry.depth > depth;
 	}
 }
