@@ -170,7 +170,7 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.getDepth', () => {
-		it('should returns 3', () => {
+		it('should returns 4', () => {
 			const expected: number = 4;
 
 			const actual = util.getDepth('a/b/*/*.js');
