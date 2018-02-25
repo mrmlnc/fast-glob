@@ -21,7 +21,13 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	const positivePatterns = getPositivePatterns(unixPatterns);
 	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
 
-	return convertPatternsToTasks(positivePatterns, negativePatterns, /* dynamic */ true);
+	const staticPatterns = positivePatterns.filter(patternUtils.isStaticPattern);
+	const dynamicPatterns = positivePatterns.filter(patternUtils.isDynamicPattern);
+
+	const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
+	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);
+
+	return staticTasks.concat(dynamicTasks);
 }
 
 /**

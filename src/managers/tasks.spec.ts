@@ -39,6 +39,31 @@ describe('Managers → Task', () => {
 
 			assert.deepEqual(actual, expected);
 		});
+
+		it('should return static and dynamic tasks', () => {
+			const options = optionsManager.prepare({ ignore: ['*.txt'] });
+
+			const expected: ITask[] = [
+				{
+					base: 'a',
+					dynamic: false,
+					patterns: ['a/file.json', '!*.txt'],
+					positive: ['a/file.json'],
+					negative: ['*.txt']
+				},
+				{
+					base: 'b',
+					dynamic: true,
+					patterns: ['b/*', '!b/*.md', '!*.txt'],
+					positive: ['b/*'],
+					negative: ['b/*.md', '*.txt']
+				}
+			];
+
+			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], options);
+
+			assert.deepEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {
@@ -162,6 +187,20 @@ describe('Managers → Task', () => {
 			};
 
 			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md'], /* dynamic */ true);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return created static task', () => {
+			const expected: ITask = {
+				base: '.',
+				dynamic: false,
+				patterns: ['file', '!file.md'],
+				positive: ['file'],
+				negative: ['file.md']
+			};
+
+			const actual = manager.convertPatternGroupToTask('.', ['file'], ['file.md'], /* dynamic */ false);
 
 			assert.deepEqual(actual, expected);
 		});
