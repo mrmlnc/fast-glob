@@ -5,6 +5,34 @@ import * as util from './pattern';
 import { Pattern } from '../types/patterns';
 
 describe('Utils → Pattern', () => {
+	describe('.isStaticPattern', () => {
+		it('should return true for static pattern', () => {
+			const actual = util.isStaticPattern('dir');
+
+			assert.ok(actual);
+		});
+
+		it('should return false for dynamic pattern', () => {
+			const actual = util.isStaticPattern('*');
+
+			assert.ok(!actual);
+		});
+	});
+
+	describe('.isDynamicPattern', () => {
+		it('should return true for dynamic pattern', () => {
+			const actual = util.isDynamicPattern('*');
+
+			assert.ok(actual);
+		});
+
+		it('should return false for static pattern', () => {
+			const actual = util.isDynamicPattern('dir');
+
+			assert.ok(!actual);
+		});
+	});
+
 	describe('.unixifyPattern', () => {
 		it('should convert backslashes to forward slashes', () => {
 			const expected: Pattern = '**/*';
