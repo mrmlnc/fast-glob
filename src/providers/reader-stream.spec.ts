@@ -13,8 +13,12 @@ import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 
 class ReaderStreamFake extends ReaderStream {
-	public api(): NodeJS.ReadableStream {
-		return this.fake({ path: 'fake' } as Entry);
+	public dynamicApi(): NodeJS.ReadableStream {
+		return this.fake({ path: 'dynamic' } as Entry);
+	}
+
+	public staticApi(): NodeJS.ReadableStream {
+		return this.fake({ path: 'static' } as Entry);
 	}
 
 	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
@@ -24,13 +28,13 @@ class ReaderStreamFake extends ReaderStream {
 
 class ReaderStreamFakeThrowEnoent extends ReaderStreamFake {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('fake', new tests.EnoentErrnoException());
+		return this.fake('dynamic', new tests.EnoentErrnoException());
 	}
 }
 
 class ReaderStreamFakeThrowErrno extends ReaderStreamFake {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('fake', new Error('Boom'));
+		return this.fake('dynamic', new Error('Boom'));
 	}
 }
 
@@ -51,6 +55,16 @@ const getEntries = (options: IOptions, task: ITask, api: typeof ReaderStreamFake
 	});
 };
 
+function getTask(dynamic: boolean = true): ITask {
+	return {
+		base: 'fixtures',
+		dynamic,
+		patterns: ['**/*'],
+		positive: ['**/*'],
+		negative: []
+	};
+}
+
 describe('Providers → ReaderStream', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
@@ -62,18 +76,22 @@ describe('Providers → ReaderStream', () => {
 	});
 
 	describe('.read', () => {
-		const task: ITask = {
-			base: 'fixtures',
-			dynamic: true,
-			patterns: ['**/*'],
-			positive: ['**/*'],
-			negative: []
-		};
-
-		it('should returns entries', async () => {
+		it('should returns entries for dynamic entries', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 
-			const expected: string[] = ['fake'];
+			const expected: string[] = ['dynamic'];
+
+			const actual = await getEntries(options, task, ReaderStreamFake);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should returns entries for static entries', async () => {
+			const task = getTask(/* dynamic */ false);
+			const options = optionsManager.prepare();
+
+			const expected: string[] = ['static'];
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
@@ -81,9 +99,10 @@ describe('Providers → ReaderStream', () => {
 		});
 
 		it('should returns entries (stats)', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare({ stats: true });
 
-			const expected: Entry[] = [{ path: 'fake' } as Entry];
+			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
@@ -91,6 +110,7 @@ describe('Providers → ReaderStream', () => {
 		});
 
 		it('should returns transformed entries', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare({ transform: () => 'cake' });
 
 			const expected: string[] = ['cake'];
@@ -101,6 +121,7 @@ describe('Providers → ReaderStream', () => {
 		});
 
 		it('should returns empty array if provided cwd does not exists', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 
 			const expected: string[] = [];
@@ -111,6 +132,7 @@ describe('Providers → ReaderStream', () => {
 		});
 
 		it('should throw error', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 
 			try {
