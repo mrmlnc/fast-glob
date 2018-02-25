@@ -14,7 +14,7 @@ export default class ReaderAsync extends Reader {
 	}
 
 	/**
-	 * Use sync API to read entries for Task.
+	 * Use async API to read entries for Task.
 	 */
 	public read(task: ITask): Promise<EntryItem[]> {
 		const root = this.getRootDirectory(task);
