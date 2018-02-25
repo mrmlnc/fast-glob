@@ -59,6 +59,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getReaderOptions({
 				base: '.',
+				dynamic: true,
 				patterns: ['**/*'],
 				positive: ['**/*'],
 				negative: []
@@ -75,6 +76,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getReaderOptions({
 				base: 'fixtures',
+				dynamic: true,
 				patterns: ['**/*'],
 				positive: ['**/*'],
 				negative: []

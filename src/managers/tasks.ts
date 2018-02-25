@@ -5,6 +5,7 @@ import { IOptions } from './options';
 
 export interface ITask {
 	base: string;
+	dynamic: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
@@ -17,13 +18,13 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
 	const unixIgnore = options.ignore.map(patternUtils.unixifyPattern);
 
-	return convertPatternsToTasks(unixPatterns, unixIgnore);
+	return convertPatternsToTasks(unixPatterns, unixIgnore, /* dynamic */ true);
 }
 
 /**
  * Convert patterns to tasks based on parent directory of each pattern.
  */
-export function convertPatternsToTasks(patterns: Pattern[], ignore: Pattern[]): ITask[] {
+export function convertPatternsToTasks(patterns: Pattern[], ignore: Pattern[], dynamic: boolean): ITask[] {
 	const positivePatterns = getPositivePatterns(patterns);
 	const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
 
@@ -33,12 +34,12 @@ export function convertPatternsToTasks(patterns: Pattern[], ignore: Pattern[]): 
 	// When we have a global group – there is no reason to divide the patterns into independent tasks.
 	// In this case, the global task covers the rest.
 	if ('.' in positivePatternsGroup) {
-		const task = convertPatternGroupToTask('.', positivePatterns, negativePatterns);
+		const task = convertPatternGroupToTask('.', positivePatterns, negativePatterns, dynamic);
 
 		return [task];
 	}
 
-	return convertPatternGroupsToTasks(positivePatternsGroup, negativePatternsGroup);
+	return convertPatternGroupsToTasks(positivePatternsGroup, negativePatternsGroup, dynamic);
 }
 
 /**
@@ -78,23 +79,24 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 /**
  * Convert group of patterns to tasks.
  */
-export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: PatternsGroup): ITask[] {
+export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: PatternsGroup, dynamic: boolean): ITask[] {
 	const globalNegative = '.' in negative ? negative['.'] : [];
 
 	return Object.keys(positive).map((base) => {
 		const localNegative = base in negative ? negative[base] : [];
 		const fullNegative = localNegative.concat(globalNegative);
 
-		return convertPatternGroupToTask(base, positive[base], fullNegative);
+		return convertPatternGroupToTask(base, positive[base], fullNegative, dynamic);
 	});
 }
 
 /**
  * Create a task for positive and negative patterns.
  */
-export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[]): ITask {
+export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): ITask {
 	return {
 		base,
+		dynamic,
 		patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern)),
 		positive,
 		negative

@@ -64,6 +64,7 @@ describe('Providers → ReaderStream', () => {
 	describe('.read', () => {
 		const task: ITask = {
 			base: 'fixtures',
+			dynamic: true,
 			patterns: ['**/*'],
 			positive: ['**/*'],
 			negative: []
