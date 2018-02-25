@@ -12,8 +12,12 @@ import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 
 class ReaderAsyncFake extends ReaderAsync {
-	public api(): NodeJS.ReadableStream {
-		return this.fake({ path: 'fake' } as Entry);
+	public dynamicApi(): NodeJS.ReadableStream {
+		return this.fake({ path: 'dynamic' } as Entry);
+	}
+
+	public staticApi(): NodeJS.ReadableStream {
+		return this.fake({ path: 'static' } as Entry);
 	}
 
 	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
@@ -23,14 +27,24 @@ class ReaderAsyncFake extends ReaderAsync {
 
 class ReaderAsyncFakeThrowEnoent extends ReaderAsyncFake {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('fake', new tests.EnoentErrnoException());
+		return this.fake('dynamic', new tests.EnoentErrnoException());
 	}
 }
 
 class ReaderAsyncFakeThrowErrno extends ReaderAsyncFake {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('fake', new Error('Boom'));
+		return this.fake('dynamic', new Error('Boom'));
 	}
+}
+
+function getTask(dynamic: boolean = true): ITask {
+	return {
+		base: 'fixtures',
+		dynamic,
+		patterns: ['**/*'],
+		positive: ['**/*'],
+		negative: []
+	};
 }
 
 describe('Providers → ReaderAsync', () => {
@@ -44,19 +58,24 @@ describe('Providers → ReaderAsync', () => {
 	});
 
 	describe('.read', () => {
-		const task: ITask = {
-			base: 'fixtures',
-			dynamic: true,
-			patterns: ['**/*'],
-			positive: ['**/*'],
-			negative: []
-		};
-
-		it('should returns entries', async () => {
+		it('should returns entries for dynamic task', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 			const reader = new ReaderAsyncFake(options);
 
-			const expected: string[] = ['fake'];
+			const expected: string[] = ['dynamic'];
+
+			const actual = await reader.read(task);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should returns entries for static task', async () => {
+			const task = getTask(/* dynamic */ false);
+			const options = optionsManager.prepare();
+			const reader = new ReaderAsyncFake(options);
+
+			const expected: string[] = ['static'];
 
 			const actual = await reader.read(task);
 
@@ -64,10 +83,11 @@ describe('Providers → ReaderAsync', () => {
 		});
 
 		it('should returns entries (stats)', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare({ stats: true });
 			const reader = new ReaderAsyncFake(options);
 
-			const expected: Entry[] = [{ path: 'fake' } as Entry];
+			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
 
 			const actual = await reader.read(task);
 
@@ -75,6 +95,7 @@ describe('Providers → ReaderAsync', () => {
 		});
 
 		it('should returns transformed entries', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare({ transform: () => 'cake' });
 			const reader = new ReaderAsyncFake(options);
 
@@ -86,6 +107,7 @@ describe('Providers → ReaderAsync', () => {
 		});
 
 		it('should returns empty array if provided cwd does not exists', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 			const reader = new ReaderAsyncFakeThrowEnoent(options);
 
@@ -97,6 +119,7 @@ describe('Providers → ReaderAsync', () => {
 		});
 
 		it('should throw error', async () => {
+			const task = getTask();
 			const options = optionsManager.prepare();
 			const reader = new ReaderAsyncFakeThrowErrno(options);
 
