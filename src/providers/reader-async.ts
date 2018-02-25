@@ -7,13 +7,6 @@ import { Entry, EntryItem } from '../types/entries';
 
 export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
 	/**
-	 * Returns founded paths.
-	 */
-	public api(root: string, options: readdir.Options): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
-	/**
 	 * Use async API to read entries for Task.
 	 */
 	public read(task: ITask): Promise<EntryItem[]> {
@@ -33,5 +26,12 @@ export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
 			stream.on('data', (entry: Entry) => entries.push(this.transform(entry)));
 			stream.on('end', () => resolve(entries));
 		});
+	}
+
+	/**
+	 * Returns founded paths.
+	 */
+	public api(root: string, options: readdir.Options): NodeJS.ReadableStream {
+		return readdir.readdirStreamStat(root, options);
 	}
 }

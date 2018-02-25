@@ -19,13 +19,6 @@ class TransformStream extends stream.Transform {
 
 export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
-	 * Returns founded paths.
-	 */
-	public api(root: string, options: readdir.Options): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
-	/**
 	 * Use stream API to read entries for Task.
 	 */
 	public read(task: ITask): NodeJS.ReadableStream {
@@ -38,5 +31,12 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		return readable
 			.once('error', (err) => this.isEnoentCodeError(err) ? null : transform.emit('error', err))
 			.pipe(transform);
+	}
+
+	/**
+	 * Returns founded paths.
+	 */
+	public api(root: string, options: readdir.Options): NodeJS.ReadableStream {
+		return readdir.readdirStreamStat(root, options);
 	}
 }

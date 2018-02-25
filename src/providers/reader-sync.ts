@@ -7,13 +7,6 @@ import { Entry, EntryItem } from '../types/entries';
 
 export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
-	 * Returns founded paths.
-	 */
-	public api(root: string, options: readdir.Options): Entry[] {
-		return readdir.readdirSyncStat(root, options);
-	}
-
-	/**
 	 * Use sync API to read entries for Task.
 	 */
 	public read(task: ITask): EntryItem[] {
@@ -31,5 +24,12 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 
 			throw err;
 		}
+	}
+
+	/**
+	 * Returns founded paths.
+	 */
+	public api(root: string, options: readdir.Options): Entry[] {
+		return readdir.readdirSyncStat(root, options);
 	}
 }
