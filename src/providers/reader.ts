@@ -12,10 +12,10 @@ import { Options as IReaddirOptions } from '@mrmlnc/readdir-enhanced';
 import { Entry, EntryItem } from '../types/entries';
 
 export default abstract class Reader<T> {
-	private readonly micromatchOptions: micromatch.Options;
+	public readonly entryFilter: EntryFilter;
+	public readonly deepFilter: DeepFilter;
 
-	private readonly entryFilter: EntryFilter;
-	private readonly deepFilter: DeepFilter;
+	private readonly micromatchOptions: micromatch.Options;
 
 	constructor(public readonly options: IOptions) {
 		this.micromatchOptions = this.getMicromatchOptions();
