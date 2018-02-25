@@ -18,23 +18,23 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
 	const unixIgnore = options.ignore.map(patternUtils.unixifyPattern);
 
-	return convertPatternsToTasks(unixPatterns, unixIgnore, /* dynamic */ true);
+	const positivePatterns = getPositivePatterns(unixPatterns);
+	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
+
+	return convertPatternsToTasks(positivePatterns, negativePatterns, /* dynamic */ true);
 }
 
 /**
  * Convert patterns to tasks based on parent directory of each pattern.
  */
-export function convertPatternsToTasks(patterns: Pattern[], ignore: Pattern[], dynamic: boolean): ITask[] {
-	const positivePatterns = getPositivePatterns(patterns);
-	const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
-
-	const positivePatternsGroup = groupPatternsByBaseDirectory(positivePatterns);
-	const negativePatternsGroup = groupPatternsByBaseDirectory(negativePatterns);
+export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): ITask[] {
+	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
+	const negativePatternsGroup = groupPatternsByBaseDirectory(negative);
 
 	// When we have a global group – there is no reason to divide the patterns into independent tasks.
 	// In this case, the global task covers the rest.
 	if ('.' in positivePatternsGroup) {
-		const task = convertPatternGroupToTask('.', positivePatterns, negativePatterns, dynamic);
+		const task = convertPatternGroupToTask('.', positive, negative, dynamic);
 
 		return [task];
 	}
