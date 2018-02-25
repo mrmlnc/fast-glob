@@ -16,7 +16,7 @@ export function unixifyPattern(pattern: Pattern): Pattern {
  * Returns negative pattern as positive pattern.
  */
 export function convertToPositivePattern(pattern: Pattern): Pattern {
-	return pattern.slice(1);
+	return isNegativePattern(pattern) ? pattern.slice(1) : pattern;
 }
 
 /**
