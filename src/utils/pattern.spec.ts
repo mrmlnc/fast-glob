@@ -23,6 +23,14 @@ describe('Utils → Pattern', () => {
 
 			assert.equal(actual, expected);
 		});
+
+		it('should returns pattern without changes', () => {
+			const expected: Pattern = '*.js';
+
+			const actual = util.convertToPositivePattern('*.js');
+
+			assert.equal(actual, expected);
+		});
 	});
 
 	describe('.convertToNegativePattern', () => {
@@ -30,14 +38,6 @@ describe('Utils → Pattern', () => {
 			const expected: Pattern = '!*.js';
 
 			const actual = util.convertToNegativePattern('*.js');
-
-			assert.equal(actual, expected);
-		});
-
-		it('should returns pattern without changes', () => {
-			const expected: Pattern = '*.js';
-
-			const actual = util.convertToPositivePattern('*.js');
 
 			assert.equal(actual, expected);
 		});
