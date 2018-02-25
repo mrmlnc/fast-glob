@@ -15,19 +15,6 @@ import { EntryItem } from './types/entries';
 import { Pattern } from './types/patterns';
 
 /**
- * Returns a set of works based on provided tasks and class of the reader.
- */
-function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader, opts?: IPartialOptions): T[] {
-	const patterns = ([] as Pattern[]).concat(source);
-	const options = optionsManager.prepare(opts);
-
-	const tasks = taskManager.generate(patterns, options);
-	const reader = new _Reader(options);
-
-	return tasks.map(reader.read, reader);
-}
-
-/**
  * Synchronous API.
  */
 export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
@@ -52,4 +39,17 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
 
 	return merge2(works);
+}
+
+/**
+ * Returns a set of works based on provided tasks and class of the reader.
+ */
+function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader, opts?: IPartialOptions): T[] {
+	const patterns = ([] as Pattern[]).concat(source);
+	const options = optionsManager.prepare(opts);
+
+	const tasks = taskManager.generate(patterns, options);
+	const reader = new _Reader(options);
+
+	return tasks.map(reader.read, reader);
 }
