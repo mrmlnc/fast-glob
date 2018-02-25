@@ -1,9 +1,24 @@
 import globParent = require('glob-parent');
+import isGlob = require('is-glob');
 import micromatch = require('micromatch');
 
 import { Pattern, PatternRe } from '../types/patterns';
 
 const GLOBSTAR = '**';
+
+/**
+ * Return true for static pattern.
+ */
+export function isStaticPattern(pattern: Pattern): boolean {
+	return !isDynamicPattern(pattern);
+}
+
+/**
+ * Return true for pattern that looks like glob.
+ */
+export function isDynamicPattern(pattern: Pattern): boolean {
+	return isGlob(pattern);
+}
 
 /**
  * Convert a windows «path» to a unix-style «path».

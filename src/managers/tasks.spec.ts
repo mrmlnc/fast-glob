@@ -13,6 +13,7 @@ describe('Managers → Task', () => {
 
 			const expected: ITask[] = [{
 				base: 'a',
+				dynamic: true,
 				patterns: ['a/*'],
 				positive: ['a/*'],
 				negative: []
@@ -28,6 +29,7 @@ describe('Managers → Task', () => {
 
 			const expected: ITask[] = [{
 				base: 'a',
+				dynamic: true,
 				patterns: ['a/*', '!*.md', '!*.txt'],
 				positive: ['a/*'],
 				negative: ['*.md', '*.txt']
@@ -37,18 +39,44 @@ describe('Managers → Task', () => {
 
 			assert.deepEqual(actual, expected);
 		});
+
+		it('should return static and dynamic tasks', () => {
+			const options = optionsManager.prepare({ ignore: ['*.txt'] });
+
+			const expected: ITask[] = [
+				{
+					base: 'a',
+					dynamic: false,
+					patterns: ['a/file.json', '!*.txt'],
+					positive: ['a/file.json'],
+					negative: ['*.txt']
+				},
+				{
+					base: 'b',
+					dynamic: true,
+					patterns: ['b/*', '!b/*.md', '!*.txt'],
+					positive: ['b/*'],
+					negative: ['b/*.md', '*.txt']
+				}
+			];
+
+			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], options);
+
+			assert.deepEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {
 		it('should return global task when positive patterns have a global pattern', () => {
 			const expected: ITask[] = [{
 				base: '.',
+				dynamic: true,
 				patterns: ['*', '!*.md'],
 				positive: ['*'],
 				negative: ['*.md']
 			}];
 
-			const actual = manager.convertPatternsToTasks(['*', '!*.md'], []);
+			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -56,12 +84,13 @@ describe('Managers → Task', () => {
 		it('should return global task with negative patterns from «ignore» patterns', () => {
 			const expected: ITask[] = [{
 				base: '.',
+				dynamic: true,
 				patterns: ['*', '!*.md'],
 				positive: ['*'],
 				negative: ['*.md']
 			}];
 
-			const actual = manager.convertPatternsToTasks(['*'], ['*.md']);
+			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -70,40 +99,21 @@ describe('Managers → Task', () => {
 			const expected: ITask[] = [
 				{
 					base: 'a',
+					dynamic: true,
 					patterns: ['a/*'],
 					positive: ['a/*'],
 					negative: []
 				},
 				{
 					base: 'b',
+					dynamic: true,
 					patterns: ['b/*', '!b/*.md'],
 					positive: ['b/*'],
 					negative: ['b/*.md']
 				}
 			];
 
-			const actual = manager.convertPatternsToTasks(['a/*', 'b/*', '!b/*.md'], []);
-
-			assert.deepEqual(actual, expected);
-		});
-
-		it('should return two tasks with global negative patterns from «ignore» patterns', () => {
-			const expected: ITask[] = [
-				{
-					base: 'a',
-					patterns: ['a/*', '!*.md'],
-					positive: ['a/*'],
-					negative: ['*.md']
-				},
-				{
-					base: 'b',
-					patterns: ['b/*', '!*.md'],
-					positive: ['b/*'],
-					negative: ['*.md']
-				}
-			];
-
-			const actual = manager.convertPatternsToTasks(['a/*', 'b/*'], ['*.md']);
+			const actual = manager.convertPatternsToTasks(['a/*', 'b/*'], ['b/*.md'], /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -167,15 +177,30 @@ describe('Managers → Task', () => {
 	});
 
 	describe('.convertPatternGroupToTask', () => {
-		it('should return created task', () => {
+		it('should return created dynamic task', () => {
 			const expected: ITask = {
 				base: '.',
+				dynamic: true,
 				patterns: ['*', '!*.md'],
 				positive: ['*'],
 				negative: ['*.md']
 			};
 
-			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md']);
+			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md'], /* dynamic */ true);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return created static task', () => {
+			const expected: ITask = {
+				base: '.',
+				dynamic: false,
+				patterns: ['file', '!file.md'],
+				positive: ['file'],
+				negative: ['file.md']
+			};
+
+			const actual = manager.convertPatternGroupToTask('.', ['file'], ['file.md'], /* dynamic */ false);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -185,12 +210,13 @@ describe('Managers → Task', () => {
 		it('should return one task without negative patterns', () => {
 			const expected: ITask[] = [{
 				base: 'a',
+				dynamic: true,
 				patterns: ['a/*'],
 				positive: ['a/*'],
 				negative: []
 			}];
 
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, {});
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, {}, /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -198,12 +224,13 @@ describe('Managers → Task', () => {
 		it('should return one task without unused negative patterns', () => {
 			const expected: ITask[] = [{
 				base: 'a',
+				dynamic: true,
 				patterns: ['a/*'],
 				positive: ['a/*'],
 				negative: []
 			}];
 
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { b: ['b/*'] });
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { b: ['b/*'] }, /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -211,12 +238,13 @@ describe('Managers → Task', () => {
 		it('should return one task with local and global negative patterns', () => {
 			const expected: ITask[] = [{
 				base: 'a',
+				dynamic: true,
 				patterns: ['a/*', '!a/*.txt', '!*.md'],
 				positive: ['a/*'],
 				negative: ['a/*.txt', '*.md']
 			}];
 
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { '.': ['*.md'], a: ['a/*.txt'] });
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { '.': ['*.md'], a: ['a/*.txt'] }, /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -225,19 +253,21 @@ describe('Managers → Task', () => {
 			const expected: ITask[] = [
 				{
 					base: 'a',
+					dynamic: true,
 					patterns: ['a/*'],
 					positive: ['a/*'],
 					negative: []
 				},
 				{
 					base: 'b',
+					dynamic: true,
 					patterns: ['b/*', '!b/*.md'],
 					positive: ['b/*'],
 					negative: ['b/*.md']
 				}
 			];
 
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { b: ['b/*.md'] });
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { b: ['b/*.md'] }, /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -246,19 +276,21 @@ describe('Managers → Task', () => {
 			const expected: ITask[] = [
 				{
 					base: 'a',
+					dynamic: true,
 					patterns: ['a/*', '!*.md'],
 					positive: ['a/*'],
 					negative: ['*.md']
 				},
 				{
 					base: 'b',
+					dynamic: true,
 					patterns: ['b/*', '!*.md'],
 					positive: ['b/*'],
 					negative: ['*.md']
 				}
 			];
 
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { '.': ['*.md'] });
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { '.': ['*.md'] }, /* dynamic */ true);
 
 			assert.deepEqual(actual, expected);
 		});
