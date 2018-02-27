@@ -2,6 +2,7 @@ import * as assert from 'assert';
 
 import * as pkg from './index';
 
+import { ITask } from './managers/tasks';
 import { EntryItem } from './types/entries';
 
 describe('Package', () => {
@@ -103,6 +104,36 @@ describe('Package', () => {
 				assert.deepEqual(actual.sort(), expected);
 				done();
 			});
+		});
+	});
+
+	describe('.generateTasks', () => {
+		it('should return tasks', () => {
+			const expected: ITask[] = [{
+				base: '.',
+				dynamic: true,
+				patterns: ['*'],
+				positive: ['*'],
+				negative: []
+			}];
+
+			const actual = pkg.generateTasks(['*']);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return tasks with negative patterns', () => {
+			const expected: ITask[] = [{
+				base: '.',
+				dynamic: true,
+				patterns: ['*', '!*.txt', '!*.md'],
+				positive: ['*'],
+				negative: ['*.txt', '*.md']
+			}];
+
+			const actual = pkg.generateTasks(['*', '!*.txt'], { ignore: ['*.md'] });
+
+			assert.deepEqual(actual, expected);
 		});
 	});
 });

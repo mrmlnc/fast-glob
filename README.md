@@ -88,6 +88,35 @@ Returns a `Array` of matching entries.
 
 Returns a [`ReadableStream`](https://nodejs.org/api/stream.html#stream_readable_streams).
 
+### fg.generateTasks(patterns, [options])
+
+Return a set of tasks based on provided patterns. All tasks satisfy the `Task` interface:
+
+```ts
+interface Task {
+  /**
+   * Parent directory for all patterns inside this task.
+   */
+  base: string;
+  /**
+   * Dynamic or static patterns are in this task.
+   */
+  dynamic: boolean;
+  /**
+   * All patterns.
+   */
+  patterns: string[];
+  /**
+   * Only positive patterns.
+   */
+  positive: string[];
+  /**
+   * Only negative patterns without ! symbol.
+   */
+  negative: string[];
+}
+```
+
 ## Options
 
 #### cwd
