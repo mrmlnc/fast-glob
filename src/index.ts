@@ -11,6 +11,7 @@ import ReaderSync from './providers/reader-sync';
 import * as arrayUtils from './utils/array';
 
 import { IOptions, IPartialOptions } from './managers/options';
+import { ITask } from './managers/tasks';
 import { EntryItem } from './types/entries';
 import { Pattern } from './types/patterns';
 
@@ -39,6 +40,16 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
 
 	return merge2(works);
+}
+
+/**
+ * Return a set of tasks based on provided patterns.
+ */
+export function generateTasks(source: Pattern | Pattern[], opts?: IPartialOptions): ITask[] {
+	const patterns = ([] as Pattern[]).concat(source);
+	const options = optionsManager.prepare(opts);
+
+	return taskManager.generate(patterns, options);
 }
 
 /**
