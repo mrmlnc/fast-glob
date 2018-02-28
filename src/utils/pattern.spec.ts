@@ -201,24 +201,4 @@ describe('Utils → Pattern', () => {
 			assert.ok(!actual);
 		});
 	});
-
-	describe('.match', () => {
-		it('should return false by negative patterns', () => {
-			const actual = util.match('fixtures/file.txt', [], [/fixtures\/file/]);
-
-			assert.ok(!actual);
-		});
-
-		it('should return false by positive patterns', () => {
-			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.md/], []);
-
-			assert.ok(!actual);
-		});
-
-		it('should return true', () => {
-			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.txt/], []);
-
-			assert.ok(actual);
-		});
-	});
 });
