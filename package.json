@@ -56,7 +56,7 @@
   },
   "scripts": {
     "clean": "rimraf out",
-    "lint": "tslint src/{,**/}*.ts -p . -t stylish",
+    "lint": "tslint \"src/**/*.ts\" -p . -t stylish",
     "compile": "tsc",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "build": "npm run clean && npm run lint && npm run compile && npm test",
