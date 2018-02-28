@@ -145,14 +145,6 @@ describe('Managers → Task', () => {
 
 			assert.deepEqual(actual, expected);
 		});
-
-		it('should return negative patterns as positive with cut slash globstar', () => {
-			const expected = ['**/node_modules', '**/.git'];
-
-			const actual = manager.getNegativePatternsAsPositive(['**/*', '!**/node_modules/**'], ['**/.git/**']);
-
-			assert.deepEqual(actual, expected);
-		});
 	});
 
 	describe('.groupPatternsByBaseDirectory', () => {

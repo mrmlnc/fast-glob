@@ -62,7 +62,7 @@ export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Patte
 	const negative = patternUtils.getNegativePatterns(patterns);
 	const positive = negative.map(patternUtils.convertToPositivePattern).concat(ignore);
 
-	return positive.map(patternUtils.trimTrailingSlashGlobStar);
+	return positive;
 }
 
 /**
