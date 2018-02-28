@@ -27,8 +27,6 @@ export default class DeepFilter {
 	 * Returns true if entry must be added to result.
 	 */
 	private filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
-		let entryPath: string = entry.path;
-
 		// Exclude duplicate results
 		if (this.options.unique) {
 			if (this.isDuplicateEntry(entry)) {
@@ -38,22 +36,12 @@ export default class DeepFilter {
 			this.createIndexRecord(entry);
 		}
 
-		// Mark directory by the final slash. Need to micromatch to support «directory/**» patterns
-		if (entry.isDirectory()) {
-			entryPath += '/';
-		}
-
-		// Filter directories that will be excluded by deep filter
-		if (entry.isDirectory() && patternUtils.matchAny(entryPath, negativeRe)) {
-			return false;
-		}
-
 		// Filter files and directories by options
 		if (this.onlyFileFilter(entry) || this.onlyDirectoryFilter(entry)) {
 			return false;
 		}
 
-		return patternUtils.match(entryPath, positiveRe, negativeRe);
+		return this.isMatchToPatterns(entry, positiveRe) && !this.isMatchToPatterns(entry, negativeRe);
 	}
 
 	/**
@@ -82,5 +70,15 @@ export default class DeepFilter {
 	 */
 	private onlyDirectoryFilter(entry: Entry): boolean {
 		return this.options.onlyDirectories && !entry.isDirectory();
+	}
+
+	/**
+	 * Return true when entry match to provided patterns.
+	 *
+	 * First, just trying to apply patterns to the path.
+	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
+	 */
+	private isMatchToPatterns(entry: Entry, patternsRe: PatternRe[]): boolean {
+		return patternUtils.matchAny(entry.path, patternsRe) || patternUtils.matchAny(entry.path + '/', patternsRe);
 	}
 }
