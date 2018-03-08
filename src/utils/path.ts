@@ -1,8 +1,10 @@
+import * as path from 'path';
+
 /**
  * Returns true if the last partial of the path starting with a period.
  */
-export function isDotDirectory(path: string): boolean {
-	const pathPartials = path.split('/');
+export function isDotDirectory(filepath: string): boolean {
+	const pathPartials = filepath.split('/');
 	const lastPathPartial: string = pathPartials[pathPartials.length - 1];
 
 	return lastPathPartial.startsWith('.');
@@ -13,4 +15,18 @@ export function isDotDirectory(path: string): boolean {
  */
 export function getDepth(filepath: string): number {
 	return filepath.split('/').length;
+}
+
+/**
+ * Return resolved a sequence of paths segments into an absolute path.
+ */
+export function resolve(from: string, to: string): string {
+	return path.resolve(from, to);
+}
+
+/**
+ * Convert a windows «path» to a unix-style «path».
+ */
+export function normalize(filepath: string): string {
+	return filepath.replace(/\\/g, '/');
 }

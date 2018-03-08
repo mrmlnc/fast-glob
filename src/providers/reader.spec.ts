@@ -6,6 +6,7 @@ import * as tests from '../tests';
 import Reader from './reader';
 
 import * as optionsManager from '../managers/options';
+import * as pathUtil from '../utils/path';
 
 import { IOptions, IPartialOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
@@ -153,7 +154,7 @@ describe('Providers → Reader', () => {
 
 				const entry = tests.getFileEntry(false /** dot */);
 
-				const expected: string = path.join(process.cwd(), 'fixtures/file.txt');
+				const expected: string = pathUtil.normalize(path.join(process.cwd(), 'fixtures/file.txt'));
 
 				const actual = reader.transform(entry);
 

@@ -5,6 +5,8 @@ import micromatch = require('micromatch');
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 
+import * as pathUtil from '../utils/path';
+
 import { IOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
 
@@ -71,7 +73,8 @@ export default abstract class Reader<T> {
 		}
 
 		if (this.options.absolute && !path.isAbsolute(entry.path)) {
-			entry.path = path.resolve(this.options.cwd, entry.path);
+			entry.path = pathUtil.resolve(this.options.cwd, entry.path);
+			entry.path = pathUtil.normalize(entry.path);
 		}
 
 		const item: EntryItem = this.options.stats ? entry : entry.path;
