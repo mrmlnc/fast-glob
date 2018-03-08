@@ -13,3 +13,4 @@ os:
 
 script:
   - npm run build
+  - npm run smoke
