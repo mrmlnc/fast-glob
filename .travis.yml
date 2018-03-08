@@ -1,6 +1,10 @@
 sudo: false
 language: node_js
 
+branches:
+  only:
+    - master
+
 node_js:
   - 'node'
   - '8'
