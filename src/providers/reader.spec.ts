@@ -113,7 +113,6 @@ describe('Providers → Reader', () => {
 		describe('The «markDirectories» option', () => {
 			it('should return mark directory when option is enabled', () => {
 				const reader = getReader({ markDirectories: true });
-
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
 				const expected: string = 'fixtures/directory/';
@@ -125,7 +124,6 @@ describe('Providers → Reader', () => {
 
 			it('should do nothing with file when option is enabled', () => {
 				const reader = getReader({ markDirectories: true });
-
 				const entry = tests.getFileEntry(false /** dot */);
 
 				const expected: string = 'fixtures/file.txt';
@@ -137,7 +135,6 @@ describe('Providers → Reader', () => {
 
 			it('should return non-marked directory when option is disabled', () => {
 				const reader = getReader();
-
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
 				const expected: string = 'fixtures/directory';
@@ -151,10 +148,10 @@ describe('Providers → Reader', () => {
 		describe('The «absolute» option', () => {
 			it('should return transformed entry when option is provided', () => {
 				const reader = getReader({ absolute: true });
-
 				const entry = tests.getFileEntry(false /** dot */);
 
-				const expected: string = pathUtil.normalize(path.join(process.cwd(), 'fixtures/file.txt'));
+				const fullpath: string = path.join(process.cwd(), 'fixtures/file.txt');
+				const expected: string = pathUtil.normalize(fullpath);
 
 				const actual = reader.transform(entry);
 
@@ -163,7 +160,6 @@ describe('Providers → Reader', () => {
 
 			it('should return do nothing when option is not provided', () => {
 				const reader = getReader();
-
 				const entry = tests.getFileEntry(false /** dot */);
 
 				const expected: string = 'fixtures/file.txt';
@@ -177,7 +173,6 @@ describe('Providers → Reader', () => {
 		describe('The «transform» option', () => {
 			it('should return transformed entry when option is provided', () => {
 				const reader = getReader({ transform: () => 'cake' });
-
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
 				const expected: string = 'cake';
@@ -189,7 +184,6 @@ describe('Providers → Reader', () => {
 
 			it('should return do nothing when option is not provided', () => {
 				const reader = getReader();
-
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
 				const expected: string = 'fixtures/directory';
