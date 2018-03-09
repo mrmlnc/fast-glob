@@ -31,9 +31,9 @@ describe('Providers → Filters → Deep', () => {
 		});
 	});
 
-	describe('.call', () => {
-		describe('Filter by «deep» option', () => {
-			it('should return false for nested directory when option is disabled', () => {
+	describe('.filter', () => {
+		describe('Skip by nesting level', () => {
+			it('should return «false» when option is disabled', () => {
 				const filter = getFilter(['**/*'], [], { deep: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
@@ -43,8 +43,36 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return false for nested directory when option has specified level', () => {
+			it('should return «false» when option has specified level', () => {
 				const filter = getFilter(['**/*'], [], { deep: 2 });
+
+				const entry = tests.getEntry({
+					path: 'fixtures/directory/directory',
+					depth: 3,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return «true» when depth is smaller than allowed', () => {
+				const filter = getFilter(['fixtures/*/*'], []);
+
+				const entry = tests.getEntry({
+					path: 'fixtures/directory/directory',
+					depth: 3,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «false» when depth is greater than allowed', () => {
+				const filter = getFilter(['fixtures/*'], []);
 
 				const entry = tests.getEntry({
 					path: 'fixtures/directory/directory',

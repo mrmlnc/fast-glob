@@ -17,18 +17,27 @@ export default class DeepFilter {
 	 * Returns filter for directories.
 	 */
 	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
-		const depth = this.getMaxDeth(positive);
+		const maxPatternDepth = this.getMaxPatternDepth(positive);
 		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
 
-		return (entry: Entry) => this.filter(entry, negativeRe, depth);
+		return (entry: Entry) => this.filter(entry, negativeRe, maxPatternDepth);
 	}
 
 	/**
-	 * Returns true if directory must be read.
+	 * Returns max depth of the provided patterns.
 	 */
-	private filter(entry: Entry, negativeRe: PatternRe[], depth: number): boolean {
-		// Skip reading, depending on the nesting level
-		if (!this.options.deep || this.skipByDeepOption(entry) || this.skipByPatternDepth(entry, depth)) {
+	private getMaxPatternDepth(patterns: Pattern[]): number {
+		const globstar = patterns.some(patternUtils.hasGlobStar);
+		const patternDepths = patterns.map(patternUtils.getDepth);
+
+		return globstar ? Infinity : arrayUtils.max(patternDepths);
+	}
+
+	/**
+	 * Returns «true» for directory that should be readed.
+	 */
+	private filter(entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
+		if (this.isSkippedByNestingLevel(entry.depth, maxPatternDepth)) {
 			return false;
 		}
 
@@ -51,40 +60,37 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns max depth for reading.
+	 * Returns «true» when the directory can be skipped by nesting level.
 	 */
-	private getMaxDeth(positive: Pattern[]): number {
-		const globstar = positive.some(patternUtils.hasGlobStar);
-		const patternDepths = positive.map(patternUtils.getDepth);
-
-		return globstar ? Infinity : arrayUtils.max(patternDepths);
+	private isSkippedByNestingLevel(entryDepth: number, maxPatternDepth: number): boolean {
+		return this.isSkippedByDeepOption(entryDepth) || this.isSkippedByMaxPatternDepth(entryDepth, maxPatternDepth);
 	}
 
 	/**
-	 * Returns true for dot directories if the «dot» option is enabled.
+	 * Returns «true» when the «deep» option is disabled or number and depth of the entry is greater that the option value.
+	 */
+	private isSkippedByDeepOption(entryDepth: number): boolean {
+		return !this.options.deep || (typeof this.options.deep === 'number' && entryDepth > this.options.deep);
+	}
+
+	/**
+	 * Returns «true» when depth parameter is not an Infinity and entry depth greater that the parameter value.
+	 */
+	private isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
+		return maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
+	}
+
+	/**
+	 * Returns «true» for dot directories if the «dot» option is enabled.
 	 */
 	private isFollowedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
 	}
 
 	/**
-	 * Returns true for symlinked directories if the «followSymlinks» option is enabled.
+	 * Returns «true» for symlinked directories if the «followSymlinks» option is enabled.
 	 */
 	private isFollowedSymlink(entry: Entry): boolean {
 		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
-	}
-
-	/**
-	 * Returns true when the «deep» options is number and entry depth greater that the option value.
-	 */
-	private skipByDeepOption(entry: Entry): boolean {
-		return typeof this.options.deep === 'number' && entry.depth > this.options.deep;
-	}
-
-	/**
-	 * Return true when depth parameter is not an Infinity and entry depth greater that the parameter value.
-	 */
-	private skipByPatternDepth(entry: Entry, depth: number): boolean {
-		return depth !== Infinity && entry.depth > depth;
 	}
 }
