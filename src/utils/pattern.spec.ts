@@ -159,6 +159,26 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	describe('.endsWithSlashGlobStar', () => {
+		it('should returns true for pattern that ends with slash and globstar', () => {
+			const actual = util.endsWithSlashGlobStar('name/**');
+
+			assert.ok(actual);
+		});
+
+		it('should returns false for pattern that has no slash, but ends with globstar', () => {
+			const actual = util.endsWithSlashGlobStar('**');
+
+			assert.ok(!actual);
+		});
+
+		it('should returns false for pattern that does not ends with globstar', () => {
+			const actual = util.endsWithSlashGlobStar('name/**/*');
+
+			assert.ok(!actual);
+		});
+	});
+
 	describe('.getDepth', () => {
 		it('should returns 4', () => {
 			const expected: number = 4;

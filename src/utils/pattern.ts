@@ -84,6 +84,13 @@ export function hasGlobStar(pattern: Pattern): boolean {
 }
 
 /**
+ * Return true if provided pattern ends with slash and globstar.
+ */
+export function endsWithSlashGlobStar(pattern: Pattern): boolean {
+	return pattern.endsWith('/' + GLOBSTAR);
+}
+
+/**
  * Return naive depth of provided pattern.
  */
 export function getDepth(pattern: Pattern): number {
