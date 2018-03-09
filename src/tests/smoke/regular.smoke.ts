@@ -37,14 +37,9 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/*', ignore: 'fixtures/*' },
 		{ pattern: 'fixtures/*', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/*', ignore: 'fixtures/**/*' },
-		{ pattern: 'fixtures/**', ignore: 'fixtures/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/**', ignore: 'fixtures/*', broken: true, issue: [47, 80] },
 		{ pattern: 'fixtures/**', ignore: 'fixtures/**' },
-		{
-			pattern: 'fixtures/**',
-			ignore: 'fixtures/**/*',
-			correct: true,
-			reason: 'The negative pattern excludes any entries (files and directories) at any nesting level.'
-		},
+		{ pattern: 'fixtures/**', ignore: 'fixtures/**/*', broken: true, issue: 47 },
 		{ pattern: 'fixtures/**/*', ignore: 'fixtures/*', broken: true, issue: 80 },
 		{ pattern: 'fixtures/**/*', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/**/*', ignore: 'fixtures/**/*' }
