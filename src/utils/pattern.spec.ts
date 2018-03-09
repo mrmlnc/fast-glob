@@ -159,52 +159,6 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.endsWithSlashGlobStar', () => {
-		it('should returns true for pattern that ends with slash and globstar', () => {
-			const actual = util.endsWithSlashGlobStar('name/**');
-
-			assert.ok(actual);
-		});
-
-		it('should returns false for pattern that has no slash, but ends with globstar', () => {
-			const actual = util.endsWithSlashGlobStar('**');
-
-			assert.ok(!actual);
-		});
-
-		it('should returns false for pattern that does not ends with globstar', () => {
-			const actual = util.endsWithSlashGlobStar('name/**/*');
-
-			assert.ok(!actual);
-		});
-	});
-
-	describe('.trimTrailingSlashGlobStar', () => {
-		it('should returns pattern without globstar when pattern ends with slash and globstar', () => {
-			const expected = 'name';
-
-			const actual = util.trimTrailingSlashGlobStar('name/**');
-
-			assert.equal(actual, expected);
-		});
-
-		it('should returns original pattern when pattern ends with globstar, but has no slash', () => {
-			const expected = '**';
-
-			const actual = util.trimTrailingSlashGlobStar('**');
-
-			assert.equal(actual, expected);
-		});
-
-		it('should returns original pattern when pattern does not ends with globstar', () => {
-			const expected = 'name/*';
-
-			const actual = util.trimTrailingSlashGlobStar('name/*');
-
-			assert.equal(actual, expected);
-		});
-	});
-
 	describe('.getDepth', () => {
 		it('should returns 4', () => {
 			const expected: number = 4;
@@ -245,26 +199,6 @@ describe('Utils → Pattern', () => {
 			const actual = util.matchAny('fixtures/directory', [/fixtures\/file/]);
 
 			assert.ok(!actual);
-		});
-	});
-
-	describe('.match', () => {
-		it('should return false by negative patterns', () => {
-			const actual = util.match('fixtures/file.txt', [], [/fixtures\/file/]);
-
-			assert.ok(!actual);
-		});
-
-		it('should return false by positive patterns', () => {
-			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.md/], []);
-
-			assert.ok(!actual);
-		});
-
-		it('should return true', () => {
-			const actual = util.match('fixtures/file.txt', [/fixtures\/file\.txt/], []);
-
-			assert.ok(actual);
 		});
 	});
 });

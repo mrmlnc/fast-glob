@@ -22,7 +22,7 @@ smoke.suite('Smoke → Static (ignore)', [
 		{ pattern: 'fixtures/file.md', ignore: 'fixtures/file.md' },
 		{ pattern: 'fixtures/file.md', ignore: 'fixtures/*.md' },
 		{ pattern: 'fixtures/file.md', ignore: 'fixtures/*' },
-		{ pattern: 'fixtures/file.md', ignore: 'fixtures/**', broken: true, issue: 69 },
+		{ pattern: 'fixtures/file.md', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/file.md', ignore: 'fixtures/**/*' }
 	],
 
@@ -32,9 +32,9 @@ smoke.suite('Smoke → Static (ignore)', [
 		{ pattern: 'fixtures/first', ignore: '*' },
 		{ pattern: 'fixtures/first', ignore: '**' },
 		{ pattern: 'fixtures/first', ignore: '**/*' },
-		{ pattern: 'fixtures/first', ignore: 'fixtures/first', broken: true, issue: 69 },
+		{ pattern: 'fixtures/first', ignore: 'fixtures/first' },
 		{ pattern: 'fixtures/first', ignore: 'fixtures/*' },
-		{ pattern: 'fixtures/first', ignore: 'fixtures/**', broken: true, issue: 69 },
+		{ pattern: 'fixtures/first', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/first', ignore: 'fixtures/**/*' }
 	]
 ]);

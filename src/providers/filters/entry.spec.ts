@@ -273,8 +273,38 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(actual);
 			});
 
+			it('should return true for directory that matched to static patterns', () => {
+				const filter = getFilter(['fixtures/directory'], [], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
 			it('should return false for directory that not matched to patterns', () => {
 				const filter = getFilter(['**/super_directory/**'], [], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return false for directory that matched to negative static pattern', () => {
+				const filter = getFilter(['**'], ['fixtures/directory'], { onlyFiles: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return false for directory that matched to negative pattern with globstar', () => {
+				const filter = getFilter(['**'], ['fixtures/directory/**'], { onlyFiles: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 

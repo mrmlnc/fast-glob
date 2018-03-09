@@ -84,20 +84,6 @@ export function hasGlobStar(pattern: Pattern): boolean {
 }
 
 /**
- * Return true if provided pattern ends with slash and globstar.
- */
-export function endsWithSlashGlobStar(pattern: Pattern): boolean {
-	return pattern.endsWith('/' + GLOBSTAR);
-}
-
-/**
- * Trim trailing globstar if provided pattern ends with slash and globstar.
- */
-export function trimTrailingSlashGlobStar(pattern: Pattern): Pattern {
-	return endsWithSlashGlobStar(pattern) ? pattern.slice(0, -3) : pattern;
-}
-
-/**
  * Return naive depth of provided pattern.
  */
 export function getDepth(pattern: Pattern): number {
@@ -129,11 +115,4 @@ export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
 	}
 
 	return false;
-}
-
-/**
- * Returns true if the entry doesn't match any of the given negative RegExp's and match any of the given positive RegExp's.
- */
-export function match(entry: string, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
-	return matchAny(entry, negativeRe) ? false : matchAny(entry, positiveRe);
 }
