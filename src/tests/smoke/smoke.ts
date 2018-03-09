@@ -66,7 +66,7 @@ function getTestCaseTitle(test: ISmokeTest): string {
 		title += `, ignore: '${test.ignore}'`;
 	}
 	if (test.broken) {
-		title += ' (broken)';
+		title += ` (broken - ${test.issue})`;
 	}
 	if (test.correct) {
 		title += ' (correct)';
