@@ -281,13 +281,13 @@ If you are using **TypeScript**, you probably want to specify your own type of t
 ```ts
 import * as fg from 'fast-glob';
 
-interface IEntry {
+interface IMyOwnEntry {
 	path: string;
 }
 
-const entries: IEntry[] = fg.sync<IEntry>(['*.md'], {
+const entries: IMyOwnEntry[] = fg.sync<IMyOwnEntry>(['*.md'], {
 	transform: (entry) => typeof entry === 'string' ? { path: entry } : { path: entry.path }
-	// Will throw compilation error for non-IEntry types (boolean, for example)
+	// Will throw compilation error for non-IMyOwnEntry types (boolean, for example)
 });
 ```
 
