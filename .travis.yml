@@ -11,6 +11,7 @@ cache:
 branches:
   only:
     - master
+    - /\d+\.\d+(\.\d+)?(-\S*)?$/
 
 matrix:
   fast_finish: true
