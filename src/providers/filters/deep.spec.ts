@@ -184,8 +184,8 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Idempotence', () => {
-			it('should return the data without changing', () => {
+		describe('Immutability', () => {
+			it('should return the data without changes', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
