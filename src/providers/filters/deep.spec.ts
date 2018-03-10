@@ -31,9 +31,9 @@ describe('Providers → Filters → Deep', () => {
 		});
 	});
 
-	describe('.call', () => {
-		describe('Filter by «deep» option', () => {
-			it('should return false for nested directory when option is disabled', () => {
+	describe('.filter', () => {
+		describe('Skip by nesting level', () => {
+			it('should return «false» when option is disabled', () => {
 				const filter = getFilter(['**/*'], [], { deep: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
@@ -43,7 +43,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return false for nested directory when option has specified level', () => {
+			it('should return «false» when option has specified level', () => {
 				const filter = getFilter(['**/*'], [], { deep: 2 });
 
 				const entry = tests.getEntry({
@@ -56,106 +56,8 @@ describe('Providers → Filters → Deep', () => {
 
 				assert.ok(!actual);
 			});
-		});
 
-		describe('Filter by «followSymlinkedDirectories» option', () => {
-			it('should return true for symlinked directory when option is enabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for symlinked directory when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { followSymlinkedDirectories: false });
-
-				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
-		describe('Filter by «dot» option', () => {
-			it('should return true for directory that starting with a period when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
-
-				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for directory that starting with a period when option is disabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
-		describe('Filter by patterns', () => {
-			it('should return true for directory when negative patterns is not defined', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return true for directory that not matched to negative patterns', () => {
-				const filter = getFilter(['**/*'], ['**/pony/**']);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return true for directory when negative patterns has globstar and star after directory name', () => {
-				const filter = getFilter(['**/*'], ['**/directory/**/*']);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for directory that matched to negative patterns', () => {
-				const filter = getFilter([], ['**/directory']);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
-		describe('Filter by «depth» parameter', () => {
-			it('should return true if the patterns have a globstar', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return true if the patterns have a depth greater than the entry', () => {
+			it('should return «true» when depth is smaller than allowed', () => {
 				const filter = getFilter(['fixtures/*/*'], []);
 
 				const entry = tests.getEntry({
@@ -169,7 +71,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return false if the patterns have a depth smaller than the entry', () => {
+			it('should return «false» when depth is greater than allowed', () => {
 				const filter = getFilter(['fixtures/*'], []);
 
 				const entry = tests.getEntry({
@@ -184,18 +86,114 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Immutability', () => {
-			it('should return the data without changes', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
+		describe('Skip by «followSymlinkedDirectories» option', () => {
+			it('should return «true» for symlinked directory when option is enabled', () => {
+				const filter = getFilter(['**/*'], []);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «false» for symlinked directory when option is disabled', () => {
+				const filter = getFilter(['**/*'], [], { followSymlinkedDirectories: false });
+
+				const entry = tests.getDirectoryEntry(false /** dot */, true /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
+
+		describe('Skip by «dot» option', () => {
+			it('should return «true» for directory that starting with a period when option is enabled', () => {
+				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
+
+				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «false» for directory that starting with a period when option is disabled', () => {
+				const filter = getFilter(['**/*'], []);
+
+				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
+
+		describe('Skip by negative patterns', () => {
+			it('should return «true» when negative patterns is not defined', () => {
+				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const expected = entry.path;
+				const actual = filter(entry);
 
-				filter(entry);
-
-				assert.equal(entry.path, expected);
+				assert.ok(actual);
 			});
+
+			it('should return «true» when the directory does not match to negative patterns', () => {
+				const filter = getFilter(['**/*'], ['**/pony/**']);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «true» when negative patterns has no effect to depth reading', () => {
+				const filter = getFilter(['**/*'], ['*', '**/*']);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «false» when the directory match to negative patterns', () => {
+				const filter = getFilter(['**/*'], ['fixtures/directory']);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return «false» when the directory match to negative patterns with effect to depth reading', () => {
+				const filter = getFilter(['**/*'], ['fixtures/**']);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
+	});
+
+	describe('Immutability', () => {
+		it('should return the data without changes', () => {
+			const filter = getFilter(['**/*'], [], { onlyFiles: false });
+
+			const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+			const expected = entry.path;
+
+			filter(entry);
+
+			assert.equal(entry.path, expected);
 		});
 	});
 });

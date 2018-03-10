@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import globParent = require('glob-parent');
 import isGlob = require('is-glob');
 import micromatch = require('micromatch');
@@ -81,6 +83,22 @@ export function getBaseDirectory(pattern: Pattern): string {
  */
 export function hasGlobStar(pattern: Pattern): boolean {
 	return pattern.indexOf(GLOBSTAR) !== -1;
+}
+
+/**
+ * Return true if provided pattern ends with slash and globstar.
+ */
+export function endsWithSlashGlobStar(pattern: Pattern): boolean {
+	return pattern.endsWith('/' + GLOBSTAR);
+}
+
+/**
+ * Returns «true» when pattern ends with a slash and globstar or the last partial of the pattern is static pattern.
+ */
+export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
+	const basename = path.basename(pattern);
+
+	return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
 }
 
 /**

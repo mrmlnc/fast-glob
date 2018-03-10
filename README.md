@@ -295,10 +295,12 @@ const entries: IMyOwnEntry[] = fg.sync<IMyOwnEntry>(['*.md'], {
 
 You can use a negative pattern like this: `!**/node_modules` or `!**/node_modules/**`. Also you can use `ignore` option. Just look at the example below.
 
-  * **first/**
-    * **second/**
-      * file.md
-    * file.md
+```
+first/
+├── file.md
+└── second
+    └── file.txt
+```
 
 If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
 
