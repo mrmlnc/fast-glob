@@ -49,12 +49,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		// Skip by negative patterns
-		if (patternUtils.matchAny(entry.path, negativeRe)) {
-			return false;
-		}
-
-		return true;
+		return this.isSkippedByNegativePatterns(entry, negativeRe);
 	}
 
 	/**
@@ -90,5 +85,12 @@ export default class DeepFilter {
 	 */
 	private isSkippedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
+	}
+
+	/**
+	 * Returns «true» for a directory whose path math to any negative pattern.
+	 */
+	private isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
+		return !patternUtils.matchAny(entry.path, negativeRe);
 	}
 }

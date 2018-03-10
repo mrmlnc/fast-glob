@@ -130,8 +130,8 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Filter by patterns', () => {
-			it('should return true for directory when negative patterns is not defined', () => {
+		describe('Skip by negative patterns', () => {
+			it('should return «true» when negative patterns is not defined', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
@@ -141,7 +141,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return true for directory that not matched to negative patterns', () => {
+			it('should return «true» when the directory does not match to negative patterns', () => {
 				const filter = getFilter(['**/*'], ['**/pony/**']);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
@@ -151,8 +151,8 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return true for directory when negative patterns has globstar and star after directory name', () => {
-				const filter = getFilter(['**/*'], ['**/directory/**/*']);
+			it('should return «true» when negative patterns has no effect to depth reading', () => {
+				const filter = getFilter(['**/*'], ['*', '**/*']);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
@@ -161,8 +161,18 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return false for directory that matched to negative patterns', () => {
-				const filter = getFilter([], ['**/directory']);
+			it('should return «false» when the directory match to negative patterns', () => {
+				const filter = getFilter(['**/*'], ['fixtures/directory']);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return «false» when the directory match to negative patterns with effect to depth reading', () => {
+				const filter = getFilter(['**/*'], ['fixtures/**']);
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
@@ -171,59 +181,19 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 		});
+	});
 
-		describe('Filter by «depth» parameter', () => {
-			it('should return true if the patterns have a globstar', () => {
-				const filter = getFilter(['**/*'], []);
+	describe('Immutability', () => {
+		it('should return the data without changes', () => {
+			const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+			const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const actual = filter(entry);
+			const expected = entry.path;
 
-				assert.ok(actual);
-			});
+			filter(entry);
 
-			it('should return true if the patterns have a depth greater than the entry', () => {
-				const filter = getFilter(['fixtures/*/*'], []);
-
-				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
-					isDirectory: () => true
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false if the patterns have a depth smaller than the entry', () => {
-				const filter = getFilter(['fixtures/*'], []);
-
-				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
-					isDirectory: () => true
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
-		describe('Immutability', () => {
-			it('should return the data without changes', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
-
-				const expected = entry.path;
-
-				filter(entry);
-
-				assert.equal(entry.path, expected);
-			});
+			assert.equal(entry.path, expected);
 		});
 	});
 });
