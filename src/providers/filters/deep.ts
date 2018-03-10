@@ -18,7 +18,7 @@ export default class DeepFilter {
 	 */
 	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
 		const maxPatternDepth = this.getMaxPatternDepth(positive);
-		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+		const negativeRe: PatternRe[] = this.getNegativePatternsRe(negative);
 
 		return (entry: Entry) => this.filter(entry, negativeRe, maxPatternDepth);
 	}
@@ -31,6 +31,15 @@ export default class DeepFilter {
 		const patternDepths = patterns.map(patternUtils.getDepth);
 
 		return globstar ? Infinity : arrayUtils.max(patternDepths);
+	}
+
+	/**
+	 * Returns RegExp's for patterns that can affect the depth of reading.
+	 */
+	private getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
+		const affectDepthOfReadingPatterns: Pattern[] = patterns.filter(patternUtils.isAffectDepthOfReadingPattern);
+
+		return patternUtils.convertPatternsToRe(affectDepthOfReadingPatterns, this.micromatchOptions);
 	}
 
 	/**

@@ -37,10 +37,10 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/*', ignore: 'fixtures/*' },
 		{ pattern: 'fixtures/*', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/*', ignore: 'fixtures/**/*' },
-		{ pattern: 'fixtures/**', ignore: 'fixtures/*', broken: true, issue: [47, 80] },
+		{ pattern: 'fixtures/**', ignore: 'fixtures/*', broken: true, issue: 47 },
 		{ pattern: 'fixtures/**', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/**', ignore: 'fixtures/**/*', broken: true, issue: 47 },
-		{ pattern: 'fixtures/**/*', ignore: 'fixtures/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/**/*', ignore: 'fixtures/*' },
 		{ pattern: 'fixtures/**/*', ignore: 'fixtures/**' },
 		{ pattern: 'fixtures/**/*', ignore: 'fixtures/**/*' }
 	],
@@ -76,14 +76,9 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/*', ignore: '*/nested/*' },
 		{ pattern: 'fixtures/*', ignore: '**/nested/*' },
 		{ pattern: 'fixtures/**', ignore: '*/nested/*', broken: true, issue: 47 },
-		{
-			pattern: 'fixtures/**',
-			ignore: '**/nested/*',
-			broken: true,
-			issue: [47, 80]
-		},
+		{ pattern: 'fixtures/**', ignore: '**/nested/*', broken: true, issue: 47 },
 		{ pattern: 'fixtures/**/*', ignore: '*/nested/*' },
-		{ pattern: 'fixtures/**/*', ignore: '**/nested/*', broken: true, issue: 80 }
+		{ pattern: 'fixtures/**/*', ignore: '**/nested/*' }
 	],
 
 	[
@@ -147,7 +142,7 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/*/nested/**', ignore: '*/nested/*' },
 		{ pattern: 'fixtures/*/nested/**', ignore: '*/nested/**' },
 		{ pattern: 'fixtures/*/nested/**', ignore: '*/nested/**/*' },
-		{ pattern: 'fixtures/*/nested/**', ignore: '**/nested/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/*/nested/**', ignore: '**/nested/*' },
 		{ pattern: 'fixtures/*/nested/**', ignore: '**/nested/**' },
 		{ pattern: 'fixtures/*/nested/**', ignore: '**/nested/**/*' }
 	],
@@ -163,7 +158,7 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/*/nested/**/*', ignore: '*/nested/*' },
 		{ pattern: 'fixtures/*/nested/**/*', ignore: '*/nested/**' },
 		{ pattern: 'fixtures/*/nested/**/*', ignore: '*/nested/**/*' },
-		{ pattern: 'fixtures/*/nested/**/*', ignore: '**/nested/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/*/nested/**/*', ignore: '**/nested/*' },
 		{ pattern: 'fixtures/*/nested/**/*', ignore: '**/nested/**' },
 		{ pattern: 'fixtures/*/nested/**/*', ignore: '**/nested/**/*' }
 	],
@@ -195,7 +190,7 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/**/nested/**', ignore: '*/nested/*' },
 		{ pattern: 'fixtures/**/nested/**', ignore: '*/nested/**' },
 		{ pattern: 'fixtures/**/nested/**', ignore: '*/nested/**/*' },
-		{ pattern: 'fixtures/**/nested/**', ignore: '**/nested/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/**/nested/**', ignore: '**/nested/*' },
 		{ pattern: 'fixtures/**/nested/**', ignore: '**/nested/**' },
 		{ pattern: 'fixtures/**/nested/**', ignore: '**/nested/**/*' }
 	],
@@ -211,7 +206,7 @@ smoke.suite('Smoke → Regular (ignore)', [
 		{ pattern: 'fixtures/**/nested/**/*', ignore: '*/nested/*' },
 		{ pattern: 'fixtures/**/nested/**/*', ignore: '*/nested/**' },
 		{ pattern: 'fixtures/**/nested/**/*', ignore: '*/nested/**/*' },
-		{ pattern: 'fixtures/**/nested/**/*', ignore: '**/nested/*', broken: true, issue: 80 },
+		{ pattern: 'fixtures/**/nested/**/*', ignore: '**/nested/*' },
 		{ pattern: 'fixtures/**/nested/**/*', ignore: '**/nested/**' },
 		{ pattern: 'fixtures/**/nested/**/*', ignore: '**/nested/**/*' }
 	]
@@ -222,10 +217,10 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 		{ pattern: '*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '*', ignore: '**/*', cwd: 'fixtures' },
-		{ pattern: '**', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '**', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '**', ignore: '**/*', cwd: 'fixtures' },
-		{ pattern: '**/*', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '**/*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '**/*', ignore: '**/*', cwd: 'fixtures' }
 	],
@@ -287,10 +282,10 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 	[
 		{ pattern: '*', ignore: '*/nested/*', cwd: 'fixtures' },
 		{ pattern: '*', ignore: '**/nested/*', cwd: 'fixtures' },
-		{ pattern: '**', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
-		{ pattern: '**', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
-		{ pattern: '**/*', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
-		{ pattern: '**/*', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 }
+		{ pattern: '**', ignore: '*/nested/*', cwd: 'fixtures' },
+		{ pattern: '**', ignore: '**/nested/*', cwd: 'fixtures' },
+		{ pattern: '**/*', ignore: '*/nested/*', cwd: 'fixtures' },
+		{ pattern: '**/*', ignore: '**/nested/*', cwd: 'fixtures' }
 	],
 
 	[
@@ -312,7 +307,7 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 	],
 
 	[
-		{ pattern: '*/nested', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '*/nested', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '*/nested', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '*/nested', ignore: 'nested', cwd: 'fixtures' },
@@ -328,7 +323,7 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 	],
 
 	[
-		{ pattern: '*/nested/*', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '*/nested/*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '*/nested/*', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/*', ignore: 'nested', cwd: 'fixtures' },
@@ -344,39 +339,39 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 	],
 
 	[
-		{ pattern: '*/nested/**', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: 'nested', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: 'nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: 'nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: 'nested/**/*', cwd: 'fixtures' },
-		{ pattern: '*/nested/**', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**', ignore: '*/nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '*/nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '*/nested/**/*', cwd: 'fixtures' },
-		{ pattern: '*/nested/**', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**', ignore: '**/nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '**/nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**', ignore: '**/nested/**/*', cwd: 'fixtures' }
 	],
 
 	[
-		{ pattern: '*/nested/**/*', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**/*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: 'nested', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: 'nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: 'nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: 'nested/**/*', cwd: 'fixtures' },
-		{ pattern: '*/nested/**/*', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**/*', ignore: '*/nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '*/nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '*/nested/**/*', cwd: 'fixtures' },
-		{ pattern: '*/nested/**/*', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '*/nested/**/*', ignore: '**/nested/*', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '**/nested/**', cwd: 'fixtures' },
 		{ pattern: '*/nested/**/*', ignore: '**/nested/**/*', cwd: 'fixtures' }
 	],
 
 	[
-		{ pattern: '**/nested/*', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '**/nested/*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '**/nested/*', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/*', ignore: 'nested', cwd: 'fixtures' },
@@ -392,33 +387,33 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 	],
 
 	[
-		{ pattern: '**/nested/**', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: 'nested', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: 'nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: 'nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: 'nested/**/*', cwd: 'fixtures' },
-		{ pattern: '**/nested/**', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**', ignore: '*/nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '*/nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '*/nested/**/*', cwd: 'fixtures' },
-		{ pattern: '**/nested/**', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**', ignore: '**/nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '**/nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**', ignore: '**/nested/**/*', cwd: 'fixtures' }
 	],
 
 	[
-		{ pattern: '**/nested/**/*', ignore: '*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**/*', ignore: '*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '**/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: 'nested', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: 'nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: 'nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: 'nested/**/*', cwd: 'fixtures' },
-		{ pattern: '**/nested/**/*', ignore: '*/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**/*', ignore: '*/nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '*/nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '*/nested/**/*', cwd: 'fixtures' },
-		{ pattern: '**/nested/**/*', ignore: '**/nested/*', cwd: 'fixtures', broken: true, issue: 80 },
+		{ pattern: '**/nested/**/*', ignore: '**/nested/*', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '**/nested/**', cwd: 'fixtures' },
 		{ pattern: '**/nested/**/*', ignore: '**/nested/**/*', cwd: 'fixtures' }
 	]
