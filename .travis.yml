@@ -1,9 +1,19 @@
 sudo: false
 language: node_js
 
+notifications:
+  email: false
+
+cache:
+  directories:
+    - node_modules
+
 branches:
   only:
     - master
+
+matrix:
+  fast_finish: true
 
 node_js:
   - 'node'
@@ -18,3 +28,26 @@ os:
 script:
   - npm run build
   - npm run smoke
+
+jobs:
+  include:
+    - stage: GitHub Release
+      if: tag IS present
+      script:
+        - npm run build
+        - npm run smoke
+      after_success:
+        - npm pack
+        - tar -xvzf "fast-glob-$TRAVIS_TAG.tgz"
+        - tar -zcvf "fast-glob-$TRAVIS_TAG.zip" package
+      deploy:
+        provider: releases
+        api_key:
+          secure: ftPMXEy7uekQfP04RkxMpa5nBxbMH4pTHT6sFJVzQFQcbqyWABDRgw/0EIOGWIlbCKIeUM+b3ylfQAQfAoejvUO8m2punmxEJrkHujhqz7r5z+xm0+nbasTOnfaa6+5tGDgDkxEHHA3O2HmMtSM1iqHw9GV1BXgwt9gow52Nr/Y3Q66QYVy7etM5YLYxdwLLcgoQ5NcY3Ug8L1zi35DqsXND0GlNkHNbg2GOnITGXoocAGZl8cQdgzaGZhArsQJ+YahqWCpaxR5VlOAZbawsxhbgTE+sEzbXh0UsanV636k6sxXqKbksppwt79eMoqcW0Sf1Cm4GR1cYgp6qVc5iHg+f7yjVcbfSZmWLyU/4RThTbWIcQ+Qk/ePSQcpRSN0WPCw92oB+0V//4fo9ZSokqkI2Sj75wQdMjtnyyU7L3YOCVscghTFY0qINC9qvu/CqjmAHeg+bRiypetv98ZifJnk8GQdgD8+sBeffcymrQ2K8+YS5Km0658KdBeXyKYtk1uP2VageTyffji0DJgWkkNLsqtvsfYQxeAOmf+JNTbCb03Bl+qGr1FjSbo5C7fVL8IOp08tydyV+rY5Dt8EzaHKwSJ4KPi7DaIIkHk013LNxYXGaoKDsZwttwN22o8Hy0jVkoiFjl7w6H4NpM1mk6V+YGS2qMgwMqZFmzk6LdgY=
+        skip_cleanup: true
+        file_glob: true
+        file: '*.{tgz,zip}'
+        name: $TRAVIS_TAG
+        draft: true
+        on:
+          tags: true
