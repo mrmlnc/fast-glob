@@ -41,8 +41,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		// Skip reading if the directory is symlink and we don't want expand symlinks
-		if (this.isFollowedSymlink(entry)) {
+		if (this.isSkippedSymlinkedDirectory(entry)) {
 			return false;
 		}
 
@@ -81,16 +80,16 @@ export default class DeepFilter {
 	}
 
 	/**
+	 * Returns «true» for symlinked directory if the «followSymlinkedDirectories» option is disabled.
+	 */
+	private isSkippedSymlinkedDirectory(entry: Entry): boolean {
+		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
+	}
+
+	/**
 	 * Returns «true» for dot directories if the «dot» option is enabled.
 	 */
 	private isFollowedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
-	}
-
-	/**
-	 * Returns «true» for symlinked directories if the «followSymlinks» option is enabled.
-	 */
-	private isFollowedSymlink(entry: Entry): boolean {
-		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
 	}
 }
