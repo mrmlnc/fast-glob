@@ -45,8 +45,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		// Skip reading if the directory name starting with a period and is not expected
-		if (this.isFollowedDotDirectory(entry)) {
+		if (this.isSkippedDotDirectory(entry)) {
 			return false;
 		}
 
@@ -87,9 +86,9 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns «true» for dot directories if the «dot» option is enabled.
+	 * Returns «true» for a directory whose name starts with a period.
 	 */
-	private isFollowedDotDirectory(entry: Entry): boolean {
+	private isSkippedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
 	}
 }

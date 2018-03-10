@@ -108,8 +108,8 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Filter by «dot» option', () => {
-			it('should return true for directory that starting with a period when option is enabled', () => {
+		describe('Skip by «dot» option', () => {
+			it('should return «true» for directory that starting with a period when option is enabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
 				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
@@ -119,7 +119,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return false for directory that starting with a period when option is disabled', () => {
+			it('should return «false» for directory that starting with a period when option is disabled', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
