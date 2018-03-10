@@ -179,6 +179,26 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	describe('.isAffectDepthOfReadingPattern', () => {
+		it('should return true for pattern that ends with slash and globstar', () => {
+			const actual = util.isAffectDepthOfReadingPattern('name/**');
+
+			assert.ok(actual);
+		});
+
+		it('should return true for pattern when the last partial of the pattern is static pattern', () => {
+			const actual = util.isAffectDepthOfReadingPattern('**/name');
+
+			assert.ok(actual);
+		});
+
+		it('should return false', () => {
+			const actual = util.isAffectDepthOfReadingPattern('**/name/*');
+
+			assert.ok(!actual);
+		});
+	});
+
 	describe('.getDepth', () => {
 		it('should returns 4', () => {
 			const expected: number = 4;
