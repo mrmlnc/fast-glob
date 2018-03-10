@@ -5,6 +5,9 @@ branches:
   only:
     - master
 
+matrix:
+  fast_finish: true
+
 node_js:
   - 'node'
   - '8'
