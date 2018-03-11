@@ -90,7 +90,7 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns «true» for a directory whose name starts with a period.
+	 * Returns «true» for a directory whose name starts with a period if «dot» option is disabled.
 	 */
 	private isSkippedDotDirectory(entry: Entry): boolean {
 		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
