@@ -139,9 +139,9 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return negative patterns as positive with patterns from ignore option', () => {
-			const expected = ['*.md', '*.txt'];
+			const expected = ['*.md', '*.txt', '*.json'];
 
-			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], ['*.txt']);
+			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], ['*.txt', '!*.json']);
 
 			assert.deepEqual(actual, expected);
 		});
