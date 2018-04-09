@@ -52,7 +52,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	public staticApi(task: ITask): Entry[] {
 		const fsAdapter = new FileSystemSync(this.options);
 
-		const filter = this.entryFilter.getFilter(['**'], task.negative);
+		const filter = this.entryFilter.getFilter(task.positive, task.negative);
 
 		return fsAdapter.read(task.patterns, filter);
 	}

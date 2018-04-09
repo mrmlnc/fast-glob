@@ -57,3 +57,8 @@ smoke.suite('Smoke → Static (ignore & cwd)', [
 		{ pattern: 'fixtures/first', ignore: '**/*', cwd: 'fixtures' }
 	]
 ]);
+
+smoke.suite('Smoke → Static (relative)', [
+	{ pattern: '../file.md', cwd: 'fixtures/first' },
+	{ pattern: '../../file.md', cwd: 'fixtures/first/nested' }
+]);
