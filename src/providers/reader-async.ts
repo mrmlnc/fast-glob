@@ -54,7 +54,7 @@ export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
 	public staticApi(task: ITask): NodeJS.ReadableStream {
 		const fsAdapter = new FileSystemStream(this.options);
 
-		const filter = this.entryFilter.getFilter(['**'], task.negative);
+		const filter = this.entryFilter.getFilter(task.positive, task.negative);
 
 		return fsAdapter.read(task.patterns, filter);
 	}

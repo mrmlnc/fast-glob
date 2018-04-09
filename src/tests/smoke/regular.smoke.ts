@@ -418,3 +418,8 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 		{ pattern: '**/nested/**/*', ignore: '**/nested/**/*', cwd: 'fixtures' }
 	]
 ]);
+
+smoke.suite('Smoke → Regular (relative)', [
+	{ pattern: '../*', cwd: 'fixtures/first' },
+	{ pattern: '../../*', cwd: 'fixtures/first/nested' }
+]);
