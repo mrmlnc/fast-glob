@@ -36,7 +36,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 			return this.dynamicApi(root, options);
 		}
 
-		return this.staticApi(task);
+		return this.staticApi(task, options);
 	}
 
 	/**
@@ -49,11 +49,9 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Api for static tasks.
 	 */
-	public staticApi(task: ITask): Entry[] {
+	public staticApi(task: ITask, options: readdir.Options): Entry[] {
 		const fsAdapter = new FileSystemSync(this.options);
 
-		const filter = this.entryFilter.getFilter(task.positive, task.negative);
-
-		return fsAdapter.read(task.patterns, filter);
+		return fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }

@@ -43,7 +43,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 			return this.dynamicApi(root, options);
 		}
 
-		return this.staticApi(task);
+		return this.staticApi(task, options);
 	}
 
 	/**
@@ -56,11 +56,9 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Api for static tasks.
 	 */
-	public staticApi(task: ITask): NodeJS.ReadableStream {
+	public staticApi(task: ITask, options: readdir.Options): NodeJS.ReadableStream {
 		const fsAdapter = new FileSystemStream(this.options);
 
-		const filter = this.entryFilter.getFilter(task.positive, task.negative);
-
-		return fsAdapter.read(task.patterns, filter);
+		return fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }
