@@ -21,6 +21,13 @@ class TransformStream extends stream.Transform {
 
 export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
+	 * Returns FileSystem adapter.
+	 */
+	public get fsAdapter(): FileSystemStream {
+		return new FileSystemStream(this.options);
+	}
+
+	/**
 	 * Use stream API to read entries for Task.
 	 */
 	public read(task: ITask): NodeJS.ReadableStream {
@@ -57,8 +64,6 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	 * Api for static tasks.
 	 */
 	public staticApi(task: ITask, options: readdir.Options): NodeJS.ReadableStream {
-		const fsAdapter = new FileSystemStream(this.options);
-
-		return fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }

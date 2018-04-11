@@ -9,6 +9,13 @@ import { Entry, EntryItem } from '../types/entries';
 
 export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
+	 * Returns FileSystem adapter.
+	 */
+	public get fsAdapter(): FileSystemSync {
+		return new FileSystemSync(this.options);
+	}
+
+	/**
 	 * Use sync API to read entries for Task.
 	 */
 	public read(task: ITask): EntryItem[] {
@@ -50,8 +57,6 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	 * Api for static tasks.
 	 */
 	public staticApi(task: ITask, options: readdir.Options): Entry[] {
-		const fsAdapter = new FileSystemSync(this.options);
-
-		return fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }
