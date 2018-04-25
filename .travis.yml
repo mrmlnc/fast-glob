@@ -17,7 +17,7 @@ matrix:
   fast_finish: true
 
 node_js:
-  - 'node'
+  - '10'
   - '8'
   - '6'
   - '4'
