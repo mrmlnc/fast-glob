@@ -56,7 +56,7 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 }
 
 /**
- * Retrun only negative patterns.
+ * Return only negative patterns.
  */
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
 	const negative = patternUtils.getNegativePatterns(patterns).concat(ignore);

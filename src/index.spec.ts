@@ -73,7 +73,7 @@ describe('Package', () => {
 	});
 
 	describe('.stream', () => {
-		it('should retruns entries', (done) => {
+		it('should returns entries', (done) => {
 			const expected: EntryItem[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
@@ -96,7 +96,7 @@ describe('Package', () => {
 			});
 		});
 
-		it('should retruns entries (two sources)', (done) => {
+		it('should returns entries (two sources)', (done) => {
 			const expected: EntryItem[] = [
 				'fixtures/first/file.md',
 				'fixtures/first/nested/directory/file.md',
