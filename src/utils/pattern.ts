@@ -47,7 +47,7 @@ export function convertToNegativePattern(pattern: Pattern): Pattern {
  * Return true if provided pattern is negative pattern.
  */
 export function isNegativePattern(pattern: Pattern): boolean {
-	return pattern.startsWith('!');
+	return pattern.startsWith('!') && pattern[1] !== '(';
 }
 
 /**
