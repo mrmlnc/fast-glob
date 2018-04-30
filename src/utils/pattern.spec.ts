@@ -83,6 +83,12 @@ describe('Utils → Pattern', () => {
 
 			assert.ok(!actual);
 		});
+
+		it('should returns false for extglob', () => {
+			const actual = util.isNegativePattern('!(a|b|c)');
+
+			assert.ok(!actual);
+		});
 	});
 
 	describe('.isPositivePattern', () => {
