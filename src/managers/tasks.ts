@@ -18,7 +18,7 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
 	const unixIgnore = options.ignore.map(patternUtils.unixifyPattern);
 
-	const positivePatterns = getPositivePatterns(unixPatterns);
+	const positivePatterns = getPositivePatterns(unixPatterns, unixIgnore);
 	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
 
 	const staticPatterns = positivePatterns.filter(patternUtils.isStaticPattern);
@@ -49,17 +49,23 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 }
 
 /**
- * Return only positive patterns.
+ * Return only positive or only inverted negative patterns.
  */
-export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
+export function getPositivePatterns(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
+	const inversedIgnore = patternUtils.getNegativePatterns(ignore);
+	if (inversedIgnore.length !== 0) {
+		return inversedIgnore.map(patternUtils.convertToPositivePattern);
+	}
+
 	return patternUtils.getPositivePatterns(patterns);
 }
 
 /**
- * Return only negative patterns.
+ * Return only negative patterns without inverted negative patterns.
  */
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
-	const negative = patternUtils.getNegativePatterns(patterns).concat(ignore);
+	const nonInversedIgnore = patternUtils.getPositivePatterns(ignore);
+	const negative = patternUtils.getNegativePatterns(patterns).concat(nonInversedIgnore);
 	const positive = negative.map(patternUtils.convertToPositivePattern);
 
 	return positive;

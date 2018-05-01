@@ -120,10 +120,18 @@ describe('Managers → Task', () => {
 	});
 
 	describe('.getPositivePatterns', () => {
-		it('should return only positive patterns', () => {
+		it('should return positive patterns from patterns', () => {
 			const expected = ['*'];
 
-			const actual = manager.getPositivePatterns(['*', '!*.md']);
+			const actual = manager.getPositivePatterns(['*', '!*.md'], ['*.txt']);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return inverted negative patterns from ignore option', () => {
+			const expected = ['**/*'];
+
+			const actual = manager.getPositivePatterns(['*', '!*.md'], ['!**/*', '*.txt']);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -139,7 +147,15 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return negative patterns as positive with patterns from ignore option', () => {
-			const expected = ['*.md', '*.txt', '*.json'];
+			const expected = ['*.md', '*.txt'];
+
+			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], ['*.txt']);
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return negative patterns as positive without inverted negative patterns from ignore option', () => {
+			const expected = ['*.md', '*.txt'];
 
 			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], ['*.txt', '!*.json']);
 
