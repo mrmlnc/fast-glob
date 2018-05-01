@@ -30,17 +30,17 @@ export function unixifyPattern(pattern: Pattern): Pattern {
 }
 
 /**
- * Returns negative pattern as positive pattern.
+ * Returns negative pattern as positive pattern if required.
  */
 export function convertToPositivePattern(pattern: Pattern): Pattern {
 	return isNegativePattern(pattern) ? pattern.slice(1) : pattern;
 }
 
 /**
- * Returns positive pattern as negative pattern.
+ * Returns positive pattern as negative pattern if required.
  */
 export function convertToNegativePattern(pattern: Pattern): Pattern {
-	return '!' + pattern;
+	return isNegativePattern(pattern) ? pattern : '!' + pattern;
 }
 
 /**
