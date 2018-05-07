@@ -45,13 +45,13 @@ function getAdapter(): FileSystemStreamFake {
 	return new FileSystemStreamFake();
 }
 
-function getEntries(_adapter: new () => FileSystemStreamFake, positive: Pattern[], isSkippedEntry: boolean): Promise<string[]> {
+function getEntries(_adapter: new () => FileSystemStreamFake, positive: Pattern[], isFollowedEntry: boolean): Promise<string[]> {
 	const adapter = new _adapter();
 
 	const entries: string[] = [];
 
 	return new Promise((resolve, reject) => {
-		const stream = adapter.read(positive, () => isSkippedEntry);
+		const stream = adapter.read(positive, () => isFollowedEntry);
 
 		stream.on('data', (entry: Entry) => entries.push(entry.path));
 
@@ -73,7 +73,7 @@ describe('Adapters → FileSystemStream', () => {
 		it('should return empty array', async () => {
 			const expected: string[] = [];
 
-			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ false);
+			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ false);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -81,7 +81,7 @@ describe('Adapters → FileSystemStream', () => {
 		it('should return entries', async () => {
 			const expected = ['pattern1', 'pattern2'];
 
-			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -89,7 +89,7 @@ describe('Adapters → FileSystemStream', () => {
 		it('should return entries without null items', async () => {
 			const expected = ['pattern2'];
 
-			const actual = await getEntries(FileSystemStreamThrowStatError, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = await getEntries(FileSystemStreamThrowStatError, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});

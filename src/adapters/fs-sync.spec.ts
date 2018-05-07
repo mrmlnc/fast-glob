@@ -48,10 +48,10 @@ function getAdapter(): FileSystemSyncFake {
 	return new FileSystemSyncFake();
 }
 
-function getEntries(_adapter: new () => FileSystemSyncFake, positive: Pattern[], isSkippedEntry: boolean): string[] {
+function getEntries(_adapter: new () => FileSystemSyncFake, positive: Pattern[], isFollowedEntry: boolean): string[] {
 	const adapter = new _adapter();
 
-	return adapter.read(positive, () => isSkippedEntry).map(({ path }) => path);
+	return adapter.read(positive, () => isFollowedEntry).map(({ path }) => path);
 }
 
 describe('Adapters → FileSystemSync', () => {
@@ -67,7 +67,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return empty array', () => {
 			const expected: string[] = [];
 
-			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ false);
+			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ false);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -75,7 +75,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return entries', () => {
 			const expected = ['pattern1', 'pattern2'];
 
-			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -83,7 +83,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return entries without null items', () => {
 			const expected = ['pattern2'];
 
-			const actual = getEntries(FileSystemSyncThrowStatError, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = getEntries(FileSystemSyncThrowStatError, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
