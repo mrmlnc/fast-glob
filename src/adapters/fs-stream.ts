@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as stream from 'stream';
 
+import * as fsStat from '@nodelib/fs.stat';
+
 import FileSystem from './fs';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
@@ -51,30 +53,6 @@ export default class FileSystemStream extends FileSystem<NodeJS.ReadableStream> 
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): Promise<fs.Stats> {
-		return this.lstat(filepath)
-			.then((lstat) => {
-				if (!lstat.isSymbolicLink()) {
-					return lstat;
-				}
-
-				return this.stat(filepath).catch(() => lstat);
-			})
-			.then((stat) => {
-				stat.isSymbolicLink = () => true;
-
-				return stat;
-			});
-	}
-
-	public lstat(filepath: string): Promise<fs.Stats> {
-		return new Promise((resolve, reject) => {
-			fs.lstat(filepath, (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? reject(err) : resolve(stats));
-		});
-	}
-
-	public stat(filepath: string): Promise<fs.Stats> {
-		return new Promise((resolve, reject) => {
-			fs.stat(filepath, (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? reject(err) : resolve(stats));
-		});
+		return fsStat.stat(filepath, { throwErrorOnBrokenSymlinks: false });
 	}
 }

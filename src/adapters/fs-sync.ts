@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 
+import * as fsStat from '@nodelib/fs.stat';
+
 import FileSystem from './fs';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
@@ -45,28 +47,6 @@ export default class FileSystemSync extends FileSystem<Entry[]> {
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): fs.Stats {
-		const lstat = this.lstat(filepath);
-
-		if (!lstat.isSymbolicLink()) {
-			return lstat;
-		}
-
-		try {
-			const stat = this.stat(filepath);
-
-			stat.isSymbolicLink = () => true;
-
-			return stat;
-		} catch {
-			return lstat;
-		}
-	}
-
-	public lstat(filepath: string): fs.Stats {
-		return fs.lstatSync(filepath);
-	}
-
-	public stat(filepath: string): fs.Stats {
-		return fs.statSync(filepath);
+		return fsStat.statSync(filepath, { throwErrorOnBrokenSymlinks: false });
 	}
 }

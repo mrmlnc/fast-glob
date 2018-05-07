@@ -18,41 +18,22 @@ class FileSystemStreamFake extends FileSystemStream {
 		super(options);
 	}
 
-	/**
-	 * Here «0» is an indicator that it is «lstat» call.
-	 */
-	public lstat(): Promise<fs.Stats> {
-		return getStats(0, this.isSymbolicLink);
-	}
-
-	/**
-	 * Here «1» is an indicator that it is «stat» call.
-	 */
-	public stat(): Promise<fs.Stats> {
+	public getStat(): Promise<fs.Stats> {
 		return getStats(1, this.isSymbolicLink);
 	}
 }
 
-class FileSystemStreamThrowLStatError extends FileSystemStreamFake {
+class FileSystemStreamThrowStatError extends FileSystemStreamFake {
 	private call: number = 0;
 
-	/**
-	 * First call throw error.
-	 */
-	public lstat(): Promise<fs.Stats> {
+	public getStat(): Promise<fs.Stats> {
 		if (this.call === 0) {
 			this.call++;
 
 			return Promise.reject(new Error('something'));
 		}
 
-		return super.lstat();
-	}
-}
-
-class FileSystemStreamThrowStatError extends FileSystemStreamFake {
-	public stat(): Promise<fs.Stats> {
-		return Promise.reject(new Error('something'));
+		return getStats(1, /* isSymbolicLink */ true);
 	}
 }
 
@@ -108,7 +89,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return entries without null items', async () => {
 			const expected = ['pattern2'];
 
-			const actual = await getEntries(FileSystemStreamThrowLStatError, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = await getEntries(FileSystemStreamThrowStatError, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -132,51 +113,13 @@ describe('Adapters → FileSystemSync', () => {
 		});
 
 		it('should return null when lstat throw error', async () => {
-			const adapter = new FileSystemStreamThrowLStatError();
+			const adapter = new FileSystemStreamThrowStatError();
 
 			const expected = null;
 
 			const actual = await adapter.getEntry('filepath', 'pattern');
 
 			assert.equal(actual, expected);
-		});
-	});
-
-	describe('.getStat', () => {
-		it('should return stat', async () => {
-			const adapter = getAdapter();
-
-			const expected: fs.Stats = { uid: 1 } as fs.Stats;
-
-			const actual = await adapter.getStat('pattern');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
-		});
-
-		it('should return only lstat when is not a symlink', async () => {
-			const adapter = getAdapter(/* isSymbolicLink */ false);
-
-			const expected: fs.Stats = { uid: 0 } as fs.Stats;
-
-			const actual = await adapter.getStat('file.json');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
-		});
-
-		it('should return only lstat when stat call throw error', async () => {
-			const adapter = new FileSystemStreamThrowStatError();
-
-			const expected: fs.Stats = { uid: 0 } as fs.Stats;
-
-			const actual = await adapter.getStat('file.json');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
 		});
 	});
 });
