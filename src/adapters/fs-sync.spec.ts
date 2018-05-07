@@ -14,12 +14,12 @@ import { Pattern } from '../types/patterns';
 const options = optionsManager.prepare();
 
 class FileSystemSyncFake extends FileSystemSync {
-	constructor(private readonly isSymbolicLink: boolean = true) {
+	constructor() {
 		super(options);
 	}
 
 	public getStat(): fs.Stats {
-		return getStats(1, this.isSymbolicLink);
+		return getStats(1);
 	}
 }
 
@@ -36,16 +36,16 @@ class FileSystemSyncThrowStatError extends FileSystemSyncFake {
 			throw new Error('Something');
 		}
 
-		return getStats(1, /* isSymbolicLink */ true);
+		return getStats(1);
 	}
 }
 
-function getStats(uid: number, isSymbolicLink: boolean): fs.Stats {
-	return { uid, isSymbolicLink: () => isSymbolicLink } as fs.Stats;
+function getStats(uid: number): fs.Stats {
+	return { uid } as fs.Stats;
 }
 
-function getAdapter(isSymbolicLink: boolean = true): FileSystemSyncFake {
-	return new FileSystemSyncFake(isSymbolicLink);
+function getAdapter(): FileSystemSyncFake {
+	return new FileSystemSyncFake();
 }
 
 function getEntries(_adapter: new () => FileSystemSyncFake, positive: Pattern[], isSkippedEntry: boolean): string[] {
@@ -100,8 +100,6 @@ describe('Adapters → FileSystemSync', () => {
 			} as Entry;
 
 			const actual = adapter.getEntry('filepath', 'pattern');
-
-			delete (actual as Entry).isSymbolicLink;
 
 			assert.deepEqual(actual, expected);
 		});

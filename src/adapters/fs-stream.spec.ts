@@ -14,12 +14,12 @@ import { Pattern } from '../types/patterns';
 const options = optionsManager.prepare();
 
 class FileSystemStreamFake extends FileSystemStream {
-	constructor(private readonly isSymbolicLink: boolean = true) {
+	constructor() {
 		super(options);
 	}
 
 	public getStat(): Promise<fs.Stats> {
-		return getStats(1, this.isSymbolicLink);
+		return getStats(1);
 	}
 }
 
@@ -33,16 +33,16 @@ class FileSystemStreamThrowStatError extends FileSystemStreamFake {
 			return Promise.reject(new Error('something'));
 		}
 
-		return getStats(1, /* isSymbolicLink */ true);
+		return getStats(1);
 	}
 }
 
-function getStats(uid: number, isSymbolicLink: boolean): Promise<fs.Stats> {
-	return Promise.resolve({ uid, isSymbolicLink: () => isSymbolicLink } as fs.Stats);
+function getStats(uid: number): Promise<fs.Stats> {
+	return Promise.resolve({ uid } as fs.Stats);
 }
 
-function getAdapter(isSymbolicLink: boolean = true): FileSystemStreamFake {
-	return new FileSystemStreamFake(isSymbolicLink);
+function getAdapter(): FileSystemStreamFake {
+	return new FileSystemStreamFake();
 }
 
 function getEntries(_adapter: new () => FileSystemStreamFake, positive: Pattern[], isSkippedEntry: boolean): Promise<string[]> {
@@ -106,8 +106,6 @@ describe('Adapters → FileSystemStream', () => {
 			} as Entry;
 
 			const actual = await adapter.getEntry('filepath', 'pattern');
-
-			delete (actual as Entry).isSymbolicLink;
 
 			assert.deepEqual(actual, expected);
 		});
