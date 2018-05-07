@@ -60,7 +60,7 @@ function getEntries(_adapter: new () => FileSystemStreamFake, positive: Pattern[
 	});
 }
 
-describe('Adapters → FileSystemSync', () => {
+describe('Adapters → FileSystemStream', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
 			const adapter = getAdapter();
