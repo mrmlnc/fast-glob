@@ -14,60 +14,44 @@ import { Pattern } from '../types/patterns';
 const options = optionsManager.prepare();
 
 class FileSystemSyncFake extends FileSystemSync {
-	constructor(private readonly isSymbolicLink: boolean = true) {
+	constructor() {
 		super(options);
 	}
 
-	/**
-	 * Here «0» is an indicator that it is «lstat» call.
-	 */
-	public lstat(): fs.Stats {
-		return getStats(0, this.isSymbolicLink);
-	}
-
-	/**
-	 * Here «1» is an indicator that it is «stat» call.
-	 */
-	public stat(): fs.Stats {
-		return getStats(1, this.isSymbolicLink);
+	public getStat(): fs.Stats {
+		return getStats(1);
 	}
 }
 
-class FileSystemSyncThrowLStatError extends FileSystemSyncFake {
+class FileSystemSyncThrowStatError extends FileSystemSyncFake {
 	private call: number = 0;
 
 	/**
 	 * First call throw error.
 	 */
-	public lstat(): fs.Stats | never {
+	public getStat(): fs.Stats | never {
 		if (this.call === 0) {
 			this.call++;
 
 			throw new Error('Something');
 		}
 
-		return super.lstat();
+		return getStats(1);
 	}
 }
 
-class FileSystemSyncThrowStatError extends FileSystemSyncFake {
-	public stat(): never {
-		throw new Error('Something');
-	}
+function getStats(uid: number): fs.Stats {
+	return { uid } as fs.Stats;
 }
 
-function getStats(uid: number, isSymbolicLink: boolean): fs.Stats {
-	return { uid, isSymbolicLink: () => isSymbolicLink } as fs.Stats;
+function getAdapter(): FileSystemSyncFake {
+	return new FileSystemSyncFake();
 }
 
-function getAdapter(isSymbolicLink: boolean = true): FileSystemSyncFake {
-	return new FileSystemSyncFake(isSymbolicLink);
-}
-
-function getEntries(_adapter: new () => FileSystemSyncFake, positive: Pattern[], isSkippedEntry: boolean): string[] {
+function getEntries(_adapter: new () => FileSystemSyncFake, positive: Pattern[], isFollowedEntry: boolean): string[] {
 	const adapter = new _adapter();
 
-	return adapter.read(positive, () => isSkippedEntry).map(({ path }) => path);
+	return adapter.read(positive, () => isFollowedEntry).map(({ path }) => path);
 }
 
 describe('Adapters → FileSystemSync', () => {
@@ -83,7 +67,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return empty array', () => {
 			const expected: string[] = [];
 
-			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ false);
+			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ false);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -91,7 +75,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return entries', () => {
 			const expected = ['pattern1', 'pattern2'];
 
-			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -99,7 +83,7 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return entries without null items', () => {
 			const expected = ['pattern2'];
 
-			const actual = getEntries(FileSystemSyncThrowLStatError, ['pattern1', 'pattern2'], /* isSkippedEntry */ true);
+			const actual = getEntries(FileSystemSyncThrowStatError, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
 			assert.deepEqual(actual, expected);
 		});
@@ -117,57 +101,17 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = adapter.getEntry('filepath', 'pattern');
 
-			delete (actual as Entry).isSymbolicLink;
-
 			assert.deepEqual(actual, expected);
 		});
 
 		it('should return null when lstat throw error', () => {
-			const adapter = new FileSystemSyncThrowLStatError();
+			const adapter = new FileSystemSyncThrowStatError();
 
 			const expected = null;
 
 			const actual = adapter.getEntry('filepath', 'pattern');
 
 			assert.equal(actual, expected);
-		});
-	});
-
-	describe('.getStat', () => {
-		it('should return stat', () => {
-			const adapter = getAdapter();
-
-			const expected: fs.Stats = { uid: 1 } as fs.Stats;
-
-			const actual = adapter.getStat('pattern');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
-		});
-
-		it('should return only lstat when is not a symlink', () => {
-			const adapter = getAdapter(/* isSymbolicLink */ false);
-
-			const expected: fs.Stats = { uid: 0 } as fs.Stats;
-
-			const actual = adapter.getStat('file.json');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
-		});
-
-		it('should return only lstat when stat call throw error', () => {
-			const adapter = new FileSystemSyncThrowStatError();
-
-			const expected: fs.Stats = { uid: 0 } as fs.Stats;
-
-			const actual = adapter.getStat('file.json');
-
-			delete actual.isSymbolicLink;
-
-			assert.deepEqual(actual, expected);
 		});
 	});
 });
