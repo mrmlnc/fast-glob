@@ -89,11 +89,24 @@ export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: P
 	const globalNegative = '.' in negative ? negative['.'] : [];
 
 	return Object.keys(positive).map((base) => {
-		const localNegative = base in negative ? negative[base] : [];
+		const localNegative = findLocalNegativePatterns(base, negative);
 		const fullNegative = localNegative.concat(globalNegative);
 
 		return convertPatternGroupToTask(base, positive[base], fullNegative, dynamic);
 	});
+}
+
+/**
+ * Returns those negative patterns whose base paths includes positive base path.
+ */
+export function findLocalNegativePatterns(positiveBase: string, negative: PatternsGroup): Pattern[] {
+	return Object.keys(negative).reduce((collection, base) => {
+		if (base.startsWith(positiveBase)) {
+			collection.push(...negative[base]);
+		}
+
+		return collection;
+	}, [] as Pattern[]);
 }
 
 /**
