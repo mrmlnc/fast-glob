@@ -10,7 +10,7 @@ describe('Benchmark → Utils', () => {
 		process.env.FG_TEST_ENV_INTEGER = '1';
 
 		process.hrtime = () => [0, 1e7];
-		process.memoryUsage = () => ({ rss: 0, heapTotal: 0, heapUsed: 10 * 1024 * 1024 });
+		process.memoryUsage = () => ({ external: 0, rss: 0, heapTotal: 0, heapUsed: 10 * 1024 * 1024 });
 	});
 
 	after(() => {
