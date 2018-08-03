@@ -18,8 +18,12 @@ import { Pattern } from './types/patterns';
 /**
  * Synchronous API.
  */
-export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
-	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
+export function sync(
+	source: Pattern | Pattern[],
+	opts?: IPartialOptions,
+	_Reader: new (options: IOptions) => Reader<EntryItem[]> = ReaderSync
+): EntryItem[] {
+	const works = getWorks<EntryItem[]>(source, _Reader, opts);
 
 	return arrayUtils.flatten(works);
 }
@@ -27,8 +31,12 @@ export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): Entry
 /**
  * Asynchronous API.
  */
-export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Promise<EntryItem[]> {
-	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, opts);
+export function async(
+	source: Pattern | Pattern[],
+	opts?: IPartialOptions,
+	_Reader: new (options: IOptions) => Reader<Promise<EntryItem[]>> = ReaderAsync
+): Promise<EntryItem[]> {
+	const works = getWorks<Promise<EntryItem[]>>(source, _Reader, opts);
 
 	return Promise.all(works).then(arrayUtils.flatten);
 }
@@ -36,8 +44,12 @@ export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Prom
 /**
  * Stream API.
  */
-export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
-	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
+export function stream(
+	source: Pattern | Pattern[],
+	opts?: IPartialOptions,
+	_Reader: new (options: IOptions) => Reader<NodeJS.ReadableStream> = ReaderStream
+): NodeJS.ReadableStream {
+	const works = getWorks<NodeJS.ReadableStream>(source, _Reader, opts);
 
 	return merge2(works);
 }
