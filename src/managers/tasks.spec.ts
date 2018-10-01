@@ -199,7 +199,7 @@ describe('Managers → Task', () => {
 	});
 
 	describe('.findLocalNegativePatterns', () => {
-		it('should retrun empty array for empty pattern group', () => {
+		it('should return empty array for empty pattern group', () => {
 			const expected: Pattern[] = [];
 
 			const actual = manager.findLocalNegativePatterns('base', {});
@@ -222,6 +222,16 @@ describe('Managers → Task', () => {
 
 			const actual = manager.findLocalNegativePatterns('base', {
 				'base/nested': ['base/nested/*']
+			});
+
+			assert.deepEqual(actual, expected);
+		});
+
+		it('should return the pattern group when the positive base path is partial matched', () => {
+			const expected: Pattern[] = ['base/*'];
+
+			const actual = manager.findLocalNegativePatterns('base/nested', {
+				base: ['base/*']
 			});
 
 			assert.deepEqual(actual, expected);
