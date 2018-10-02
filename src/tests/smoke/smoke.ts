@@ -30,7 +30,7 @@ export interface ISmokeTest {
 	reason?: string;
 }
 
-type MochaDefinition = (desc: string, cb: (this: Mocha.ITestCallbackContext) => void) => void;
+type MochaDefinition = (desc: string, cb: (this: Mocha.Context) => void) => void;
 type DebugCompareTestMarker = '+' | '-';
 
 /**
