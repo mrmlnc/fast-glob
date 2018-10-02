@@ -97,11 +97,11 @@ export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: P
 }
 
 /**
- * Returns those negative patterns whose base paths includes positive base path.
+ * Returns those negative patterns whose base paths includes positive base path or positive base path includes base paths.
  */
 export function findLocalNegativePatterns(positiveBase: string, negative: PatternsGroup): Pattern[] {
 	return Object.keys(negative).reduce((collection, base) => {
-		if (base.startsWith(positiveBase)) {
+		if (base.startsWith(positiveBase) || positiveBase.startsWith(base)) {
 			collection.push(...negative[base]);
 		}
 
