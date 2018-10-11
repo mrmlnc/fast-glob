@@ -68,13 +68,13 @@ export default abstract class Reader<T> {
 	 * Returns transformed entry.
 	 */
 	public transform(entry: Entry): EntryItem {
-		if (this.options.markDirectories && entry.isDirectory()) {
-			entry.path += '/';
-		}
-
 		if (this.options.absolute && !path.isAbsolute(entry.path)) {
 			entry.path = pathUtil.resolve(this.options.cwd, entry.path);
 			entry.path = pathUtil.normalize(entry.path);
+		}
+
+		if (this.options.markDirectories && entry.isDirectory()) {
+			entry.path += '/';
 		}
 
 		const item: EntryItem = this.options.stats ? entry : entry.path;
