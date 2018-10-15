@@ -122,6 +122,18 @@ describe('Providers → Reader', () => {
 				assert.equal(actual, expected);
 			});
 
+			it('should return mark directory when option is enabled with the absolute option enabled', () => {
+				const reader = getReader({ markDirectories: true, absolute: true });
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const fullpath: string = path.join(process.cwd(), 'fixtures/directory/');
+				const expected: string = pathUtil.normalize(fullpath);
+
+				const actual = reader.transform(entry);
+
+				assert.equal(actual, expected);
+			});
+
 			it('should do nothing with file when option is enabled', () => {
 				const reader = getReader({ markDirectories: true });
 				const entry = tests.getFileEntry(false /** dot */);
