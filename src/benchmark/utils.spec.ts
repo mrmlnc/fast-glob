@@ -28,7 +28,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.convertHrtimeToMilliseconds(hrtime);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -38,7 +38,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.convertBytesToMegaBytes(1e6);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -48,7 +48,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.timeStart();
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -58,7 +58,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.timeEnd([0, 1e7]);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -68,7 +68,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getMemory();
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -78,7 +78,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getMeasures(1, 1, 1);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -88,7 +88,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getAverageValue([3, 1, 2]);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -98,7 +98,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getStdev([1, 2, 3]);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -108,7 +108,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getEnvAsInteger('FG_TEST_ENV_INTEGER');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 
 		it('should returns undefined', () => {
@@ -116,7 +116,7 @@ describe('Benchmark → Utils', () => {
 
 			const actual = utils.getEnvAsInteger('NON_EXIST_ENV_VARIABLE');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

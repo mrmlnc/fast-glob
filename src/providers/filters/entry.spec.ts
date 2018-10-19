@@ -78,7 +78,7 @@ describe('Providers → Filters → Entry', () => {
 
 				filter(entry);
 
-				assert.equal(filterInstance.index.size, 0);
+				assert.strictEqual(filterInstance.index.size, 0);
 			});
 		});
 
@@ -324,7 +324,7 @@ describe('Providers → Filters → Entry', () => {
 
 				filter(entry);
 
-				assert.equal(entry.path, expected);
+				assert.strictEqual(entry.path, expected);
 			});
 		});
 	});

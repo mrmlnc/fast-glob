@@ -39,7 +39,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.unixifyPattern('**\\*');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -49,7 +49,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.convertToPositivePattern('!*.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 
 		it('should returns pattern without changes', () => {
@@ -57,7 +57,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.convertToPositivePattern('*.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -67,7 +67,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.convertToNegativePattern('*.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -111,7 +111,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getNegativePatterns(['*.js', '!*.spec.js', '*.ts']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns empty array', () => {
@@ -119,7 +119,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getNegativePatterns(['*.js', '*.ts']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -129,7 +129,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getPositivePatterns(['*.js', '!*.spec.js', '*.ts']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns empty array', () => {
@@ -137,7 +137,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getPositivePatterns(['!*.js', '!*.ts']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -147,7 +147,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getBaseDirectory('root/*.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -211,7 +211,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.getDepth('a/b/*/*.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -221,7 +221,7 @@ describe('Utils → Pattern', () => {
 
 			const actual = util.makeRe('*.js', {});
 
-			assert.equal(actual.source, expected.source);
+			assert.strictEqual(actual.source, expected.source);
 		});
 	});
 
@@ -231,7 +231,7 @@ describe('Utils → Pattern', () => {
 
 			const [actual] = util.convertPatternsToRe(['*.js'], {});
 
-			assert.equal(actual.source, expected.source);
+			assert.strictEqual(actual.source, expected.source);
 		});
 	});
 	describe('.matchAny', () => {

@@ -84,7 +84,7 @@ describe('Providers → ReaderStream', () => {
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries for static entries', async () => {
@@ -95,7 +95,7 @@ describe('Providers → ReaderStream', () => {
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries (stats)', async () => {
@@ -106,7 +106,7 @@ describe('Providers → ReaderStream', () => {
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns transformed entries', async () => {
@@ -117,7 +117,7 @@ describe('Providers → ReaderStream', () => {
 
 			const actual = await getEntries(options, task, ReaderStreamFake);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns empty array if provided cwd does not exists', async () => {
@@ -128,7 +128,7 @@ describe('Providers → ReaderStream', () => {
 
 			const actual = await getEntries(options, task, ReaderStreamFakeThrowEnoent);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should throw error', async () => {
@@ -140,7 +140,7 @@ describe('Providers → ReaderStream', () => {
 
 				throw new Error('Wow');
 			} catch (err) {
-				assert.equal(err, 'Error: Boom');
+				assert.strictEqual(err.message, 'Boom');
 			}
 		});
 	});

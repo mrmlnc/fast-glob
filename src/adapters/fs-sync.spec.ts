@@ -69,7 +69,7 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ false);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return entries', () => {
@@ -77,7 +77,7 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = getEntries(FileSystemSyncFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return entries without null items', () => {
@@ -85,7 +85,7 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = getEntries(FileSystemSyncThrowStatError, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -101,7 +101,7 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = adapter.getEntry('filepath', 'pattern');
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return null when lstat throw error', () => {
@@ -111,7 +111,7 @@ describe('Adapters → FileSystemSync', () => {
 
 			const actual = adapter.getEntry('filepath', 'pattern');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

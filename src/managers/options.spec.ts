@@ -35,7 +35,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare();
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns prepared options for provided object', () => {
@@ -43,7 +43,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare({ stats: true });
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should disable the «onlyFiles» option if «onlyDirectories» option is enabled', () => {
@@ -54,7 +54,7 @@ describe('Managers → Options', () => {
 
 			const actual = manager.prepare({ onlyDirectories: true });
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		describe('The «brace» option', () => {
@@ -63,7 +63,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ nobrace: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set false for the «brace» option if «brace» option is disabled', () => {
@@ -71,7 +71,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ brace: false });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set true for the «brace» option if «brace» and «nobrace» option is enabled', () => {
@@ -79,7 +79,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ brace: true, nobrace: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 		});
 
@@ -89,7 +89,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ noglobstar: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set false for the «globstar» option if «globstar» option is disabled', () => {
@@ -97,7 +97,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ globstar: false });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set true for the «globstar» option if «globstar» and «noglobstar» option is enabled', () => {
@@ -105,7 +105,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ globstar: true, noglobstar: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 		});
 
@@ -115,7 +115,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ noext: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set false for the «extension» option if «extension» option is enabled', () => {
@@ -123,7 +123,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ extension: false });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set true for the «extension» option if «extension» and «noext» option is enabled', () => {
@@ -131,7 +131,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ extension: true, noext: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 		});
 
@@ -141,7 +141,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ nocase: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set false for the «case» option if «case» option is disabled', () => {
@@ -149,7 +149,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ case: false });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 
 			it('should set true for the «extension» option if «case» and «nocase» option is enabled', () => {
@@ -157,7 +157,7 @@ describe('Managers → Options', () => {
 
 				const actual = manager.prepare({ case: true, nocase: true });
 
-				assert.deepEqual(actual, expected);
+				assert.deepStrictEqual(actual, expected);
 			});
 		});
 	});

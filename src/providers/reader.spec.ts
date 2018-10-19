@@ -40,7 +40,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getRootDirectory({ base: '.' } as ITask);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 
 		it('should return root directory for reader with non-global base (fixtures)', () => {
@@ -50,7 +50,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getRootDirectory({ base: 'fixtures' } as ITask);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -66,10 +66,10 @@ describe('Providers → Reader', () => {
 				negative: []
 			});
 
-			assert.equal(actual.basePath, '');
-			assert.equal(actual.sep, '/');
-			assert.equal(typeof actual.filter, 'function');
-			assert.equal(typeof actual.deep, 'function');
+			assert.strictEqual(actual.basePath, '');
+			assert.strictEqual(actual.sep, '/');
+			assert.strictEqual(typeof actual.filter, 'function');
+			assert.strictEqual(typeof actual.deep, 'function');
 		});
 
 		it('should return options for reader with non-global base (fixtures)', () => {
@@ -83,10 +83,10 @@ describe('Providers → Reader', () => {
 				negative: []
 			});
 
-			assert.equal(actual.basePath, 'fixtures');
-			assert.equal(actual.sep, '/');
-			assert.equal(typeof actual.filter, 'function');
-			assert.equal(typeof actual.deep, 'function');
+			assert.strictEqual(actual.basePath, 'fixtures');
+			assert.strictEqual(actual.sep, '/');
+			assert.strictEqual(typeof actual.filter, 'function');
+			assert.strictEqual(typeof actual.deep, 'function');
 		});
 	});
 
@@ -105,7 +105,7 @@ describe('Providers → Reader', () => {
 
 			const actual = reader.getMicromatchOptions();
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -119,7 +119,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 
 			it('should return mark directory when option is enabled with the absolute option enabled', () => {
@@ -131,7 +131,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 
 			it('should do nothing with file when option is enabled', () => {
@@ -142,7 +142,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 
 			it('should return non-marked directory when option is disabled', () => {
@@ -153,7 +153,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 		});
 
@@ -167,7 +167,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 
 			it('should return do nothing when option is not provided', () => {
@@ -178,7 +178,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 		});
 
@@ -191,7 +191,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 
 			it('should return do nothing when option is not provided', () => {
@@ -202,7 +202,7 @@ describe('Providers → Reader', () => {
 
 				const actual = reader.transform(entry);
 
-				assert.equal(actual, expected);
+				assert.strictEqual(actual, expected);
 			});
 		});
 	});

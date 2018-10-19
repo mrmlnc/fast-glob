@@ -24,7 +24,7 @@ describe('Utils → Path', () => {
 
 			const actual = util.getDepth('a/b/c/d.js');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -34,7 +34,7 @@ describe('Utils → Path', () => {
 
 			const actual = util.resolve(process.cwd(), 'file.md');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -44,7 +44,7 @@ describe('Utils → Path', () => {
 
 			const actual = util.normalize('directory\\nested/file.md');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

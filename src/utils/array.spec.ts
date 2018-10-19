@@ -9,7 +9,7 @@ describe('Utils → Array', () => {
 
 			const actual = util.flatten([['a'], ['b']]);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -19,7 +19,7 @@ describe('Utils → Array', () => {
 
 			const actual = util.max([0, 3, 1]);
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

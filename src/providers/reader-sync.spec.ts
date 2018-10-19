@@ -62,7 +62,7 @@ describe('Providers → ReaderSync', () => {
 
 			const actual = reader.read(task);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries for static task', () => {
@@ -74,7 +74,7 @@ describe('Providers → ReaderSync', () => {
 
 			const actual = reader.read(task);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries (stats)', () => {
@@ -86,7 +86,7 @@ describe('Providers → ReaderSync', () => {
 
 			const actual = reader.read(task);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns transformed entries', () => {
@@ -100,7 +100,7 @@ describe('Providers → ReaderSync', () => {
 
 			const actual = reader.read(task);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns empty array if provided cwd does not exists', () => {
@@ -113,7 +113,7 @@ describe('Providers → ReaderSync', () => {
 
 			const actual = reader.read(task);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should throw error', () => {
