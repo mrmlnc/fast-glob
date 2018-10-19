@@ -1,0 +1,44 @@
+# Unfortunately, VSTS does not currently support anchors in the YAML files.
+# This promote duplication of matrices in strategies.
+
+trigger:
+  branches:
+    include:
+      - master
+      - releases/*
+
+jobs:
+  - job: Windows
+    strategy:
+      matrix:
+        (Node.js 6): { node_version: 6 }
+        (Node.js 8): { node_version: 8 }
+        (Node.js 10): { node_version: 10 }
+    pool:
+      vmImage: 'vs2017-win2016'
+    steps:
+      - template: build-steps.yml
+
+  - job: Linux
+    strategy:
+      matrix:
+        (Node.js 4): { node_version: 4 }
+        (Node.js 6): { node_version: 6 }
+        (Node.js 8): { node_version: 8 }
+        (Node.js 10): { node_version: 10 }
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+      - template: build-steps.yml
+
+  - job: macOS
+    strategy:
+      matrix:
+        (Node.js 4): { node_version: 4 }
+        (Node.js 6): { node_version: 6 }
+        (Node.js 8): { node_version: 8 }
+        (Node.js 10): { node_version: 10 }
+    pool:
+      vmImage: 'xcode9-macos10.13'
+    steps:
+      - template: build-steps.yml

@@ -2,9 +2,6 @@
 
 > Is a faster [`node-glob`](https://github.com/isaacs/node-glob) alternative.
 
-[![Build Status](https://travis-ci.org/mrmlnc/fast-glob.svg?branch=master)](https://travis-ci.org/mrmlnc/fast-glob)
-[![Build status](https://ci.appveyor.com/api/projects/status/i4xqijtq26qf6o9d?svg=true)](https://ci.appveyor.com/project/mrmlnc/fast-glob)
-
 ## :bulb: Highlights
 
   * :rocket: Fast by using Streams and Promises. Used [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
