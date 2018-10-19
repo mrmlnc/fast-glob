@@ -11,6 +11,7 @@ jobs:
   - job: Windows
     strategy:
       matrix:
+        (Node.js 4): { node_version: 4 }
         (Node.js 6): { node_version: 6 }
         (Node.js 8): { node_version: 8 }
         (Node.js 10): { node_version: 10 }
