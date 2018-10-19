@@ -1,7 +1,7 @@
 steps:
   - task: NodeTool@0
     inputs:
-      version: $(node_version)
+      versionSpec: '${{parameters.node_version}}'
 
   - script: node --version && npm --version
     displayName: Environment information
