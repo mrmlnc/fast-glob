@@ -1,0 +1,24 @@
+steps:
+  - task: NodeTool@0
+    inputs:
+      version: $(node_version)
+
+  - script: node --version && npm --version
+    displayName: Environment information
+
+  - task: Npm@0
+    displayName: Install dependencies
+    inputs:
+      command: install
+
+  - script: npm run lint
+    displayName: Run Hygiene Checks
+
+  - script: npm run compile
+    displayName: Compile Sources
+
+  - script: npm run test
+    displayName: Run Unit Tests
+
+  - script: npm run smoke
+    displayName: Run Smoke Tests

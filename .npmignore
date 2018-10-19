@@ -2,6 +2,7 @@
 .editorconfig
 .gitattributes
 .gitignore
+.vsts
 tsconfig.json
 tslint.json
 
