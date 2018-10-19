@@ -193,7 +193,7 @@ describe('Providers → Filters → Deep', () => {
 
 			filter(entry);
 
-			assert.equal(entry.path, expected);
+			assert.strictEqual(entry.path, expected);
 		});
 	});
 });

@@ -21,7 +21,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.generate(['a\\*'], options);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return task with negative patterns from «ignore» option', () => {
@@ -37,7 +37,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.generate(['a/*', '!*.md'], options);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return static and dynamic tasks', () => {
@@ -62,7 +62,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], options);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -78,7 +78,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return global task with negative patterns from «ignore» patterns', () => {
@@ -92,7 +92,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return two tasks', () => {
@@ -115,7 +115,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternsToTasks(['a/*', 'b/*'], ['b/*.md'], /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -125,7 +125,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.getPositivePatterns(['*', '!*.md']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -135,7 +135,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], []);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return negative patterns as positive with patterns from ignore option', () => {
@@ -143,7 +143,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.getNegativePatternsAsPositive(['*', '!*.md'], ['*.txt', '!*.json']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -153,7 +153,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.groupPatternsByBaseDirectory([]);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return grouped patterns', () => {
@@ -164,7 +164,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.groupPatternsByBaseDirectory(['*', 'a/*']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -180,7 +180,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md'], /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return created static task', () => {
@@ -194,7 +194,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupToTask('.', ['file'], ['file.md'], /* dynamic */ false);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -204,7 +204,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.findLocalNegativePatterns('base', {});
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return the pattern group when the base path is fully matched', () => {
@@ -214,7 +214,7 @@ describe('Managers → Task', () => {
 				base: ['base/*']
 			});
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return the pattern group when the base path is partial matched', () => {
@@ -224,7 +224,7 @@ describe('Managers → Task', () => {
 				'base/nested': ['base/nested/*']
 			});
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return the pattern group when the positive base path is partial matched', () => {
@@ -234,7 +234,7 @@ describe('Managers → Task', () => {
 				base: ['base/*']
 			});
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return the pattern group for all cases', () => {
@@ -245,7 +245,7 @@ describe('Managers → Task', () => {
 				'base/nested': ['base/nested/*']
 			});
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -261,7 +261,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, {}, /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return one task without unused negative patterns', () => {
@@ -275,7 +275,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { b: ['b/*'] }, /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return one task with local and global negative patterns', () => {
@@ -289,7 +289,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, { '.': ['*.md'], a: ['a/*.txt'] }, /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return two tasks with negative patterns for only one task', () => {
@@ -312,7 +312,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { b: ['b/*.md'] }, /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return two tasks with local and global negative patterns', () => {
@@ -335,7 +335,7 @@ describe('Managers → Task', () => {
 
 			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, { '.': ['*.md'] }, /* dynamic */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

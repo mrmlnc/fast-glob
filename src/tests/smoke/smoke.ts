@@ -103,7 +103,7 @@ function testCaseRunner(test: ISmokeTest): void {
 		assert.fail("This test is marked as «correct», but it doesn't have a reason.");
 	}
 
-	const assertAction = (test.broken || test.correct) ? assert.notDeepEqual : assert.deepEqual;
+	const assertAction = (test.broken || test.correct) ? assert.notDeepStrictEqual : assert.deepStrictEqual;
 
 	assertAction(actual, expected);
 }

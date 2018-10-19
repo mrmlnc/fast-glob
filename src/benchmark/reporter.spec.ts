@@ -27,7 +27,7 @@ describe('Benchmark → Reporter', () => {
 
 			const actual = reporter.toString();
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 
 		it('should returns report with errors', () => {
@@ -39,7 +39,7 @@ describe('Benchmark → Reporter', () => {
 
 			const actual = reporter.toString();
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

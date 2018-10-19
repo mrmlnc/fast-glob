@@ -37,7 +37,7 @@ describe('Adapters → FileSystem', () => {
 
 			const actual = adapter.read([]);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -49,7 +49,7 @@ describe('Adapters → FileSystem', () => {
 
 			const actual = adapter.getFullEntryPath('config.json');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 
@@ -64,7 +64,7 @@ describe('Adapters → FileSystem', () => {
 
 			const actual = adapter.makeEntry({} as fs.Stats, 'base/file.json');
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

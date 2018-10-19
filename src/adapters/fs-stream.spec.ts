@@ -75,7 +75,7 @@ describe('Adapters → FileSystemStream', () => {
 
 			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ false);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return entries', async () => {
@@ -83,7 +83,7 @@ describe('Adapters → FileSystemStream', () => {
 
 			const actual = await getEntries(FileSystemStreamFake, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return entries without null items', async () => {
@@ -91,7 +91,7 @@ describe('Adapters → FileSystemStream', () => {
 
 			const actual = await getEntries(FileSystemStreamThrowStatError, ['pattern1', 'pattern2'], /* isFollowedEntry */ true);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -107,7 +107,7 @@ describe('Adapters → FileSystemStream', () => {
 
 			const actual = await adapter.getEntry('filepath', 'pattern');
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return null when lstat throw error', async () => {
@@ -117,7 +117,7 @@ describe('Adapters → FileSystemStream', () => {
 
 			const actual = await adapter.getEntry('filepath', 'pattern');
 
-			assert.equal(actual, expected);
+			assert.strictEqual(actual, expected);
 		});
 	});
 });

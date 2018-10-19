@@ -47,7 +47,7 @@ describe('Benchmark → Runner', () => {
 
 			const actual = runner.suite('suitePath');
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should throw error', () => {
@@ -74,7 +74,7 @@ describe('Benchmark → Runner', () => {
 
 			const actual = runner.suitePack('suitePath', 0);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns pack measures with errors', () => {
@@ -93,7 +93,7 @@ describe('Benchmark → Runner', () => {
 
 			const actual = runner.suitePack('suitePath', 0);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -114,7 +114,7 @@ describe('Benchmark → Runner', () => {
 
 			runner.packs();
 
-			assert.deepEqual(runner.results, expected);
+			assert.deepStrictEqual(runner.results, expected);
 		});
 	});
 });

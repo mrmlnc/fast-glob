@@ -20,7 +20,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/**/*.md']);
 
-			assert.deepEqual(actual.sort(), expected);
+			assert.deepStrictEqual(actual.sort(), expected);
 		});
 
 		it('should returns entries (two sources)', () => {
@@ -35,7 +35,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			assert.deepEqual(actual.sort(), expected);
+			assert.deepStrictEqual(actual.sort(), expected);
 		});
 	});
 
@@ -53,7 +53,7 @@ describe('Package', () => {
 
 			const actual = await pkg.async(['fixtures/**/*.md']);
 
-			assert.deepEqual(actual.sort(), expected);
+			assert.deepStrictEqual(actual.sort(), expected);
 		});
 
 		it('should returns entries (two sources)', async () => {
@@ -68,7 +68,7 @@ describe('Package', () => {
 
 			const actual = await pkg.async(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			assert.deepEqual(actual.sort(), expected);
+			assert.deepStrictEqual(actual.sort(), expected);
 		});
 	});
 
@@ -91,7 +91,7 @@ describe('Package', () => {
 			stream.on('data', (entry) => actual.push(entry));
 			stream.on('error', (err) => assert.fail(err));
 			stream.on('end', () => {
-				assert.deepEqual(actual.sort(), expected);
+				assert.deepStrictEqual(actual.sort(), expected);
 				done();
 			});
 		});
@@ -113,7 +113,7 @@ describe('Package', () => {
 			stream.on('data', (entry) => actual.push(entry));
 			stream.on('error', (err) => assert.fail(err));
 			stream.on('end', () => {
-				assert.deepEqual(actual.sort(), expected);
+				assert.deepStrictEqual(actual.sort(), expected);
 				done();
 			});
 		});
@@ -131,7 +131,7 @@ describe('Package', () => {
 
 			const actual = pkg.generateTasks(['*']);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return tasks with negative patterns', () => {
@@ -145,7 +145,7 @@ describe('Package', () => {
 
 			const actual = pkg.generateTasks(['*', '!*.txt'], { ignore: ['*.md'] });
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });
