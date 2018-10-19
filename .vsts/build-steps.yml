@@ -1,7 +1,7 @@
 steps:
   - task: NodeTool@0
     inputs:
-      version: $(node_version)
+      versionSpec: '${{parameters.node_version}}'
 
   - script: node --version && npm --version
     displayName: Environment information
@@ -12,6 +12,7 @@ steps:
       command: install
 
   - script: npm run lint
+    condition: ne(variables['node_version'], '4.x')
     displayName: Run Hygiene Checks
 
   - script: npm run compile
