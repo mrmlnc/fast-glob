@@ -1,5 +1,6 @@
 # Common files
 .editorconfig
+.gitattributes
 .gitignore
 .travis.yml
 appveyor.yml
