@@ -19,6 +19,8 @@ import { Pattern } from './types/patterns';
  * Synchronous API.
  */
 export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
+	assertPatternsInput(source);
+
 	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
 
 	return arrayUtils.flatten(works);
@@ -28,6 +30,12 @@ export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): Entry
  * Asynchronous API.
  */
 export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Promise<EntryItem[]> {
+	try {
+		assertPatternsInput(source);
+	} catch (error) {
+		return Promise.reject(error);
+	}
+
 	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, opts);
 
 	return Promise.all(works).then(arrayUtils.flatten);
@@ -37,6 +45,8 @@ export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Prom
  * Stream API.
  */
 export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
+	assertPatternsInput(source);
+
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
 
 	return merge2(works);
@@ -46,6 +56,8 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
  * Return a set of tasks based on provided patterns.
  */
 export function generateTasks(source: Pattern | Pattern[], opts?: IPartialOptions): ITask[] {
+	assertPatternsInput(source);
+
 	const patterns = ([] as Pattern[]).concat(source);
 	const options = optionsManager.prepare(opts);
 
@@ -63,4 +75,17 @@ function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOption
 	const reader = new _Reader(options);
 
 	return tasks.map(reader.read, reader);
+}
+
+function assertPatternsInput(source: unknown): void | never {
+	if (([] as Array<unknown>).concat(source).every(isString)) {
+		return;
+	}
+
+	throw new TypeError('Patterns must be a string or an array of strings');
+}
+
+function isString(source: unknown): source is string {
+	/* tslint:disable-next-line strict-type-predicates */
+	return typeof source === 'string';
 }

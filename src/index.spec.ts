@@ -7,6 +7,11 @@ import { EntryItem } from './types/entries';
 
 describe('Package', () => {
 	describe('.sync', () => {
+		it('should throw an error when input values can not pass validation', () => {
+			/* tslint:disable-next-line no-any */
+			assert.throws(() => pkg.sync(null as any), /TypeError: Patterns must be a string or an array of strings/);
+		});
+
 		it('should returns entries', () => {
 			const expected: EntryItem[] = [
 				'fixtures/file.md',
@@ -40,6 +45,16 @@ describe('Package', () => {
 	});
 
 	describe('.async', () => {
+		it('should throw an error when input values can not pass validation', async () => {
+			try {
+				/* tslint:disable-next-line no-any */
+				await pkg.async(null as any);
+				throw new Error('An unexpected error was found.');
+			} catch (error) {
+				assert.strictEqual(error.toString(), 'TypeError: Patterns must be a string or an array of strings');
+			}
+		});
+
 		it('should returns entries', async () => {
 			const expected: EntryItem[] = [
 				'fixtures/file.md',
@@ -73,6 +88,11 @@ describe('Package', () => {
 	});
 
 	describe('.stream', () => {
+		it('should throw an error when input values can not pass validation', () => {
+			/* tslint:disable-next-line no-any */
+			assert.throws(() => pkg.stream(null as any), /TypeError: Patterns must be a string or an array of strings/);
+		});
+
 		it('should returns entries', (done) => {
 			const expected: EntryItem[] = [
 				'fixtures/file.md',
@@ -120,6 +140,11 @@ describe('Package', () => {
 	});
 
 	describe('.generateTasks', () => {
+		it('should throw an error when input values can not pass validation', () => {
+			/* tslint:disable-next-line no-any */
+			assert.throws(() => pkg.generateTasks(null as any), /TypeError: Patterns must be a string or an array of strings/);
+		});
+
 		it('should return tasks', () => {
 			const expected: ITask[] = [{
 				base: '.',
