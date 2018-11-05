@@ -43,7 +43,7 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns «true» for directory that should be readed.
+	 * Returns «true» for directory that should be read.
 	 */
 	private filter(entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
 		if (this.isSkippedByNestingLevel(entry.depth, maxPatternDepth)) {
