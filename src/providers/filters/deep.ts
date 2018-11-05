@@ -72,7 +72,7 @@ export default class DeepFilter {
 	 * Returns «true» when the «deep» option is disabled or number and depth of the entry is greater that the option value.
 	 */
 	private isSkippedByDeepOption(entryDepth: number): boolean {
-		return !this.options.deep || (typeof this.options.deep === 'number' && entryDepth > this.options.deep);
+		return !this.options.deep || (typeof this.options.deep === 'number' && entryDepth >= this.options.deep);
 	}
 
 	/**

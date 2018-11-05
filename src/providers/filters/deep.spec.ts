@@ -43,7 +43,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return «false» when option has specified level', () => {
+			it('should return «false» when the entry has depth greater than options.deep', () => {
 				const filter = getFilter(['**/*'], [], { deep: 2 });
 
 				const entry = tests.getEntry({
@@ -57,22 +57,8 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return «true» when depth is smaller than allowed', () => {
-				const filter = getFilter(['fixtures/*/*'], []);
-
-				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
-					isDirectory: () => true
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «false» when depth is greater than allowed', () => {
-				const filter = getFilter(['fixtures/*'], []);
+			it('should return «false» when the entry has depth equal to options.deep', () => {
+				const filter = getFilter(['fixtures/*/*'], [], { deep: 3 });
 
 				const entry = tests.getEntry({
 					path: 'fixtures/directory/directory',
@@ -83,6 +69,34 @@ describe('Providers → Filters → Deep', () => {
 				const actual = filter(entry);
 
 				assert.ok(!actual);
+			});
+
+			it('should return «false» when the entry has depth greater then options.deep', () => {
+				const filter = getFilter(['fixtures/*'], [], { deep: 2 });
+
+				const entry = tests.getEntry({
+					path: 'fixtures/directory/directory',
+					depth: 3,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return «true» when the entry has depth less then options.deep', () => {
+				const filter = getFilter(['fixtures/*/*'], [], { deep: 3 });
+
+				const entry = tests.getEntry({
+					path: 'fixtures/directory',
+					depth: 2,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
 			});
 		});
 
