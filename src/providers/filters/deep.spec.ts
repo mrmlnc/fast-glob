@@ -32,9 +32,9 @@ describe('Providers → Filters → Deep', () => {
 	});
 
 	describe('.filter', () => {
-		describe('Skip by nesting level', () => {
+		describe('Skip by options.deep', () => {
 			it('should return «false» when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { deep: false });
+				const filter = getFilter(['fixtures/**'], [], { deep: false });
 
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
@@ -44,11 +44,11 @@ describe('Providers → Filters → Deep', () => {
 			});
 
 			it('should return «false» when the entry has depth greater than options.deep', () => {
-				const filter = getFilter(['**/*'], [], { deep: 2 });
+				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
 
 				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
+					path: 'fixtures/one/two/three',
+					depth: 2,
 					isDirectory: () => true
 				});
 
@@ -58,25 +58,11 @@ describe('Providers → Filters → Deep', () => {
 			});
 
 			it('should return «false» when the entry has depth equal to options.deep', () => {
-				const filter = getFilter(['fixtures/*/*'], [], { deep: 3 });
+				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
 
 				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
-					isDirectory: () => true
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-
-			it('should return «false» when the entry has depth greater then options.deep', () => {
-				const filter = getFilter(['fixtures/*'], [], { deep: 2 });
-
-				const entry = tests.getEntry({
-					path: 'fixtures/directory/directory',
-					depth: 3,
+					path: 'fixtures/one/two',
+					depth: 1,
 					isDirectory: () => true
 				});
 
@@ -86,11 +72,11 @@ describe('Providers → Filters → Deep', () => {
 			});
 
 			it('should return «true» when the entry has depth less then options.deep', () => {
-				const filter = getFilter(['fixtures/*/*'], [], { deep: 3 });
+				const filter = getFilter(['fixtures/**'], [], { deep: 2 });
 
 				const entry = tests.getEntry({
-					path: 'fixtures/directory',
-					depth: 2,
+					path: 'fixtures/one/two',
+					depth: 1,
 					isDirectory: () => true
 				});
 

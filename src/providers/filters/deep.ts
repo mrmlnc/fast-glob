@@ -46,7 +46,11 @@ export default class DeepFilter {
 	 * Returns «true» for directory that should be read.
 	 */
 	private filter(entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
-		if (this.isSkippedByNestingLevel(entry.depth, maxPatternDepth)) {
+		if (this.isSkippedByDeepOption(entry.depth)) {
+			return false;
+		}
+
+		if (this.isSkippedByMaxPatternDepth(entry.depth, maxPatternDepth)) {
 			return false;
 		}
 
@@ -59,13 +63,6 @@ export default class DeepFilter {
 		}
 
 		return this.isSkippedByNegativePatterns(entry, negativeRe);
-	}
-
-	/**
-	 * Returns «true» when the directory can be skipped by nesting level.
-	 */
-	private isSkippedByNestingLevel(entryDepth: number, maxPatternDepth: number): boolean {
-		return this.isSkippedByDeepOption(entryDepth) || this.isSkippedByMaxPatternDepth(entryDepth, maxPatternDepth);
 	}
 
 	/**
