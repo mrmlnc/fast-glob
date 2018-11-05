@@ -86,6 +86,46 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
+		describe('Skip by max pattern depth', () => {
+			it('should return «true» when max pattern depth is Infinity', () => {
+				const filter = getFilter(['fixtures/**'], []);
+
+				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «true» when max pattern depth is greater then entry depth', () => {
+				const filter = getFilter(['fixtures/*/*/*'], []);
+
+				const entry = tests.getEntry({
+					path: 'fixtures/one/two',
+					depth: 1,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return «false» when max pattern depth is less then entry depth', () => {
+				const filter = getFilter(['fixtures/*'], []);
+
+				const entry = tests.getEntry({
+					path: 'fixtures/one/two/three/four',
+					depth: 3,
+					isDirectory: () => true
+				});
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
+
 		describe('Skip by «followSymlinkedDirectories» option', () => {
 			it('should return «true» for symlinked directory when option is enabled', () => {
 				const filter = getFilter(['**/*'], []);
