@@ -205,11 +205,37 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.getDepth', () => {
-		it('should returns 4', () => {
-			const expected: number = 4;
+	describe('.getNaiveDepth', () => {
+		it('should return 0', () => {
+			const expected: number = 0; // 1 (pattern) - 1 (base directory)
 
-			const actual = util.getDepth('a/b/*/*.js');
+			const actual = util.getNaiveDepth('*.js');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should returns 1', () => {
+			const expected: number = 1; // 4 (pattern) - 2 (base directory) - 1
+
+			const actual = util.getNaiveDepth('a/b/*/*.js');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('.getMaxNaivePatternsDepth', () => {
+		it('should return 1', () => {
+			const expected: number = 1;
+
+			const actual = util.getMaxNaivePatternsDepth(['*.js', './*.js']);
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should return 2', () => {
+			const expected: number = 2;
+
+			const actual = util.getMaxNaivePatternsDepth(['*.js', './*/*.js']);
 
 			assert.strictEqual(actual, expected);
 		});

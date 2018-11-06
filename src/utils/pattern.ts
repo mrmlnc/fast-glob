@@ -102,10 +102,35 @@ export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 }
 
 /**
- * Return naive depth of provided pattern.
+ * Return naive depth of provided pattern without depth of the base directory.
  */
-export function getDepth(pattern: Pattern): number {
-	return pattern.split('/').length;
+export function getNaiveDepth(pattern: Pattern): number {
+	const base = getBaseDirectory(pattern);
+
+	const patternDepth = pattern.split('/').length;
+	const patternBaseDepth = base.split('/').length;
+
+	/**
+	 * This is a hack for pattern that has no base directory.
+	 *
+	 * This is related to the `*\something\*` pattern.
+	 */
+	if (base === '.') {
+		return patternDepth - patternBaseDepth;
+	}
+
+	return patternDepth - patternBaseDepth - 1;
+}
+
+/**
+ * Return max naive depth of provided patterns without depth of the base directory.
+ */
+export function getMaxNaivePatternsDepth(patterns: Pattern[]): number {
+	return patterns.reduce((max, pattern) => {
+		const depth = getNaiveDepth(pattern);
+
+		return depth > max ? depth : max;
+	}, 0);
 }
 
 /**

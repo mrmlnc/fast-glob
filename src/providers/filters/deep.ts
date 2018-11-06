@@ -1,6 +1,5 @@
 import micromatch = require('micromatch');
 
-import * as arrayUtils from '../../utils/array';
 import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 
@@ -28,9 +27,8 @@ export default class DeepFilter {
 	 */
 	private getMaxPatternDepth(patterns: Pattern[]): number {
 		const globstar = patterns.some(patternUtils.hasGlobStar);
-		const patternDepths = patterns.map(patternUtils.getDepth);
 
-		return globstar ? Infinity : arrayUtils.max(patternDepths);
+		return globstar ? Infinity : patternUtils.getMaxNaivePatternsDepth(patterns);
 	}
 
 	/**
@@ -76,7 +74,7 @@ export default class DeepFilter {
 	 * Returns «true» when depth parameter is not an Infinity and entry depth greater that the parameter value.
 	 */
 	private isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
-		return maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
+		return maxPatternDepth !== Infinity && entryDepth >= maxPatternDepth;
 	}
 
 	/**
