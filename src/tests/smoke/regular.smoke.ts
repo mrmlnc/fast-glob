@@ -11,13 +11,46 @@ smoke.suite('Smoke → Regular', [
 	{ pattern: 'fixtures/*/nested/**/*' },
 	{ pattern: 'fixtures/**/nested/*' },
 	{ pattern: 'fixtures/**/nested/**' },
-	{ pattern: 'fixtures/**/nested/**/*' }
+	{ pattern: 'fixtures/**/nested/**/*' },
+
+	{ pattern: 'fixtures/{first,second}' },
+	{ pattern: 'fixtures/{first,second}/*' },
+	{ pattern: 'fixtures/{first,second}/**' },
+	{ pattern: 'fixtures/{first,second}/**/*' },
+
+	{ pattern: 'fixtures/*/{nested,file.md}/*' },
+	{ pattern: 'fixtures/**/{nested,file.md}/*' },
+
+	{ pattern: './fixtures/*' }
 ]);
 
 smoke.suite('Smoke → Regular (cwd)', [
 	{ pattern: '*', cwd: 'fixtures' },
 	{ pattern: '**', cwd: 'fixtures' },
-	{ pattern: '**/*', cwd: 'fixtures' }
+	{ pattern: '**/*', cwd: 'fixtures' },
+
+	{ pattern: '*/nested', cwd: 'fixtures' },
+	{ pattern: '*/nested/*', cwd: 'fixtures' },
+	{ pattern: '*/nested/**', cwd: 'fixtures' },
+	{ pattern: '*/nested/**/*', cwd: 'fixtures' },
+	{ pattern: '**/nested/*', cwd: 'fixtures' },
+	{ pattern: '**/nested/**', cwd: 'fixtures' },
+	{ pattern: '**/nested/**/*', cwd: 'fixtures' },
+
+	{ pattern: '{first,second}', cwd: 'fixtures' },
+	{ pattern: '{first,second}/*', cwd: 'fixtures' },
+	{ pattern: '{first,second}/**', cwd: 'fixtures' },
+	{ pattern: '{first,second}/**/*', cwd: 'fixtures' },
+
+	{ pattern: '*/{nested,file.md}/*', cwd: 'fixtures' },
+	{ pattern: '**/{nested,file.md}/*', cwd: 'fixtures' },
+
+	{
+		pattern: './*',
+		cwd: 'fixtures',
+		correct: true,
+		reason: 'The `node-glob package returns entries with leading `./`'
+	}
 ]);
 
 smoke.suite('Smoke → Regular (ignore)', [
@@ -421,5 +454,9 @@ smoke.suite('Smoke → Regular (ignore & cwd)', [
 
 smoke.suite('Smoke → Regular (relative)', [
 	{ pattern: '../*', cwd: 'fixtures/first' },
-	{ pattern: '../../*', cwd: 'fixtures/first/nested' }
+	{ pattern: '../**', cwd: 'fixtures/first', broken: true, issue: 47 },
+	{ pattern: '../../*', cwd: 'fixtures/first/nested' },
+
+	{ pattern: '../{first,second}', cwd: 'fixtures/first' },
+	{ pattern: './../*', cwd: 'fixtures/first' }
 ]);
