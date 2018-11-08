@@ -13,3 +13,16 @@ export function isDotDirectory(filepath: string): boolean {
 export function normalize(filepath: string): string {
 	return filepath.replace(/\\/g, '/');
 }
+
+/**
+ * Returns normalized absolute path of provided filepath.
+ */
+export function makeAbsolute(cwd: string, filepath: string): string {
+	if (path.isAbsolute(filepath)) {
+		return normalize(filepath);
+	}
+
+	const fullpath = path.resolve(cwd, filepath);
+
+	return normalize(fullpath);
+}
