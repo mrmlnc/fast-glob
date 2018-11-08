@@ -41,7 +41,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		return this.isMatchToPatterns(entry, positiveRe) && !this.isMatchToPatterns(entry, negativeRe);
+		return this.isMatchToPatterns(entry.path, positiveRe) && !this.isMatchToPatterns(entry.path, negativeRe);
 	}
 
 	/**
@@ -78,7 +78,7 @@ export default class DeepFilter {
 	 * First, just trying to apply patterns to the path.
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
-	private isMatchToPatterns(entry: Entry, patternsRe: PatternRe[]): boolean {
-		return patternUtils.matchAny(entry.path, patternsRe) || patternUtils.matchAny(entry.path + '/', patternsRe);
+	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
+		return patternUtils.matchAny(filepath, patternsRe) || patternUtils.matchAny(filepath + '/', patternsRe);
 	}
 }
