@@ -18,16 +18,6 @@ describe('Utils → Path', () => {
 		});
 	});
 
-	describe('.getDepth', () => {
-		it('should returns 4', () => {
-			const expected: number = 4;
-
-			const actual = util.getDepth('a/b/c/d.js');
-
-			assert.strictEqual(actual, expected);
-		});
-	});
-
 	describe('.resolve', () => {
 		it('should return resolved filepath', () => {
 			const expected = path.join(process.cwd(), 'file.md');

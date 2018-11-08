@@ -8,13 +8,6 @@ export function isDotDirectory(filepath: string): boolean {
 }
 
 /**
- * Return naive depth of provided filepath.
- */
-export function getDepth(filepath: string): number {
-	return filepath.split('/').length;
-}
-
-/**
  * Return resolved a sequence of paths segments into an absolute path.
  */
 export function resolve(from: string, to: string): string {
