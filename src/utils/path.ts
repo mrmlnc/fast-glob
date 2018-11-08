@@ -8,13 +8,6 @@ export function isDotDirectory(filepath: string): boolean {
 }
 
 /**
- * Return resolved a sequence of paths segments into an absolute path.
- */
-export function resolve(from: string, to: string): string {
-	return path.resolve(from, to);
-}
-
-/**
  * Convert a windows-like path to a unix-style path.
  */
 export function normalize(filepath: string): string {

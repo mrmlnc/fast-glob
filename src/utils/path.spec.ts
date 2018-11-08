@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as path from 'path';
 
 import * as util from './path';
 
@@ -15,16 +14,6 @@ describe('Utils → Path', () => {
 			const actual = util.isDotDirectory('fixtures/.directory/directory');
 
 			assert.ok(!actual);
-		});
-	});
-
-	describe('.resolve', () => {
-		it('should return resolved filepath', () => {
-			const expected = path.join(process.cwd(), 'file.md');
-
-			const actual = util.resolve(process.cwd(), 'file.md');
-
-			assert.strictEqual(actual, expected);
 		});
 	});
 

@@ -69,7 +69,7 @@ export default abstract class Reader<T> {
 	 */
 	public transform(entry: Entry): EntryItem {
 		if (this.options.absolute && !path.isAbsolute(entry.path)) {
-			entry.path = pathUtil.resolve(this.options.cwd, entry.path);
+			entry.path = path.resolve(this.options.cwd, entry.path);
 			entry.path = pathUtil.normalize(entry.path);
 		}
 
