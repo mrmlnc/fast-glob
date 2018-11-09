@@ -40,9 +40,7 @@ smoke.suite('Smoke → Absolute (ignore)', [
 		pattern: 'fixtures/*',
 		ignore: path.join(process.cwd(), 'fixtures', '*'),
 		globOptions: { absolute: true },
-		fgOptions: { absolute: true },
-		broken: true,
-		issue: 113
+		fgOptions: { absolute: true }
 	},
 	{
 		pattern: 'fixtures/**',
@@ -50,15 +48,7 @@ smoke.suite('Smoke → Absolute (ignore)', [
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true },
 		broken: true,
-		issue: 113
-	},
-	{
-		pattern: 'fixtures/**',
-		ignore: path.join(process.cwd(), 'fixtures', '**'),
-		globOptions: { absolute: true },
-		fgOptions: { absolute: true },
-		broken: true,
-		issue: 113
+		issue: 47
 	}
 ]);
 
@@ -104,26 +94,20 @@ smoke.suite('Smoke → Absolute (cwd & ignore)', [
 		ignore: path.join(process.cwd(), 'fixtures', '*'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
-		fgOptions: { absolute: true },
-		broken: true,
-		issue: 113
+		fgOptions: { absolute: true }
 	},
 	{
 		pattern: '**',
 		ignore: path.join(process.cwd(), 'fixtures', '*'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
-		fgOptions: { absolute: true },
-		broken: true,
-		issue: 113
+		fgOptions: { absolute: true }
 	},
 	{
 		pattern: '**',
 		ignore: path.join(process.cwd(), 'fixtures', '**'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
-		fgOptions: { absolute: true },
-		broken: true,
-		issue: 113
+		fgOptions: { absolute: true }
 	}
 ]);

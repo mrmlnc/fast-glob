@@ -1,5 +1,6 @@
 import micromatch = require('micromatch');
 
+import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 
 import { IOptions } from '../../managers/options';
@@ -41,6 +42,10 @@ export default class DeepFilter {
 			return false;
 		}
 
+		if (this.isSkippedByAbsoluteNegativePatterns(entry, negativeRe)) {
+			return false;
+		}
+
 		return this.isMatchToPatterns(entry.path, positiveRe) && !this.isMatchToPatterns(entry.path, negativeRe);
 	}
 
@@ -70,6 +75,19 @@ export default class DeepFilter {
 	 */
 	private onlyDirectoryFilter(entry: Entry): boolean {
 		return this.options.onlyDirectories && !entry.isDirectory();
+	}
+
+	/**
+	 * Return true when `absolute` option is enabled and matched to the negative patterns.
+	 */
+	private isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
+		if (!this.options.absolute) {
+			return false;
+		}
+
+		const fullpath = pathUtils.makeAbsolute(this.options.cwd, entry.path);
+
+		return this.isMatchToPatterns(fullpath, negativeRe);
 	}
 
 	/**

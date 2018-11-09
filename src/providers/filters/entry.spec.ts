@@ -5,6 +5,7 @@ import * as tests from '../../tests';
 import EntryFilter from './entry';
 
 import * as optionsManager from '../../managers/options';
+import * as pathUtil from '../../utils/path';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import { IOptions, IPartialOptions } from '../../managers/options';
@@ -225,6 +226,49 @@ describe('Providers → Filters → Entry', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+		});
+
+		describe('Filter by absolute negative patterns', () => {
+			it('should return true when `absolute` option is disabled', () => {
+				const filter = getFilter(['**/*'], []);
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return true for file that no matched by negative pattern when `absolute` option is enabled', () => {
+				const filter = getFilter(['**/*'], ['*'], { absolute: true });
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return false for file that excluded by negative pattern with globstar when `absolute` option is enabled', () => {
+				const filter = getFilter(['**/*'], ['**/*'], { absolute: true });
+
+				const entry = tests.getFileEntry(false /** dot */);
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return false for file that excluded by absolute negative patterns when `absolute` option is enabled', () => {
+				const negative = pathUtil.makeAbsolute(process.cwd(), '**');
+				const filter = getFilter(['**/*'], [negative], { absolute: true });
+
+				const entry = tests.getFileEntry(false /** dot */);
 
 				const actual = filter(entry);
 
