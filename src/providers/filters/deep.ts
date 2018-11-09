@@ -1,6 +1,5 @@
 import micromatch = require('micromatch');
 
-import * as arrayUtils from '../../utils/array';
 import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 
@@ -28,9 +27,8 @@ export default class DeepFilter {
 	 */
 	private getMaxPatternDepth(patterns: Pattern[]): number {
 		const globstar = patterns.some(patternUtils.hasGlobStar);
-		const patternDepths = patterns.map(patternUtils.getDepth);
 
-		return globstar ? Infinity : arrayUtils.max(patternDepths);
+		return globstar ? Infinity : patternUtils.getMaxNaivePatternsDepth(patterns);
 	}
 
 	/**
@@ -46,7 +44,11 @@ export default class DeepFilter {
 	 * Returns «true» for directory that should be read.
 	 */
 	private filter(entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
-		if (this.isSkippedByNestingLevel(entry.depth, maxPatternDepth)) {
+		if (this.isSkippedByDeepOption(entry.depth)) {
+			return false;
+		}
+
+		if (this.isSkippedByMaxPatternDepth(entry.depth, maxPatternDepth)) {
 			return false;
 		}
 
@@ -62,13 +64,6 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns «true» when the directory can be skipped by nesting level.
-	 */
-	private isSkippedByNestingLevel(entryDepth: number, maxPatternDepth: number): boolean {
-		return this.isSkippedByDeepOption(entryDepth) || this.isSkippedByMaxPatternDepth(entryDepth, maxPatternDepth);
-	}
-
-	/**
 	 * Returns «true» when the «deep» option is disabled or number and depth of the entry is greater that the option value.
 	 */
 	private isSkippedByDeepOption(entryDepth: number): boolean {
@@ -79,7 +74,7 @@ export default class DeepFilter {
 	 * Returns «true» when depth parameter is not an Infinity and entry depth greater that the parameter value.
 	 */
 	private isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
-		return maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
+		return maxPatternDepth !== Infinity && entryDepth >= maxPatternDepth;
 	}
 
 	/**
