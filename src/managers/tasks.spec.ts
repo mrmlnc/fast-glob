@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as optionsManager from './options';
 import * as manager from './tasks';
 
-import { Pattern, PatternsGroup } from '../types/patterns';
+import { PatternsGroup } from '../types/patterns';
 import { ITask } from './tasks';
 
 describe('Managers → Task', () => {
@@ -193,57 +193,6 @@ describe('Managers → Task', () => {
 			};
 
 			const actual = manager.convertPatternGroupToTask('.', ['file'], ['file.md'], /* dynamic */ false);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-	});
-
-	describe('.findLocalNegativePatterns', () => {
-		it('should return empty array for empty pattern group', () => {
-			const expected: Pattern[] = [];
-
-			const actual = manager.findLocalNegativePatterns('base', {});
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return the pattern group when the base path is fully matched', () => {
-			const expected: Pattern[] = ['base/*'];
-
-			const actual = manager.findLocalNegativePatterns('base', {
-				base: ['base/*']
-			});
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return the pattern group when the base path is partial matched', () => {
-			const expected: Pattern[] = ['base/nested/*'];
-
-			const actual = manager.findLocalNegativePatterns('base', {
-				'base/nested': ['base/nested/*']
-			});
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return the pattern group when the positive base path is partial matched', () => {
-			const expected: Pattern[] = ['base/*'];
-
-			const actual = manager.findLocalNegativePatterns('base/nested', {
-				base: ['base/*']
-			});
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return the pattern group for all cases', () => {
-			const expected: Pattern[] = ['base/*', 'base/nested/*'];
-
-			const actual = manager.findLocalNegativePatterns('base', {
-				base: ['base/*'],
-				'base/nested': ['base/nested/*']
-			});
 
 			assert.deepStrictEqual(actual, expected);
 		});
