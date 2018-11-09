@@ -151,11 +151,5 @@ export function convertPatternsToRe(patterns: Pattern[], options: micromatch.Opt
  * Returns true if the entry match any of the given RegExp's.
  */
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
-	for (const regexp of patternsRe) {
-		if (regexp.test(entry)) {
-			return true;
-		}
-	}
-
-	return false;
+	return patternsRe.some((patternRe) => patternRe.test(entry));
 }
