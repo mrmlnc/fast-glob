@@ -12,14 +12,4 @@ describe('Utils → Array', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 	});
-
-	describe('.max', () => {
-		it('should return max element of array', () => {
-			const expected: number = 3;
-
-			const actual = util.max([0, 3, 1]);
-
-			assert.strictEqual(actual, expected);
-		});
-	});
 });
