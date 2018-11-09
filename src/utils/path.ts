@@ -8,22 +8,21 @@ export function isDotDirectory(filepath: string): boolean {
 }
 
 /**
- * Return naive depth of provided filepath.
- */
-export function getDepth(filepath: string): number {
-	return filepath.split('/').length;
-}
-
-/**
- * Return resolved a sequence of paths segments into an absolute path.
- */
-export function resolve(from: string, to: string): string {
-	return path.resolve(from, to);
-}
-
-/**
  * Convert a windows-like path to a unix-style path.
  */
 export function normalize(filepath: string): string {
 	return filepath.replace(/\\/g, '/');
+}
+
+/**
+ * Returns normalized absolute path of provided filepath.
+ */
+export function makeAbsolute(cwd: string, filepath: string): string {
+	if (path.isAbsolute(filepath)) {
+		return normalize(filepath);
+	}
+
+	const fullpath = path.resolve(cwd, filepath);
+
+	return normalize(fullpath);
 }

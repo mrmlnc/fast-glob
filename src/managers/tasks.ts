@@ -35,7 +35,6 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
  */
 export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): ITask[] {
 	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
-	const negativePatternsGroup = groupPatternsByBaseDirectory(negative);
 
 	// When we have a global group – there is no reason to divide the patterns into independent tasks.
 	// In this case, the global task covers the rest.
@@ -45,7 +44,7 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 		return [task];
 	}
 
-	return convertPatternGroupsToTasks(positivePatternsGroup, negativePatternsGroup, dynamic);
+	return convertPatternGroupsToTasks(positivePatternsGroup, negative, dynamic);
 }
 
 /**
@@ -85,14 +84,9 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 /**
  * Convert group of patterns to tasks.
  */
-export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: PatternsGroup, dynamic: boolean): ITask[] {
-	const globalNegative = '.' in negative ? negative['.'] : [];
-
+export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], dynamic: boolean): ITask[] {
 	return Object.keys(positive).map((base) => {
-		const localNegative = findLocalNegativePatterns(base, negative);
-		const fullNegative = localNegative.concat(globalNegative);
-
-		return convertPatternGroupToTask(base, positive[base], fullNegative, dynamic);
+		return convertPatternGroupToTask(base, positive[base], negative, dynamic);
 	});
 }
 

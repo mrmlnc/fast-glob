@@ -1,5 +1,6 @@
 import micromatch = require('micromatch');
 
+import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 
 import { IOptions } from '../../managers/options';
@@ -41,7 +42,11 @@ export default class DeepFilter {
 			return false;
 		}
 
-		return this.isMatchToPatterns(entry, positiveRe) && !this.isMatchToPatterns(entry, negativeRe);
+		if (this.isSkippedByAbsoluteNegativePatterns(entry, negativeRe)) {
+			return false;
+		}
+
+		return this.isMatchToPatterns(entry.path, positiveRe) && !this.isMatchToPatterns(entry.path, negativeRe);
 	}
 
 	/**
@@ -73,12 +78,25 @@ export default class DeepFilter {
 	}
 
 	/**
+	 * Return true when `absolute` option is enabled and matched to the negative patterns.
+	 */
+	private isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
+		if (!this.options.absolute) {
+			return false;
+		}
+
+		const fullpath = pathUtils.makeAbsolute(this.options.cwd, entry.path);
+
+		return this.isMatchToPatterns(fullpath, negativeRe);
+	}
+
+	/**
 	 * Return true when entry match to provided patterns.
 	 *
 	 * First, just trying to apply patterns to the path.
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
-	private isMatchToPatterns(entry: Entry, patternsRe: PatternRe[]): boolean {
-		return patternUtils.matchAny(entry.path, patternsRe) || patternUtils.matchAny(entry.path + '/', patternsRe);
+	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
+		return patternUtils.matchAny(filepath, patternsRe) || patternUtils.matchAny(filepath + '/', patternsRe);
 	}
 }
