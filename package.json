@@ -46,6 +46,7 @@
     "minimist": "^1.2.0",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
+    "tiny-glob": "^0.2.3",
     "tslint": "^5.11.0",
     "tslint-config-mrmlnc": "^1.0.0",
     "typescript": "^3.1.3"

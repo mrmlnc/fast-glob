@@ -378,6 +378,7 @@ You can see results [here](https://gist.github.com/mrmlnc/f06246b197f53c356895fa
   * [node-glob](https://github.com/isaacs/node-glob) – «Standard» glob functionality for Node.js
   * [bash-glob](https://github.com/micromatch/bash-glob) – Bash-powered globbing for node.js.
   * [glob-stream](https://github.com/gulpjs/glob-stream) – A Readable Stream interface over node-glob that used in the [gulpjs](https://github.com/gulpjs/gulp).
+  * [tiny-glob](https://github.com/terkelg/tiny-glob) – Tiny and extremely fast library to match files and folders using glob patterns.
 
 ## Changelog
 
