@@ -216,6 +216,8 @@ Add a `/` character to directory entries.
 
 Return absolute paths for matched entries.
 
+> :book: Note that you need to use this option if you want to use absolute negative patterns like `${__dirname}/*.md`.
+
 #### nobrace
 
   * Type: `boolean`
