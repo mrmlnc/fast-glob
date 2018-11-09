@@ -7,7 +7,7 @@ import * as utils from '../../utils';
 
 import { Pattern } from '../../../types/patterns';
 
-const patterns: Pattern[] = ['**/*.md', '**/*.txt', '!**/*.txt'];
+const patterns: Pattern[] = ['**/*.md', '!**/*.txt'];
 
 const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
@@ -16,7 +16,7 @@ const options: glob.Options = {
 
 const timeStart = utils.timeStart();
 
-glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options, (err, matches) => {
+glob('**/*', options, (err, matches) => {
 	const memory = utils.getMemory();
 
 	if (err) {

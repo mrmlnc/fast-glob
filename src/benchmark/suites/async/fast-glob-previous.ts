@@ -11,7 +11,7 @@ const options: fg.Options = {
 
 const timeStart = utils.timeStart();
 
-fg(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
+fg(['**/*', '!**/*.txt'], options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

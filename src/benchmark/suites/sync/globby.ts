@@ -12,7 +12,7 @@ const options = {
 const timeStart = utils.timeStart();
 
 try {
-	const matches = glob.sync(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options);
+	const matches = glob.sync(['**/*', '!**/*.txt'], options);
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
 	const measures = utils.getMeasures(matches.length, time, memory);

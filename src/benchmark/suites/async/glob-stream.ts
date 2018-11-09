@@ -17,7 +17,7 @@ const timeStart = utils.timeStart();
 
 const entries: string[] = [];
 
-const stream = glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options);
+const stream = glob(['**/*', '!**/*.txt'], options);
 
 stream.on('data', (data: glob.Entry) => entries.push(data.path));
 stream.on('error', () => process.exit(0));

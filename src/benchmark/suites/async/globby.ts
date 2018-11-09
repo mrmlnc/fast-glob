@@ -11,7 +11,7 @@ const options = {
 
 const timeStart = utils.timeStart();
 
-glob(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
+glob(['**/*', '!**/*.txt'], options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

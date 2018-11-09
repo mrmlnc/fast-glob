@@ -13,7 +13,7 @@ const options: IPartialOptions = {
 
 const timeStart = utils.timeStart();
 
-glob.async(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options)
+glob.async(['**/*', '!**/*.txt'], options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

@@ -12,7 +12,7 @@ const options: fg.Options = {
 const timeStart = utils.timeStart();
 
 try {
-	const matches = fg.sync(['**/*', '**/*.md', '**/*.txt', '!**/*.txt'], options);
+	const matches = fg.sync(['**/*', '!**/*.txt'], options);
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
 	const measures = utils.getMeasures(matches.length, time, memory);
