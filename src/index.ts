@@ -1,5 +1,3 @@
-import merge2 = require('merge2');
-
 import * as optionsManager from './managers/options';
 import * as taskManager from './managers/tasks';
 
@@ -9,6 +7,7 @@ import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 
 import * as arrayUtils from './utils/array';
+import * as streamUtils from './utils/stream';
 
 import { IOptions, IPartialOptions } from './managers/options';
 import { ITask } from './managers/tasks';
@@ -49,7 +48,7 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
 
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
 
-	return merge2(works);
+	return streamUtils.merge(works);
 }
 
 /**
