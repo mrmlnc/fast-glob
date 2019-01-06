@@ -9,7 +9,7 @@ import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import { Entry } from '../../types/entries';
 import { Pattern, PatternRe } from '../../types/patterns';
 
-export default class DeepFilter {
+export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
 	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }

@@ -34,8 +34,8 @@ class ReaderSyncFakeThrowErrno extends ReaderSyncFake {
 
 function getTask(dynamic: boolean = true): ITask {
 	return {
-		base: 'fixtures',
 		dynamic,
+		base: 'fixtures',
 		patterns: ['**/*'],
 		positive: ['**/*'],
 		negative: []

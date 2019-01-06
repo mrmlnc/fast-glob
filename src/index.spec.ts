@@ -25,7 +25,9 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/**/*.md']);
 
-			assert.deepStrictEqual(actual.sort(), expected);
+			actual.sort();
+
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries (two sources)', () => {
@@ -40,7 +42,9 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			assert.deepStrictEqual(actual.sort(), expected);
+			actual.sort();
+
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -51,7 +55,7 @@ describe('Package', () => {
 				await pkg.async(null as any);
 				throw new Error('An unexpected error was found.');
 			} catch (error) {
-				assert.strictEqual(error.toString(), 'TypeError: Patterns must be a string or an array of strings');
+				assert.strictEqual((error as Error).toString(), 'TypeError: Patterns must be a string or an array of strings');
 			}
 		});
 
@@ -68,7 +72,9 @@ describe('Package', () => {
 
 			const actual = await pkg.async(['fixtures/**/*.md']);
 
-			assert.deepStrictEqual(actual.sort(), expected);
+			actual.sort();
+
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns entries (two sources)', async () => {
@@ -83,7 +89,9 @@ describe('Package', () => {
 
 			const actual = await pkg.async(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			assert.deepStrictEqual(actual.sort(), expected);
+			actual.sort();
+
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 
@@ -108,10 +116,11 @@ describe('Package', () => {
 
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
-			stream.on('data', (entry) => actual.push(entry));
-			stream.on('error', (err) => assert.fail(err));
+			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('error', (err: Error) => assert.fail(err));
 			stream.on('end', () => {
-				assert.deepStrictEqual(actual.sort(), expected);
+				actual.sort();
+				assert.deepStrictEqual(actual, expected);
 				done();
 			});
 		});
@@ -130,10 +139,11 @@ describe('Package', () => {
 
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			stream.on('data', (entry) => actual.push(entry));
-			stream.on('error', (err) => assert.fail(err));
+			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('error', (err: Error) => assert.fail(err));
 			stream.on('end', () => {
-				assert.deepStrictEqual(actual.sort(), expected);
+				actual.sort();
+				assert.deepStrictEqual(actual, expected);
 				done();
 			});
 		});

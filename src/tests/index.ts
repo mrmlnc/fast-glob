@@ -26,13 +26,14 @@ export class EnoentErrnoException extends Error {
 }
 
 export function getEntry(entry?: Partial<Entry>): Entry {
-	return Object.assign({
+	return {
 		isFile: () => false,
 		isDirectory: () => false,
 		isSymbolicLink: () => false,
 		path: 'path',
-		depth: 1
-	} as Entry, entry);
+		depth: 1,
+		...entry
+	} as unknown as Entry;
 }
 
 export function getFileEntry(dot: boolean): Entry {
