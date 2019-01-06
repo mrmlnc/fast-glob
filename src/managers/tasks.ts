@@ -97,8 +97,8 @@ export function convertPatternGroupToTask(base: string, positive: Pattern[], neg
 	return {
 		base,
 		dynamic,
-		patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern)),
 		positive,
-		negative
+		negative,
+		patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern))
 	};
 }

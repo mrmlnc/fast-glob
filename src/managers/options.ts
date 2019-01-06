@@ -96,7 +96,7 @@ export interface IOptions<T = EntryItem> {
 export type IPartialOptions<T = EntryItem> = Partial<IOptions<T>>;
 
 export function prepare(options?: IPartialOptions): IOptions {
-	const opts = Object.assign<IOptions, IPartialOptions | undefined>({
+	const opts = {
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
@@ -117,8 +117,9 @@ export function prepare(options?: IPartialOptions): IOptions {
 		nocase: false,
 		case: true,
 		matchBase: false,
-		transform: null
-	}, options);
+		transform: null,
+		...options
+	};
 
 	if (opts.onlyDirectories) {
 		opts.onlyFiles = false;

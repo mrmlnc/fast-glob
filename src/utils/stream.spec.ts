@@ -28,7 +28,7 @@ describe('Utils → Stream', () => {
 
 			const actual: number[] = [];
 
-			mergedStream.on('error', (err) => actual.push(err));
+			mergedStream.on('error', (err: number) => actual.push(err));
 
 			mergedStream.on('finish', () => {
 				assert.deepStrictEqual(actual, expected);
