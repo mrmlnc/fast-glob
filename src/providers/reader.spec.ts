@@ -115,7 +115,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader({ markDirectories: true });
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const expected = 'fixtures/directory/';
+				const expected: string = 'fixtures/directory/';
 
 				const actual = reader.transform(entry);
 
@@ -126,8 +126,8 @@ describe('Providers → Reader', () => {
 				const reader = getReader({ markDirectories: true, absolute: true });
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const fullpath = path.join(process.cwd(), 'fixtures/directory/');
-				const expected = pathUtil.normalize(fullpath);
+				const fullpath: string = path.join(process.cwd(), 'fixtures/directory/');
+				const expected: string = pathUtil.normalize(fullpath);
 
 				const actual = reader.transform(entry);
 
@@ -138,7 +138,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader({ markDirectories: true });
 				const entry = tests.getFileEntry(false /** dot */);
 
-				const expected = 'fixtures/file.txt';
+				const expected: string = 'fixtures/file.txt';
 
 				const actual = reader.transform(entry);
 
@@ -149,7 +149,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader();
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const expected = 'fixtures/directory';
+				const expected: string = 'fixtures/directory';
 
 				const actual = reader.transform(entry);
 
@@ -162,8 +162,8 @@ describe('Providers → Reader', () => {
 				const reader = getReader({ absolute: true });
 				const entry = tests.getFileEntry(false /** dot */);
 
-				const fullpath = path.join(process.cwd(), 'fixtures/file.txt');
-				const expected = pathUtil.normalize(fullpath);
+				const fullpath: string = path.join(process.cwd(), 'fixtures/file.txt');
+				const expected: string = pathUtil.normalize(fullpath);
 
 				const actual = reader.transform(entry);
 
@@ -174,7 +174,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader();
 				const entry = tests.getFileEntry(false /** dot */);
 
-				const expected = 'fixtures/file.txt';
+				const expected: string = 'fixtures/file.txt';
 
 				const actual = reader.transform(entry);
 
@@ -187,7 +187,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader({ transform: () => 'cake' });
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const expected = 'cake';
+				const expected: string = 'cake';
 
 				const actual = reader.transform(entry);
 
@@ -198,7 +198,7 @@ describe('Providers → Reader', () => {
 				const reader = getReader();
 				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
 
-				const expected = 'fixtures/directory';
+				const expected: string = 'fixtures/directory';
 
 				const actual = reader.transform(entry);
 

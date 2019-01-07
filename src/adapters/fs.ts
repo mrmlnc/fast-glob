@@ -26,10 +26,9 @@ export default abstract class FileSystem<T> {
 	 * Return an implementation of the Entry interface.
 	 */
 	public makeEntry(stat: fs.Stats, pattern: Pattern): Entry {
-		return {
-			...stat,
+		return Object.assign<fs.Stats, Entry>(stat, {
 			path: pattern,
 			depth: pattern.split('/').length
-		} as unknown as Entry;
+		} as Entry);
 	}
 }

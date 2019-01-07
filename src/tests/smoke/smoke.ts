@@ -141,11 +141,10 @@ function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
  * Return entries from the `node-glob` package with sorting.
  */
 function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: glob.IOptions): string[] {
-	const options = {
+	const options = Object.assign<glob.IOptions, glob.IOptions | undefined>({
 		cwd: cwd || process.cwd(),
-		ignore: ignore ? [ignore] : [],
-		...opts
-	};
+		ignore: ignore ? [ignore] : []
+	}, opts);
 
 	return glob.sync(pattern, options).sort();
 }
@@ -154,12 +153,11 @@ function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
  * Return entries from the `fast-glob` package with sorting.
  */
 function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: IPartialOptions<string>): string[] {
-	const options = {
+	const options = Object.assign<IPartialOptions<string>, IPartialOptions<string> | undefined>({
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
-		onlyFiles: false,
-		...opts
-	};
+		onlyFiles: false
+	}, opts);
 
 	return fg.sync(pattern, options).sort() as string[];
 }

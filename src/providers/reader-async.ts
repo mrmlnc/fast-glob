@@ -27,7 +27,7 @@ export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
 		return new Promise((resolve, reject) => {
 			const stream: NodeJS.ReadableStream = this.api(root, task, options);
 
-			stream.on('error', (err: NodeJS.ErrnoException) => {
+			stream.on('error', (err) => {
 				this.isEnoentCodeError(err) ? resolve([]) : reject(err);
 				stream.pause();
 			});

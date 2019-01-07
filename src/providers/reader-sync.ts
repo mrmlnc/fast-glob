@@ -27,7 +27,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 
 			return entries.map<EntryItem>(this.transform, this);
 		} catch (err) {
-			if (this.isEnoentCodeError(err as NodeJS.ErrnoException)) {
+			if (this.isEnoentCodeError(err)) {
 				return [];
 			}
 

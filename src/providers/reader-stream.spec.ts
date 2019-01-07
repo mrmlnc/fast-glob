@@ -57,8 +57,8 @@ const getEntries = (options: IOptions, task: ITask, api: typeof ReaderStreamFake
 
 function getTask(dynamic: boolean = true): ITask {
 	return {
-		dynamic,
 		base: 'fixtures',
+		dynamic,
 		patterns: ['**/*'],
 		positive: ['**/*'],
 		negative: []
@@ -140,7 +140,7 @@ describe('Providers → ReaderStream', () => {
 
 				throw new Error('Wow');
 			} catch (err) {
-				assert.strictEqual((err as Error).message, 'Boom');
+				assert.strictEqual(err.message, 'Boom');
 			}
 		});
 	});
