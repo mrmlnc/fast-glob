@@ -38,7 +38,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		const readable: NodeJS.ReadableStream = this.api(root, task, options);
 
 		return readable
-			.on('error', (err) => this.isEnoentCodeError(err) ? null : transform.emit('error', err))
+			.on('error', (err: NodeJS.ErrnoException) => this.isEnoentCodeError(err) ? null : transform.emit('error', err))
 			.pipe(transform);
 	}
 
