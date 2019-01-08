@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as stream from 'stream';
 
 import { Entry, EntryItem } from '../types/entries';
@@ -25,27 +26,50 @@ export class EnoentErrnoException extends Error {
 	}
 }
 
-export function getEntry(entry?: Partial<Entry>): Entry {
-	return Object.assign({
-		isFile: () => false,
-		isDirectory: () => false,
-		isSymbolicLink: () => false,
-		path: 'path',
-		depth: 1
-	} as Entry, entry);
+interface IFakeFsStatOptions {
+	isFile: boolean;
+	isDirectory: boolean;
+	isSymbolicLink: boolean;
+	path: string;
 }
 
-export function getFileEntry(dot: boolean): Entry {
-	return getEntry({
-		path: dot ? 'fixtures/.file.txt' : 'fixtures/file.txt',
-		isFile: () => true
+class FakeEntry extends fs.Stats {
+	public path: string = this._options.path || 'fixtures/entry';
+	public depth: number = this.path.split('/').length - 2;
+
+	constructor(private readonly _options: Partial<IFakeFsStatOptions> = {}) {
+		super();
+	}
+
+	public isFile(): boolean {
+		return this._options.isFile || false;
+	}
+
+	public isDirectory(): boolean {
+		return this._options.isDirectory || false;
+	}
+
+	public isSymbolicLink(): boolean {
+		return this._options.isSymbolicLink || false;
+	}
+}
+
+export function getEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+	return new FakeEntry(options);
+}
+
+export function getFileEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+	return new FakeEntry({
+		isFile: true,
+		path: 'fixtures/file.txt',
+		...options
 	});
 }
 
-export function getDirectoryEntry(dot: boolean, isSymbolicLink: boolean): Entry {
-	return getEntry({
-		path: dot ? 'fixtures/.directory' : 'fixtures/directory',
-		isDirectory: () => true,
-		isSymbolicLink: () => isSymbolicLink
+export function getDirectoryEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+	return new FakeEntry({
+		isDirectory: true,
+		path: 'fixtures/directory',
+		...options
 	});
 }

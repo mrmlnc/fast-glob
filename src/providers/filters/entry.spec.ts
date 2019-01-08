@@ -37,7 +37,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for unique entry when option is enabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -47,7 +47,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for non-unique entry when option is enabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				// Create index record
 				filter(entry);
@@ -60,7 +60,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for non-unique entry when option is disabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, unique: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				// Create index record
 				filter(entry);
@@ -75,7 +75,7 @@ describe('Providers → Filters → Entry', () => {
 
 				const filter = filterInstance.getFilter(['**/*'], []);
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				filter(entry);
 
@@ -87,7 +87,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for excluded directory', () => {
 				const filter = getFilter(['**/*', '!**/directory'], ['**/directory'], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -97,7 +97,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for files in excluded directory', () => {
 				const filter = getFilter(['**/*', '!**/directory/**'], ['**/directory/**'], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -110,7 +110,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return true for file when option is enabled', () => {
 					const filter = getFilter(['**/*'], []);
 
-					const entry = tests.getFileEntry(false /** dot */);
+					const entry = tests.getFileEntry();
 
 					const actual = filter(entry);
 
@@ -120,7 +120,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return true for file when option is disabled', () => {
 					const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-					const entry = tests.getFileEntry(false /** dot */);
+					const entry = tests.getFileEntry();
 
 					const actual = filter(entry);
 
@@ -130,7 +130,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return false for directory when option is enabled', () => {
 					const filter = getFilter(['**/*'], []);
 
-					const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+					const entry = tests.getDirectoryEntry();
 
 					const actual = filter(entry);
 
@@ -140,7 +140,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return true for directory when option is disabled', () => {
 					const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-					const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+					const entry = tests.getDirectoryEntry();
 
 					const actual = filter(entry);
 
@@ -152,7 +152,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return false for file when option is enabled', () => {
 					const filter = getFilter(['**/*'], [], { onlyFiles: false, onlyDirectories: true });
 
-					const entry = tests.getFileEntry(false /** dot */);
+					const entry = tests.getFileEntry();
 
 					const actual = filter(entry);
 
@@ -162,7 +162,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return true for file when option is disabled', () => {
 					const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-					const entry = tests.getFileEntry(false /** dot */);
+					const entry = tests.getFileEntry();
 
 					const actual = filter(entry);
 
@@ -172,7 +172,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return true for directory when option is enabled', () => {
 					const filter = getFilter(['**/*'], [], { onlyFiles: false, onlyDirectories: true });
 
-					const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+					const entry = tests.getDirectoryEntry();
 
 					const actual = filter(entry);
 
@@ -182,7 +182,7 @@ describe('Providers → Filters → Entry', () => {
 				it('should return false for directory when option is disabled', () => {
 					const filter = getFilter(['**/*'], []);
 
-					const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+					const entry = tests.getDirectoryEntry();
 
 					const actual = filter(entry);
 
@@ -195,7 +195,9 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for file that starting with a period when option is enabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
-				const entry = tests.getFileEntry(true /** dot */);
+				const entry = tests.getFileEntry({
+					path: 'fixtures/.file.txt'
+				});
 
 				const actual = filter(entry);
 
@@ -205,7 +207,9 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for file that starting with a period when option is disabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(true /** dot */);
+				const entry = tests.getFileEntry({
+					path: 'fixtures/.file.txt'
+				});
 
 				const actual = filter(entry);
 
@@ -215,7 +219,9 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for directory that starting with a period when option is enabled', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
-				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry({
+					path: 'fixtures/.directory'
+				});
 
 				const actual = filter(entry);
 
@@ -225,7 +231,9 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for directory that starting with a period when option is disabled', () => {
 				const filter = getFilter(['**/*'], []);
 
-				const entry = tests.getDirectoryEntry(true /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry({
+					path: 'fixtures/.directory'
+				});
 
 				const actual = filter(entry);
 
@@ -237,7 +245,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true when `absolute` option is disabled', () => {
 				const filter = getFilter(['**/*'], []);
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -247,7 +255,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for file that no matched by negative pattern when `absolute` option is enabled', () => {
 				const filter = getFilter(['**/*'], ['*'], { absolute: true });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -257,7 +265,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for file that excluded by negative pattern with globstar when `absolute` option is enabled', () => {
 				const filter = getFilter(['**/*'], ['**/*'], { absolute: true });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -268,7 +276,7 @@ describe('Providers → Filters → Entry', () => {
 				const negative = pathUtil.makeAbsolute(process.cwd(), '**');
 				const filter = getFilter(['**/*'], [negative], { absolute: true });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -280,7 +288,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for file that matched to patterns', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -290,7 +298,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for file that not matched to patterns', () => {
 				const filter = getFilter(['**/*.md'], [], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -300,7 +308,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for file that excluded by negative patterns', () => {
 				const filter = getFilter(['**/*', '!**/*.txt'], ['**/*.txt'], { onlyFiles: false });
 
-				const entry = tests.getFileEntry(false /** dot */);
+				const entry = tests.getFileEntry();
 
 				const actual = filter(entry);
 
@@ -310,7 +318,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for directory that matched to patterns', () => {
 				const filter = getFilter(['**/directory/**'], [], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -320,7 +328,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return true for directory that matched to static patterns', () => {
 				const filter = getFilter(['fixtures/directory'], [], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -330,7 +338,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for directory that not matched to patterns', () => {
 				const filter = getFilter(['**/super_directory/**'], [], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -340,7 +348,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for directory that matched to negative static pattern', () => {
 				const filter = getFilter(['**'], ['fixtures/directory'], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -350,7 +358,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return false for directory that matched to negative pattern with globstar', () => {
 				const filter = getFilter(['**'], ['fixtures/directory/**'], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const actual = filter(entry);
 
@@ -362,7 +370,7 @@ describe('Providers → Filters → Entry', () => {
 			it('should return the data without changes', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
-				const entry = tests.getDirectoryEntry(false /** dot */, false /** isSymbolicLink */);
+				const entry = tests.getDirectoryEntry();
 
 				const expected = entry.path;
 
