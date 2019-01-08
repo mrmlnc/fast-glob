@@ -59,5 +59,13 @@ describe('Adapters → FileSystem', () => {
 			assert.strictEqual(actual.path, 'base/file.json');
 			assert.strictEqual(actual.depth, 2);
 		});
+
+		it('issue-144: should return entry with methods from fs.Stats', () => {
+			const adapter = getAdapter();
+
+			const actual = adapter.makeEntry(tests.getFileEntry(), 'file.json');
+
+			assert.ok(actual.isFile());
+		});
 	});
 });
