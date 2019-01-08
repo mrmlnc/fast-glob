@@ -1,3 +1,6 @@
+import * as assert from 'assert';
+
+import { Entry } from '../../types/entries';
 import * as smoke from './smoke';
 
 smoke.suite('Smoke → Static', [
@@ -61,4 +64,19 @@ smoke.suite('Smoke → Static (ignore & cwd)', [
 smoke.suite('Smoke → Static (relative)', [
 	{ pattern: '../file.md', cwd: 'fixtures/first' },
 	{ pattern: '../../file.md', cwd: 'fixtures/first/nested' }
+]);
+
+smoke.suite('Smoke → Static (stats)', [
+	{
+		issue: 144,
+		pattern: 'fixtures/file.md',
+		fgOptions: {
+			stats: true,
+			transform: (entry) => {
+				assert.ok((entry as Entry).isFile());
+
+				return (entry as Entry).path;
+			}
+		}
+	}
 ]);
