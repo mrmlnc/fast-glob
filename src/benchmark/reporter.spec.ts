@@ -23,7 +23,7 @@ describe('Benchmark → Reporter', () => {
 		it('should returns report', () => {
 			const reporter = new Reporter(results);
 
-			const expected: string = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 0 | Retries: 1';
+			const expected = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 0 | Retries: 1';
 
 			const actual = reporter.toString();
 
@@ -35,7 +35,7 @@ describe('Benchmark → Reporter', () => {
 
 			const reporter = new Reporter(results);
 
-			const expected: string = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 1 | Retries: 1';
+			const expected = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 1 | Retries: 1';
 
 			const actual = reporter.toString();
 

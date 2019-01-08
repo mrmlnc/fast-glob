@@ -24,7 +24,7 @@ describe('Benchmark → Utils', () => {
 		it('should returns milliseconds', () => {
 			const hrtime: [number, number] = [0, 1e7];
 
-			const expected: number = 10;
+			const expected = 10;
 
 			const actual = utils.convertHrtimeToMilliseconds(hrtime);
 
@@ -34,7 +34,7 @@ describe('Benchmark → Utils', () => {
 
 	describe('.convertBytesToMegaBytes', () => {
 		it('should returns megabytes', () => {
-			const expected: number = 1;
+			const expected = 1;
 
 			const actual = utils.convertBytesToMegaBytes(1e6);
 
@@ -54,7 +54,7 @@ describe('Benchmark → Utils', () => {
 
 	describe('.timeEnd', () => {
 		it('should returns diff between hrtime\'s', () => {
-			const expected: number = 10;
+			const expected = 10;
 
 			const actual = utils.timeEnd([0, 1e7]);
 
@@ -64,7 +64,7 @@ describe('Benchmark → Utils', () => {
 
 	describe('.getMemory', () => {
 		it('should returns memory usage in megabytes', () => {
-			const expected: number = 10;
+			const expected = 10;
 
 			const actual = utils.getMemory();
 
@@ -104,7 +104,7 @@ describe('Benchmark → Utils', () => {
 
 	describe('.getEnvAsInteger', () => {
 		it('should returns integer', () => {
-			const expected: number = 1;
+			const expected = 1;
 
 			const actual = utils.getEnvAsInteger('FG_TEST_ENV_INTEGER');
 

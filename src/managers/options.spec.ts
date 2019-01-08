@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as manager from './options';
 
 function getOptions(options?: manager.IPartialOptions): manager.IOptions {
-	return Object.assign<manager.IOptions, manager.IPartialOptions | undefined>({
+	return {
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
@@ -24,8 +24,9 @@ function getOptions(options?: manager.IPartialOptions): manager.IOptions {
 		nocase: false,
 		case: true,
 		matchBase: false,
-		transform: null
-	}, options);
+		transform: null,
+		...options
+	};
 }
 
 describe('Managers → Options', () => {
