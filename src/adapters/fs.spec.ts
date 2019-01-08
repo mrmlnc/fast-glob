@@ -1,12 +1,9 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
-import FileSystem from './fs';
-
 import * as optionsManager from '../managers/options';
-
-import { Entry } from '../types/entries';
+import * as tests from '../tests/index';
+import FileSystem from './fs';
 
 class FileSystemFake extends FileSystem<never[]> {
 	public read(_filepaths: string[]): never[] {
@@ -57,14 +54,10 @@ describe('Adapters → FileSystem', () => {
 		it('should return created entry', () => {
 			const adapter = getAdapter();
 
-			const expected = {
-				path: 'base/file.json',
-				depth: 2
-			} as Entry;
+			const actual = adapter.makeEntry(tests.getFileEntry(), 'base/file.json');
 
-			const actual = adapter.makeEntry({} as fs.Stats, 'base/file.json');
-
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual(actual.path, 'base/file.json');
+			assert.strictEqual(actual.depth, 2);
 		});
 	});
 });
