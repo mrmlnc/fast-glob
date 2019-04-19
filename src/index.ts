@@ -77,7 +77,7 @@ function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOption
 }
 
 function assertPatternsInput(source: unknown): void | never {
-	if (([] as Array<unknown>).concat(source).every(isString)) {
+	if (([] as unknown[]).concat(source).every(isString)) {
 		return;
 	}
 
