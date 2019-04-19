@@ -9,7 +9,7 @@ describe('Benchmark → Utils', () => {
 	before(() => {
 		process.env.FG_TEST_ENV_INTEGER = '1';
 
-		process.hrtime = () => [0, 1e7];
+		process.hrtime = (() => [0, 1e7]) as NodeJS.HRTime;
 		process.memoryUsage = () => ({ external: 0, rss: 0, heapTotal: 0, heapUsed: 10 * 1024 * 1024 });
 	});
 
