@@ -63,7 +63,15 @@ stream.once('end', () => console.log(entries));
 ### fg(patterns, [options])
 ### fg.async(patterns, [options])
 
-Returns a `Promise<Array>` of matching entries.
+Returns a `Promise` with an array of matching [entries](#entry).
+
+### fg.sync(patterns, [options])
+
+Returns an array of matching [entries](#entry).
+
+### fg.stream(patterns, [options])
+
+Returns a [`ReadableStream`](https://nodejs.org/api/stream.html#stream_readable_streams) when the `data` event will be emitted with [`Entry`](#entry).
 
 #### patterns
 
@@ -76,14 +84,6 @@ This package does not respect the order of patterns. First, all the negative pat
   * Type: `Object`
 
 See [options](#options-1) section for more detailed information.
-
-### fg.sync(patterns, [options])
-
-Returns a `Array` of matching entries.
-
-### fg.stream(patterns, [options])
-
-Returns a [`ReadableStream`](https://nodejs.org/api/stream.html#stream_readable_streams).
 
 ### fg.generateTasks(patterns, [options])
 
@@ -113,6 +113,10 @@ interface Task {
   negative: string[];
 }
 ```
+
+## Entry
+
+The entry which can be a `string` if the [`stats`](#stats) option is disabled, otherwise `fs.Stats` with two additional `path` and `depth` properties.
 
 ## Options
 
@@ -169,10 +173,10 @@ Allow patterns to match filenames starting with a period (files & directories), 
 
 #### stats
 
-  * Type: `number|boolean`
+  * Type: `boolean`
   * Default: `false`
 
-Return `fs.Stats` with `path` property instead of file path.
+Return `fs.Stats` with two additional `path` and `depth` properties instead of a `string`.
 
 #### onlyFiles
 
