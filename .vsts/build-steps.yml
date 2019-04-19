@@ -12,7 +12,6 @@ steps:
       command: install
 
   - script: npm run lint
-    condition: ne(variables['node_version'], '4.x')
     displayName: Run Hygiene Checks
 
   - script: npm run compile

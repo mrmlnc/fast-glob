@@ -11,7 +11,6 @@ jobs:
   - job: Windows
     strategy:
       matrix:
-        (Node.js 4): { node_version: 4.x }
         (Node.js 6): { node_version: 6.x }
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
@@ -25,7 +24,6 @@ jobs:
   - job: Linux
     strategy:
       matrix:
-        (Node.js 4): { node_version: 4.x }
         (Node.js 6): { node_version: 6.x }
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
@@ -39,7 +37,6 @@ jobs:
   - job: macOS
     strategy:
       matrix:
-        (Node.js 4): { node_version: 4.x }
         (Node.js 6): { node_version: 6.x }
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
