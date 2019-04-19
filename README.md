@@ -222,61 +222,33 @@ Return absolute paths for matched entries.
 
 > :book: Note that you need to use this option if you want to use absolute negative patterns like `${__dirname}/*.md`.
 
-#### nobrace
-
-  * Type: `boolean`
-  * Default: `false`
-
-Disable expansion of brace patterns (`{a,b}`, `{1..3}`).
-
 #### brace
 
   * Type: `boolean`
   * Default: `true`
 
-The [`nobrace`](#nobrace) option without double-negation. This option has a higher priority then `nobrace`.
-
-#### noglobstar
-
-  * Type: `boolean`
-  * Default: `false`
-
-Disable matching with globstars (`**`).
+Enable expansion of brace patterns.
 
 #### globstar
 
   * Type: `boolean`
   * Default: `true`
 
-The [`noglobstar`](#noglobstar) option without double-negation. This option has a higher priority then `noglobstar`.
+Enable matching with globstars (`**`).
 
-#### noext
-
-  * Type: `boolean`
-  * Default: `false`
-
-Disable extglob support (patterns like `+(a|b)`), so that extglobs are regarded as literal characters.
-
-#### extension
+#### extglob
 
   * Type: `boolean`
   * Default: `true`
 
-The [`noext`](#noext) option without double-negation. This option has a higher priority then `noext`.
-
-#### nocase
-
-  * Type: `boolean`
-  * Default: `false`
-
-Disable a case-insensitive regex for matching files.
+Enable extglob support, so that extglobs are regarded as literal characters.
 
 #### case
 
   * Type: `boolean`
   * Default: `true`
 
-The [`nocase`](#nocase) option without double-negation. This option has a higher priority then `nocase`.
+Enable a case-insensitive regex for matching files.
 
 #### matchBase
 
@@ -352,10 +324,10 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
-| `nobrace`    | [`nobrace`](#nobrace) or [`brace`](#brace) |
-| `noglobstar` | [`noglobstar`](#noglobstar) or [`globstar`](#globstar) |
-| `noext`      | [`noext`](#noext) or [`extension`](#extension) |
-| `nocase`     | [`nocase`](#nocase) or [`case`](#case) |
+| `nobrace`    | [`brace`](#brace) |
+| `noglobstar` | [`globstar`](#globstar) |
+| `noext`      | [`extglob`](#extglob) |
+| `nocase`     | [`case`](#case) |
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |

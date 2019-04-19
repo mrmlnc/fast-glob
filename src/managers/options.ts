@@ -51,33 +51,17 @@ export interface IOptions<T = EntryItem> {
 	 */
 	absolute: boolean;
 	/**
-	 * Disable expansion of brace patterns.
-	 */
-	nobrace: boolean;
-	/**
 	 * Enable expansion of brace patterns.
 	 */
 	brace: boolean;
-	/**
-	 * Disable matching with globstars (`**`).
-	 */
-	noglobstar: boolean;
 	/**
 	 * Enable matching with globstars (`**`).
 	 */
 	globstar: boolean;
 	/**
-	 * Disable extglob support, so that extglobs are regarded as literal characters.
-	 */
-	noext: boolean;
-	/**
 	 * Enable extglob support, so that extglobs are regarded as literal characters.
 	 */
-	extension: boolean;
-	/**
-	 * Disable a case-insensitive regex for matching files.
-	 */
-	nocase: boolean;
+	extglob: boolean;
 	/**
 	 * Enable a case-insensitive regex for matching files.
 	 */
@@ -96,7 +80,7 @@ export interface IOptions<T = EntryItem> {
 export type IPartialOptions<T = EntryItem> = Partial<IOptions<T>>;
 
 export function prepare(options?: IPartialOptions): IOptions {
-	const opts = {
+	const opts: IOptions = {
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
@@ -108,13 +92,9 @@ export function prepare(options?: IPartialOptions): IOptions {
 		unique: true,
 		markDirectories: false,
 		absolute: false,
-		nobrace: false,
 		brace: true,
-		noglobstar: false,
 		globstar: true,
-		noext: false,
-		extension: true,
-		nocase: false,
+		extglob: true,
 		case: true,
 		matchBase: false,
 		transform: null,
@@ -125,15 +105,10 @@ export function prepare(options?: IPartialOptions): IOptions {
 		opts.onlyFiles = false;
 	}
 
-	opts.brace = !opts.nobrace;
-	opts.globstar = !opts.noglobstar;
-	opts.extension = !opts.noext;
-	opts.case = !opts.nocase;
-
 	if (options) {
 		opts.brace = ('brace' in options ? options.brace : opts.brace) as boolean;
 		opts.globstar = ('globstar' in options ? options.globstar : opts.globstar) as boolean;
-		opts.extension = ('extension' in options ? options.extension : opts.extension) as boolean;
+		opts.extglob = ('extglob' in options ? options.extglob : opts.extglob) as boolean;
 		opts.case = ('case' in options ? options.case : opts.case) as boolean;
 	}
 
