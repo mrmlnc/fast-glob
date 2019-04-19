@@ -51,33 +51,17 @@ export interface IOptions<T = EntryItem> {
 	 */
 	absolute: boolean;
 	/**
-	 * Disable expansion of brace patterns.
-	 */
-	nobrace: boolean;
-	/**
 	 * Enable expansion of brace patterns.
 	 */
 	brace: boolean;
-	/**
-	 * Disable matching with globstars (`**`).
-	 */
-	noglobstar: boolean;
 	/**
 	 * Enable matching with globstars (`**`).
 	 */
 	globstar: boolean;
 	/**
-	 * Disable extglob support, so that extglobs are regarded as literal characters.
-	 */
-	noext: boolean;
-	/**
 	 * Enable extglob support, so that extglobs are regarded as literal characters.
 	 */
 	extension: boolean;
-	/**
-	 * Disable a case-insensitive regex for matching files.
-	 */
-	nocase: boolean;
 	/**
 	 * Enable a case-insensitive regex for matching files.
 	 */
@@ -96,7 +80,7 @@ export interface IOptions<T = EntryItem> {
 export type IPartialOptions<T = EntryItem> = Partial<IOptions<T>>;
 
 export function prepare(options?: IPartialOptions): IOptions {
-	const opts = {
+	const opts: IOptions = {
 		cwd: process.cwd(),
 		deep: true,
 		ignore: [],
@@ -108,13 +92,9 @@ export function prepare(options?: IPartialOptions): IOptions {
 		unique: true,
 		markDirectories: false,
 		absolute: false,
-		nobrace: false,
 		brace: true,
-		noglobstar: false,
 		globstar: true,
-		noext: false,
 		extension: true,
-		nocase: false,
 		case: true,
 		matchBase: false,
 		transform: null,
@@ -124,11 +104,6 @@ export function prepare(options?: IPartialOptions): IOptions {
 	if (opts.onlyDirectories) {
 		opts.onlyFiles = false;
 	}
-
-	opts.brace = !opts.nobrace;
-	opts.globstar = !opts.noglobstar;
-	opts.extension = !opts.noext;
-	opts.case = !opts.nocase;
 
 	if (options) {
 		opts.brace = ('brace' in options ? options.brace : opts.brace) as boolean;
