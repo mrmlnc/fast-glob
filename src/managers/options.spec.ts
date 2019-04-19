@@ -17,7 +17,7 @@ function getOptions(options?: manager.IPartialOptions): manager.IOptions {
 		absolute: false,
 		brace: true,
 		globstar: true,
-		extension: true,
+		extglob: true,
 		case: true,
 		matchBase: false,
 		transform: null,
@@ -74,11 +74,11 @@ describe('Managers → Options', () => {
 			});
 		});
 
-		describe('The «extension» option', () => {
-			it('should set false for the «extension» option if «extension» option is enabled', () => {
-				const expected: manager.IOptions = getOptions({ extension: false });
+		describe('The «extglob» option', () => {
+			it('should set false for the «extglob» option if «extglob» option is enabled', () => {
+				const expected: manager.IOptions = getOptions({ extglob: false });
 
-				const actual = manager.prepare({ extension: false });
+				const actual = manager.prepare({ extglob: false });
 
 				assert.deepStrictEqual(actual, expected);
 			});

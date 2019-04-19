@@ -236,7 +236,7 @@ Enable expansion of brace patterns.
 
 Enable matching with globstars (`**`).
 
-#### extension
+#### extglob
 
   * Type: `boolean`
   * Default: `true`
@@ -326,7 +326,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `nounique`   | [`unique`](#unique) |
 | `nobrace`    | [`brace`](#brace) |
 | `noglobstar` | [`globstar`](#globstar) |
-| `noext`      | [`extension`](#extension) |
+| `noext`      | [`extglob`](#extglob) |
 | `nocase`     | [`case`](#case) |
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |

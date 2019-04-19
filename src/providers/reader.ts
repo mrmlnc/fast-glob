@@ -58,7 +58,7 @@ export default abstract class Reader<T> {
 			dot: this.options.dot,
 			nobrace: !this.options.brace,
 			noglobstar: !this.options.globstar,
-			noext: !this.options.extension,
+			noext: !this.options.extglob,
 			nocase: !this.options.case,
 			matchBase: this.options.matchBase
 		};

@@ -61,7 +61,7 @@ export interface IOptions<T = EntryItem> {
 	/**
 	 * Enable extglob support, so that extglobs are regarded as literal characters.
 	 */
-	extension: boolean;
+	extglob: boolean;
 	/**
 	 * Enable a case-insensitive regex for matching files.
 	 */
@@ -94,7 +94,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 		absolute: false,
 		brace: true,
 		globstar: true,
-		extension: true,
+		extglob: true,
 		case: true,
 		matchBase: false,
 		transform: null,
@@ -108,7 +108,7 @@ export function prepare(options?: IPartialOptions): IOptions {
 	if (options) {
 		opts.brace = ('brace' in options ? options.brace : opts.brace) as boolean;
 		opts.globstar = ('globstar' in options ? options.globstar : opts.globstar) as boolean;
-		opts.extension = ('extension' in options ? options.extension : opts.extension) as boolean;
+		opts.extglob = ('extglob' in options ? options.extglob : opts.extglob) as boolean;
 		opts.case = ('case' in options ? options.case : opts.case) as boolean;
 	}
 
