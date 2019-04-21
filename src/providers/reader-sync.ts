@@ -1,18 +1,16 @@
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
-import Reader from './reader';
-
 import FileSystemSync from '../adapters/fs-sync';
-
 import { ITask } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
+import Reader from './reader';
 
 export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Returns FileSystem adapter.
 	 */
 	public get fsAdapter(): FileSystemSync {
-		return new FileSystemSync(this.options);
+		return new FileSystemSync(this.settings);
 	}
 
 	/**

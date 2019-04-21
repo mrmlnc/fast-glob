@@ -1,24 +1,21 @@
 import * as assert from 'assert';
 
-import * as tests from '../../tests';
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
+import Settings, { Options } from '../../settings';
+import * as tests from '../../tests';
+import { Pattern } from '../../types/patterns';
 import DeepFilter from './deep';
 
-import * as optionsManager from '../../managers/options';
+function getDeepFilterInstance(options?: Options): DeepFilter {
+	const settings = new Settings(options);
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import { IOptions, IPartialOptions } from '../../managers/options';
-import { Pattern } from '../../types/patterns';
-
-function getDeepFilterInstance(options?: IPartialOptions): DeepFilter {
-	const preparedOptions: IOptions = optionsManager.prepare(options);
-
-	return new DeepFilter(preparedOptions, {
-		dot: preparedOptions.dot
+	return new DeepFilter(settings, {
+		dot: settings.dot
 	});
 }
 
-function getFilter(positive: Pattern[], negative: Pattern[], options?: IPartialOptions): FilterFunction {
+function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): FilterFunction {
 	return getDeepFilterInstance(options).getFilter(positive, negative);
 }
 

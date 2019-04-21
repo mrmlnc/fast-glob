@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as optionsManager from '../managers/options';
+import Settings from '../settings';
 import * as tests from '../tests/index';
 import FileSystem from './fs';
 
@@ -12,9 +12,7 @@ class FileSystemFake extends FileSystem<never[]> {
 }
 
 function getAdapter(): FileSystemFake {
-	const options = optionsManager.prepare();
-
-	return new FileSystemFake(options);
+	return new FileSystemFake(new Settings());
 }
 
 describe('Adapters → FileSystem', () => {

@@ -1,21 +1,14 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
-import FileSystemStream from './fs-stream';
-
-import * as optionsManager from '../managers/options';
-
+import Settings from '../settings';
 import { Entry } from '../types/entries';
 import { Pattern } from '../types/patterns';
-
-/**
- * The options are not changed in these tests.
- */
-const options = optionsManager.prepare();
+import FileSystemStream from './fs-stream';
 
 class FileSystemStreamFake extends FileSystemStream {
 	constructor() {
-		super(options);
+		super(new Settings());
 	}
 
 	public getStat(): Promise<fs.Stats> {

@@ -1,16 +1,14 @@
 import micromatch = require('micromatch');
 
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
+import Settings from '../../settings';
+import { Entry } from '../../types/entries';
+import { Pattern, PatternRe } from '../../types/patterns';
 import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 
-import { IOptions } from '../../managers/options';
-
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import { Entry } from '../../types/entries';
-import { Pattern, PatternRe } from '../../types/patterns';
-
 export default class DeepFilter {
-	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
+	constructor(private readonly settings: Settings, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
 	 * Returns filter for directories.
@@ -67,7 +65,7 @@ export default class DeepFilter {
 	 * Returns «true» when the «deep» option is disabled or number and depth of the entry is greater that the option value.
 	 */
 	private isSkippedByDeepOption(entryDepth: number): boolean {
-		return !this.options.deep || (typeof this.options.deep === 'number' && entryDepth >= this.options.deep);
+		return !this.settings.deep || (typeof this.settings.deep === 'number' && entryDepth >= this.settings.deep);
 	}
 
 	/**
@@ -81,14 +79,14 @@ export default class DeepFilter {
 	 * Returns «true» for symlinked directory if the «followSymlinkedDirectories» option is disabled.
 	 */
 	private isSkippedSymlinkedDirectory(entry: Entry): boolean {
-		return !this.options.followSymlinkedDirectories && entry.isSymbolicLink();
+		return !this.settings.followSymlinkedDirectories && entry.isSymbolicLink();
 	}
 
 	/**
 	 * Returns «true» for a directory whose name starts with a period if «dot» option is disabled.
 	 */
 	private isSkippedDotDirectory(entry: Entry): boolean {
-		return !this.options.dot && pathUtils.isDotDirectory(entry.path);
+		return !this.settings.dot && pathUtils.isDotDirectory(entry.path);
 	}
 
 	/**

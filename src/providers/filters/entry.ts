@@ -1,18 +1,16 @@
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import micromatch = require('micromatch');
 
-import * as pathUtils from '../../utils/path';
-import * as patternUtils from '../../utils/pattern';
-
-import { IOptions } from '../../managers/options';
-
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
+import Settings from '../../settings';
 import { Entry } from '../../types/entries';
 import { Pattern, PatternRe } from '../../types/patterns';
+import * as pathUtils from '../../utils/path';
+import * as patternUtils from '../../utils/pattern';
 
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
-	constructor(private readonly options: IOptions, private readonly micromatchOptions: micromatch.Options) { }
+	constructor(private readonly settings: Settings, private readonly micromatchOptions: micromatch.Options) { }
 
 	/**
 	 * Returns filter for directories.
@@ -29,7 +27,7 @@ export default class EntryFilter {
 	 */
 	private filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
 		// Exclude duplicate results
-		if (this.options.unique) {
+		if (this.settings.unique) {
 			if (this.isDuplicateEntry(entry)) {
 				return false;
 			}
@@ -67,25 +65,25 @@ export default class EntryFilter {
 	 * Returns true for non-files if the «onlyFiles» option is enabled.
 	 */
 	private onlyFileFilter(entry: Entry): boolean {
-		return this.options.onlyFiles && !entry.isFile();
+		return this.settings.onlyFiles && !entry.isFile();
 	}
 
 	/**
 	 * Returns true for non-directories if the «onlyDirectories» option is enabled.
 	 */
 	private onlyDirectoryFilter(entry: Entry): boolean {
-		return this.options.onlyDirectories && !entry.isDirectory();
+		return this.settings.onlyDirectories && !entry.isDirectory();
 	}
 
 	/**
 	 * Return true when `absolute` option is enabled and matched to the negative patterns.
 	 */
 	private isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
-		if (!this.options.absolute) {
+		if (!this.settings.absolute) {
 			return false;
 		}
 
-		const fullpath = pathUtils.makeAbsolute(this.options.cwd, entry.path);
+		const fullpath = pathUtils.makeAbsolute(this.settings.cwd, entry.path);
 
 		return this.isMatchToPatterns(fullpath, negativeRe);
 	}

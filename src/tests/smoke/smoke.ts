@@ -4,8 +4,7 @@ import Table = require('easy-table');
 import glob = require('glob');
 
 import * as fg from '../../index';
-
-import { IPartialOptions } from '../../managers/options';
+import { Options } from '../../settings';
 import { Pattern } from '../../types/patterns';
 
 export interface ISmokeTest {
@@ -13,7 +12,7 @@ export interface ISmokeTest {
 	ignore?: Pattern;
 	cwd?: string;
 	globOptions?: glob.IOptions;
-	fgOptions?: IPartialOptions<string>;
+	fgOptions?: Options<string>;
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
@@ -153,8 +152,8 @@ function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
 /**
  * Return entries from the `fast-glob` package with sorting.
  */
-function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: IPartialOptions<string>): string[] {
-	const options: IPartialOptions<string> = {
+function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options<string>): string[] {
+	const options: Options<string> = {
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
 		onlyFiles: false,

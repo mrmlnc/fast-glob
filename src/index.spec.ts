@@ -1,7 +1,6 @@
 import * as assert from 'assert';
 
 import * as pkg from './index';
-
 import { ITask } from './managers/tasks';
 import { EntryItem } from './types/entries';
 

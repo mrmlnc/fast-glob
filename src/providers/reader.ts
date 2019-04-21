@@ -1,17 +1,14 @@
 import * as path from 'path';
 
+import { Options as IReaddirOptions } from '@mrmlnc/readdir-enhanced';
 import micromatch = require('micromatch');
 
+import { ITask } from '../managers/tasks';
+import Settings from '../settings';
+import { Entry, EntryItem } from '../types/entries';
+import * as pathUtil from '../utils/path';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
-
-import * as pathUtil from '../utils/path';
-
-import { IOptions } from '../managers/options';
-import { ITask } from '../managers/tasks';
-
-import { Options as IReaddirOptions } from '@mrmlnc/readdir-enhanced';
-import { Entry, EntryItem } from '../types/entries';
 
 export default abstract class Reader<T> {
 	public readonly entryFilter: EntryFilter;
@@ -19,11 +16,11 @@ export default abstract class Reader<T> {
 
 	private readonly micromatchOptions: micromatch.Options;
 
-	constructor(public readonly options: IOptions) {
+	constructor(public readonly settings: Settings) {
 		this.micromatchOptions = this.getMicromatchOptions();
 
-		this.entryFilter = new EntryFilter(options, this.micromatchOptions);
-		this.deepFilter = new DeepFilter(options, this.micromatchOptions);
+		this.entryFilter = new EntryFilter(settings, this.micromatchOptions);
+		this.deepFilter = new DeepFilter(settings, this.micromatchOptions);
 	}
 
 	/**
@@ -35,7 +32,7 @@ export default abstract class Reader<T> {
 	 * Returns root path to scanner.
 	 */
 	public getRootDirectory(task: ITask): string {
-		return path.resolve(this.options.cwd, task.base);
+		return path.resolve(this.settings.cwd, task.base);
 	}
 
 	/**
@@ -55,12 +52,12 @@ export default abstract class Reader<T> {
 	 */
 	public getMicromatchOptions(): micromatch.Options {
 		return {
-			dot: this.options.dot,
-			nobrace: !this.options.brace,
-			noglobstar: !this.options.globstar,
-			noext: !this.options.extglob,
-			nocase: !this.options.case,
-			matchBase: this.options.matchBase
+			dot: this.settings.dot,
+			nobrace: !this.settings.brace,
+			noglobstar: !this.settings.globstar,
+			noext: !this.settings.extglob,
+			nocase: !this.settings.case,
+			matchBase: this.settings.matchBase
 		};
 	}
 
@@ -68,21 +65,21 @@ export default abstract class Reader<T> {
 	 * Returns transformed entry.
 	 */
 	public transform(entry: Entry): EntryItem {
-		if (this.options.absolute && !path.isAbsolute(entry.path)) {
-			entry.path = pathUtil.makeAbsolute(this.options.cwd, entry.path);
+		if (this.settings.absolute && !path.isAbsolute(entry.path)) {
+			entry.path = pathUtil.makeAbsolute(this.settings.cwd, entry.path);
 		}
 
-		if (this.options.markDirectories && entry.isDirectory()) {
+		if (this.settings.markDirectories && entry.isDirectory()) {
 			entry.path += '/';
 		}
 
-		const item: EntryItem = this.options.stats ? entry : entry.path;
+		const item: EntryItem = this.settings.stats ? entry : entry.path;
 
-		if (this.options.transform === null) {
+		if (this.settings.transform === null) {
 			return item;
 		}
 
-		return this.options.transform(item);
+		return this.settings.transform(item);
 	}
 
 	/**
