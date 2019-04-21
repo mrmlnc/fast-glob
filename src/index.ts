@@ -9,15 +9,18 @@ import ReaderSync from './providers/reader-sync';
 import * as arrayUtils from './utils/array';
 import * as streamUtils from './utils/stream';
 
-import { IOptions, IPartialOptions } from './managers/options';
-import { ITask } from './managers/tasks';
 import { EntryItem } from './types/entries';
 import { Pattern } from './types/patterns';
+
+type Options = optionsManager.IOptions;
+type PartialOptions = optionsManager.IPartialOptions;
+type TransformFunction<T> = optionsManager.TransformFunction<T>;
+type Task = taskManager.ITask;
 
 /**
  * Synchronous API.
  */
-export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): EntryItem[] {
+function sync(source: Pattern | Pattern[], opts?: PartialOptions): EntryItem[] {
 	assertPatternsInput(source);
 
 	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
@@ -28,7 +31,7 @@ export function sync(source: Pattern | Pattern[], opts?: IPartialOptions): Entry
 /**
  * Asynchronous API.
  */
-export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Promise<EntryItem[]> {
+function async(source: Pattern | Pattern[], opts?: PartialOptions): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
 	} catch (error) {
@@ -43,7 +46,7 @@ export function async(source: Pattern | Pattern[], opts?: IPartialOptions): Prom
 /**
  * Stream API.
  */
-export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): NodeJS.ReadableStream {
+function stream(source: Pattern | Pattern[], opts?: PartialOptions): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
@@ -54,7 +57,7 @@ export function stream(source: Pattern | Pattern[], opts?: IPartialOptions): Nod
 /**
  * Return a set of tasks based on provided patterns.
  */
-export function generateTasks(source: Pattern | Pattern[], opts?: IPartialOptions): ITask[] {
+function generateTasks(source: Pattern | Pattern[], opts?: PartialOptions): Task[] {
 	assertPatternsInput(source);
 
 	const patterns = ([] as Pattern[]).concat(source);
@@ -66,7 +69,7 @@ export function generateTasks(source: Pattern | Pattern[], opts?: IPartialOption
 /**
  * Returns a set of works based on provided tasks and class of the reader.
  */
-function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: IOptions) => Reader<T>, opts?: IPartialOptions): T[] {
+function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: Options) => Reader<T>, opts?: PartialOptions): T[] {
 	const patterns = ([] as Pattern[]).concat(source);
 	const options = optionsManager.prepare(opts);
 
@@ -88,3 +91,16 @@ function isString(source: unknown): source is string {
 	/* tslint:disable-next-line strict-type-predicates */
 	return typeof source === 'string';
 }
+
+export default async;
+export {
+	async,
+	sync,
+	stream,
+	generateTasks,
+
+	PartialOptions as Options,
+	TransformFunction,
+	Task,
+	EntryItem
+};

@@ -11,8 +11,8 @@
   "engines": {
     "node": ">=8"
   },
-  "main": "index.js",
-  "typings": "index.d.ts",
+  "main": "out/index.js",
+  "typings": "out/index.d.ts",
   "keywords": [
     "glob",
     "patterns",
