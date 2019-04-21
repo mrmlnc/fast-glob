@@ -11,11 +11,11 @@ steps:
     inputs:
       command: install
 
-  - script: npm run lint
-    displayName: Run Hygiene Checks
-
   - script: npm run compile
     displayName: Compile Sources
+
+  - script: npm run lint
+    displayName: Run Hygiene Checks
 
   - script: npm run test
     displayName: Run Unit Tests

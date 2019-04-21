@@ -1,11 +1,8 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "es2017",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"lib": [
-			"es2015"
-		],
 
 		"rootDir": "src",
 		"outDir": "out",
@@ -32,7 +29,6 @@
 		"pretty": true
 	},
 	"include": [
-		"typings/**/*",
 		"src/**/*"
 	]
 }
