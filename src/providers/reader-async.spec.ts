@@ -2,7 +2,7 @@
 
 import * as assert from 'assert';
 
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import * as tests from '../tests/index';
 import { Entry, EntryItem } from '../types/entries';
@@ -34,7 +34,7 @@ class ReaderAsyncFakeThrowErrno extends ReaderAsyncFake {
 	}
 }
 
-function getTask(dynamic: boolean = true): ITask {
+function getTask(dynamic: boolean = true): Task {
 	return {
 		dynamic,
 		base: 'fixtures',

@@ -1,7 +1,7 @@
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemSync from '../adapters/fs-sync';
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/entries';
 import Reader from './reader';
 
@@ -16,7 +16,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Use sync API to read entries for Task.
 	 */
-	public read(task: ITask): EntryItem[] {
+	public read(task: Task): EntryItem[] {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
 
@@ -36,7 +36,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: ITask, options: readdir.Options): Entry[] {
+	public api(root: string, task: Task, options: readdir.Options): Entry[] {
 		if (task.dynamic) {
 			return this.dynamicApi(root, options);
 		}
@@ -54,7 +54,7 @@ export default class ReaderSync extends Reader<EntryItem[]> {
 	/**
 	 * Api for static tasks.
 	 */
-	public staticApi(task: ITask, options: readdir.Options): Entry[] {
+	public staticApi(task: Task, options: readdir.Options): Entry[] {
 		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }

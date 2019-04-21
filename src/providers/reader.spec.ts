@@ -1,14 +1,14 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
 import * as pathUtil from '../utils/path';
 import Reader from './reader';
 
 export class TestReader extends Reader<Array<{}>> {
-	public read(_task: ITask): Array<{}> {
+	public read(_task: Task): Array<{}> {
 		return [];
 	}
 }
@@ -34,7 +34,7 @@ describe('Providers → Reader', () => {
 
 			const expected = process.cwd();
 
-			const actual = reader.getRootDirectory({ base: '.' } as ITask);
+			const actual = reader.getRootDirectory({ base: '.' } as Task);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -44,7 +44,7 @@ describe('Providers → Reader', () => {
 
 			const expected = path.join(process.cwd(), 'fixtures');
 
-			const actual = reader.getRootDirectory({ base: 'fixtures' } as ITask);
+			const actual = reader.getRootDirectory({ base: 'fixtures' } as Task);
 
 			assert.strictEqual(actual, expected);
 		});

@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as pkg from './index';
-import { ITask } from './managers/tasks';
+import { Task } from './managers/tasks';
 import { EntryItem } from './types/entries';
 
 describe('Package', () => {
@@ -155,7 +155,7 @@ describe('Package', () => {
 		});
 
 		it('should return tasks', () => {
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: '.',
 				dynamic: true,
 				patterns: ['*'],
@@ -169,7 +169,7 @@ describe('Package', () => {
 		});
 
 		it('should return tasks with negative patterns', () => {
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: '.',
 				dynamic: true,
 				patterns: ['*', '!*.txt', '!*.md'],

@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Options as IReaddirOptions } from '@mrmlnc/readdir-enhanced';
 import micromatch = require('micromatch');
 
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import { Entry, EntryItem } from '../types/entries';
 import * as pathUtil from '../utils/path';
@@ -26,19 +26,19 @@ export default abstract class Reader<T> {
 	/**
 	 * The main logic of reading the directories that must be implemented by each providers.
 	 */
-	public abstract read(_task: ITask): T;
+	public abstract read(_task: Task): T;
 
 	/**
 	 * Returns root path to scanner.
 	 */
-	public getRootDirectory(task: ITask): string {
+	public getRootDirectory(task: Task): string {
 		return path.resolve(this.settings.cwd, task.base);
 	}
 
 	/**
 	 * Returns options for reader.
 	 */
-	public getReaderOptions(task: ITask): IReaddirOptions {
+	public getReaderOptions(task: Task): IReaddirOptions {
 		return {
 			basePath: task.base === '.' ? '' : task.base,
 			filter: this.entryFilter.getFilter(task.positive, task.negative),

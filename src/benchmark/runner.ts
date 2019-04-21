@@ -6,7 +6,7 @@ import execa = require('execa');
 import Reporter from './reporter';
 import * as utils from './utils';
 
-export interface IRunnerOptions {
+export interface RunnerOptions {
 	/**
 	 * The directory from which you want to take suites.
 	 */
@@ -29,34 +29,34 @@ export interface IRunnerOptions {
 	retries: number;
 }
 
-export interface ISuiteMeasures {
+export interface SuiteMeasures {
 	matches: number;
 	time: number;
 	memory: number;
 }
 
-export interface IMeasure {
+export interface Measure {
 	units: string;
 	raw: number[];
 	average: number;
 	stdev: number;
 }
 
-export interface ISuitePackMeasures extends Record<string, IMeasure> {
-	time: IMeasure;
-	memory: IMeasure;
+export interface SuitePackMeasures extends Record<string, Measure> {
+	time: Measure;
+	memory: Measure;
 }
 
-export interface ISuitePackResult {
+export interface SuitePackResult {
 	name: string;
 	errors: number;
 	entries: number;
 	retries: number;
-	measures: ISuitePackMeasures;
+	measures: SuitePackMeasures;
 }
 
 export default class Runner {
-	constructor(private readonly basedir: string, private readonly options: IRunnerOptions) { }
+	constructor(private readonly basedir: string, private readonly options: RunnerOptions) { }
 
 	/**
 	 * Runs child process.
@@ -68,7 +68,7 @@ export default class Runner {
 	/**
 	 * Runs a single suite in the child process and returns the measurements of his work.
 	 */
-	public suite(suitePath: string): ISuiteMeasures {
+	public suite(suitePath: string): SuiteMeasures {
 		const env: Record<string, string> = {
 			NODE_ENV: 'production',
 			BENCHMARK_CWD: this.basedir
@@ -77,7 +77,7 @@ export default class Runner {
 		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
 
 		try {
-			return JSON.parse(stdout) as ISuiteMeasures;
+			return JSON.parse(stdout) as SuiteMeasures;
 		} catch {
 			throw new TypeError('Ops! Broken suite run.');
 		}
@@ -86,8 +86,8 @@ export default class Runner {
 	/**
 	 * Runs a pack of suites.
 	 */
-	public suitePack(suitePath: string, retries: number): ISuitePackResult {
-		const results: ISuitePackResult = {
+	public suitePack(suitePath: string, retries: number): SuitePackResult {
+		const results: SuitePackResult = {
 			name: path.basename(suitePath),
 			errors: 0,
 			entries: 0,
@@ -119,7 +119,7 @@ export default class Runner {
 		return results;
 	}
 
-	public report(result: ISuitePackResult): void {
+	public report(result: SuitePackResult): void {
 		const reporter = new Reporter(result);
 
 		const report = reporter.toString();
@@ -148,7 +148,7 @@ export default class Runner {
 		return fs.readdirSync(suitesPath).filter((suite) => suite.endsWith('.js'));
 	}
 
-	private getMeasures(raw: number[], units: string): IMeasure {
+	private getMeasures(raw: number[], units: string): Measure {
 		return {
 			units,
 			raw,
@@ -157,7 +157,7 @@ export default class Runner {
 		};
 	}
 
-	private getSuitePackMeasures(): ISuitePackMeasures {
+	private getSuitePackMeasures(): SuitePackMeasures {
 		return {
 			time: this.getMeasures([], 'ms'),
 			memory: this.getMeasures([], 'MB')
