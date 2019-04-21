@@ -240,23 +240,19 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.makePatternRe', () => {
+	describe('.makeRE', () => {
 		it('should return regexp for provided pattern', () => {
-			const expected: RegExp = /^(?:(?:\.[\\/](?=.))?(?![\\/])(?!\.)(?=.)[^\\/]*?\.js(?:[\\/]|$))$/;
-
 			const actual = util.makeRe('*.js', {});
 
-			assert.strictEqual(actual.source, expected.source);
+			assert.ok(actual instanceof RegExp);
 		});
 	});
 
 	describe('.convertPatternsToRe', () => {
 		it('should return regexps for provided patterns', () => {
-			const expected: RegExp = /^(?:(?:\.[\\/](?=.))?(?![\\/])(?!\.)(?=.)[^\\/]*?\.js(?:[\\/]|$))$/;
-
 			const [actual] = util.convertPatternsToRe(['*.js'], {});
 
-			assert.strictEqual(actual.source, expected.source);
+			assert.ok(actual instanceof RegExp);
 		});
 	});
 	describe('.matchAny', () => {
@@ -270,6 +266,14 @@ describe('Utils → Pattern', () => {
 			const actual = util.matchAny('fixtures/directory', [/fixtures\/file/]);
 
 			assert.ok(!actual);
+		});
+
+		it('should return true for path with leading slash', () => {
+			const pattern = util.makeRe('*.js', {});
+
+			const actual = util.matchAny('./test.js', [pattern]);
+
+			assert.ok(actual);
 		});
 	});
 });
