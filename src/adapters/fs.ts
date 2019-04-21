@@ -3,12 +3,12 @@ import * as path from 'path';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
-import { IOptions } from '../managers/options';
+import Settings from '../settings';
 import { Entry } from '../types/entries';
 import { Pattern } from '../types/patterns';
 
 export default abstract class FileSystem<T> {
-	constructor(private readonly options: IOptions) { }
+	constructor(private readonly settings: Settings) { }
 
 	/**
 	 * The main logic of reading the entries that must be implemented by each adapter.
@@ -19,7 +19,7 @@ export default abstract class FileSystem<T> {
 	 * Return full path to entry.
 	 */
 	public getFullEntryPath(filepath: string): string {
-		return path.resolve(this.options.cwd, filepath);
+		return path.resolve(this.settings.cwd, filepath);
 	}
 
 	/**

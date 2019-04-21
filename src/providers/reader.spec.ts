@@ -1,15 +1,11 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as tests from '../tests';
-
-import Reader from './reader';
-
-import * as optionsManager from '../managers/options';
-import * as pathUtil from '../utils/path';
-
-import { IOptions, IPartialOptions } from '../managers/options';
 import { ITask } from '../managers/tasks';
+import Settings, { Options } from '../settings';
+import * as tests from '../tests';
+import * as pathUtil from '../utils/path';
+import Reader from './reader';
 
 export class TestReader extends Reader<Array<{}>> {
 	public read(_task: ITask): Array<{}> {
@@ -17,10 +13,10 @@ export class TestReader extends Reader<Array<{}>> {
 	}
 }
 
-export function getReader(options?: IPartialOptions): TestReader {
-	const preparedOptions: IOptions = optionsManager.prepare(options);
+export function getReader(options?: Options): TestReader {
+	const settings = new Settings(options);
 
-	return new TestReader(preparedOptions);
+	return new TestReader(settings);
 }
 
 describe('Providers → Reader', () => {

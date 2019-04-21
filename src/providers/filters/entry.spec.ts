@@ -1,25 +1,22 @@
 import * as assert from 'assert';
 
-import * as tests from '../../tests';
+import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
+import Settings, { Options } from '../../settings';
+import * as tests from '../../tests';
+import { Pattern } from '../../types/patterns';
+import * as pathUtil from '../../utils/path';
 import EntryFilter from './entry';
 
-import * as optionsManager from '../../managers/options';
-import * as pathUtil from '../../utils/path';
+function getEntryFilterInstance(options?: Options): EntryFilter {
+	const settings = new Settings(options);
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import { IOptions, IPartialOptions } from '../../managers/options';
-import { Pattern } from '../../types/patterns';
-
-function getEntryFilterInstance(options?: IPartialOptions): EntryFilter {
-	const preparedOptions: IOptions = optionsManager.prepare(options);
-
-	return new EntryFilter(preparedOptions, {
-		dot: preparedOptions.dot
+	return new EntryFilter(settings, {
+		dot: settings.dot
 	});
 }
 
-function getFilter(positive: Pattern[], negative: Pattern[], options?: IPartialOptions): FilterFunction {
+function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): FilterFunction {
 	return getEntryFilterInstance(options).getFilter(positive, negative);
 }
 

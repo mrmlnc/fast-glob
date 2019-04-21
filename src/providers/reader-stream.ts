@@ -2,12 +2,10 @@ import * as stream from 'stream';
 
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
-import Reader from './reader';
-
 import FileSystemStream from '../adapters/fs-stream';
-
 import { ITask } from '../managers/tasks';
 import { Entry } from '../types/entries';
+import Reader from './reader';
 
 class TransformStream extends stream.Transform {
 	constructor(private readonly reader: ReaderStream) {
@@ -24,7 +22,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	 * Returns FileSystem adapter.
 	 */
 	public get fsAdapter(): FileSystemStream {
-		return new FileSystemStream(this.options);
+		return new FileSystemStream(this.settings);
 	}
 
 	/**

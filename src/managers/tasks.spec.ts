@@ -1,15 +1,14 @@
 import * as assert from 'assert';
 
-import * as optionsManager from './options';
-import * as manager from './tasks';
-
+import Settings from '../settings';
 import { PatternsGroup } from '../types/patterns';
+import * as manager from './tasks';
 import { ITask } from './tasks';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
 		it('should return task with windows-like patterns', () => {
-			const options = optionsManager.prepare();
+			const settings = new Settings();
 
 			const expected: ITask[] = [{
 				base: 'a',
@@ -19,13 +18,13 @@ describe('Managers → Task', () => {
 				negative: []
 			}];
 
-			const actual = manager.generate(['a\\*'], options);
+			const actual = manager.generate(['a\\*'], settings);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return task with negative patterns from «ignore» option', () => {
-			const options = optionsManager.prepare({ ignore: ['*.txt'] });
+			const settings = new Settings({ ignore: ['*.txt'] });
 
 			const expected: ITask[] = [{
 				base: 'a',
@@ -35,13 +34,13 @@ describe('Managers → Task', () => {
 				negative: ['*.md', '*.txt']
 			}];
 
-			const actual = manager.generate(['a/*', '!*.md'], options);
+			const actual = manager.generate(['a/*', '!*.md'], settings);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return static and dynamic tasks', () => {
-			const options = optionsManager.prepare({ ignore: ['*.txt'] });
+			const settings = new Settings({ ignore: ['*.txt'] });
 
 			const expected: ITask[] = [
 				{
@@ -60,7 +59,7 @@ describe('Managers → Task', () => {
 				}
 			];
 
-			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], options);
+			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], settings);
 
 			assert.deepStrictEqual(actual, expected);
 		});

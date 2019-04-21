@@ -1,7 +1,6 @@
-import * as patternUtils from '../utils/pattern';
-
+import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/patterns';
-import { IOptions } from './options';
+import * as patternUtils from '../utils/pattern';
 
 export interface ITask {
 	base: string;
@@ -14,9 +13,9 @@ export interface ITask {
 /**
  * Generate tasks based on parent directory of each pattern.
  */
-export function generate(patterns: Pattern[], options: IOptions): ITask[] {
+export function generate(patterns: Pattern[], settings: Settings): ITask[] {
 	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
-	const unixIgnore = options.ignore.map(patternUtils.unixifyPattern);
+	const unixIgnore = settings.ignore.map(patternUtils.unixifyPattern);
 
 	const positivePatterns = getPositivePatterns(unixPatterns);
 	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);

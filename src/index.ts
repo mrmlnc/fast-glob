@@ -1,29 +1,23 @@
-import * as optionsManager from './managers/options';
 import * as taskManager from './managers/tasks';
-
 import Reader from './providers/reader';
 import ReaderAsync from './providers/reader-async';
 import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
-
+import Settings, { Options, TransformFunction } from './settings';
+import { EntryItem } from './types/entries';
+import { Pattern } from './types/patterns';
 import * as arrayUtils from './utils/array';
 import * as streamUtils from './utils/stream';
 
-import { EntryItem } from './types/entries';
-import { Pattern } from './types/patterns';
-
-type Options = optionsManager.IOptions;
-type PartialOptions = optionsManager.IPartialOptions;
-type TransformFunction<T> = optionsManager.TransformFunction<T>;
 type Task = taskManager.ITask;
 
 /**
  * Synchronous API.
  */
-function sync(source: Pattern | Pattern[], opts?: PartialOptions): EntryItem[] {
+function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
-	const works = getWorks<EntryItem[]>(source, ReaderSync, opts);
+	const works = getWorks<EntryItem[]>(source, ReaderSync, options);
 
 	return arrayUtils.flatten(works);
 }
@@ -31,14 +25,14 @@ function sync(source: Pattern | Pattern[], opts?: PartialOptions): EntryItem[] {
 /**
  * Asynchronous API.
  */
-function async(source: Pattern | Pattern[], opts?: PartialOptions): Promise<EntryItem[]> {
+function async(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
 	} catch (error) {
 		return Promise.reject(error);
 	}
 
-	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, opts);
+	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, options);
 
 	return Promise.all(works).then(arrayUtils.flatten);
 }
@@ -46,10 +40,10 @@ function async(source: Pattern | Pattern[], opts?: PartialOptions): Promise<Entr
 /**
  * Stream API.
  */
-function stream(source: Pattern | Pattern[], opts?: PartialOptions): NodeJS.ReadableStream {
+function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
-	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, opts);
+	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, options);
 
 	return streamUtils.merge(works);
 }
@@ -57,24 +51,24 @@ function stream(source: Pattern | Pattern[], opts?: PartialOptions): NodeJS.Read
 /**
  * Return a set of tasks based on provided patterns.
  */
-function generateTasks(source: Pattern | Pattern[], opts?: PartialOptions): Task[] {
+function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
 	assertPatternsInput(source);
 
 	const patterns = ([] as Pattern[]).concat(source);
-	const options = optionsManager.prepare(opts);
+	const settings = new Settings(options);
 
-	return taskManager.generate(patterns, options);
+	return taskManager.generate(patterns, settings);
 }
 
 /**
  * Returns a set of works based on provided tasks and class of the reader.
  */
-function getWorks<T>(source: Pattern | Pattern[], _Reader: new (options: Options) => Reader<T>, opts?: PartialOptions): T[] {
+function getWorks<T>(source: Pattern | Pattern[], _Reader: new (settings: Settings) => Reader<T>, options?: Options): T[] {
 	const patterns = ([] as Pattern[]).concat(source);
-	const options = optionsManager.prepare(opts);
+	const settings = new Settings(options);
 
-	const tasks = taskManager.generate(patterns, options);
-	const reader = new _Reader(options);
+	const tasks = taskManager.generate(patterns, settings);
+	const reader = new _Reader(settings);
 
 	return tasks.map(reader.read, reader);
 }
@@ -99,7 +93,8 @@ export {
 	stream,
 	generateTasks,
 
-	PartialOptions as Options,
+	Options,
+	Settings,
 	TransformFunction,
 	Task,
 	EntryItem
