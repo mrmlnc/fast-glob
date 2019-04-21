@@ -9,7 +9,7 @@
     "url": "canonium.com"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8"
   },
   "main": "index.js",
   "typings": "index.d.ts",
