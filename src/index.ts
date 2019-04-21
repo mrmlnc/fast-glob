@@ -9,7 +9,7 @@ import { Pattern } from './types/patterns';
 import * as arrayUtils from './utils/array';
 import * as streamUtils from './utils/stream';
 
-type Task = taskManager.ITask;
+type Task = taskManager.Task;
 
 /**
  * Synchronous API.

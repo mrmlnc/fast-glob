@@ -2,7 +2,7 @@ import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/patterns';
 import * as patternUtils from '../utils/pattern';
 
-export interface ITask {
+export interface Task {
 	base: string;
 	dynamic: boolean;
 	patterns: Pattern[];
@@ -13,7 +13,7 @@ export interface ITask {
 /**
  * Generate tasks based on parent directory of each pattern.
  */
-export function generate(patterns: Pattern[], settings: Settings): ITask[] {
+export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
 	const unixIgnore = settings.ignore.map(patternUtils.unixifyPattern);
 
@@ -32,7 +32,7 @@ export function generate(patterns: Pattern[], settings: Settings): ITask[] {
 /**
  * Convert patterns to tasks based on parent directory of each pattern.
  */
-export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): ITask[] {
+export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): Task[] {
 	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
 
 	// When we have a global group – there is no reason to divide the patterns into independent tasks.
@@ -83,7 +83,7 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 /**
  * Convert group of patterns to tasks.
  */
-export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], dynamic: boolean): ITask[] {
+export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], dynamic: boolean): Task[] {
 	return Object.keys(positive).map((base) => {
 		return convertPatternGroupToTask(base, positive[base], negative, dynamic);
 	});
@@ -92,7 +92,7 @@ export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: P
 /**
  * Create a task for positive and negative patterns.
  */
-export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): ITask {
+export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): Task {
 	return {
 		base,
 		dynamic,

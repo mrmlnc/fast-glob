@@ -1,10 +1,10 @@
 import * as assert from 'assert';
 
 import Reporter from './reporter';
-import { ISuitePackResult } from './runner';
+import { SuitePackResult } from './runner';
 
 describe('Benchmark → Reporter', () => {
-	const results: ISuitePackResult = {
+	const results: SuitePackResult = {
 		name: 'name',
 		errors: 0,
 		retries: 1,

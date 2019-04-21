@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import Runner, { IRunnerOptions, ISuiteMeasures, ISuitePackResult } from './runner';
+import Runner, { RunnerOptions, SuiteMeasures, SuitePackResult } from './runner';
 
 class RunnerFakeProcess extends Runner {
 	public execNodeProcess(): string {
@@ -15,9 +15,9 @@ class RunnerFakeProcessError extends Runner {
 }
 
 class RunnerFakeReport extends RunnerFakeProcess {
-	public results: ISuitePackResult[] = [];
+	public results: SuitePackResult[] = [];
 
-	public report(results: ISuitePackResult): void {
+	public report(results: SuitePackResult): void {
 		this.results.push(results);
 	}
 
@@ -27,7 +27,7 @@ class RunnerFakeReport extends RunnerFakeProcess {
 }
 
 describe('Benchmark → Runner', () => {
-	const runnerOptions: IRunnerOptions = {
+	const runnerOptions: RunnerOptions = {
 		type: 'async',
 		depth: 1,
 		launches: 3,
@@ -37,9 +37,9 @@ describe('Benchmark → Runner', () => {
 
 	describe('.suite', () => {
 		it('should returns measures', () => {
-			const runner = new RunnerFakeProcess('basedir', {} as IRunnerOptions);
+			const runner = new RunnerFakeProcess('basedir', {} as RunnerOptions);
 
-			const expected: ISuiteMeasures = {
+			const expected: SuiteMeasures = {
 				matches: 1,
 				time: 1,
 				memory: 1
@@ -51,7 +51,7 @@ describe('Benchmark → Runner', () => {
 		});
 
 		it('should throw error', () => {
-			const runner = new RunnerFakeProcessError('basedir', {} as IRunnerOptions);
+			const runner = new RunnerFakeProcessError('basedir', {} as RunnerOptions);
 
 			assert.throws(() => runner.suite('suitePath'), /Ops! Broken suite run\./);
 		});
@@ -61,7 +61,7 @@ describe('Benchmark → Runner', () => {
 		it('should returns pack measures', () => {
 			const runner = new RunnerFakeProcess('basedir', runnerOptions);
 
-			const expected: ISuitePackResult = {
+			const expected: SuitePackResult = {
 				name: 'suitePath',
 				errors: 0,
 				retries: 1,
@@ -80,7 +80,7 @@ describe('Benchmark → Runner', () => {
 		it('should returns pack measures with errors', () => {
 			const runner = new RunnerFakeProcessError('basedir', runnerOptions);
 
-			const expected: ISuitePackResult = {
+			const expected: SuitePackResult = {
 				name: 'suitePath',
 				errors: 3,
 				retries: 1,

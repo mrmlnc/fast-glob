@@ -7,7 +7,7 @@ import * as fg from '../../index';
 import { Options } from '../../settings';
 import { Pattern } from '../../types/patterns';
 
-export interface ISmokeTest {
+export interface SmokeTest {
 	pattern: Pattern;
 	ignore?: Pattern;
 	cwd?: string;
@@ -35,7 +35,7 @@ type DebugCompareTestMarker = '+' | '-';
 /**
  * Runs the passed test suite.
  */
-export function suite(name: string, tests: Array<ISmokeTest | ISmokeTest[]>): void {
+export function suite(name: string, tests: Array<SmokeTest | SmokeTest[]>): void {
 	const testCases = getTestCases(tests);
 
 	describe(name, () => {
@@ -51,14 +51,14 @@ export function suite(name: string, tests: Array<ISmokeTest | ISmokeTest[]>): vo
 /**
  * Return flatten list of test cases.
  */
-function getTestCases(tests: Array<ISmokeTest | ISmokeTest[]>): ISmokeTest[] {
-	return ([] as ISmokeTest[]).concat(...tests);
+function getTestCases(tests: Array<SmokeTest | SmokeTest[]>): SmokeTest[] {
+	return ([] as SmokeTest[]).concat(...tests);
 }
 
 /**
  * Return title for one of test cases.
  */
-function getTestCaseTitle(test: ISmokeTest): string {
+function getTestCaseTitle(test: SmokeTest): string {
 	let title = `pattern: '${test.pattern}'`;
 
 	if (test.ignore) {
@@ -77,14 +77,14 @@ function getTestCaseTitle(test: ISmokeTest): string {
 /**
  * Return test case definition for run.
  */
-function getTestCaseMochaDefinition(test: ISmokeTest): MochaDefinition {
+function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
 	return test.debug ? it.only : it;
 }
 
 /**
  * Runs one of the passed test cases.
  */
-function testCaseRunner(test: ISmokeTest): void {
+function testCaseRunner(test: SmokeTest): void {
 	const expected = getNodeGlobEntries(test.pattern, test.ignore, test.cwd, test.globOptions);
 	const actual = getFastGlobEntries(test.pattern, test.ignore, test.cwd, test.fgOptions);
 

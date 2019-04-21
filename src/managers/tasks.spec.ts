@@ -3,14 +3,14 @@ import * as assert from 'assert';
 import Settings from '../settings';
 import { PatternsGroup } from '../types/patterns';
 import * as manager from './tasks';
-import { ITask } from './tasks';
+import { Task } from './tasks';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
 		it('should return task with windows-like patterns', () => {
 			const settings = new Settings();
 
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: 'a',
 				dynamic: true,
 				patterns: ['a/*'],
@@ -26,7 +26,7 @@ describe('Managers → Task', () => {
 		it('should return task with negative patterns from «ignore» option', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: 'a',
 				dynamic: true,
 				patterns: ['a/*', '!*.md', '!*.txt'],
@@ -42,7 +42,7 @@ describe('Managers → Task', () => {
 		it('should return static and dynamic tasks', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
-			const expected: ITask[] = [
+			const expected: Task[] = [
 				{
 					base: 'a',
 					dynamic: false,
@@ -67,7 +67,7 @@ describe('Managers → Task', () => {
 
 	describe('.convertPatternsToTasks', () => {
 		it('should return global task when positive patterns have a global pattern', () => {
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: '.',
 				dynamic: true,
 				patterns: ['*', '!*.md'],
@@ -81,7 +81,7 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return global task with negative patterns from «ignore» patterns', () => {
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: '.',
 				dynamic: true,
 				patterns: ['*', '!*.md'],
@@ -95,7 +95,7 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return two tasks', () => {
-			const expected: ITask[] = [
+			const expected: Task[] = [
 				{
 					base: 'a',
 					dynamic: true,
@@ -169,7 +169,7 @@ describe('Managers → Task', () => {
 
 	describe('.convertPatternGroupToTask', () => {
 		it('should return created dynamic task', () => {
-			const expected: ITask = {
+			const expected: Task = {
 				base: '.',
 				dynamic: true,
 				patterns: ['*', '!*.md'],
@@ -183,7 +183,7 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return created static task', () => {
-			const expected: ITask = {
+			const expected: Task = {
 				base: '.',
 				dynamic: false,
 				patterns: ['file', '!file.md'],
@@ -199,7 +199,7 @@ describe('Managers → Task', () => {
 
 	describe('.convertPatternGroupsToTasks', () => {
 		it('should return one task without negative patterns', () => {
-			const expected: ITask[] = [{
+			const expected: Task[] = [{
 				base: 'a',
 				dynamic: true,
 				patterns: ['a/*'],
@@ -213,7 +213,7 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return two tasks with negative patterns', () => {
-			const expected: ITask[] = [
+			const expected: Task[] = [
 				{
 					base: 'a',
 					dynamic: true,

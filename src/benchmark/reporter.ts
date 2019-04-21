@@ -1,7 +1,7 @@
-import { ISuitePackResult } from './runner';
+import { SuitePackResult } from './runner';
 
 export default class Reporter {
-	constructor(private readonly results: ISuitePackResult) { }
+	constructor(private readonly results: SuitePackResult) { }
 
 	public toString(): string {
 		return this.header + '\n' + this.measures + ' | ' + this.meta;

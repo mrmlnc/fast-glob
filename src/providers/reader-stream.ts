@@ -3,7 +3,7 @@ import * as stream from 'stream';
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemStream from '../adapters/fs-stream';
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import { Entry } from '../types/entries';
 import Reader from './reader';
 
@@ -28,7 +28,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Use stream API to read entries for Task.
 	 */
-	public read(task: ITask): NodeJS.ReadableStream {
+	public read(task: Task): NodeJS.ReadableStream {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
 		const transform = new TransformStream(this);
@@ -43,7 +43,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: ITask, options: readdir.Options): NodeJS.ReadableStream {
+	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
 		if (task.dynamic) {
 			return this.dynamicApi(root, options);
 		}
@@ -61,7 +61,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Api for static tasks.
 	 */
-	public staticApi(task: ITask, options: readdir.Options): NodeJS.ReadableStream {
+	public staticApi(task: Task, options: readdir.Options): NodeJS.ReadableStream {
 		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
 	}
 }

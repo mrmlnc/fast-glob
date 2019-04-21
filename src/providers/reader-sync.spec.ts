@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import Settings, { TransformFunction } from '../settings';
 import * as tests from '../tests/index';
 import { Entry } from '../types/entries';
@@ -28,7 +28,7 @@ class ReaderSyncFakeThrowErrno extends ReaderSyncFake {
 	}
 }
 
-function getTask(dynamic: boolean = true): ITask {
+function getTask(dynamic: boolean = true): Task {
 	return {
 		dynamic,
 		base: 'fixtures',

@@ -2,7 +2,7 @@
 
 import * as assert from 'assert';
 
-import { ITask } from '../managers/tasks';
+import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import * as tests from '../tests/index';
 import { Entry, EntryItem } from '../types/entries';
@@ -37,7 +37,7 @@ class ReaderStreamFakeThrowErrno extends ReaderStreamFake {
 /**
  * Wrapper for easily testing Stream API.
  */
-const getEntries = (settings: Settings, task: ITask, api: typeof ReaderStreamFake): Promise<EntryItem[]> => {
+const getEntries = (settings: Settings, task: Task, api: typeof ReaderStreamFake): Promise<EntryItem[]> => {
 	return new Promise((resolve, reject) => {
 		const entries: EntryItem[] = [];
 
@@ -51,7 +51,7 @@ const getEntries = (settings: Settings, task: ITask, api: typeof ReaderStreamFak
 	});
 };
 
-function getTask(dynamic: boolean = true): ITask {
+function getTask(dynamic: boolean = true): Task {
 	return {
 		dynamic,
 		base: 'fixtures',

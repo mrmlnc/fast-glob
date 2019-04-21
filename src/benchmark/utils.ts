@@ -1,6 +1,6 @@
 import stdev = require('compute-stdev');
 
-import { ISuiteMeasures } from './runner';
+import { SuiteMeasures } from './runner';
 
 export function convertHrtimeToMilliseconds(hrtime: [number, number]): number {
 	const nanoseconds = (hrtime[0] * 1e9) + hrtime[1];
@@ -27,7 +27,7 @@ export function getMemory(): number {
 }
 
 export function getMeasures(matches: number, time: number, memory: number): string {
-	return JSON.stringify({ matches, time, memory } as ISuiteMeasures);
+	return JSON.stringify({ matches, time, memory } as SuiteMeasures);
 }
 
 export function getAverageValue(raw: number[]): number {

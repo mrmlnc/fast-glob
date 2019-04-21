@@ -26,7 +26,7 @@ export class EnoentErrnoException extends Error {
 	}
 }
 
-interface IFakeFsStatOptions {
+interface FakeFsStatOptions {
 	isFile: boolean;
 	isDirectory: boolean;
 	isSymbolicLink: boolean;
@@ -37,7 +37,7 @@ class FakeEntry extends fs.Stats {
 	public path: string = this._options.path || 'fixtures/entry';
 	public depth: number = this.path.split('/').length - 2;
 
-	constructor(private readonly _options: Partial<IFakeFsStatOptions> = {}) {
+	constructor(private readonly _options: Partial<FakeFsStatOptions> = {}) {
 		super();
 	}
 
@@ -54,11 +54,11 @@ class FakeEntry extends fs.Stats {
 	}
 }
 
-export function getEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+export function getEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry(options);
 }
 
-export function getFileEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+export function getFileEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry({
 		isFile: true,
 		path: 'fixtures/file.txt',
@@ -66,7 +66,7 @@ export function getFileEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
 	});
 }
 
-export function getDirectoryEntry(options: Partial<IFakeFsStatOptions> = {}): Entry {
+export function getDirectoryEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry({
 		isDirectory: true,
 		path: 'fixtures/directory',
