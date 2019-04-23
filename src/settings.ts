@@ -1,5 +1,4 @@
-import { EntryItem } from './types/entries';
-import { Pattern } from './types/patterns';
+import { EntryItem, Pattern } from './types/index';
 
 export type TransformFunction<T> = (entry: EntryItem) => T;
 

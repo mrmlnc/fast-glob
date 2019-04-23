@@ -1,5 +1,5 @@
 import Settings from '../settings';
-import { Pattern, PatternsGroup } from '../types/patterns';
+import { Pattern, PatternsGroup } from '../types/index';
 import * as patternUtils from '../utils/pattern';
 
 export interface Task {

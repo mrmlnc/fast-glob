@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import { Task } from '../managers/tasks';
 import Settings, { TransformFunction } from '../settings';
 import * as tests from '../tests/index';
-import { Entry } from '../types/entries';
+import { Entry } from '../types/index';
 import ReaderSync from './reader-sync';
 
 class ReaderSyncFake extends ReaderSync {

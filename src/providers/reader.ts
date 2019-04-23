@@ -5,7 +5,7 @@ import micromatch = require('micromatch');
 
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 import * as pathUtil from '../utils/path';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';

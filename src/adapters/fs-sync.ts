@@ -6,8 +6,7 @@ import FileSystem from './fs';
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
-import { Entry } from '../types/entries';
-import { Pattern } from '../types/patterns';
+import { Entry, Pattern } from '../types/index';
 
 export default class FileSystemSync extends FileSystem<Entry[]> {
 	/**

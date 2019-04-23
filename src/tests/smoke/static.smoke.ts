@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { Entry } from '../../types/entries';
+import { Entry } from '../../types/index';
 import * as smoke from './smoke';
 
 smoke.suite('Smoke → Static', [

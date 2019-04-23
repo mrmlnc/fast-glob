@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as stream from 'stream';
 
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 
 export class FakeStream extends stream.Readable {
 	constructor(private readonly value: EntryItem, private readonly error: Error | null, opts?: stream.ReadableOptions) {

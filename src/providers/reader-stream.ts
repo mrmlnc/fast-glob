@@ -4,7 +4,7 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
-import { Entry } from '../types/entries';
+import { Entry } from '../types/index';
 import Reader from './reader';
 
 class TransformStream extends stream.Transform {

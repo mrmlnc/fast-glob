@@ -2,7 +2,7 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 import Reader from './reader';
 
 export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {

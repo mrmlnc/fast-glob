@@ -4,8 +4,7 @@ import * as path from 'path';
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
 import Settings from '../settings';
-import { Entry } from '../types/entries';
-import { Pattern } from '../types/patterns';
+import { Entry, Pattern } from '../types/index';
 
 export default abstract class FileSystem<T> {
 	constructor(private readonly settings: Settings) { }

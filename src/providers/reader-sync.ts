@@ -2,7 +2,7 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemSync from '../adapters/fs-sync';
 import { Task } from '../managers/tasks';
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 import Reader from './reader';
 
 export default class ReaderSync extends Reader<EntryItem[]> {

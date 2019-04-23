@@ -5,7 +5,7 @@ import glob = require('glob');
 
 import * as fg from '../../index';
 import { Options } from '../../settings';
-import { Pattern } from '../../types/patterns';
+import { Pattern } from '../../types/index';
 
 export interface SmokeTest {
 	pattern: Pattern;

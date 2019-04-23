@@ -2,8 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 
 import Settings from '../settings';
-import { Entry } from '../types/entries';
-import { Pattern } from '../types/patterns';
+import { Entry, Pattern } from '../types/index';
 import FileSystemSync from './fs-sync';
 
 class FileSystemSyncFake extends FileSystemSync {

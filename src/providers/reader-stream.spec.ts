@@ -5,7 +5,7 @@ import * as assert from 'assert';
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import * as tests from '../tests/index';
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 import ReaderStream from './reader-stream';
 
 class ReaderStreamFake extends ReaderStream {

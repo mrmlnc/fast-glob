@@ -4,8 +4,7 @@ import ReaderAsync from './providers/reader-async';
 import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 import Settings, { Options, TransformFunction } from './settings';
-import { EntryItem } from './types/entries';
-import { Pattern } from './types/patterns';
+import { EntryItem, Pattern } from './types/index';
 import * as arrayUtils from './utils/array';
 import * as streamUtils from './utils/stream';
 

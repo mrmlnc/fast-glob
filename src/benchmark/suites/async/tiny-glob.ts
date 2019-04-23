@@ -5,7 +5,7 @@ import glob = require('tiny-glob');
 
 import * as utils from '../../utils';
 
-import { Pattern } from '../../../types/patterns';
+import { Pattern } from '../../../types/index';
 
 const options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),

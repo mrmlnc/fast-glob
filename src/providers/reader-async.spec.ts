@@ -5,7 +5,7 @@ import * as assert from 'assert';
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import * as tests from '../tests/index';
-import { Entry, EntryItem } from '../types/entries';
+import { Entry, EntryItem } from '../types/index';
 import ReaderAsync from './reader-async';
 
 class ReaderAsyncFake extends ReaderAsync {

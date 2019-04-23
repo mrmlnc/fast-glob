@@ -4,7 +4,7 @@ import globParent = require('glob-parent');
 import isGlob = require('is-glob');
 import micromatch = require('micromatch');
 
-import { Pattern, PatternRe } from '../types/patterns';
+import { Pattern, PatternRe } from '../types/index';
 
 const GLOBSTAR = '**';
 

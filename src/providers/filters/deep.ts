@@ -2,8 +2,7 @@ import micromatch = require('micromatch');
 
 import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import Settings from '../../settings';
-import { Entry } from '../../types/entries';
-import { Pattern, PatternRe } from '../../types/patterns';
+import { Entry, Pattern, PatternRe } from '../../types/index';
 import * as pathUtils from '../../utils/path';
 import * as patternUtils from '../../utils/pattern';
 

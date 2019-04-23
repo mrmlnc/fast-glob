@@ -4,7 +4,7 @@ import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
-import { Pattern } from '../../types/patterns';
+import { Pattern } from '../../types/index';
 import * as pathUtil from '../../utils/path';
 import EntryFilter from './entry';
 
