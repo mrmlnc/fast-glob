@@ -4,6 +4,7 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
+import ReaderStream from '../readers/stream';
 import { Entry } from '../types/index';
 import Provider from './provider';
 
@@ -18,6 +19,8 @@ class TransformStream extends stream.Transform {
 }
 
 export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
+	protected _reader: ReaderStream = new ReaderStream(this.settings);
+
 	/**
 	 * Returns FileSystem adapter.
 	 */
@@ -45,23 +48,9 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	 */
 	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
 		if (task.dynamic) {
-			return this.dynamicApi(root, options);
+			return this._reader.dynamic(root, options);
 		}
 
-		return this.staticApi(task, options);
-	}
-
-	/**
-	 * Api for dynamic tasks.
-	 */
-	public dynamicApi(root: string, options: readdir.Options): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
-	/**
-	 * Api for static tasks.
-	 */
-	public staticApi(task: Task, options: readdir.Options): NodeJS.ReadableStream {
-		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this._reader.static(task.patterns, options);
 	}
 }

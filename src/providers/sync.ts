@@ -1,17 +1,12 @@
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
-import FileSystemSync from '../adapters/fs-sync';
 import { Task } from '../managers/tasks';
+import ReaderSync from '../readers/sync';
 import { Entry, EntryItem } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
-	/**
-	 * Returns FileSystem adapter.
-	 */
-	public get fsAdapter(): FileSystemSync {
-		return new FileSystemSync(this.settings);
-	}
+	protected _reader: ReaderSync = new ReaderSync(this.settings);
 
 	/**
 	 * Use sync API to read entries for Task.
@@ -38,23 +33,9 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 	 */
 	public api(root: string, task: Task, options: readdir.Options): Entry[] {
 		if (task.dynamic) {
-			return this.dynamicApi(root, options);
+			return this._reader.dynamic(root, options);
 		}
 
-		return this.staticApi(task, options);
-	}
-
-	/**
-	 * Api for dynamic tasks.
-	 */
-	public dynamicApi(root: string, options: readdir.Options): Entry[] {
-		return readdir.readdirSyncStat(root, options);
-	}
-
-	/**
-	 * Api for static tasks.
-	 */
-	public staticApi(task: Task, options: readdir.Options): Entry[] {
-		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this._reader.static(task.patterns, options);
 	}
 }

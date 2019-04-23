@@ -1,18 +1,29 @@
+// tslint:disable max-classes-per-file
+
 import * as assert from 'assert';
 
 import { Task } from '../managers/tasks';
+import ReaderSync from '../readers/sync';
 import Settings, { TransformFunction } from '../settings';
 import * as tests from '../tests/index';
 import { Entry } from '../types/index';
 import ProviderSync from './sync';
 
-class TestProviderSync extends ProviderSync {
-	public dynamicApi(): Entry[] {
+class TestReaderSync extends ReaderSync {
+	public dynamic(): Entry[] {
 		return [{ path: 'dynamic' } as Entry];
 	}
 
-	public staticApi(): Entry[] {
+	public static(): Entry[] {
 		return [{ path: 'static' } as Entry];
+	}
+}
+
+class TestProviderSync extends ProviderSync {
+	protected readonly _reader: ReaderSync = new TestReaderSync(this.settings);
+
+	constructor(public settings: Settings = new Settings()) {
+		super(settings);
 	}
 }
 
@@ -41,8 +52,7 @@ function getTask(dynamic: boolean = true): Task {
 describe('Providers → ProviderSync', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const settings = new Settings();
-			const provider = new ProviderSync(settings);
+			const provider = new TestProviderSync();
 
 			assert.ok(provider instanceof ProviderSync);
 		});
@@ -51,8 +61,7 @@ describe('Providers → ProviderSync', () => {
 	describe('.read', () => {
 		it('should returns entries for dynamic task', () => {
 			const task = getTask();
-			const settings = new Settings();
-			const provider = new TestProviderSync(settings);
+			const provider = new TestProviderSync();
 
 			const expected: string[] = ['dynamic'];
 
@@ -63,8 +72,7 @@ describe('Providers → ProviderSync', () => {
 
 		it('should returns entries for static task', () => {
 			const task = getTask(/* dynamic */ false);
-			const settings = new Settings();
-			const provider = new TestProviderSync(settings);
+			const provider = new TestProviderSync();
 
 			const expected: string[] = ['static'];
 

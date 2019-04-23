@@ -1,17 +1,12 @@
 import * as readdir from '@mrmlnc/readdir-enhanced';
 
-import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
+import ReaderStream from '../readers/stream';
 import { Entry, EntryItem } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	/**
-	 * Returns FileSystem adapter.
-	 */
-	public get fsAdapter(): FileSystemStream {
-		return new FileSystemStream(this.settings);
-	}
+	protected _reader: ReaderStream = new ReaderStream(this.settings);
 
 	/**
 	 * Use async API to read entries for Task.
@@ -40,23 +35,9 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 	 */
 	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
 		if (task.dynamic) {
-			return this.dynamicApi(root, options);
+			return this._reader.dynamic(root, options);
 		}
 
-		return this.staticApi(task, options);
-	}
-
-	/**
-	 * Api for dynamic tasks.
-	 */
-	public dynamicApi(root: string, options: readdir.Options): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
-	/**
-	 * Api for static tasks.
-	 */
-	public staticApi(task: Task, options: readdir.Options): NodeJS.ReadableStream {
-		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this._reader.static(task.patterns, options);
 	}
 }

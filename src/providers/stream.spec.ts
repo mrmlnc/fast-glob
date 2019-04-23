@@ -3,17 +3,18 @@
 import * as assert from 'assert';
 
 import { Task } from '../managers/tasks';
+import ReaderStream from '../readers/stream';
 import Settings from '../settings';
 import * as tests from '../tests/index';
 import { Entry, EntryItem } from '../types/index';
 import ProviderStream from './stream';
 
-class TestProviderStream extends ProviderStream {
-	public dynamicApi(): NodeJS.ReadableStream {
+class TestReaderStream extends ReaderStream {
+	public dynamic(): NodeJS.ReadableStream {
 		return this.fake({ path: 'dynamic' } as Entry);
 	}
 
-	public staticApi(): NodeJS.ReadableStream {
+	public static(): NodeJS.ReadableStream {
 		return this.fake({ path: 'static' } as Entry);
 	}
 
@@ -22,15 +23,23 @@ class TestProviderStream extends ProviderStream {
 	}
 }
 
+class TestProviderStream extends ProviderStream {
+	protected readonly _reader: TestReaderStream = new TestReaderStream(this.settings);
+
+	constructor(public settings: Settings = new Settings()) {
+		super(settings);
+	}
+}
+
 class TestProviderWithEnoent extends TestProviderStream {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('dynamic', new tests.EnoentErrnoException());
+		return this._reader.fake('dynamic', new tests.EnoentErrnoException());
 	}
 }
 
 class TestProviderWithErrno extends TestProviderStream {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('dynamic', new Error('Boom'));
+		return this._reader.fake('dynamic', new Error('Boom'));
 	}
 }
 
@@ -64,8 +73,7 @@ function getTask(dynamic: boolean = true): Task {
 describe('Providers → ProviderStream', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const settings = new Settings();
-			const provider = new ProviderStream(settings);
+			const provider = new TestProviderStream();
 
 			assert.ok(provider instanceof ProviderStream);
 		});
