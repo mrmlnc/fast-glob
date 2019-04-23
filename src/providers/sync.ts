@@ -3,9 +3,9 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 import FileSystemSync from '../adapters/fs-sync';
 import { Task } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/index';
-import Reader from './reader';
+import Provider from './provider';
 
-export default class ReaderSync extends Reader<EntryItem[]> {
+export default class ProviderSync extends Provider<EntryItem[]> {
 	/**
 	 * Returns FileSystem adapter.
 	 */

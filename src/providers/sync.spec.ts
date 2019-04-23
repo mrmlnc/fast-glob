@@ -4,9 +4,9 @@ import { Task } from '../managers/tasks';
 import Settings, { TransformFunction } from '../settings';
 import * as tests from '../tests/index';
 import { Entry } from '../types/index';
-import ReaderSync from './reader-sync';
+import ProviderSync from './sync';
 
-class ReaderSyncFake extends ReaderSync {
+class TestProviderSync extends ProviderSync {
 	public dynamicApi(): Entry[] {
 		return [{ path: 'dynamic' } as Entry];
 	}
@@ -16,13 +16,13 @@ class ReaderSyncFake extends ReaderSync {
 	}
 }
 
-class ReaderSyncFakeThrowEnoent extends ReaderSyncFake {
+class TestProviderSyncWithEnoent extends TestProviderSync {
 	public api(): never {
 		throw new tests.EnoentErrnoException();
 	}
 }
 
-class ReaderSyncFakeThrowErrno extends ReaderSyncFake {
+class TestProviderSyncWithErrno extends TestProviderSync {
 	public api(): never {
 		throw new Error('Boom');
 	}
@@ -38,13 +38,13 @@ function getTask(dynamic: boolean = true): Task {
 	};
 }
 
-describe('Providers → ReaderSync', () => {
+describe('Providers → ProviderSync', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
 			const settings = new Settings();
-			const reader = new ReaderSync(settings);
+			const provider = new ProviderSync(settings);
 
-			assert.ok(reader instanceof ReaderSync);
+			assert.ok(provider instanceof ProviderSync);
 		});
 	});
 
@@ -52,11 +52,11 @@ describe('Providers → ReaderSync', () => {
 		it('should returns entries for dynamic task', () => {
 			const task = getTask();
 			const settings = new Settings();
-			const reader = new ReaderSyncFake(settings);
+			const provider = new TestProviderSync(settings);
 
 			const expected: string[] = ['dynamic'];
 
-			const actual = reader.read(task);
+			const actual = provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -64,11 +64,11 @@ describe('Providers → ReaderSync', () => {
 		it('should returns entries for static task', () => {
 			const task = getTask(/* dynamic */ false);
 			const settings = new Settings();
-			const reader = new ReaderSyncFake(settings);
+			const provider = new TestProviderSync(settings);
 
 			const expected: string[] = ['static'];
 
-			const actual = reader.read(task);
+			const actual = provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -76,11 +76,11 @@ describe('Providers → ReaderSync', () => {
 		it('should returns entries (stats)', () => {
 			const task = getTask();
 			const settings = new Settings({ stats: true });
-			const reader = new ReaderSyncFake(settings);
+			const provider = new TestProviderSync(settings);
 
 			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
 
-			const actual = reader.read(task);
+			const actual = provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -90,11 +90,11 @@ describe('Providers → ReaderSync', () => {
 
 			const task = getTask();
 			const settings = new Settings({ transform });
-			const reader = new ReaderSyncFake(settings);
+			const provider = new TestProviderSync(settings);
 
 			const expected: string[] = ['cake'];
 
-			const actual = reader.read(task);
+			const actual = provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -103,11 +103,11 @@ describe('Providers → ReaderSync', () => {
 			const task = getTask();
 			const settings = new Settings();
 
-			const reader = new ReaderSyncFakeThrowEnoent(settings);
+			const provider = new TestProviderSyncWithEnoent(settings);
 
 			const expected: string[] = [];
 
-			const actual = reader.read(task);
+			const actual = provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -115,9 +115,9 @@ describe('Providers → ReaderSync', () => {
 		it('should throw error', () => {
 			const task = getTask();
 			const settings = new Settings();
-			const reader = new ReaderSyncFakeThrowErrno(settings);
+			const provider = new TestProviderSyncWithErrno(settings);
 
-			assert.throws(() => reader.read(task), /Boom/);
+			assert.throws(() => provider.read(task), /Boom/);
 		});
 	});
 });

@@ -3,9 +3,9 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
 import { Entry, EntryItem } from '../types/index';
-import Reader from './reader';
+import Provider from './provider';
 
-export default class ReaderAsync extends Reader<Promise<EntryItem[]>> {
+export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 	/**
 	 * Returns FileSystem adapter.
 	 */

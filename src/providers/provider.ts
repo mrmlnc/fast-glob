@@ -10,7 +10,7 @@ import * as utils from '../utils/index';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 
-export default abstract class Reader<T> {
+export default abstract class Provider<T> {
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;
 

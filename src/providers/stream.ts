@@ -5,19 +5,19 @@ import * as readdir from '@mrmlnc/readdir-enhanced';
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
 import { Entry } from '../types/index';
-import Reader from './reader';
+import Provider from './provider';
 
 class TransformStream extends stream.Transform {
-	constructor(private readonly reader: ReaderStream) {
+	constructor(private readonly provider: ProviderStream) {
 		super({ objectMode: true });
 	}
 
 	public _transform(entry: Entry, _encoding: string, callback: Function): void {
-		callback(null, this.reader.transform(entry));
+		callback(null, this.provider.transform(entry));
 	}
 }
 
-export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
+export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	/**
 	 * Returns FileSystem adapter.
 	 */

@@ -1,8 +1,8 @@
 import * as taskManager from './managers/tasks';
-import Reader from './providers/reader';
-import ReaderAsync from './providers/reader-async';
-import ReaderStream from './providers/reader-stream';
-import ReaderSync from './providers/reader-sync';
+import ProviderAsync from './providers/async';
+import Provider from './providers/provider';
+import ProviderStream from './providers/stream';
+import ProviderSync from './providers/sync';
 import Settings, { Options, TransformFunction } from './settings';
 import { EntryItem, Pattern } from './types/index';
 import * as utils from './utils/index';
@@ -15,7 +15,7 @@ type Task = taskManager.Task;
 function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
-	const works = getWorks<EntryItem[]>(source, ReaderSync, options);
+	const works = getWorks<EntryItem[]>(source, ProviderSync, options);
 
 	return utils.array.flatten(works);
 }
@@ -30,7 +30,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 		return Promise.reject(error);
 	}
 
-	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, options);
+	const works = getWorks<Promise<EntryItem[]>>(source, ProviderAsync, options);
 
 	return Promise.all(works).then(utils.array.flatten);
 }
@@ -41,7 +41,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
-	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, options);
+	const works = getWorks<NodeJS.ReadableStream>(source, ProviderStream, options);
 
 	return utils.stream.merge(works);
 }
@@ -59,16 +59,16 @@ function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
 }
 
 /**
- * Returns a set of works based on provided tasks and class of the reader.
+ * Returns a set of works based on provided tasks and class of the provider.
  */
-function getWorks<T>(source: Pattern | Pattern[], _Reader: new (settings: Settings) => Reader<T>, options?: Options): T[] {
+function getWorks<T>(source: Pattern | Pattern[], _Provider: new (settings: Settings) => Provider<T>, options?: Options): T[] {
 	const patterns = ([] as Pattern[]).concat(source);
 	const settings = new Settings(options);
 
 	const tasks = taskManager.generate(patterns, settings);
-	const reader = new _Reader(settings);
+	const provider = new _Provider(settings);
 
-	return tasks.map(reader.read, reader);
+	return tasks.map(provider.read, provider);
 }
 
 function assertPatternsInput(source: unknown): void | never {
