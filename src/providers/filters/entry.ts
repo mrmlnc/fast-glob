@@ -3,8 +3,7 @@ import micromatch = require('micromatch');
 
 import Settings from '../../settings';
 import { Entry, Pattern, PatternRe } from '../../types/index';
-import * as pathUtils from '../../utils/path';
-import * as patternUtils from '../../utils/pattern';
+import * as utils from '../../utils/index';
 
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
@@ -15,8 +14,8 @@ export default class EntryFilter {
 	 * Returns filter for directories.
 	 */
 	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
-		const positiveRe: PatternRe[] = patternUtils.convertPatternsToRe(positive, this.micromatchOptions);
-		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+		const positiveRe: PatternRe[] = utils.pattern.convertPatternsToRe(positive, this.micromatchOptions);
+		const negativeRe: PatternRe[] = utils.pattern.convertPatternsToRe(negative, this.micromatchOptions);
 
 		return (entry: Entry) => this.filter(entry, positiveRe, negativeRe);
 	}
@@ -82,7 +81,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		const fullpath = pathUtils.makeAbsolute(this.settings.cwd, entry.path);
+		const fullpath = utils.path.makeAbsolute(this.settings.cwd, entry.path);
 
 		return this.isMatchToPatterns(fullpath, negativeRe);
 	}
@@ -94,6 +93,6 @@ export default class EntryFilter {
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
 	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
-		return patternUtils.matchAny(filepath, patternsRe) || patternUtils.matchAny(filepath + '/', patternsRe);
+		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
 	}
 }

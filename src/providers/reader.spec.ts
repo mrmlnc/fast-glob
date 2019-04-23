@@ -4,7 +4,7 @@ import * as path from 'path';
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import * as pathUtil from '../utils/path';
+import * as utils from '../utils/index';
 import Reader from './reader';
 
 export class TestReader extends Reader<Array<{}>> {
@@ -123,7 +123,7 @@ describe('Providers → Reader', () => {
 				const entry = tests.getDirectoryEntry();
 
 				const fullpath = path.join(process.cwd(), 'fixtures/directory/');
-				const expected = pathUtil.normalize(fullpath);
+				const expected = utils.path.normalize(fullpath);
 
 				const actual = reader.transform(entry);
 
@@ -159,7 +159,7 @@ describe('Providers → Reader', () => {
 				const entry = tests.getFileEntry();
 
 				const fullpath = path.join(process.cwd(), 'fixtures/file.txt');
-				const expected = pathUtil.normalize(fullpath);
+				const expected = utils.path.normalize(fullpath);
 
 				const actual = reader.transform(entry);
 

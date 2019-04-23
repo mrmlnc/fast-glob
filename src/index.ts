@@ -5,8 +5,7 @@ import ReaderStream from './providers/reader-stream';
 import ReaderSync from './providers/reader-sync';
 import Settings, { Options, TransformFunction } from './settings';
 import { EntryItem, Pattern } from './types/index';
-import * as arrayUtils from './utils/array';
-import * as streamUtils from './utils/stream';
+import * as utils from './utils/index';
 
 type Task = taskManager.Task;
 
@@ -18,7 +17,7 @@ function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 
 	const works = getWorks<EntryItem[]>(source, ReaderSync, options);
 
-	return arrayUtils.flatten(works);
+	return utils.array.flatten(works);
 }
 
 /**
@@ -33,7 +32,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 
 	const works = getWorks<Promise<EntryItem[]>>(source, ReaderAsync, options);
 
-	return Promise.all(works).then(arrayUtils.flatten);
+	return Promise.all(works).then(utils.array.flatten);
 }
 
 /**
@@ -44,7 +43,7 @@ function stream(source: Pattern | Pattern[], options?: Options): NodeJS.Readable
 
 	const works = getWorks<NodeJS.ReadableStream>(source, ReaderStream, options);
 
-	return streamUtils.merge(works);
+	return utils.stream.merge(works);
 }
 
 /**

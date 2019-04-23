@@ -6,7 +6,7 @@ import micromatch = require('micromatch');
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
 import { Entry, EntryItem } from '../types/index';
-import * as pathUtil from '../utils/path';
+import * as utils from '../utils/index';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 
@@ -66,7 +66,7 @@ export default abstract class Reader<T> {
 	 */
 	public transform(entry: Entry): EntryItem {
 		if (this.settings.absolute && !path.isAbsolute(entry.path)) {
-			entry.path = pathUtil.makeAbsolute(this.settings.cwd, entry.path);
+			entry.path = utils.path.makeAbsolute(this.settings.cwd, entry.path);
 		}
 
 		if (this.settings.markDirectories && entry.isDirectory()) {

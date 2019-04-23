@@ -1,6 +1,6 @@
 import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/index';
-import * as patternUtils from '../utils/pattern';
+import * as utils from '../utils/index';
 
 export interface Task {
 	base: string;
@@ -14,14 +14,14 @@ export interface Task {
  * Generate tasks based on parent directory of each pattern.
  */
 export function generate(patterns: Pattern[], settings: Settings): Task[] {
-	const unixPatterns = patterns.map(patternUtils.unixifyPattern);
-	const unixIgnore = settings.ignore.map(patternUtils.unixifyPattern);
+	const unixPatterns = patterns.map(utils.pattern.unixifyPattern);
+	const unixIgnore = settings.ignore.map(utils.pattern.unixifyPattern);
 
 	const positivePatterns = getPositivePatterns(unixPatterns);
 	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
 
-	const staticPatterns = positivePatterns.filter(patternUtils.isStaticPattern);
-	const dynamicPatterns = positivePatterns.filter(patternUtils.isDynamicPattern);
+	const staticPatterns = positivePatterns.filter(utils.pattern.isStaticPattern);
+	const dynamicPatterns = positivePatterns.filter(utils.pattern.isDynamicPattern);
 
 	const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
 	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);
@@ -50,15 +50,15 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
  * Return only positive patterns.
  */
 export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
-	return patternUtils.getPositivePatterns(patterns);
+	return utils.pattern.getPositivePatterns(patterns);
 }
 
 /**
  * Return only negative patterns.
  */
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
-	const negative = patternUtils.getNegativePatterns(patterns).concat(ignore);
-	const positive = negative.map(patternUtils.convertToPositivePattern);
+	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
+	const positive = negative.map(utils.pattern.convertToPositivePattern);
 
 	return positive;
 }
@@ -68,7 +68,7 @@ export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Patte
  */
 export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup {
 	return patterns.reduce((collection, pattern) => {
-		const base = patternUtils.getBaseDirectory(pattern);
+		const base = utils.pattern.getBaseDirectory(pattern);
 
 		if (base in collection) {
 			collection[base].push(pattern);
@@ -98,6 +98,6 @@ export function convertPatternGroupToTask(base: string, positive: Pattern[], neg
 		dynamic,
 		positive,
 		negative,
-		patterns: ([] as Pattern[]).concat(positive, negative.map(patternUtils.convertToNegativePattern))
+		patterns: ([] as Pattern[]).concat(positive, negative.map(utils.pattern.convertToNegativePattern))
 	};
 }
