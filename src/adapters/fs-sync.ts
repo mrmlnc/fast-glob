@@ -46,6 +46,6 @@ export default class FileSystemSync extends FileSystem<Entry[]> {
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): fs.Stats {
-		return fsStat.statSync(filepath, { throwErrorOnBrokenSymlinks: false });
+		return fsStat.statSync(filepath, { throwErrorOnBrokenSymbolicLink: false });
 	}
 }
