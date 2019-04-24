@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import Settings from '../settings';
 import { Entry, EntryFilterFunction, Pattern } from '../types/index';
+import * as utils from '../utils/index';
 
 export default abstract class FileSystem<T> {
 	constructor(private readonly _settings: Settings) { }
@@ -22,10 +23,17 @@ export default abstract class FileSystem<T> {
 	/**
 	 * Return an implementation of the Entry interface.
 	 */
-	public makeEntry(stat: fs.Stats, pattern: Pattern): Entry {
-		(stat as Entry).path = pattern;
-		(stat as Entry).depth = pattern.split(path.sep).length;
+	public makeEntry(stats: fs.Stats, pattern: Pattern): Entry {
+		const entry: Entry = {
+			name: pattern,
+			path: pattern,
+			dirent: utils.fs.createDirentFromStats(pattern, stats)
+		};
 
-		return stat as Entry;
+		if (this._settings.stats) {
+			entry.stats = stats;
+		}
+
+		return entry;
 	}
 }

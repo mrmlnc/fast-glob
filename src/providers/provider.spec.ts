@@ -63,8 +63,9 @@ describe('Providers → Provider', () => {
 			});
 
 			assert.strictEqual(actual.basePath, '');
-			assert.strictEqual(typeof actual.filter, 'function');
-			assert.strictEqual(typeof actual.deep, 'function');
+			assert.strictEqual(typeof actual.entryFilter, 'function');
+			assert.strictEqual(typeof actual.deepFilter, 'function');
+			assert.strictEqual(typeof actual.transform, 'function');
 		});
 
 		it('should return options for reader with non-global base (fixtures)', () => {
@@ -79,8 +80,9 @@ describe('Providers → Provider', () => {
 			});
 
 			assert.strictEqual(actual.basePath, 'fixtures');
-			assert.strictEqual(typeof actual.filter, 'function');
-			assert.strictEqual(typeof actual.deep, 'function');
+			assert.strictEqual(typeof actual.entryFilter, 'function');
+			assert.strictEqual(typeof actual.deepFilter, 'function');
+			assert.strictEqual(typeof actual.transform, 'function');
 		});
 	});
 

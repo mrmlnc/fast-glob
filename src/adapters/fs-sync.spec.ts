@@ -1,6 +1,8 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
+import { Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
 import { Entry, Pattern } from '../types/index';
 import FileSystemSync from './fs-sync';
@@ -11,7 +13,7 @@ class FileSystemSyncFake extends FileSystemSync {
 	}
 
 	public getStat(): fs.Stats {
-		return getStats(1);
+		return new Stats();
 	}
 }
 
@@ -28,12 +30,8 @@ class FileSystemSyncThrowStatError extends FileSystemSyncFake {
 			throw new Error('Something');
 		}
 
-		return getStats(1);
+		return new Stats();
 	}
-}
-
-function getStats(uid: number): fs.Stats {
-	return { uid } as fs.Stats;
 }
 
 function getAdapter(): FileSystemSyncFake {
@@ -85,15 +83,10 @@ describe('Adapters → FileSystemSync', () => {
 		it('should return created entry', () => {
 			const adapter = getAdapter();
 
-			const expected: Entry = {
-				path: 'pattern',
-				depth: 1,
-				uid: 1
-			} as Entry;
-
 			const actual = adapter.getEntry('filepath', 'pattern');
 
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual((actual as Entry).name, 'pattern');
+			assert.strictEqual((actual as Entry).path, 'pattern');
 		});
 
 		it('should return null when lstat throw error', () => {

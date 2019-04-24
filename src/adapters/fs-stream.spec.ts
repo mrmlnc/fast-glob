@@ -1,6 +1,8 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 
+import { Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
 import { Entry, Pattern } from '../types/index';
 import FileSystemStream from './fs-stream';
@@ -11,7 +13,7 @@ class FileSystemStreamFake extends FileSystemStream {
 	}
 
 	public getStat(): Promise<fs.Stats> {
-		return getStats(1);
+		return Promise.resolve(new Stats());
 	}
 }
 
@@ -25,12 +27,8 @@ class FileSystemStreamThrowStatError extends FileSystemStreamFake {
 			return Promise.reject(new Error('something'));
 		}
 
-		return getStats(1);
+		return Promise.resolve(new Stats());
 	}
-}
-
-function getStats(uid: number): Promise<fs.Stats> {
-	return Promise.resolve({ uid } as fs.Stats);
 }
 
 function getAdapter(): FileSystemStreamFake {
@@ -91,15 +89,10 @@ describe('Adapters → FileSystemStream', () => {
 		it('should return created entry', async () => {
 			const adapter = getAdapter();
 
-			const expected: Entry = {
-				path: 'pattern',
-				depth: 1,
-				uid: 1
-			} as Entry;
-
 			const actual = await adapter.getEntry('filepath', 'pattern');
 
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual((actual as Entry).name, 'pattern');
+			assert.strictEqual((actual as Entry).path, 'pattern');
 		});
 
 		it('should return null when lstat throw error', async () => {

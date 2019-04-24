@@ -15,7 +15,7 @@ function getDeepFilterInstance(options?: Options): DeepFilter {
 }
 
 function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): EntryFilterFunction {
-	return getDeepFilterInstance(options).getFilter(positive, negative);
+	return getDeepFilterInstance(options).getFilter('base', positive, negative);
 }
 
 describe('Providers → Filters → Deep', () => {

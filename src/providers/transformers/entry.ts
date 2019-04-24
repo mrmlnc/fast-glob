@@ -16,7 +16,7 @@ export default class EntryTransformer {
 			entry.path = utils.path.makeAbsolute(this._settings.cwd, entry.path);
 		}
 
-		if (this._settings.markDirectories && entry.isDirectory()) {
+		if (this._settings.markDirectories && entry.dirent.isDirectory()) {
 			entry.path = path.join(entry.path, path.sep);
 		}
 

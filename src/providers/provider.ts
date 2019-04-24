@@ -38,10 +38,12 @@ export default abstract class Provider<T> {
 	 * Returns options for reader.
 	 */
 	public getReaderOptions(task: Task): ReaderOptions {
+		const basePath = task.base === '.' ? '' : task.base;
+
 		return {
-			basePath: task.base === '.' ? '' : task.base,
-			filter: this.entryFilter.getFilter(task.positive, task.negative),
-			deep: this.deepFilter.getFilter(task.positive, task.negative),
+			basePath,
+			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
+			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
 			transform: this.entryTransformer.getTransformer()
 		};
 	}

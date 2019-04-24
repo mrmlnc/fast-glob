@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import Settings from '../../settings';
 import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
 import * as utils from '../../utils/index';
@@ -8,11 +10,11 @@ export default class DeepFilter {
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
+	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const maxPatternDepth = this._getMaxPatternDepth(positive);
 		const negativeRe: PatternRe[] = this._getNegativePatternsRe(negative);
 
-		return (entry: Entry) => this._filter(entry, negativeRe, maxPatternDepth);
+		return (entry: Entry) => this._filter(basePath, entry, negativeRe, maxPatternDepth);
 	}
 
 	/**
@@ -36,12 +38,15 @@ export default class DeepFilter {
 	/**
 	 * Returns «true» for directory that should be read.
 	 */
-	private _filter(entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
-		if (this._isSkippedByDeepOption(entry.depth)) {
+	private _filter(basePath: string, entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
+		const basePathDepth = basePath.split(path.posix.sep).length;
+		const depth = entry.path.split(path.sep).length - (basePath === '' ? 0 : basePathDepth) - 1;
+
+		if (this._isSkippedByDeepOption(depth)) {
 			return false;
 		}
 
-		if (this._isSkippedByMaxPatternDepth(entry.depth, maxPatternDepth)) {
+		if (this._isSkippedByMaxPatternDepth(depth, maxPatternDepth)) {
 			return false;
 		}
 
@@ -74,7 +79,7 @@ export default class DeepFilter {
 	 * Returns «true» for symlinked directory if the «followSymlinkedDirectories» option is disabled.
 	 */
 	private _isSkippedSymlinkedDirectory(entry: Entry): boolean {
-		return !this._settings.followSymlinkedDirectories && entry.isSymbolicLink();
+		return !this._settings.followSymlinkedDirectories && entry.dirent.isSymbolicLink();
 	}
 
 	/**

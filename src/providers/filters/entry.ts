@@ -62,14 +62,14 @@ export default class EntryFilter {
 	 * Returns true for non-files if the «onlyFiles» option is enabled.
 	 */
 	private _onlyFileFilter(entry: Entry): boolean {
-		return this._settings.onlyFiles && !entry.isFile();
+		return this._settings.onlyFiles && !entry.dirent.isFile();
 	}
 
 	/**
 	 * Returns true for non-directories if the «onlyDirectories» option is enabled.
 	 */
 	private _onlyDirectoryFilter(entry: Entry): boolean {
-		return this._settings.onlyDirectories && !entry.isDirectory();
+		return this._settings.onlyDirectories && !entry.dirent.isDirectory();
 	}
 
 	/**

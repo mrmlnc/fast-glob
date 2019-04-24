@@ -20,6 +20,7 @@
     "implementation"
   ],
   "devDependencies": {
+    "@nodelib/fs.macchiato": "^1.0.0",
     "@types/compute-stdev": "^1.0.0",
     "@types/easy-table": "^0.0.32",
     "@types/execa": "^0.9.0",
@@ -48,6 +49,7 @@
   "dependencies": {
     "@mrmlnc/readdir-enhanced": "^2.2.1",
     "@nodelib/fs.stat": "^2.0.0",
+    "@nodelib/fs.walk": "^1.1.0",
     "glob-parent": "^5.0.0",
     "is-glob": "^4.0.0",
     "merge2": "^1.2.3",
