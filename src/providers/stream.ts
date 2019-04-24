@@ -1,11 +1,9 @@
 import * as stream from 'stream';
 
-import * as readdir from '@mrmlnc/readdir-enhanced';
-
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry } from '../types/index';
+import { Entry, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 class TransformStream extends stream.Transform {
@@ -46,7 +44,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
+	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}

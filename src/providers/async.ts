@@ -1,8 +1,6 @@
-import * as readdir from '@mrmlnc/readdir-enhanced';
-
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry, EntryItem } from '../types/index';
+import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
@@ -33,7 +31,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
+	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}

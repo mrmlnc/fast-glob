@@ -1,17 +1,14 @@
-import micromatch = require('micromatch');
-
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import Settings from '../../settings';
-import { Entry, Pattern, PatternRe } from '../../types/index';
+import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
 import * as utils from '../../utils/index';
 
 export default class DeepFilter {
-	constructor(private readonly settings: Settings, private readonly micromatchOptions: micromatch.Options) { }
+	constructor(private readonly settings: Settings, private readonly micromatchOptions: MicromatchOptions) { }
 
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
+	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const maxPatternDepth = this.getMaxPatternDepth(positive);
 		const negativeRe: PatternRe[] = this.getNegativePatternsRe(negative);
 

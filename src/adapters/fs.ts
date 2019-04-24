@@ -1,10 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-
 import Settings from '../settings';
-import { Entry, Pattern } from '../types/index';
+import { Entry, EntryFilterFunction, Pattern } from '../types/index';
 
 export default abstract class FileSystem<T> {
 	constructor(private readonly settings: Settings) { }
@@ -12,7 +10,7 @@ export default abstract class FileSystem<T> {
 	/**
 	 * The main logic of reading the entries that must be implemented by each adapter.
 	 */
-	public abstract read(filepaths: string[], filter: FilterFunction): T;
+	public abstract read(filepaths: string[], filter: EntryFilterFunction): T;
 
 	/**
 	 * Return full path to entry.

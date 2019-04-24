@@ -1,8 +1,6 @@
-import * as readdir from '@mrmlnc/readdir-enhanced';
-
 import { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
-import { Entry, EntryItem } from '../types/index';
+import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
@@ -31,7 +29,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: Task, options: readdir.Options): Entry[] {
+	public api(root: string, task: Task, options: ReaderOptions): Entry[] {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}

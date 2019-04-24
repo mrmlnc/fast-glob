@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
+import { MicromatchOptions } from '../types/index';
 import * as utils from '../utils/index';
 import Provider from './provider';
 
@@ -90,7 +91,7 @@ describe('Providers → Provider', () => {
 		it('should return options for micromatch', () => {
 			const provider = getProvider();
 
-			const expected: micromatch.Options = {
+			const expected: MicromatchOptions = {
 				dot: false,
 				matchBase: false,
 				nobrace: false,
