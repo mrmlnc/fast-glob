@@ -19,7 +19,7 @@ export function isStaticPattern(pattern: Pattern): boolean {
  * Return true for pattern that looks like glob.
  */
 export function isDynamicPattern(pattern: Pattern): boolean {
-	return isGlob(pattern);
+	return isGlob(pattern, { strict: false });
 }
 
 /**
