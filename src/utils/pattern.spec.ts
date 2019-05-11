@@ -26,6 +26,12 @@ describe('Utils → Pattern', () => {
 			assert.ok(actual);
 		});
 
+		it('should return true for dynamic pattern with question mark glob', () => {
+			const actual = util.isDynamicPattern('?');
+
+			assert.ok(actual);
+		});
+
 		it('should return false for static pattern', () => {
 			const actual = util.isDynamicPattern('dir');
 
