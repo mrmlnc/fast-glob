@@ -257,7 +257,7 @@ describe('Utils → Pattern', () => {
 	});
 	describe('.matchAny', () => {
 		it('should return true', () => {
-			const actual = util.matchAny('fixtures/file.txt', [/fixture/, /fixtures\/file/]);
+			const actual = util.matchAny('fixtures/nested/file.txt', [/fixture/, /fixtures\/nested\/file/]);
 
 			assert.ok(actual);
 		});
