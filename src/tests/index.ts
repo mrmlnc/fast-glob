@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as stream from 'stream';
 
 import { Entry, EntryItem } from '../types/index';
@@ -34,8 +35,8 @@ interface FakeFsStatOptions {
 }
 
 class FakeEntry extends fs.Stats {
-	public path: string = this._options.path || 'fixtures/entry';
-	public depth: number = this.path.split('/').length - 2;
+	public path: string = this._options.path || path.join('fixtures', 'entry');
+	public depth: number = this.path.split(path.sep).length - 2;
 
 	constructor(private readonly _options: Partial<FakeFsStatOptions> = {}) {
 		super();
@@ -61,7 +62,7 @@ export function getEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 export function getFileEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry({
 		isFile: true,
-		path: 'fixtures/file.txt',
+		path: path.join('fixtures', 'file.txt'),
 		...options
 	});
 }
@@ -69,7 +70,7 @@ export function getFileEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 export function getDirectoryEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry({
 		isDirectory: true,
-		path: 'fixtures/directory',
+		path: path.join('fixtures', 'directory'),
 		...options
 	});
 }

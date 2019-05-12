@@ -14,11 +14,8 @@ export interface Task {
  * Generate tasks based on parent directory of each pattern.
  */
 export function generate(patterns: Pattern[], settings: Settings): Task[] {
-	const unixPatterns = patterns.map(utils.pattern.unixifyPattern);
-	const unixIgnore = settings.ignore.map(utils.pattern.unixifyPattern);
-
-	const positivePatterns = getPositivePatterns(unixPatterns);
-	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
+	const positivePatterns = getPositivePatterns(patterns);
+	const negativePatterns = getNegativePatternsAsPositive(patterns, settings.ignore);
 
 	const staticPatterns = positivePatterns.filter(utils.pattern.isStaticPattern);
 	const dynamicPatterns = positivePatterns.filter(utils.pattern.isDynamicPattern);

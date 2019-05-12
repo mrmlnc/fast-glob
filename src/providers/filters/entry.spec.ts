@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
@@ -191,7 +192,7 @@ describe('Providers → Filters → Entry', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
 				const entry = tests.getFileEntry({
-					path: 'fixtures/.file.txt'
+					path: path.join('fixtures', '.file.txt')
 				});
 
 				const actual = filter(entry);
@@ -203,7 +204,7 @@ describe('Providers → Filters → Entry', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false });
 
 				const entry = tests.getFileEntry({
-					path: 'fixtures/.file.txt'
+					path: path.join('fixtures', '.file.txt')
 				});
 
 				const actual = filter(entry);
@@ -215,7 +216,7 @@ describe('Providers → Filters → Entry', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/.directory'
+					path: path.join('fixtures', '.directory')
 				});
 
 				const actual = filter(entry);
@@ -227,7 +228,7 @@ describe('Providers → Filters → Entry', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/.directory'
+					path: path.join('fixtures', '.directory')
 				});
 
 				const actual = filter(entry);
@@ -268,7 +269,7 @@ describe('Providers → Filters → Entry', () => {
 			});
 
 			it('should return false for file that excluded by absolute negative patterns when `absolute` option is enabled', () => {
-				const negative = utils.path.makeAbsolute(process.cwd(), '**');
+				const negative = utils.path.makeAbsolute(process.cwd(), '**').replace(/\\/g, '/');
 				const filter = getFilter(['**/*'], [negative], { absolute: true });
 
 				const entry = tests.getFileEntry();

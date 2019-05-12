@@ -24,7 +24,7 @@ export default abstract class FileSystem<T> {
 	 */
 	public makeEntry(stat: fs.Stats, pattern: Pattern): Entry {
 		(stat as Entry).path = pattern;
-		(stat as Entry).depth = pattern.split('/').length;
+		(stat as Entry).depth = pattern.split(path.sep).length;
 
 		return stat as Entry;
 	}

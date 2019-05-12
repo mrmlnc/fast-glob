@@ -10,7 +10,7 @@ export function isDotDirectory(filepath: string): boolean {
 /**
  * Convert a windows-like path to a unix-style path.
  */
-export function normalize(filepath: string): string {
+export function unixify(filepath: string): string {
 	return filepath.replace(/\\/g, '/');
 }
 
@@ -19,10 +19,8 @@ export function normalize(filepath: string): string {
  */
 export function makeAbsolute(cwd: string, filepath: string): string {
 	if (path.isAbsolute(filepath)) {
-		return normalize(filepath);
+		return filepath;
 	}
 
-	const fullpath = path.resolve(cwd, filepath);
-
-	return normalize(fullpath);
+	return path.resolve(cwd, filepath);
 }

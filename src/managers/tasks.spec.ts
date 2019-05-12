@@ -7,22 +7,6 @@ import { Task } from './tasks';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
-		it('should return task with windows-like patterns', () => {
-			const settings = new Settings();
-
-			const expected: Task[] = [{
-				base: 'a',
-				dynamic: true,
-				patterns: ['a/*'],
-				positive: ['a/*'],
-				negative: []
-			}];
-
-			const actual = manager.generate(['a\\*'], settings);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
 		it('should return task with negative patterns from «ignore» option', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 

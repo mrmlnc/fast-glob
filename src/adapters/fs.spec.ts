@@ -52,9 +52,10 @@ describe('Adapters → FileSystem', () => {
 		it('should return created entry', () => {
 			const adapter = getAdapter();
 
-			const actual = adapter.makeEntry(tests.getFileEntry(), 'base/file.json');
+			const filepath = path.join('base', 'file.json');
+			const actual = adapter.makeEntry(tests.getFileEntry(), filepath);
 
-			assert.strictEqual(actual.path, 'base/file.json');
+			assert.strictEqual(actual.path, filepath);
 			assert.strictEqual(actual.depth, 2);
 		});
 

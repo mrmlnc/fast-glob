@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import Settings from '../../settings';
 import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
 import * as utils from '../../utils/index';
@@ -90,6 +92,6 @@ export default class EntryFilter {
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
 	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
-		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
+		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + path.sep, patternsRe);
 	}
 }
