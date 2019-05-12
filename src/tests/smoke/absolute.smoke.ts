@@ -21,6 +21,11 @@ smoke.suite('Smoke → Absolute', [
 		pattern: 'fixtures/**/*',
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true }
+	},
+	{
+		pattern: 'fixtures/../*',
+		globOptions: { absolute: true },
+		fgOptions: { absolute: true }
 	}
 ]);
 

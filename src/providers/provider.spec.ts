@@ -157,7 +157,21 @@ describe('Providers → Provider', () => {
 				const provider = getProvider({ absolute: true });
 				const entry = tests.getFileEntry();
 
-				const fullpath = path.join(process.cwd(), 'fixtures/file.txt');
+				const fullpath = path.join(process.cwd(), 'fixtures', 'file.txt');
+				const expected = utils.path.unixify(fullpath);
+
+				const actual = provider.transform(entry);
+
+				assert.strictEqual(actual, expected);
+			});
+
+			it('should transform event absolute filepath when option is provided', () => {
+				const provider = getProvider({ absolute: true });
+				const entry = tests.getFileEntry({
+					path: `${process.cwd()}/fixtures/../file.txt`
+				});
+
+				const fullpath = path.join(process.cwd(), 'file.txt');
 				const expected = utils.path.unixify(fullpath);
 
 				const actual = provider.transform(entry);

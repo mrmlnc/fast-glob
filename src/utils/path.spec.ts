@@ -31,16 +31,6 @@ describe('Utils → Path', () => {
 	});
 
 	describe('.makeAbsolute', () => {
-		it('should return absolute filepath without changes', () => {
-			const filepath = path.resolve('something', 'file.md');
-
-			const expected = filepath;
-
-			const actual = util.makeAbsolute(process.cwd(), filepath);
-
-			assert.strictEqual(actual, expected);
-		});
-
 		it('should return absolute filepath', () => {
 			const expected = path.join(process.cwd(), 'file.md');
 
