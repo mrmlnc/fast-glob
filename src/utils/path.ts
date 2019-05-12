@@ -15,12 +15,8 @@ export function unixify(filepath: string): string {
 }
 
 /**
- * Returns normalized absolute path of provided filepath.
+ * Returns absolute path for provided filepath relative to cwd.
  */
 export function makeAbsolute(cwd: string, filepath: string): string {
-	if (path.isAbsolute(filepath)) {
-		return filepath;
-	}
-
 	return path.resolve(cwd, filepath);
 }

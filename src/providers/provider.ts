@@ -61,7 +61,7 @@ export default abstract class Provider<T> {
 	 * Returns transformed entry.
 	 */
 	public transform(entry: Entry): EntryItem {
-		if (this.settings.absolute && !path.isAbsolute(entry.path)) {
+		if (this.settings.absolute) {
 			entry.path = utils.path.makeAbsolute(this.settings.cwd, entry.path);
 		}
 
