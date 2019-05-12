@@ -311,6 +311,32 @@ fg.sync(['**/*.md'], { ignore: '**/second/**' }); // ['first/file.txt']
 
 You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
 
+## How to write patterns on Windows?
+
+Always use forward-slashes in glob expressions (patterns and `ignore` option). Use backslashes for escaping characters. With the `cwd` option use a convenient format.
+
+**Bad**
+
+```ts
+[
+	'directory\\*',
+	path.join(process.cwd(), '**')
+]
+```
+
+**Good**
+
+```ts
+[
+	'directory/*',
+	path.join(process.cwd(), '**').replace(/\\/g, '/')
+]
+```
+
+> :book: Use the [`normalize-path`](https://www.npmjs.com/package/normalize-path) or the [`unixify`](https://www.npmjs.com/package/unixify) package to convert Windows-style path to a Unix-style path.
+
+Read more about [matching with backslashes](https://github.com/micromatch/micromatch#backslashes).
+
 ## Compatible with `node-glob`?
 
 Not fully, because `fast-glob` does not implement all options of `node-glob`. See table below.

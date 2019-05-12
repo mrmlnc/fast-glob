@@ -2,6 +2,8 @@ import * as path from 'path';
 
 import * as smoke from './smoke';
 
+const CWD = process.cwd().replace(/\\/g, '/');
+
 smoke.suite('Smoke → Absolute', [
 	{
 		pattern: 'fixtures/*',
@@ -38,13 +40,13 @@ smoke.suite('Smoke → Absolute (ignore)', [
 
 	{
 		pattern: 'fixtures/*',
-		ignore: path.join(process.cwd(), 'fixtures', '*'),
+		ignore: path.posix.join(CWD, 'fixtures', '*'),
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true }
 	},
 	{
 		pattern: 'fixtures/**',
-		ignore: path.join(process.cwd(), 'fixtures', '*'),
+		ignore: path.posix.join(CWD, 'fixtures', '*'),
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true },
 		broken: true,
@@ -91,21 +93,21 @@ smoke.suite('Smoke → Absolute (cwd & ignore)', [
 
 	{
 		pattern: '*',
-		ignore: path.join(process.cwd(), 'fixtures', '*'),
+		ignore: path.posix.join(CWD, 'fixtures', '*'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true }
 	},
 	{
 		pattern: '**',
-		ignore: path.join(process.cwd(), 'fixtures', '*'),
+		ignore: path.posix.join(CWD, 'fixtures', '*'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true }
 	},
 	{
 		pattern: '**',
-		ignore: path.join(process.cwd(), 'fixtures', '**'),
+		ignore: path.posix.join(CWD, 'fixtures', '**'),
 		cwd: 'fixtures',
 		globOptions: { absolute: true },
 		fgOptions: { absolute: true }

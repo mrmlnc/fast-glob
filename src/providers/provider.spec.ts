@@ -64,7 +64,6 @@ describe('Providers → Provider', () => {
 			});
 
 			assert.strictEqual(actual.basePath, '');
-			assert.strictEqual(actual.sep, '/');
 			assert.strictEqual(typeof actual.filter, 'function');
 			assert.strictEqual(typeof actual.deep, 'function');
 		});
@@ -81,7 +80,6 @@ describe('Providers → Provider', () => {
 			});
 
 			assert.strictEqual(actual.basePath, 'fixtures');
-			assert.strictEqual(actual.sep, '/');
 			assert.strictEqual(typeof actual.filter, 'function');
 			assert.strictEqual(typeof actual.deep, 'function');
 		});
@@ -124,7 +122,7 @@ describe('Providers → Provider', () => {
 				const entry = tests.getDirectoryEntry();
 
 				const fullpath = path.join(process.cwd(), 'fixtures/directory/');
-				const expected = utils.path.normalize(fullpath);
+				const expected = utils.path.unixify(fullpath);
 
 				const actual = provider.transform(entry);
 
@@ -160,7 +158,7 @@ describe('Providers → Provider', () => {
 				const entry = tests.getFileEntry();
 
 				const fullpath = path.join(process.cwd(), 'fixtures/file.txt');
-				const expected = utils.path.normalize(fullpath);
+				const expected = utils.path.unixify(fullpath);
 
 				const actual = provider.transform(entry);
 

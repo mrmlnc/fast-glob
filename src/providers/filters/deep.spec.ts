@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
@@ -42,7 +43,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/one/two/three'
+					path: path.join('fixtures', 'one', 'two', 'three')
 				});
 
 				const actual = filter(entry);
@@ -54,7 +55,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/one/two'
+					path: path.join('fixtures', 'one', 'two')
 				});
 
 				const actual = filter(entry);
@@ -66,7 +67,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['fixtures/**'], [], { deep: 2 });
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/one/two'
+					path: path.join('fixtures', 'one', 'two')
 				});
 
 				const actual = filter(entry);
@@ -90,7 +91,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['fixtures/*/*/*'], []);
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/one/two'
+					path: path.join('fixtures', 'one', 'two')
 				});
 
 				const actual = filter(entry);
@@ -102,7 +103,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['fixtures/*'], []);
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/one/two/three/four'
+					path: path.join('fixtures', 'one', 'two', 'three', 'four')
 				});
 
 				const actual = filter(entry);
@@ -142,7 +143,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/.directory'
+					path: path.join('fixtures', '.directory')
 				});
 
 				const actual = filter(entry);
@@ -154,7 +155,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry({
-					path: 'fixtures/.directory'
+					path: path.join('fixtures', '.directory')
 				});
 
 				const actual = filter(entry);

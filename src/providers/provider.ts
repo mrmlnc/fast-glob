@@ -39,8 +39,7 @@ export default abstract class Provider<T> {
 		return {
 			basePath: task.base === '.' ? '' : task.base,
 			filter: this.entryFilter.getFilter(task.positive, task.negative),
-			deep: this.deepFilter.getFilter(task.positive, task.negative),
-			sep: '/'
+			deep: this.deepFilter.getFilter(task.positive, task.negative)
 		};
 	}
 
@@ -67,8 +66,10 @@ export default abstract class Provider<T> {
 		}
 
 		if (this.settings.markDirectories && entry.isDirectory()) {
-			entry.path += '/';
+			entry.path += path.sep;
 		}
+
+		entry.path = utils.path.unixify(entry.path);
 
 		const item: EntryItem = this.settings.stats ? entry : entry.path;
 

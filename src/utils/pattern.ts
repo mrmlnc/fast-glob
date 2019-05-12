@@ -23,13 +23,6 @@ export function isDynamicPattern(pattern: Pattern): boolean {
 }
 
 /**
- * Convert a windows «path» to a unix-style «path».
- */
-export function unixifyPattern(pattern: Pattern): Pattern {
-	return pattern.replace(/\\/g, '/');
-}
-
-/**
  * Returns negative pattern as positive pattern.
  */
 export function convertToPositivePattern(pattern: Pattern): Pattern {
