@@ -4,16 +4,13 @@ import * as fsStat from '@nodelib/fs.stat';
 
 import FileSystem from './fs';
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-
-import { Entry } from '../types/entries';
-import { Pattern } from '../types/patterns';
+import { Entry, EntryFilterFunction, Pattern } from '../types/index';
 
 export default class FileSystemSync extends FileSystem<Entry[]> {
 	/**
 	 * Use sync API to read entries for Task.
 	 */
-	public read(patterns: string[], filter: FilterFunction): Entry[] {
+	public read(patterns: string[], filter: EntryFilterFunction): Entry[] {
 		const entries: Entry[] = [];
 
 		patterns.forEach((pattern) => {
@@ -47,6 +44,6 @@ export default class FileSystemSync extends FileSystem<Entry[]> {
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): fs.Stats {
-		return fsStat.statSync(filepath, { throwErrorOnBrokenSymlinks: false });
+		return fsStat.statSync(filepath, { throwErrorOnBrokenSymbolicLink: false });
 	}
 }

@@ -5,16 +5,13 @@ import * as fsStat from '@nodelib/fs.stat';
 
 import FileSystem from './fs';
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-
-import { Entry } from '../types/entries';
-import { Pattern } from '../types/patterns';
+import { Entry, EntryFilterFunction, Pattern } from '../types/index';
 
 export default class FileSystemStream extends FileSystem<NodeJS.ReadableStream> {
 	/**
 	 * Use stream API to read entries for Task.
 	 */
-	public read(patterns: string[], filter: FilterFunction): NodeJS.ReadableStream {
+	public read(patterns: string[], filter: EntryFilterFunction): NodeJS.ReadableStream {
 		const filepaths = patterns.map(this.getFullEntryPath, this);
 
 		const transform = new stream.Transform({ objectMode: true });
@@ -53,6 +50,10 @@ export default class FileSystemStream extends FileSystem<NodeJS.ReadableStream> 
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): Promise<fs.Stats> {
-		return fsStat.stat(filepath, { throwErrorOnBrokenSymlinks: false });
+		return new Promise((resolve, reject) => {
+			fsStat.stat(filepath, { throwErrorOnBrokenSymbolicLink: false }, (error, stats) => {
+				error ? reject(error) : resolve(stats);
+			});
+		});
 	}
 }

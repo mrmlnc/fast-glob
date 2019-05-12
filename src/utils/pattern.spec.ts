@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { Pattern } from '../types/patterns';
+import { Pattern } from '../types/index';
 import * as util from './pattern';
 
 describe('Utils → Pattern', () => {

@@ -4,7 +4,7 @@ import globParent = require('glob-parent');
 import isGlob = require('is-glob');
 import micromatch = require('micromatch');
 
-import { Pattern, PatternRe } from '../types/patterns';
+import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
 
 const GLOBSTAR = '**';
 
@@ -136,14 +136,14 @@ export function getMaxNaivePatternsDepth(patterns: Pattern[]): number {
 /**
  * Make RegExp for provided pattern.
  */
-export function makeRe(pattern: Pattern, options: micromatch.Options): PatternRe {
+export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
 	return micromatch.makeRe(pattern, options);
 }
 
 /**
  * Convert patterns to regexps.
  */
-export function convertPatternsToRe(patterns: Pattern[], options: micromatch.Options): PatternRe[] {
+export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOptions): PatternRe[] {
 	return patterns.map((pattern) => makeRe(pattern, options));
 }
 

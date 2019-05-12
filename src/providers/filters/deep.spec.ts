@@ -1,10 +1,8 @@
 import * as assert from 'assert';
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
-import { Pattern } from '../../types/patterns';
+import { EntryFilterFunction, Pattern } from '../../types/index';
 import DeepFilter from './deep';
 
 function getDeepFilterInstance(options?: Options): DeepFilter {
@@ -15,7 +13,7 @@ function getDeepFilterInstance(options?: Options): DeepFilter {
 	});
 }
 
-function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): FilterFunction {
+function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): EntryFilterFunction {
 	return getDeepFilterInstance(options).getFilter(positive, negative);
 }
 

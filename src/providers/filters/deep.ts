@@ -1,19 +1,14 @@
-import micromatch = require('micromatch');
-
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
 import Settings from '../../settings';
-import { Entry } from '../../types/entries';
-import { Pattern, PatternRe } from '../../types/patterns';
-import * as pathUtils from '../../utils/path';
-import * as patternUtils from '../../utils/pattern';
+import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
+import * as utils from '../../utils/index';
 
 export default class DeepFilter {
-	constructor(private readonly settings: Settings, private readonly micromatchOptions: micromatch.Options) { }
+	constructor(private readonly settings: Settings, private readonly micromatchOptions: MicromatchOptions) { }
 
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
+	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const maxPatternDepth = this.getMaxPatternDepth(positive);
 		const negativeRe: PatternRe[] = this.getNegativePatternsRe(negative);
 
@@ -24,18 +19,18 @@ export default class DeepFilter {
 	 * Returns max depth of the provided patterns.
 	 */
 	private getMaxPatternDepth(patterns: Pattern[]): number {
-		const globstar = patterns.some(patternUtils.hasGlobStar);
+		const globstar = patterns.some(utils.pattern.hasGlobStar);
 
-		return globstar ? Infinity : patternUtils.getMaxNaivePatternsDepth(patterns);
+		return globstar ? Infinity : utils.pattern.getMaxNaivePatternsDepth(patterns);
 	}
 
 	/**
 	 * Returns RegExp's for patterns that can affect the depth of reading.
 	 */
 	private getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
-		const affectDepthOfReadingPatterns: Pattern[] = patterns.filter(patternUtils.isAffectDepthOfReadingPattern);
+		const affectDepthOfReadingPatterns: Pattern[] = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
 
-		return patternUtils.convertPatternsToRe(affectDepthOfReadingPatterns, this.micromatchOptions);
+		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this.micromatchOptions);
 	}
 
 	/**
@@ -86,13 +81,13 @@ export default class DeepFilter {
 	 * Returns «true» for a directory whose name starts with a period if «dot» option is disabled.
 	 */
 	private isSkippedDotDirectory(entry: Entry): boolean {
-		return !this.settings.dot && pathUtils.isDotDirectory(entry.path);
+		return !this.settings.dot && utils.path.isDotDirectory(entry.path);
 	}
 
 	/**
 	 * Returns «true» for a directory whose path math to any negative pattern.
 	 */
 	private isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
-		return !patternUtils.matchAny(entry.path, negativeRe);
+		return !utils.pattern.matchAny(entry.path, negativeRe);
 	}
 }

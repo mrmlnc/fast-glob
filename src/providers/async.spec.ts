@@ -3,17 +3,18 @@
 import * as assert from 'assert';
 
 import { Task } from '../managers/tasks';
+import ReaderStream from '../readers/stream';
 import Settings from '../settings';
 import * as tests from '../tests/index';
-import { Entry, EntryItem } from '../types/entries';
-import ReaderStream from './reader-stream';
+import { Entry, EntryItem } from '../types/index';
+import ProviderAsync from './async';
 
-class ReaderStreamFake extends ReaderStream {
-	public dynamicApi(): NodeJS.ReadableStream {
+class TestReaderStream extends ReaderStream {
+	public dynamic(): NodeJS.ReadableStream {
 		return this.fake({ path: 'dynamic' } as Entry);
 	}
 
-	public staticApi(): NodeJS.ReadableStream {
+	public static(): NodeJS.ReadableStream {
 		return this.fake({ path: 'static' } as Entry);
 	}
 
@@ -22,34 +23,25 @@ class ReaderStreamFake extends ReaderStream {
 	}
 }
 
-class ReaderStreamFakeThrowEnoent extends ReaderStreamFake {
-	public api(): NodeJS.ReadableStream {
-		return this.fake('dynamic', new tests.EnoentErrnoException());
+class TestProviderAsync extends ProviderAsync {
+	protected readonly _reader: TestReaderStream = new TestReaderStream(this.settings);
+
+	constructor(public settings: Settings = new Settings()) {
+		super(settings);
 	}
 }
 
-class ReaderStreamFakeThrowErrno extends ReaderStreamFake {
+class TestProviderAsyncWithEnoent extends TestProviderAsync {
 	public api(): NodeJS.ReadableStream {
-		return this.fake('dynamic', new Error('Boom'));
+		return this._reader.fake('dynamic', new tests.EnoentErrnoException());
 	}
 }
 
-/**
- * Wrapper for easily testing Stream API.
- */
-const getEntries = (settings: Settings, task: Task, api: typeof ReaderStreamFake): Promise<EntryItem[]> => {
-	return new Promise((resolve, reject) => {
-		const entries: EntryItem[] = [];
-
-		const reader = new api(settings);
-
-		const stream = reader.read(task);
-
-		stream.on('error', reject);
-		stream.on('data', (entry: EntryItem) => entries.push(entry));
-		stream.on('end', () => resolve(entries));
-	});
-};
+class TestProviderAsyncWithErrno extends TestProviderAsync {
+	public api(): NodeJS.ReadableStream {
+		return this._reader.fake('dynamic', new Error('Boom'));
+	}
+}
 
 function getTask(dynamic: boolean = true): Task {
 	return {
@@ -61,35 +53,34 @@ function getTask(dynamic: boolean = true): Task {
 	};
 }
 
-describe('Providers → ReaderStream', () => {
+describe('Providers → ProviderAsync', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const settings = new Settings();
-			const reader = new ReaderStream(settings);
+			const provider = new TestProviderAsync();
 
-			assert.ok(reader instanceof ReaderStream);
+			assert.ok(provider instanceof ProviderAsync);
 		});
 	});
 
 	describe('.read', () => {
-		it('should returns entries for dynamic entries', async () => {
+		it('should returns entries for dynamic task', async () => {
 			const task = getTask();
-			const settings = new Settings();
+			const provider = new TestProviderAsync();
 
 			const expected: string[] = ['dynamic'];
 
-			const actual = await getEntries(settings, task, ReaderStreamFake);
+			const actual = await provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should returns entries for static entries', async () => {
+		it('should returns entries for static task', async () => {
 			const task = getTask(/* dynamic */ false);
-			const settings = new Settings();
+			const provider = new TestProviderAsync();
 
 			const expected: string[] = ['static'];
 
-			const actual = await getEntries(settings, task, ReaderStreamFake);
+			const actual = await provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -97,10 +88,11 @@ describe('Providers → ReaderStream', () => {
 		it('should returns entries (stats)', async () => {
 			const task = getTask();
 			const settings = new Settings({ stats: true });
+			const provider = new TestProviderAsync(settings);
 
 			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
 
-			const actual = await getEntries(settings, task, ReaderStreamFake);
+			const actual = await provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -108,31 +100,32 @@ describe('Providers → ReaderStream', () => {
 		it('should returns transformed entries', async () => {
 			const task = getTask();
 			const settings = new Settings({ transform: () => 'cake' });
+			const provider = new TestProviderAsync(settings);
 
 			const expected: string[] = ['cake'];
 
-			const actual = await getEntries(settings, task, ReaderStreamFake);
+			const actual = await provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should returns empty array if provided cwd does not exists', async () => {
 			const task = getTask();
-			const settings = new Settings();
+			const provider = new TestProviderAsyncWithEnoent();
 
 			const expected: string[] = [];
 
-			const actual = await getEntries(settings, task, ReaderStreamFakeThrowEnoent);
+			const actual = await provider.read(task);
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should throw error', async () => {
 			const task = getTask();
-			const settings = new Settings();
+			const provider = new TestProviderAsyncWithErrno();
 
 			try {
-				await getEntries(settings, task, ReaderStreamFakeThrowErrno);
+				await provider.read(task);
 
 				throw new Error('Wow');
 			} catch (err) {

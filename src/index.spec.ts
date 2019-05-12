@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as pkg from './index';
 import { Task } from './managers/tasks';
-import { EntryItem } from './types/entries';
+import { EntryItem } from './types/index';
 
 describe('Package', () => {
 	describe('.sync', () => {

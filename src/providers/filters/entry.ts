@@ -1,23 +1,18 @@
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-import micromatch = require('micromatch');
-
 import Settings from '../../settings';
-import { Entry } from '../../types/entries';
-import { Pattern, PatternRe } from '../../types/patterns';
-import * as pathUtils from '../../utils/path';
-import * as patternUtils from '../../utils/pattern';
+import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
+import * as utils from '../../utils/index';
 
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
-	constructor(private readonly settings: Settings, private readonly micromatchOptions: micromatch.Options) { }
+	constructor(private readonly settings: Settings, private readonly micromatchOptions: MicromatchOptions) { }
 
 	/**
 	 * Returns filter for directories.
 	 */
-	public getFilter(positive: Pattern[], negative: Pattern[]): FilterFunction {
-		const positiveRe: PatternRe[] = patternUtils.convertPatternsToRe(positive, this.micromatchOptions);
-		const negativeRe: PatternRe[] = patternUtils.convertPatternsToRe(negative, this.micromatchOptions);
+	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
+		const positiveRe: PatternRe[] = utils.pattern.convertPatternsToRe(positive, this.micromatchOptions);
+		const negativeRe: PatternRe[] = utils.pattern.convertPatternsToRe(negative, this.micromatchOptions);
 
 		return (entry: Entry) => this.filter(entry, positiveRe, negativeRe);
 	}
@@ -83,7 +78,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		const fullpath = pathUtils.makeAbsolute(this.settings.cwd, entry.path);
+		const fullpath = utils.path.makeAbsolute(this.settings.cwd, entry.path);
 
 		return this.isMatchToPatterns(fullpath, negativeRe);
 	}
@@ -95,6 +90,6 @@ export default class EntryFilter {
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
 	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
-		return patternUtils.matchAny(filepath, patternsRe) || patternUtils.matchAny(filepath + '/', patternsRe);
+		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
 	}
 }

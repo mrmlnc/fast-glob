@@ -1,23 +1,24 @@
 import * as stream from 'stream';
 
-import * as readdir from '@mrmlnc/readdir-enhanced';
-
 import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
-import { Entry } from '../types/entries';
-import Reader from './reader';
+import ReaderStream from '../readers/stream';
+import { Entry, ReaderOptions } from '../types/index';
+import Provider from './provider';
 
 class TransformStream extends stream.Transform {
-	constructor(private readonly reader: ReaderStream) {
+	constructor(private readonly provider: ProviderStream) {
 		super({ objectMode: true });
 	}
 
 	public _transform(entry: Entry, _encoding: string, callback: Function): void {
-		callback(null, this.reader.transform(entry));
+		callback(null, this.provider.transform(entry));
 	}
 }
 
-export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
+export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
+	protected _reader: ReaderStream = new ReaderStream(this.settings);
+
 	/**
 	 * Returns FileSystem adapter.
 	 */
@@ -43,25 +44,11 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	/**
 	 * Returns founded paths.
 	 */
-	public api(root: string, task: Task, options: readdir.Options): NodeJS.ReadableStream {
+	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
 		if (task.dynamic) {
-			return this.dynamicApi(root, options);
+			return this._reader.dynamic(root, options);
 		}
 
-		return this.staticApi(task, options);
-	}
-
-	/**
-	 * Api for dynamic tasks.
-	 */
-	public dynamicApi(root: string, options: readdir.Options): NodeJS.ReadableStream {
-		return readdir.readdirStreamStat(root, options);
-	}
-
-	/**
-	 * Api for static tasks.
-	 */
-	public staticApi(task: Task, options: readdir.Options): NodeJS.ReadableStream {
-		return this.fsAdapter.read(task.patterns, options.filter as readdir.FilterFunction);
+		return this._reader.static(task.patterns, options);
 	}
 }

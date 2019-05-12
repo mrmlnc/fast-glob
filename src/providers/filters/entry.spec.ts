@@ -1,11 +1,9 @@
 import * as assert from 'assert';
 
-import { FilterFunction } from '@mrmlnc/readdir-enhanced';
-
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
-import { Pattern } from '../../types/patterns';
-import * as pathUtil from '../../utils/path';
+import { EntryFilterFunction, Pattern } from '../../types/index';
+import * as utils from '../../utils/index';
 import EntryFilter from './entry';
 
 function getEntryFilterInstance(options?: Options): EntryFilter {
@@ -16,7 +14,7 @@ function getEntryFilterInstance(options?: Options): EntryFilter {
 	});
 }
 
-function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): FilterFunction {
+function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): EntryFilterFunction {
 	return getEntryFilterInstance(options).getFilter(positive, negative);
 }
 
@@ -270,7 +268,7 @@ describe('Providers → Filters → Entry', () => {
 			});
 
 			it('should return false for file that excluded by absolute negative patterns when `absolute` option is enabled', () => {
-				const negative = pathUtil.makeAbsolute(process.cwd(), '**');
+				const negative = utils.path.makeAbsolute(process.cwd(), '**');
 				const filter = getFilter(['**/*'], [negative], { absolute: true });
 
 				const entry = tests.getFileEntry();

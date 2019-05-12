@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import Settings from '../settings';
-import { PatternsGroup } from '../types/patterns';
+import { PatternsGroup } from '../types/index';
 import * as manager from './tasks';
 import { Task } from './tasks';
 
