@@ -17,8 +17,12 @@ export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	const positivePatterns = getPositivePatterns(patterns);
 	const negativePatterns = getNegativePatternsAsPositive(patterns, settings.ignore);
 
-	const staticPatterns = positivePatterns.filter(utils.pattern.isStaticPattern);
-	const dynamicPatterns = positivePatterns.filter(utils.pattern.isDynamicPattern);
+	/**
+	 * When the `case` option is disabled, all patterns must be marked as dynamic, because we cannot check filepath
+	 * directly (without read directory).
+	 */
+	const staticPatterns = !settings.case ? [] : positivePatterns.filter(utils.pattern.isStaticPattern);
+	const dynamicPatterns = !settings.case ? positivePatterns : positivePatterns.filter(utils.pattern.isDynamicPattern);
 
 	const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
 	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);

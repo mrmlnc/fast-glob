@@ -47,6 +47,31 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should return only dynamic patterns when the `case` option is enabled', () => {
+			const settings = new Settings({ case: false });
+
+			const expected: Task[] = [
+				{
+					base: 'a',
+					dynamic: true,
+					patterns: ['a/file.json', '!b/*.md'],
+					positive: ['a/file.json'],
+					negative: ['b/*.md']
+				},
+				{
+					base: 'b',
+					dynamic: true,
+					patterns: ['b/*', '!b/*.md'],
+					positive: ['b/*'],
+					negative: ['b/*.md']
+				}
+			];
+
+			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {
