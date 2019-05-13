@@ -248,7 +248,13 @@ Enable extglob support, so that extglobs are regarded as literal characters.
   * Type: `boolean`
   * Default: `true`
 
-Enable a case-insensitive regex for matching files.
+Enable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode for matching files.
+
+##### Examples
+
+* File System: `test/file.md`, `test/File.md`
+* Case-sensitive for `test/file.*` pattern: `test/file.md`
+* Case-insensitive for `test/file.*` pattern: `test/file.md`, `test/File.md`
 
 #### matchBase
 
