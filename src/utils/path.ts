@@ -18,11 +18,5 @@ export function normalize(filepath: string): string {
  * Returns normalized absolute path of provided filepath.
  */
 export function makeAbsolute(cwd: string, filepath: string): string {
-	if (path.isAbsolute(filepath)) {
-		return normalize(filepath);
-	}
-
-	const fullpath = path.resolve(cwd, filepath);
-
-	return normalize(fullpath);
+	return normalize(path.resolve(cwd, filepath));
 }

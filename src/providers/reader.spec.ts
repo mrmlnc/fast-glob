@@ -170,6 +170,20 @@ describe('Providers → Reader', () => {
 				assert.strictEqual(actual, expected);
 			});
 
+			it('should transform even absolute filepath when option is provided', () => {
+				const reader = getReader({ absolute: true });
+				const entry = tests.getFileEntry({
+					path: `${process.cwd()}/fixtures/../file.txt`
+				});
+
+				const fullpath = path.join(process.cwd(), 'file.txt');
+				const expected = pathUtil.normalize(fullpath);
+
+				const actual = reader.transform(entry);
+
+				assert.strictEqual(actual, expected);
+			});
+
 			it('should return do nothing when option is not provided', () => {
 				const reader = getReader();
 				const entry = tests.getFileEntry();
