@@ -21,8 +21,12 @@ export function generate(patterns: Pattern[], options: IOptions): ITask[] {
 	const positivePatterns = getPositivePatterns(unixPatterns);
 	const negativePatterns = getNegativePatternsAsPositive(unixPatterns, unixIgnore);
 
-	const staticPatterns = positivePatterns.filter(patternUtils.isStaticPattern);
-	const dynamicPatterns = positivePatterns.filter(patternUtils.isDynamicPattern);
+	/**
+	 * When the `case` option is disabled, all patterns must be marked as dynamic, because we cannot check filepath
+	 * directly (without read directory).
+	 */
+	const staticPatterns = !options.case ? [] : positivePatterns.filter(patternUtils.isStaticPattern);
+	const dynamicPatterns = !options.case ? positivePatterns : positivePatterns.filter(patternUtils.isDynamicPattern);
 
 	const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
 	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);

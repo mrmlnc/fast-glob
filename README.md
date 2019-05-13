@@ -269,7 +269,13 @@ The [`noext`](#noext) option without double-negation. This option has a higher p
   * Type: `boolean`
   * Default: `false`
 
-Disable a case-insensitive regex for matching files.
+Disable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode for matching files.
+
+##### Examples
+
+* File System: `test/file.md`, `test/File.md`
+* Case-sensitive for `test/file.*` pattern (`false`): `test/file.md`
+* Case-insensitive for `test/file.*` pattern (`true`): `test/file.md`, `test/File.md`
 
 #### case
 
