@@ -26,7 +26,6 @@
     "@types/glob": "^7.1.1",
     "@types/glob-parent": "^3.1.1",
     "@types/glob-stream": "^6.1.0",
-    "@types/globby": "^9.1.0",
     "@types/is-glob": "^4.0.1",
     "@types/merge2": "^1.1.4",
     "@types/micromatch": "^3.1.0",
