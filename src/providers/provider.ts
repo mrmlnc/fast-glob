@@ -11,13 +11,13 @@ export default abstract class Provider<T> {
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;
 
-	private readonly micromatchOptions: MicromatchOptions;
+	private readonly _micromatchOptions: MicromatchOptions;
 
 	constructor(public readonly settings: Settings) {
-		this.micromatchOptions = this.getMicromatchOptions();
+		this._micromatchOptions = this.getMicromatchOptions();
 
-		this.entryFilter = new EntryFilter(settings, this.micromatchOptions);
-		this.deepFilter = new DeepFilter(settings, this.micromatchOptions);
+		this.entryFilter = new EntryFilter(settings, this._micromatchOptions);
+		this.deepFilter = new DeepFilter(settings, this._micromatchOptions);
 	}
 
 	/**

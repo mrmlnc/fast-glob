@@ -56,7 +56,7 @@ export interface SuitePackResult {
 }
 
 export default class Runner {
-	constructor(private readonly basedir: string, private readonly options: RunnerOptions) { }
+	constructor(private readonly _basedir: string, private readonly _options: RunnerOptions) { }
 
 	/**
 	 * Runs child process.
@@ -71,7 +71,7 @@ export default class Runner {
 	public suite(suitePath: string): SuiteMeasures {
 		const env: Record<string, string> = {
 			NODE_ENV: 'production',
-			BENCHMARK_CWD: this.basedir
+			BENCHMARK_CWD: this._basedir
 		};
 
 		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
@@ -92,10 +92,10 @@ export default class Runner {
 			errors: 0,
 			entries: 0,
 			retries: retries + 1,
-			measures: this.getSuitePackMeasures()
+			measures: this._getSuitePackMeasures()
 		};
 
-		for (let i = 0; i < this.options.launches; i++) {
+		for (let i = 0; i < this._options.launches; i++) {
 			try {
 				const { matches, time, memory } = this.suite(suitePath);
 
@@ -112,8 +112,8 @@ export default class Runner {
 		}
 
 		results.measures = {
-			time: this.getMeasures(results.measures.time.raw, 'ms'),
-			memory: this.getMeasures(results.measures.memory.raw, 'MB')
+			time: this._getMeasures(results.measures.time.raw, 'ms'),
+			memory: this._getMeasures(results.measures.memory.raw, 'MB')
 		};
 
 		return results;
@@ -128,7 +128,7 @@ export default class Runner {
 	}
 
 	public packs(): void {
-		const suitesPath: string = path.join(__dirname, 'suites', this.options.type);
+		const suitesPath: string = path.join(__dirname, 'suites', this._options.type);
 		const suites: string[] = this.getSuites(suitesPath);
 
 		for (const filepath of suites) {
@@ -136,7 +136,7 @@ export default class Runner {
 
 			let result = this.suitePack(suitePath, 0);
 
-			while (result.measures.time.stdev > this.options.maxStdev && result.retries < this.options.retries) {
+			while (result.measures.time.stdev > this._options.maxStdev && result.retries < this._options.retries) {
 				result = this.suitePack(suitePath, result.retries);
 			}
 
@@ -148,7 +148,7 @@ export default class Runner {
 		return fs.readdirSync(suitesPath).filter((suite) => suite.endsWith('.js'));
 	}
 
-	private getMeasures(raw: number[], units: string): Measure {
+	private _getMeasures(raw: number[], units: string): Measure {
 		return {
 			units,
 			raw,
@@ -157,10 +157,10 @@ export default class Runner {
 		};
 	}
 
-	private getSuitePackMeasures(): SuitePackMeasures {
+	private _getSuitePackMeasures(): SuitePackMeasures {
 		return {
-			time: this.getMeasures([], 'ms'),
-			memory: this.getMeasures([], 'MB')
+			time: this._getMeasures([], 'ms'),
+			memory: this._getMeasures([], 'MB')
 		};
 	}
 }

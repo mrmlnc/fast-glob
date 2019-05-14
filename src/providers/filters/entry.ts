@@ -7,82 +7,82 @@ import * as utils from '../../utils/index';
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
-	constructor(private readonly settings: Settings, private readonly micromatchOptions: MicromatchOptions) { }
+	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
 
 	/**
 	 * Returns filter for directories.
 	 */
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const positiveRe: PatternRe[] = utils.pattern.convertPatternsToRe(positive, this.micromatchOptions);
-		const negativeRe: PatternRe[] = utils.pattern.convertPatternsToRe(negative, this.micromatchOptions);
+		const positiveRe: PatternRe[] = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
+		const negativeRe: PatternRe[] = utils.pattern.convertPatternsToRe(negative, this._micromatchOptions);
 
-		return (entry: Entry) => this.filter(entry, positiveRe, negativeRe);
+		return (entry: Entry) => this._filter(entry, positiveRe, negativeRe);
 	}
 
 	/**
 	 * Returns true if entry must be added to result.
 	 */
-	private filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	private _filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
 		// Exclude duplicate results
-		if (this.settings.unique) {
-			if (this.isDuplicateEntry(entry)) {
+		if (this._settings.unique) {
+			if (this._isDuplicateEntry(entry)) {
 				return false;
 			}
 
-			this.createIndexRecord(entry);
+			this._createIndexRecord(entry);
 		}
 
 		// Filter files and directories by options
-		if (this.onlyFileFilter(entry) || this.onlyDirectoryFilter(entry)) {
+		if (this._onlyFileFilter(entry) || this._onlyDirectoryFilter(entry)) {
 			return false;
 		}
 
-		if (this.isSkippedByAbsoluteNegativePatterns(entry, negativeRe)) {
+		if (this._isSkippedByAbsoluteNegativePatterns(entry, negativeRe)) {
 			return false;
 		}
 
-		return this.isMatchToPatterns(entry.path, positiveRe) && !this.isMatchToPatterns(entry.path, negativeRe);
+		return this._isMatchToPatterns(entry.path, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
 	}
 
 	/**
 	 * Return true if the entry already has in the cross reader index.
 	 */
-	private isDuplicateEntry(entry: Entry): boolean {
+	private _isDuplicateEntry(entry: Entry): boolean {
 		return this.index.has(entry.path);
 	}
 
 	/**
 	 * Create record in the cross reader index.
 	 */
-	private createIndexRecord(entry: Entry): void {
+	private _createIndexRecord(entry: Entry): void {
 		this.index.set(entry.path, undefined);
 	}
 
 	/**
 	 * Returns true for non-files if the «onlyFiles» option is enabled.
 	 */
-	private onlyFileFilter(entry: Entry): boolean {
-		return this.settings.onlyFiles && !entry.isFile();
+	private _onlyFileFilter(entry: Entry): boolean {
+		return this._settings.onlyFiles && !entry.isFile();
 	}
 
 	/**
 	 * Returns true for non-directories if the «onlyDirectories» option is enabled.
 	 */
-	private onlyDirectoryFilter(entry: Entry): boolean {
-		return this.settings.onlyDirectories && !entry.isDirectory();
+	private _onlyDirectoryFilter(entry: Entry): boolean {
+		return this._settings.onlyDirectories && !entry.isDirectory();
 	}
 
 	/**
 	 * Return true when `absolute` option is enabled and matched to the negative patterns.
 	 */
-	private isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
-		if (!this.settings.absolute) {
+	private _isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
+		if (!this._settings.absolute) {
 			return false;
 		}
 
-		const fullpath = utils.path.makeAbsolute(this.settings.cwd, entry.path);
+		const fullpath = utils.path.makeAbsolute(this._settings.cwd, entry.path);
 
-		return this.isMatchToPatterns(fullpath, negativeRe);
+		return this._isMatchToPatterns(fullpath, negativeRe);
 	}
 
 	/**
@@ -91,7 +91,7 @@ export default class EntryFilter {
 	 * First, just trying to apply patterns to the path.
 	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
 	 */
-	private isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
+	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
 		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + path.sep, patternsRe);
 	}
 }

@@ -45,7 +45,7 @@
     "rimraf": "^2.6.2",
     "tiny-glob": "^0.2.3",
     "tslint": "^5.16.0",
-    "tslint-config-mrmlnc": "^2.0.1",
+    "tslint-config-mrmlnc": "^2.1.0",
     "typescript": "^3.4.4"
   },
   "dependencies": {

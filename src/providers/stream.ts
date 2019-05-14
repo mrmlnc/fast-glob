@@ -7,12 +7,12 @@ import { Entry, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 class TransformStream extends stream.Transform {
-	constructor(private readonly provider: ProviderStream) {
+	constructor(private readonly _provider: ProviderStream) {
 		super({ objectMode: true });
 	}
 
 	public _transform(entry: Entry, _encoding: string, callback: Function): void {
-		callback(null, this.provider.transform(entry));
+		callback(null, this._provider.transform(entry));
 	}
 }
 

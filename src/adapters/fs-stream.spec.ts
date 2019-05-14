@@ -16,11 +16,11 @@ class FileSystemStreamFake extends FileSystemStream {
 }
 
 class FileSystemStreamThrowStatError extends FileSystemStreamFake {
-	private call: number = 0;
+	private _call: number = 0;
 
 	public getStat(): Promise<fs.Stats> {
-		if (this.call === 0) {
-			this.call++;
+		if (this._call === 0) {
+			this._call++;
 
 			return Promise.reject(new Error('something'));
 		}

@@ -5,7 +5,7 @@ import Settings from '../settings';
 import { Entry, EntryFilterFunction, Pattern } from '../types/index';
 
 export default abstract class FileSystem<T> {
-	constructor(private readonly settings: Settings) { }
+	constructor(private readonly _settings: Settings) { }
 
 	/**
 	 * The main logic of reading the entries that must be implemented by each adapter.
@@ -16,7 +16,7 @@ export default abstract class FileSystem<T> {
 	 * Return full path to entry.
 	 */
 	public getFullEntryPath(filepath: string): string {
-		return path.resolve(this.settings.cwd, filepath);
+		return path.resolve(this._settings.cwd, filepath);
 	}
 
 	/**

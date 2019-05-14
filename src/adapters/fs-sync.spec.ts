@@ -16,14 +16,14 @@ class FileSystemSyncFake extends FileSystemSync {
 }
 
 class FileSystemSyncThrowStatError extends FileSystemSyncFake {
-	private call: number = 0;
+	private _call: number = 0;
 
 	/**
 	 * First call throw error.
 	 */
 	public getStat(): fs.Stats | never {
-		if (this.call === 0) {
-			this.call++;
+		if (this._call === 0) {
+			this._call++;
 
 			throw new Error('Something');
 		}

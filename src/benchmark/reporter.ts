@@ -1,39 +1,39 @@
 import { SuitePackResult } from './runner';
 
 export default class Reporter {
-	constructor(private readonly results: SuitePackResult) { }
+	constructor(private readonly _results: SuitePackResult) { }
 
 	public toString(): string {
-		return this.header + '\n' + this.measures + ' | ' + this.meta;
+		return this._formatHeader() + '\n' + this._formatMeasures() + ' | ' + this._formatMeta();
 	}
 
-	private get header(): string {
-		return this.results.name;
+	private _formatHeader(): string {
+		return this._results.name;
 	}
 
-	private get meta(): string {
-		const matches: string = 'Entries: ' + this.units(this.results.entries, '');
-		const errors: string = 'Errors: ' + this.units(this.results.errors, '');
-		const retries: string = 'Retries: ' + this.units(this.results.retries, '');
+	private _formatMeta(): string {
+		const matches: string = 'Entries: ' + this._formatValue(this._results.entries, '');
+		const errors: string = 'Errors: ' + this._formatValue(this._results.errors, '');
+		const retries: string = 'Retries: ' + this._formatValue(this._results.retries, '');
 
 		return [matches, errors, retries].join(' | ');
 	}
 
-	private get measures(): string {
-		return Object.keys(this.results.measures).map(this.measure, this).join(' | ');
+	private _formatMeasures(): string {
+		return Object.keys(this._results.measures).map(this._formatMeasure, this).join(' | ');
 	}
 
-	private measure(name: string): string {
-		const data = this.results.measures[name];
+	private _formatMeasure(name: string): string {
+		const data = this._results.measures[name];
 
 		return [
 			'(' + name.toUpperCase() + ')',
-			this.units(data.average, data.units, 3),
-			'±' + this.units(data.stdev, '%', 3)
+			this._formatValue(data.average, data.units, 3),
+			'±' + this._formatValue(data.stdev, '%', 3)
 		].join(' ');
 	}
 
-	private units(value: number, units: string, faction?: number): string {
+	private _formatValue(value: number, units: string, faction?: number): string {
 		return value.toFixed(faction).toString() + units;
 	}
 }

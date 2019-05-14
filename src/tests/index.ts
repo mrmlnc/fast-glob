@@ -5,15 +5,15 @@ import * as stream from 'stream';
 import { Entry, EntryItem } from '../types/index';
 
 export class FakeStream extends stream.Readable {
-	constructor(private readonly value: EntryItem, private readonly error: Error | null, opts?: stream.ReadableOptions) {
+	constructor(private readonly _value: EntryItem, private readonly _error: Error | null, opts?: stream.ReadableOptions) {
 		super(opts);
 	}
 
 	public _read(): void {
-		if (this.error === null) {
-			this.emit('data', this.value);
+		if (this._error === null) {
+			this.emit('data', this._value);
 		} else {
-			this.emit('error', this.error);
+			this.emit('error', this._error);
 		}
 		this.push(null);
 	}
