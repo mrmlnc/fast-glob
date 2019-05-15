@@ -23,7 +23,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 				stream.pause();
 			});
 
-			stream.on('data', (entry: Entry) => entries.push(this.transform(entry)));
+			stream.on('data', (entry: Entry) => entries.push(options.transform(entry)));
 			stream.on('end', () => resolve(entries));
 		});
 	}

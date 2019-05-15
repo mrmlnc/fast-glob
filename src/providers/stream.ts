@@ -7,12 +7,12 @@ import { Entry, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 class TransformStream extends stream.Transform {
-	constructor(private readonly _provider: ProviderStream) {
+	constructor(private readonly _options: ReaderOptions) {
 		super({ objectMode: true });
 	}
 
 	public _transform(entry: Entry, _encoding: string, callback: Function): void {
-		callback(null, this._provider.transform(entry));
+		callback(null, this._options.transform(entry));
 	}
 }
 
@@ -32,7 +32,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	public read(task: Task): NodeJS.ReadableStream {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
-		const transform = new TransformStream(this);
+		const transform = new TransformStream(options);
 
 		const readable: NodeJS.ReadableStream = this.api(root, task, options);
 

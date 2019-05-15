@@ -16,7 +16,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 		try {
 			const entries: Entry[] = this.api(root, task, options);
 
-			return entries.map<EntryItem>(this.transform, this);
+			return entries.map<EntryItem>(options.transform);
 		} catch (err) {
 			if (this.isEnoentCodeError(err as NodeJS.ErrnoException)) {
 				return [];

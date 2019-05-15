@@ -15,6 +15,10 @@ export type Pattern = string;
 export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
-export type ReaderOptions = readdir.Options;
+export interface ReaderOptions extends readdir.Options {
+	transform(entry: Entry): EntryItem;
+}
+
 export type EntryFilterFunction = readdir.FilterFunction;
+export type EntryTransformerFunction = (entry: Entry) => EntryItem;
 export type MicromatchOptions = micromatch.Options;

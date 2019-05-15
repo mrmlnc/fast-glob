@@ -5,7 +5,6 @@ import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
 import { MicromatchOptions } from '../types/index';
-import * as utils from '../utils/index';
 import Provider from './provider';
 
 export class TestProvider extends Provider<Array<{}>> {
@@ -101,118 +100,6 @@ describe('Providers → Provider', () => {
 			const actual = provider.getMicromatchOptions();
 
 			assert.deepStrictEqual(actual, expected);
-		});
-	});
-
-	describe('.transform', () => {
-		describe('The «markDirectories» option', () => {
-			it('should return mark directory when option is enabled', () => {
-				const provider = getProvider({ markDirectories: true });
-				const entry = tests.getDirectoryEntry();
-
-				const expected = 'fixtures/directory/';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should return mark directory when option is enabled with the absolute option enabled', () => {
-				const provider = getProvider({ markDirectories: true, absolute: true });
-				const entry = tests.getDirectoryEntry();
-
-				const fullpath = path.join(process.cwd(), 'fixtures/directory/');
-				const expected = utils.path.unixify(fullpath);
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should do nothing with file when option is enabled', () => {
-				const provider = getProvider({ markDirectories: true });
-				const entry = tests.getFileEntry();
-
-				const expected = 'fixtures/file.txt';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should return non-marked directory when option is disabled', () => {
-				const provider = getProvider();
-				const entry = tests.getDirectoryEntry();
-
-				const expected = 'fixtures/directory';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-		});
-
-		describe('The «absolute» option', () => {
-			it('should return transformed entry when option is provided', () => {
-				const provider = getProvider({ absolute: true });
-				const entry = tests.getFileEntry();
-
-				const fullpath = path.join(process.cwd(), 'fixtures', 'file.txt');
-				const expected = utils.path.unixify(fullpath);
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should transform event absolute filepath when option is provided', () => {
-				const provider = getProvider({ absolute: true });
-				const entry = tests.getFileEntry({
-					path: `${process.cwd()}/fixtures/../file.txt`
-				});
-
-				const fullpath = path.join(process.cwd(), 'file.txt');
-				const expected = utils.path.unixify(fullpath);
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should return do nothing when option is not provided', () => {
-				const provider = getProvider();
-				const entry = tests.getFileEntry();
-
-				const expected = 'fixtures/file.txt';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-		});
-
-		describe('The «transform» option', () => {
-			it('should return transformed entry when option is provided', () => {
-				const provider = getProvider({ transform: () => 'cake' });
-				const entry = tests.getDirectoryEntry();
-
-				const expected = 'cake';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
-
-			it('should return do nothing when option is not provided', () => {
-				const provider = getProvider();
-				const entry = tests.getDirectoryEntry();
-
-				const expected = 'fixtures/directory';
-
-				const actual = provider.transform(entry);
-
-				assert.strictEqual(actual, expected);
-			});
 		});
 	});
 
