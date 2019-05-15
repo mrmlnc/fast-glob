@@ -20,10 +20,10 @@ class TestReaderSync extends ReaderSync {
 }
 
 class TestProviderSync extends ProviderSync {
-	protected readonly _reader: ReaderSync = new TestReaderSync(this.settings);
+	protected readonly _reader: ReaderSync = new TestReaderSync(this._settings);
 
-	constructor(public settings: Settings = new Settings()) {
-		super(settings);
+	constructor(protected _settings: Settings = new Settings()) {
+		super(_settings);
 	}
 }
 

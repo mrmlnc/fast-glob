@@ -17,13 +17,13 @@ class TransformStream extends stream.Transform {
 }
 
 export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
-	protected _reader: ReaderStream = new ReaderStream(this.settings);
+	protected _reader: ReaderStream = new ReaderStream(this._settings);
 
 	/**
 	 * Returns FileSystem adapter.
 	 */
 	public get fsAdapter(): FileSystemStream {
-		return new FileSystemStream(this.settings);
+		return new FileSystemStream(this._settings);
 	}
 
 	/**

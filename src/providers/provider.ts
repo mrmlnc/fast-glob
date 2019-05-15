@@ -14,12 +14,12 @@ export default abstract class Provider<T> {
 
 	private readonly _micromatchOptions: MicromatchOptions;
 
-	constructor(public readonly settings: Settings) {
+	constructor(protected readonly _settings: Settings) {
 		this._micromatchOptions = this.getMicromatchOptions();
 
-		this.entryFilter = new EntryFilter(settings, this._micromatchOptions);
-		this.deepFilter = new DeepFilter(settings, this._micromatchOptions);
-		this.entryTransformer = new EntryTransformer(settings);
+		this.entryFilter = new EntryFilter(_settings, this._micromatchOptions);
+		this.deepFilter = new DeepFilter(_settings, this._micromatchOptions);
+		this.entryTransformer = new EntryTransformer(_settings);
 	}
 
 	/**
@@ -31,7 +31,7 @@ export default abstract class Provider<T> {
 	 * Returns root path to scanner.
 	 */
 	public getRootDirectory(task: Task): string {
-		return path.resolve(this.settings.cwd, task.base);
+		return path.resolve(this._settings.cwd, task.base);
 	}
 
 	/**
@@ -51,12 +51,12 @@ export default abstract class Provider<T> {
 	 */
 	public getMicromatchOptions(): MicromatchOptions {
 		return {
-			dot: this.settings.dot,
-			nobrace: !this.settings.brace,
-			noglobstar: !this.settings.globstar,
-			noext: !this.settings.extglob,
-			nocase: !this.settings.case,
-			matchBase: this.settings.matchBase
+			dot: this._settings.dot,
+			nobrace: !this._settings.brace,
+			noglobstar: !this._settings.globstar,
+			noext: !this._settings.extglob,
+			nocase: !this._settings.case,
+			matchBase: this._settings.matchBase
 		};
 	}
 

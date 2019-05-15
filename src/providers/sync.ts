@@ -4,7 +4,7 @@ import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
-	protected _reader: ReaderSync = new ReaderSync(this.settings);
+	protected _reader: ReaderSync = new ReaderSync(this._settings);
 
 	/**
 	 * Use sync API to read entries for Task.
