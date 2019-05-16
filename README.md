@@ -343,6 +343,15 @@ Always use forward-slashes in glob expressions (patterns and `ignore` option). U
 
 Read more about [matching with backslashes](https://github.com/micromatch/micromatch#backslashes).
 
+## How to use UNC path?
+
+You cannot use UNC paths as patterns (due to syntax), but you can use them as `cwd` directory.
+
+```ts
+fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
+fg.sync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
+```
+
 ## Compatible with `node-glob`?
 
 Not fully, because `fast-glob` does not implement all options of `node-glob`. See table below.
