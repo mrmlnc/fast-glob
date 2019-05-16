@@ -345,6 +345,15 @@ fg.sync(['**/*.md'], { ignore: '**/second/**' }); // ['first/file.txt']
 
 You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
 
+## How to use UNC path?
+
+You cannot use UNC paths as patterns (due to syntax), but you can use them as `cwd` directory.
+
+```ts
+fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
+fg.sync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
+```
+
 ## Compatible with `node-glob`?
 
 Not fully, because `fast-glob` does not implement all options of `node-glob`. See table below.
