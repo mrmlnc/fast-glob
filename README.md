@@ -317,6 +317,20 @@ fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.txt']
 
 You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
 
+## Why are parentheses match wrong?
+
+```js
+fg.sync(['(special-*file).txt']) // → [] for files: ['(special-*file).txt']
+```
+
+Refers to Bash. You need to escape special characters:
+
+```js
+fg.sync(['\(special-*file\).txt']) // → ['(special-*file).txt']
+```
+
+Read more about [«Matching special characters as literals»](https://github.com/micromatch/picomatch#matching-special-characters-as-literals).
+
 ## How to write patterns on Windows?
 
 Always use forward-slashes in glob expressions (patterns and `ignore` option). Use backslashes for escaping characters. With the `cwd` option use a convenient format.
