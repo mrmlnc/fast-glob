@@ -39,7 +39,6 @@
     "fast-glob": "^2.2.0",
     "glob": "^7.1.2",
     "glob-stream": "^6.1.0",
-    "globby": "^9.2.0",
     "minimist": "^1.2.0",
     "mocha": "^6.1.4",
     "rimraf": "^2.6.2",
