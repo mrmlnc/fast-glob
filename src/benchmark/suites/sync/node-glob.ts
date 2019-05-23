@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import glob = require('glob-stream');
+import glob = require('glob');
 
 import * as utils from '../../utils';
 
@@ -15,16 +15,13 @@ const options: IOptions = {
 
 const timeStart = utils.timeStart();
 
-const entries: string[] = [];
-
-const stream = glob(process.env.BENCHMARK_PATTERN as string, options);
-
-stream.on('data', (data: glob.Entry) => entries.push(data.path));
-stream.on('error', () => process.exit(0));
-stream.once('end', () => {
+try {
+	const matches = glob.sync(process.env.BENCHMARK_PATTERN as string, options);
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
-	const measures = utils.getMeasures(entries.length, time, memory);
+	const measures = utils.getMeasures(matches.length, time, memory);
 
 	console.info(measures);
-});
+} catch {
+	process.exit(0);
+}
