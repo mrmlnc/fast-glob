@@ -7,7 +7,7 @@ import * as utils from '../../utils';
 import { IOptions } from 'glob';
 
 const options: IOptions = {
-	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
+	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
 	nosort: true,
 	nounique: true,
 	nodir: true
@@ -17,7 +17,7 @@ const timeStart = utils.timeStart();
 
 const entries: string[] = [];
 
-const stream = glob(['**/*', '!**/*.txt'], options);
+const stream = glob(process.env.BENCHMARK_PATTERN as string, options);
 
 stream.on('data', (data: glob.Entry) => entries.push(data.path));
 stream.on('error', () => process.exit(0));

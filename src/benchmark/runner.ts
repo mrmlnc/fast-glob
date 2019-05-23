@@ -7,25 +7,10 @@ import Reporter from './reporter';
 import * as utils from './utils';
 
 export interface RunnerOptions {
-	/**
-	 * The directory from which you want to take suites.
-	 */
 	type: 'sync' | 'async';
-	/**
-	 * The number of nested directories.
-	 */
-	depth: number;
-	/**
-	 * The number of runs for each suite.
-	 */
+	pattern: string;
 	launches: number;
-	/**
-	 * The maximum allowable deviation in percent.
-	 */
 	maxStdev: number;
-	/**
-	 * The number of retries before giving the result, if the current deviation is greater than specified in `maxStdev`.
-	 */
 	retries: number;
 }
 
@@ -71,7 +56,8 @@ export default class Runner {
 	public suite(suitePath: string): SuiteMeasures {
 		const env: Record<string, string> = {
 			NODE_ENV: 'production',
-			BENCHMARK_CWD: this._basedir
+			BENCHMARK_BASE_DIR: this._basedir,
+			BENCHMARK_PATTERN: this._options.pattern
 		};
 
 		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
