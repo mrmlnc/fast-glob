@@ -29,7 +29,7 @@ class RunnerFakeReport extends RunnerFakeProcess {
 describe('Benchmark → Runner', () => {
 	const runnerOptions: RunnerOptions = {
 		type: 'async',
-		depth: 1,
+		pattern: '*',
 		launches: 3,
 		maxStdev: 3,
 		retries: 5

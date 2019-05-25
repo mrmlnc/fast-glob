@@ -1,30 +1,21 @@
 import * as path from 'path';
 
-import micromatch = require('micromatch');
 import glob = require('tiny-glob');
 
 import * as utils from '../../utils';
 
-import { Pattern } from '../../../types/index';
-
 const options = {
-	cwd: path.join(process.cwd(), process.env.BENCHMARK_CWD as string),
+	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
 	flush: true
 };
 
-const patterns: Pattern[] = ['**/*.md', '!**/*.txt'];
-
 const timeStart = utils.timeStart();
 
-glob('**/*', options)
+glob(process.env.BENCHMARK_PATTERN as string, options)
 	.then((matches) => {
 		const memory = utils.getMemory();
-
-		// The tiny-glob package does not support negative patterns
-		const entries = micromatch(matches, patterns);
-
 		const time = utils.timeEnd(timeStart);
-		const measures = utils.getMeasures(entries.length, time, memory);
+		const measures = utils.getMeasures(matches.length, time, memory);
 
 		console.info(measures);
 	})
