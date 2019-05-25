@@ -201,6 +201,15 @@ Indicates whether to traverse descendants of symbolic link directories.
 
 > :book: Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
 
+#### throwErrorOnBrokenSymbolicLink
+
+  * Type: `boolean`
+  * Default: `true`
+
+Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`. Always `false` when the `stats` option is disabled.
+
+> :book: This option has no effect on errors when reading the symbolic link directory.
+
 #### unique
 
   * Type: `boolean`

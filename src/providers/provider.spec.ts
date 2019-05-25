@@ -64,6 +64,7 @@ describe('Providers → Provider', () => {
 
 			assert.strictEqual(actual.basePath, '');
 			assert.ok(actual.followSymbolicLinks);
+			assert.ok(!actual.throwErrorOnBrokenSymbolicLink);
 			assert.strictEqual(typeof actual.entryFilter, 'function');
 			assert.strictEqual(typeof actual.deepFilter, 'function');
 			assert.strictEqual(typeof actual.transform, 'function');

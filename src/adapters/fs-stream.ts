@@ -50,8 +50,13 @@ export default class FileSystemStream extends FileSystem<NodeJS.ReadableStream> 
 	 * Return fs.Stats for the provided path.
 	 */
 	public getStat(filepath: string): Promise<fs.Stats> {
+		const options: fsStat.Options = {
+			followSymbolicLink: this._settings.followSymbolicLinks,
+			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink
+		};
+
 		return new Promise((resolve, reject) => {
-			fsStat.stat(filepath, { throwErrorOnBrokenSymbolicLink: false }, (error, stats) => {
+			fsStat.stat(filepath, options, (error, stats) => {
 				error ? reject(error) : resolve(stats);
 			});
 		});

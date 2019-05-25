@@ -39,6 +39,10 @@ export interface Options<T = EntryItem> {
 	 */
 	followSymbolicLinks?: boolean;
 	/**
+	 * Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`.
+	 */
+	throwErrorOnBrokenSymbolicLink?: boolean;
+	/**
 	 * Prevent duplicate results.
 	 */
 	unique?: boolean;
@@ -86,6 +90,7 @@ export default class Settings {
 	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
 	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
 	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
+	public readonly throwErrorOnBrokenSymbolicLink: boolean = this.stats && this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);

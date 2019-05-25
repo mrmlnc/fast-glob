@@ -14,6 +14,7 @@ describe('Settings', () => {
 		assert.ok(settings.onlyFiles);
 		assert.ok(!settings.onlyDirectories);
 		assert.ok(settings.followSymbolicLinks);
+		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
 		assert.ok(settings.unique);
 		assert.ok(!settings.markDirectories);
 		assert.ok(!settings.absolute);
@@ -40,5 +41,14 @@ describe('Settings', () => {
 
 		assert.ok(!settings.onlyFiles);
 		assert.ok(settings.onlyDirectories);
+	});
+
+	it('should set the "throwErrorOnBrokenSymbolicLink" option to "true" when the "stats" option is enabled', () => {
+		const settings = new Settings({
+			stats: true
+		});
+
+		assert.ok(settings.stats);
+		assert.ok(settings.throwErrorOnBrokenSymbolicLink);
 	});
 });

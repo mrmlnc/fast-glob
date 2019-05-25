@@ -42,6 +42,8 @@ export default abstract class Provider<T> {
 
 		return {
 			basePath,
+			followSymbolicLinks: this._settings.followSymbolicLinks,
+			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
 			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
 			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
 			transform: this.entryTransformer.getTransformer()
