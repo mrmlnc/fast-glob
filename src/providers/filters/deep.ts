@@ -50,7 +50,7 @@ export default class DeepFilter {
 			return false;
 		}
 
-		if (this._isSkippedSymlinkedDirectory(entry)) {
+		if (this._isSkippedSymbolicLink(entry)) {
 			return false;
 		}
 
@@ -76,10 +76,10 @@ export default class DeepFilter {
 	}
 
 	/**
-	 * Returns «true» for symlinked directory if the «followSymlinkedDirectories» option is disabled.
+	 * Returns «true» for symbolic link if the «followSymbolicLinks» option is disabled.
 	 */
-	private _isSkippedSymlinkedDirectory(entry: Entry): boolean {
-		return !this._settings.followSymlinkedDirectories && entry.dirent.isSymbolicLink();
+	private _isSkippedSymbolicLink(entry: Entry): boolean {
+		return !this._settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
 	}
 
 	/**

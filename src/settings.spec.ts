@@ -13,7 +13,7 @@ describe('Settings', () => {
 		assert.ok(!settings.stats);
 		assert.ok(settings.onlyFiles);
 		assert.ok(!settings.onlyDirectories);
-		assert.ok(settings.followSymlinkedDirectories);
+		assert.ok(settings.followSymbolicLinks);
 		assert.ok(settings.unique);
 		assert.ok(!settings.markDirectories);
 		assert.ok(!settings.absolute);

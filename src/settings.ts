@@ -34,9 +34,10 @@ export interface Options<T = EntryItem> {
 	 */
 	onlyDirectories?: boolean;
 	/**
-	 * Follow symlinked directories when expanding `**` patterns.
+	 * Indicates whether to traverse descendants of symbolic link directories.
+	 * Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
 	 */
-	followSymlinkedDirectories?: boolean;
+	followSymbolicLinks?: boolean;
 	/**
 	 * Prevent duplicate results.
 	 */
@@ -84,7 +85,7 @@ export default class Settings {
 	public readonly stats: boolean = this._getValue(this._options.stats, false);
 	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
 	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
-	public readonly followSymlinkedDirectories: boolean = this._getValue(this._options.followSymlinkedDirectories, true);
+	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);

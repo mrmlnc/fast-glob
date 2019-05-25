@@ -192,12 +192,14 @@ Return only files.
 
 Return only directories.
 
-#### followSymlinkedDirectories
+#### followSymbolicLinks
 
   * Type: `boolean`
   * Default: `true`
 
-Follow symlinked directories when expanding `**` patterns.
+Indicates whether to traverse descendants of symbolic link directories.
+
+> :book: Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
 
 #### unique
 
@@ -386,7 +388,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |
-| `follow`     | [`followSymlinkedDirectories`](#followsymlinkeddirectories) |
+| `follow`     | [`followSymbolicLinks`](#followSymbolicLinks) |
 | `realpath`   | – |
 | `absolute`   | [`absolute`](#absolute) |
 
