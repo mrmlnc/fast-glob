@@ -6,6 +6,7 @@ describe('Settings', () => {
 	it('should return instance with default values', () => {
 		const settings = new Settings();
 
+		assert.strictEqual(settings.concurrency, Infinity);
 		assert.strictEqual(settings.cwd, process.cwd());
 		assert.ok(settings.deep);
 		assert.deepStrictEqual(settings.ignore, []);

@@ -4,6 +4,10 @@ export type TransformFunction<T> = (entry: EntryItem) => T;
 
 export interface Options<T = EntryItem> {
 	/**
+	 * The maximum number of concurrent calls to `fs.readdir`.
+	 */
+	concurrency?: number;
+	/**
 	 * The current working directory in which to search.
 	 */
 	cwd?: string;
@@ -83,6 +87,7 @@ export interface Options<T = EntryItem> {
 
 export default class Settings {
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
+	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
 	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
 	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);

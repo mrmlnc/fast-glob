@@ -120,6 +120,15 @@ The entry which can be a `string` if the [`stats`](#stats) option is disabled, o
 
 ## Options
 
+#### concurrency
+
+  * Type: `number`
+  * Default: `Infinity`
+
+The maximum number of concurrent calls to `fs.readdir`.
+
+See more more detailed description in the [`fs.walk`](https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk#concurrency) repository.
+
 #### cwd
 
   * Type: `string`
