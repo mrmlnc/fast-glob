@@ -4,7 +4,7 @@ import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
-	protected _reader: ReaderSync = new ReaderSync(this.settings);
+	protected _reader: ReaderSync = new ReaderSync(this._settings);
 
 	/**
 	 * Use sync API to read entries for Task.
@@ -16,7 +16,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 		try {
 			const entries: Entry[] = this.api(root, task, options);
 
-			return entries.map<EntryItem>(this.transform, this);
+			return entries.map<EntryItem>(options.transform);
 		} catch (err) {
 			if (this.isEnoentCodeError(err as NodeJS.ErrnoException)) {
 				return [];

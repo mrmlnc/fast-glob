@@ -1,6 +1,7 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import * as stream from 'stream';
+
+import { Dirent } from '@nodelib/fs.macchiato';
 
 import { Entry, EntryItem } from '../types/index';
 
@@ -28,48 +29,40 @@ export class EnoentErrnoException extends Error {
 }
 
 interface FakeFsStatOptions {
-	isFile: boolean;
-	isDirectory: boolean;
-	isSymbolicLink: boolean;
-	path: string;
+	name?: string;
+	isFile?: boolean;
+	isDirectory?: boolean;
+	isSymbolicLink?: boolean;
+	path?: string;
 }
 
-class FakeEntry extends fs.Stats {
-	public path: string = this._options.path || path.join('fixtures', 'entry');
-	public depth: number = this.path.split(path.sep).length - 2;
+class FakeEntry implements Entry {
+	public readonly name: string = this._options.name || 'file.txt';
+	public readonly path: string = this._options.path || path.join('fixtures', 'file.txt');
+	public readonly dirent: Dirent = new Dirent({
+		...this._options,
+		name: this.name
+	});
 
-	constructor(private readonly _options: Partial<FakeFsStatOptions> = {}) {
-		super();
-	}
-
-	public isFile(): boolean {
-		return this._options.isFile || false;
-	}
-
-	public isDirectory(): boolean {
-		return this._options.isDirectory || false;
-	}
-
-	public isSymbolicLink(): boolean {
-		return this._options.isSymbolicLink || false;
-	}
+	constructor(private readonly _options: FakeFsStatOptions = {}) { }
 }
 
-export function getEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
+export function getEntry(options: FakeFsStatOptions = {}): Entry {
 	return new FakeEntry(options);
 }
 
-export function getFileEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
+export function getFileEntry(options: FakeFsStatOptions = {}): Entry {
 	return new FakeEntry({
 		isFile: true,
-		path: path.join('fixtures', 'file.txt'),
 		...options
 	});
 }
 
 export function getDirectoryEntry(options: Partial<FakeFsStatOptions> = {}): Entry {
 	return new FakeEntry({
+		isFile: false,
 		isDirectory: true,
+		name: 'directory',
 		path: path.join('fixtures', 'directory'),
 		...options
 	});

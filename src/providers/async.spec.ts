@@ -24,10 +24,10 @@ class TestReaderStream extends ReaderStream {
 }
 
 class TestProviderAsync extends ProviderAsync {
-	protected readonly _reader: TestReaderStream = new TestReaderStream(this.settings);
+	protected readonly _reader: TestReaderStream = new TestReaderStream(this._settings);
 
-	constructor(public settings: Settings = new Settings()) {
-		super(settings);
+	constructor(protected _settings: Settings = new Settings()) {
+		super(_settings);
 	}
 }
 

@@ -326,7 +326,7 @@ fg.sync(['(special-*file).txt']) // → [] for files: ['(special-*file).txt']
 Refers to Bash. You need to escape special characters:
 
 ```js
-fg.sync(['\(special-*file\).txt']) // → ['(special-*file).txt']
+fg.sync(['\\(special-*file\\).txt']) // → ['(special-*file).txt']
 ```
 
 Read more about [«Matching special characters as literals»](https://github.com/micromatch/picomatch#matching-special-characters-as-literals).

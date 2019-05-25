@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
+import { Stats } from '@nodelib/fs.macchiato';
+
 import Settings from '../settings';
-import * as tests from '../tests/index';
 import FileSystem from './fs';
 
 class FileSystemFake extends FileSystem<never[]> {
@@ -53,18 +54,10 @@ describe('Adapters → FileSystem', () => {
 			const adapter = getAdapter();
 
 			const filepath = path.join('base', 'file.json');
-			const actual = adapter.makeEntry(tests.getFileEntry(), filepath);
+			const actual = adapter.makeEntry(new Stats(), filepath);
 
 			assert.strictEqual(actual.path, filepath);
-			assert.strictEqual(actual.depth, 2);
-		});
-
-		it('issue-144: should return entry with methods from fs.Stats', () => {
-			const adapter = getAdapter();
-
-			const actual = adapter.makeEntry(tests.getFileEntry(), 'file.json');
-
-			assert.ok(actual.isFile());
+			assert.ok(actual.dirent.isFile());
 		});
 	});
 });

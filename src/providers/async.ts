@@ -4,7 +4,7 @@ import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	protected _reader: ReaderStream = new ReaderStream(this.settings);
+	protected _reader: ReaderStream = new ReaderStream(this._settings);
 
 	/**
 	 * Use async API to read entries for Task.
@@ -23,7 +23,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 				stream.pause();
 			});
 
-			stream.on('data', (entry: Entry) => entries.push(this.transform(entry)));
+			stream.on('data', (entry: Entry) => entries.push(options.transform(entry)));
 			stream.on('end', () => resolve(entries));
 		});
 	}

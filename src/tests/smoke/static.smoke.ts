@@ -73,7 +73,7 @@ smoke.suite('Smoke → Static (stats)', [
 		fgOptions: {
 			stats: true,
 			transform: (entry) => {
-				assert.ok((entry as Entry).isFile());
+				assert.ok((entry as Entry).dirent.isFile());
 
 				return (entry as Entry).path;
 			}

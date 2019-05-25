@@ -2,22 +2,24 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
-import { Entry, EntryItem, MicromatchOptions, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
+import { MicromatchOptions, ReaderOptions } from '../types/index';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
+import EntryTransformer from './transformers/entry';
 
 export default abstract class Provider<T> {
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;
+	public readonly entryTransformer: EntryTransformer;
 
 	private readonly _micromatchOptions: MicromatchOptions;
 
-	constructor(public readonly settings: Settings) {
+	constructor(protected readonly _settings: Settings) {
 		this._micromatchOptions = this.getMicromatchOptions();
 
-		this.entryFilter = new EntryFilter(settings, this._micromatchOptions);
-		this.deepFilter = new DeepFilter(settings, this._micromatchOptions);
+		this.entryFilter = new EntryFilter(_settings, this._micromatchOptions);
+		this.deepFilter = new DeepFilter(_settings, this._micromatchOptions);
+		this.entryTransformer = new EntryTransformer(_settings);
 	}
 
 	/**
@@ -29,17 +31,20 @@ export default abstract class Provider<T> {
 	 * Returns root path to scanner.
 	 */
 	public getRootDirectory(task: Task): string {
-		return path.resolve(this.settings.cwd, task.base);
+		return path.resolve(this._settings.cwd, task.base);
 	}
 
 	/**
 	 * Returns options for reader.
 	 */
 	public getReaderOptions(task: Task): ReaderOptions {
+		const basePath = task.base === '.' ? '' : task.base;
+
 		return {
-			basePath: task.base === '.' ? '' : task.base,
-			filter: this.entryFilter.getFilter(task.positive, task.negative),
-			deep: this.deepFilter.getFilter(task.positive, task.negative)
+			basePath,
+			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
+			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
+			transform: this.entryTransformer.getTransformer()
 		};
 	}
 
@@ -48,36 +53,13 @@ export default abstract class Provider<T> {
 	 */
 	public getMicromatchOptions(): MicromatchOptions {
 		return {
-			dot: this.settings.dot,
-			nobrace: !this.settings.brace,
-			noglobstar: !this.settings.globstar,
-			noext: !this.settings.extglob,
-			nocase: !this.settings.case,
-			matchBase: this.settings.matchBase
+			dot: this._settings.dot,
+			nobrace: !this._settings.brace,
+			noglobstar: !this._settings.globstar,
+			noext: !this._settings.extglob,
+			nocase: !this._settings.case,
+			matchBase: this._settings.matchBase
 		};
-	}
-
-	/**
-	 * Returns transformed entry.
-	 */
-	public transform(entry: Entry): EntryItem {
-		if (this.settings.absolute) {
-			entry.path = utils.path.makeAbsolute(this.settings.cwd, entry.path);
-		}
-
-		if (this.settings.markDirectories && entry.isDirectory()) {
-			entry.path += path.sep;
-		}
-
-		entry.path = utils.path.unixify(entry.path);
-
-		const item: EntryItem = this.settings.stats ? entry : entry.path;
-
-		if (this.settings.transform === null) {
-			return item;
-		}
-
-		return this.settings.transform(item);
 	}
 
 	/**
