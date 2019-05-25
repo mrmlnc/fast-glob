@@ -22,7 +22,7 @@ describe('Settings', () => {
 		assert.ok(settings.brace);
 		assert.ok(settings.globstar);
 		assert.ok(settings.extglob);
-		assert.ok(settings.case);
+		assert.ok(settings.caseSensitiveMatch);
 		assert.ok(!settings.matchBase);
 		assert.strictEqual(settings.transform, null);
 	});

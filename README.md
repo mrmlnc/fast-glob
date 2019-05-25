@@ -263,7 +263,7 @@ Enable matching with globstars (`**`).
 
 Enable extglob support, so that extglobs are regarded as literal characters.
 
-#### case
+#### caseSensitiveMatch
 
   * Type: `boolean`
   * Default: `true`
@@ -402,7 +402,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `nobrace`    | [`brace`](#brace) |
 | `noglobstar` | [`globstar`](#globstar) |
 | `noext`      | [`extglob`](#extglob) |
-| `nocase`     | [`case`](#case) |
+| `nocase`     | [`caseSensitiveMatch`](#caseSensitiveMatch) |
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |

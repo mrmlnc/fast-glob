@@ -48,8 +48,8 @@ describe('Managers → Task', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should return only dynamic patterns when the `case` option is enabled', () => {
-			const settings = new Settings({ case: false });
+		it('should return only dynamic patterns when the `caseSensitiveMatch` option is enabled', () => {
+			const settings = new Settings({ caseSensitiveMatch: false });
 
 			const expected: Task[] = [
 				{

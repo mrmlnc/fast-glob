@@ -60,7 +60,7 @@ export default abstract class Provider<T> {
 			nobrace: !this._settings.brace,
 			noglobstar: !this._settings.globstar,
 			noext: !this._settings.extglob,
-			nocase: !this._settings.case,
+			nocase: !this._settings.caseSensitiveMatch,
 			matchBase: this._settings.matchBase
 		};
 	}

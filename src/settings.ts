@@ -71,9 +71,9 @@ export interface Options<T = EntryItem> {
 	 */
 	extglob?: boolean;
 	/**
-	 * Enable a case-insensitive regex for matching files.
+	 * Enable a case-sensitive regex for matching files.
 	 */
-	case?: boolean;
+	caseSensitiveMatch?: boolean;
 	/**
 	 * Allow glob patterns without slashes to match a file path based on its basename.
 	 * For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
@@ -102,7 +102,7 @@ export default class Settings {
 	public readonly brace: boolean = this._getValue(this._options.brace, true);
 	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
-	public readonly case: boolean = this._getValue(this._options.case, true);
+	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
 	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
 
