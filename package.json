@@ -66,9 +66,9 @@
     "bench": "npm run bench-async && npm run bench-sync",
     "bench-async": "npm run bench-async-flatten && npm run bench-async-deep",
     "bench-sync": "npm run bench-sync-flatten && npm run bench-sync-deep",
-    "bench-async-flatten": "node ./out/benchmark --type async --pattern *",
-    "bench-async-deep": "node ./out/benchmark --type async --pattern **",
-    "bench-sync-flatten": "node ./out/benchmark --type sync --pattern *",
-    "bench-sync-deep": "node ./out/benchmark --type sync --pattern **"
+    "bench-async-flatten": "node ./out/benchmark --type async --pattern \"*\"",
+    "bench-async-deep": "node ./out/benchmark --type async --pattern \"**\"",
+    "bench-sync-flatten": "node ./out/benchmark --type sync --pattern \"*\"",
+    "bench-sync-deep": "node ./out/benchmark --type sync --pattern \"**\""
   }
 }
