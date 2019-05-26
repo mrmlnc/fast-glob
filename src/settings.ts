@@ -4,6 +4,10 @@ export type TransformFunction<T> = (entry: EntryItem) => T;
 
 export interface Options<T = EntryItem> {
 	/**
+	 * The maximum number of concurrent calls to `fs.readdir`.
+	 */
+	concurrency?: number;
+	/**
 	 * The current working directory in which to search.
 	 */
 	cwd?: string;
@@ -34,9 +38,14 @@ export interface Options<T = EntryItem> {
 	 */
 	onlyDirectories?: boolean;
 	/**
-	 * Follow symlinked directories when expanding `**` patterns.
+	 * Indicates whether to traverse descendants of symbolic link directories.
+	 * Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
 	 */
-	followSymlinkedDirectories?: boolean;
+	followSymbolicLinks?: boolean;
+	/**
+	 * Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`.
+	 */
+	throwErrorOnBrokenSymbolicLink?: boolean;
 	/**
 	 * Prevent duplicate results.
 	 */
@@ -52,7 +61,7 @@ export interface Options<T = EntryItem> {
 	/**
 	 * Enable expansion of brace patterns.
 	 */
-	brace?: boolean;
+	braceExpansion?: boolean;
 	/**
 	 * Enable matching with globstars (`**`).
 	 */
@@ -62,9 +71,9 @@ export interface Options<T = EntryItem> {
 	 */
 	extglob?: boolean;
 	/**
-	 * Enable a case-insensitive regex for matching files.
+	 * Enable a case-sensitive regex for matching files.
 	 */
-	case?: boolean;
+	caseSensitiveMatch?: boolean;
 	/**
 	 * Allow glob patterns without slashes to match a file path based on its basename.
 	 * For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
@@ -74,26 +83,34 @@ export interface Options<T = EntryItem> {
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
 	transform?: TransformFunction<T> | null;
+	/**
+	 * Suppress any errors from reader.
+	 * Can be useful when the directory has entries with a special level of access.
+	 */
+	suppressErrors?: boolean;
 }
 
 export default class Settings {
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
+	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
 	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
 	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);
 	public readonly stats: boolean = this._getValue(this._options.stats, false);
 	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
 	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
-	public readonly followSymlinkedDirectories: boolean = this._getValue(this._options.followSymlinkedDirectories, true);
+	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
+	public readonly throwErrorOnBrokenSymbolicLink: boolean = this.stats && this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
-	public readonly brace: boolean = this._getValue(this._options.brace, true);
+	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
 	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
-	public readonly case: boolean = this._getValue(this._options.case, true);
+	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
 	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
+	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {

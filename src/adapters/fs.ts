@@ -6,7 +6,7 @@ import { Entry, EntryFilterFunction, Pattern } from '../types/index';
 import * as utils from '../utils/index';
 
 export default abstract class FileSystem<T> {
-	constructor(private readonly _settings: Settings) { }
+	constructor(protected readonly _settings: Settings) { }
 
 	/**
 	 * The main logic of reading the entries that must be implemented by each adapter.

@@ -120,6 +120,15 @@ The entry which can be a `string` if the [`stats`](#stats) option is disabled, o
 
 ## Options
 
+#### concurrency
+
+  * Type: `number`
+  * Default: `Infinity`
+
+The maximum number of concurrent calls to `fs.readdir`.
+
+See more more detailed description in the [`fs.walk`](https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk#concurrency) repository.
+
 #### cwd
 
   * Type: `string`
@@ -192,12 +201,23 @@ Return only files.
 
 Return only directories.
 
-#### followSymlinkedDirectories
+#### followSymbolicLinks
 
   * Type: `boolean`
   * Default: `true`
 
-Follow symlinked directories when expanding `**` patterns.
+Indicates whether to traverse descendants of symbolic link directories.
+
+> :book: Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
+
+#### throwErrorOnBrokenSymbolicLink
+
+  * Type: `boolean`
+  * Default: `true`
+
+Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`. Always `false` when the `stats` option is disabled.
+
+> :book: This option has no effect on errors when reading the symbolic link directory.
 
 #### unique
 
@@ -222,7 +242,7 @@ Return absolute paths for matched entries.
 
 > :book: Note that you need to use this option if you want to use absolute negative patterns like `${__dirname}/*.md`.
 
-#### brace
+#### braceExpansion
 
   * Type: `boolean`
   * Default: `true`
@@ -243,7 +263,7 @@ Enable matching with globstars (`**`).
 
 Enable extglob support, so that extglobs are regarded as literal characters.
 
-#### case
+#### caseSensitiveMatch
 
   * Type: `boolean`
   * Default: `true`
@@ -262,6 +282,14 @@ Enable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode f
   * Default: `false`
 
 Allow glob patterns without slashes to match a file path based on its basename. For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
+
+#### suppressErrors
+
+  * Type: `boolean`
+  * Default: `false`
+
+Suppress any errors from reader. Works only with Node.js 10.10+.
+Can be useful when the directory has entries with a special level of access.
 
 #### transform
 
@@ -379,14 +407,14 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
-| `nobrace`    | [`brace`](#brace) |
+| `nobrace`    | [`braceExpansion`](#braceExpansion) |
 | `noglobstar` | [`globstar`](#globstar) |
 | `noext`      | [`extglob`](#extglob) |
-| `nocase`     | [`case`](#case) |
+| `nocase`     | [`caseSensitiveMatch`](#caseSensitiveMatch) |
 | `matchBase`  | [`matchbase`](#matchbase) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |
-| `follow`     | [`followSymlinkedDirectories`](#followsymlinkeddirectories) |
+| `follow`     | [`followSymbolicLinks`](#followSymbolicLinks) |
 | `realpath`   | – |
 | `absolute`   | [`absolute`](#absolute) |
 

@@ -112,7 +112,7 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Skip by «followSymlinkedDirectories» option', () => {
+		describe('Skip by «followSymbolicLinks» option', () => {
 			it('should return «true» for symlinked directory when option is enabled', () => {
 				const filter = getFilter(['**/*'], []);
 
@@ -125,8 +125,8 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(actual);
 			});
 
-			it('should return «false» for symlinked directory when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { followSymlinkedDirectories: false });
+			it('should return «false» for symbolic link when option is disabled', () => {
+				const filter = getFilter(['**/*'], [], { followSymbolicLinks: false });
 
 				const entry = tests.getDirectoryEntry({
 					isSymbolicLink: true
