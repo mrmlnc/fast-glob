@@ -16,6 +16,7 @@ export interface ReaderOptions extends fsWalk.Options {
 	transform(entry: Entry): EntryItem;
 }
 
+export type ErrorFilterFunction = fsWalk.ErrorFilterFunction;
 export type EntryFilterFunction = fsWalk.EntryFilterFunction;
 export type DeepFilterFunction = fsWalk.DeepFilterFunction;
 export type EntryTransformerFunction = (entry: Entry) => EntryItem;

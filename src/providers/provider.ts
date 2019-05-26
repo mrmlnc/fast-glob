@@ -5,9 +5,11 @@ import Settings from '../settings';
 import { MicromatchOptions, ReaderOptions } from '../types/index';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
+import ErrorFilter from './filters/error';
 import EntryTransformer from './transformers/entry';
 
 export default abstract class Provider<T> {
+	public readonly errorFilter: ErrorFilter;
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;
 	public readonly entryTransformer: EntryTransformer;
@@ -17,6 +19,7 @@ export default abstract class Provider<T> {
 	constructor(protected readonly _settings: Settings) {
 		this._micromatchOptions = this.getMicromatchOptions();
 
+		this.errorFilter = new ErrorFilter(_settings);
 		this.entryFilter = new EntryFilter(_settings, this._micromatchOptions);
 		this.deepFilter = new DeepFilter(_settings, this._micromatchOptions);
 		this.entryTransformer = new EntryTransformer(_settings);
@@ -45,6 +48,7 @@ export default abstract class Provider<T> {
 			concurrency: this._settings.concurrency,
 			followSymbolicLinks: this._settings.followSymbolicLinks,
 			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
+			errorFilter: this.errorFilter.getFilter(),
 			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
 			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
 			transform: this.entryTransformer.getTransformer()

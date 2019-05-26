@@ -283,6 +283,14 @@ Enable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode f
 
 Allow glob patterns without slashes to match a file path based on its basename. For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
 
+#### suppressErrors
+
+  * Type: `boolean`
+  * Default: `false`
+
+Suppress any errors from reader. Works only with Node.js 10.10+.
+Can be useful when the directory has entries with a special level of access.
+
 #### transform
 
   * Type: `Function`

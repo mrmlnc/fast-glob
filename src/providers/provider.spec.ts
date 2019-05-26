@@ -66,6 +66,7 @@ describe('Providers → Provider', () => {
 			assert.strictEqual(actual.concurrency, Infinity);
 			assert.ok(actual.followSymbolicLinks);
 			assert.ok(!actual.throwErrorOnBrokenSymbolicLink);
+			assert.strictEqual(typeof actual.errorFilter, 'function');
 			assert.strictEqual(typeof actual.entryFilter, 'function');
 			assert.strictEqual(typeof actual.deepFilter, 'function');
 			assert.strictEqual(typeof actual.transform, 'function');

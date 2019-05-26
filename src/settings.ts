@@ -83,6 +83,11 @@ export interface Options<T = EntryItem> {
 	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
 	 */
 	transform?: TransformFunction<T> | null;
+	/**
+	 * Suppress any errors from reader.
+	 * Can be useful when the directory has entries with a special level of access.
+	 */
+	suppressErrors?: boolean;
 }
 
 export default class Settings {
@@ -105,6 +110,7 @@ export default class Settings {
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
 	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
+	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
