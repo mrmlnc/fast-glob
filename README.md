@@ -242,7 +242,7 @@ Return absolute paths for matched entries.
 
 > :book: Note that you need to use this option if you want to use absolute negative patterns like `${__dirname}/*.md`.
 
-#### brace
+#### braceExpansion
 
   * Type: `boolean`
   * Default: `true`
@@ -399,7 +399,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
-| `nobrace`    | [`brace`](#brace) |
+| `nobrace`    | [`braceExpansion`](#braceExpansion) |
 | `noglobstar` | [`globstar`](#globstar) |
 | `noext`      | [`extglob`](#extglob) |
 | `nocase`     | [`caseSensitiveMatch`](#caseSensitiveMatch) |

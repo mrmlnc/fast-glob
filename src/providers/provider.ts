@@ -57,7 +57,7 @@ export default abstract class Provider<T> {
 	public getMicromatchOptions(): MicromatchOptions {
 		return {
 			dot: this._settings.dot,
-			nobrace: !this._settings.brace,
+			nobrace: !this._settings.braceExpansion,
 			noglobstar: !this._settings.globstar,
 			noext: !this._settings.extglob,
 			nocase: !this._settings.caseSensitiveMatch,

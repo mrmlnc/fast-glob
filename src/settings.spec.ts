@@ -19,7 +19,7 @@ describe('Settings', () => {
 		assert.ok(settings.unique);
 		assert.ok(!settings.markDirectories);
 		assert.ok(!settings.absolute);
-		assert.ok(settings.brace);
+		assert.ok(settings.braceExpansion);
 		assert.ok(settings.globstar);
 		assert.ok(settings.extglob);
 		assert.ok(settings.caseSensitiveMatch);

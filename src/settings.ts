@@ -61,7 +61,7 @@ export interface Options<T = EntryItem> {
 	/**
 	 * Enable expansion of brace patterns.
 	 */
-	brace?: boolean;
+	braceExpansion?: boolean;
 	/**
 	 * Enable matching with globstars (`**`).
 	 */
@@ -99,7 +99,7 @@ export default class Settings {
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
-	public readonly brace: boolean = this._getValue(this._options.brace, true);
+	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
 	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
