@@ -1,6 +1,7 @@
 import { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
-import { Entry, EntryItem, ReaderOptions } from '../types/index';
+import { Entry, EntryItem, ErrnoException, ReaderOptions } from '../types/index';
+import * as utils from '../utils/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
@@ -18,7 +19,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 
 			return entries.map<EntryItem>(options.transform);
 		} catch (err) {
-			if (this.isEnoentCodeError(err as NodeJS.ErrnoException)) {
+			if (utils.errno.isEnoentCodeError(err as ErrnoException)) {
 				return [];
 			}
 

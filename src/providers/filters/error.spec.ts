@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import Settings, { Options } from '../../settings';
-import { ErrorFilterFunction } from '../../types/index';
+import { ErrnoException, ErrorFilterFunction } from '../../types/index';
 import ErrorFilter from './error';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
@@ -27,7 +27,7 @@ describe('Providers → Filters → Error', () => {
 		it('should return false when the `suppressErrors` option is disabled', () => {
 			const filter = getFilter();
 
-			const actual = filter({} as NodeJS.ErrnoException);
+			const actual = filter({} as ErrnoException);
 
 			assert.ok(!actual);
 		});
@@ -35,7 +35,7 @@ describe('Providers → Filters → Error', () => {
 		it('should return true when the `suppressErrors` option is enabled', () => {
 			const filter = getFilter({ suppressErrors: true });
 
-			const actual = filter({} as NodeJS.ErrnoException);
+			const actual = filter({} as ErrnoException);
 
 			assert.ok(actual);
 		});

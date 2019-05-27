@@ -1,0 +1,16 @@
+import * as assert from 'assert';
+
+import * as tests from '../tests/index';
+import * as util from './errno';
+
+describe('Utils → Errno', () => {
+	describe('.isEnoentCodeError', () => {
+		it('should return true for ENOENT error', () => {
+			assert.ok(util.isEnoentCodeError(new tests.EnoentErrnoException()));
+		});
+
+		it('should return false for EPERM error', () => {
+			assert.ok(!util.isEnoentCodeError(new tests.EpermErrnoException()));
+		});
+	});
+});
