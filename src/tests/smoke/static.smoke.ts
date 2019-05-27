@@ -80,3 +80,9 @@ smoke.suite('Smoke → Static (stats)', [
 		}
 	}
 ]);
+
+smoke.suite('Smoke → Static (error)', [
+	{
+		pattern: 'non-exist.txt'
+	}
+]);
