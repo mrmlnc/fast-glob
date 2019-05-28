@@ -54,9 +54,6 @@ export default class ReaderSync extends Reader<Entry[]> {
 	}
 
 	private _getStat(filepath: string): fs.Stats {
-		return this._statSync(filepath, {
-			followSymbolicLink: this._settings.followSymbolicLinks,
-			throwErrorOnBrokenSymbolicLink: this._settings.followSymbolicLinks
-		});
+		return this._statSync(filepath, this._fsStatSettings);
 	}
 }

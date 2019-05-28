@@ -64,13 +64,8 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	}
 
 	private _getStat(filepath: string): Promise<fs.Stats> {
-		const options: fsStat.Options = {
-			followSymbolicLink: this._settings.followSymbolicLinks,
-			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink
-		};
-
 		return new Promise((resolve, reject) => {
-			this._stat(filepath, options, (error, stats) => {
+			this._stat(filepath, this._fsStatSettings, (error, stats) => {
 				error ? reject(error) : resolve(stats);
 			});
 		});

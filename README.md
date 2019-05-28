@@ -323,6 +323,24 @@ const entries: IMyOwnEntry[] = fg.sync<IMyOwnEntry>(['*.md'], {
 });
 ```
 
+#### fs
+
+* Type: `FileSystemAdapter`
+* Default: `fs.*`
+
+Custom implementation of methods for working with the file system.
+
+```ts
+interface FileSystemAdapter {
+    lstat: typeof fs.lstat;
+    stat: typeof fs.stat;
+    lstatSync: typeof fs.lstatSync;
+    statSync: typeof fs.statSync;
+    readdir: typeof fs.readdir;
+    readdirSync: typeof fs.readdirSync;
+}
+```
+
 ## How to exclude directory from reading?
 
 You can use a negative pattern like this: `!**/node_modules` or `!**/node_modules/**`. Also you can use `ignore` option. Just look at the example below.

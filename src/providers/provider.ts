@@ -46,11 +46,12 @@ export default abstract class Provider<T> {
 		return {
 			basePath,
 			concurrency: this._settings.concurrency,
-			followSymbolicLinks: this._settings.followSymbolicLinks,
-			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
-			errorFilter: this.errorFilter.getFilter(),
-			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
 			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
+			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
+			errorFilter: this.errorFilter.getFilter(),
+			followSymbolicLinks: this._settings.followSymbolicLinks,
+			fs: this._settings.fs,
+			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
 			transform: this.entryTransformer.getTransformer()
 		};
 	}

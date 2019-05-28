@@ -1,6 +1,17 @@
-import { EntryItem, Pattern } from './types/index';
+import * as fs from 'fs';
+
+import { EntryItem, FileSystemAdapter, Pattern } from './types/index';
 
 export type TransformFunction<T> = (entry: EntryItem) => T;
+
+export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
+	lstat: fs.lstat,
+	lstatSync: fs.lstatSync,
+	stat: fs.stat,
+	statSync: fs.statSync,
+	readdir: fs.readdir,
+	readdirSync: fs.readdirSync
+};
 
 export interface Options<T = EntryItem> {
 	/**
@@ -88,6 +99,10 @@ export interface Options<T = EntryItem> {
 	 * Can be useful when the directory has entries with a special level of access.
 	 */
 	suppressErrors?: boolean;
+	/**
+	 * Custom implementation of methods for working with the file system.
+	 */
+	fs?: Partial<FileSystemAdapter>;
 }
 
 export default class Settings {
@@ -111,6 +126,7 @@ export default class Settings {
 	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
 	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
 	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
+	public readonly fs: FileSystemAdapter = this._getFileSystemMethods(this._options.fs);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
@@ -120,5 +136,12 @@ export default class Settings {
 
 	private _getValue<T>(option: T | undefined, value: T): T {
 		return option === undefined ? value : option;
+	}
+
+	private _getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {
+		return {
+			...DEFAULT_FILE_SYSTEM_ADAPTER,
+			...methods
+		};
 	}
 }

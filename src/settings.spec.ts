@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import Settings from './settings';
+import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {
@@ -25,6 +25,8 @@ describe('Settings', () => {
 		assert.ok(settings.caseSensitiveMatch);
 		assert.ok(!settings.matchBase);
 		assert.strictEqual(settings.transform, null);
+		assert.ok(!settings.suppressErrors);
+		assert.deepStrictEqual(settings.fs, DEFAULT_FILE_SYSTEM_ADAPTER);
 	});
 
 	it('should return instance with custom values', () => {
@@ -51,5 +53,15 @@ describe('Settings', () => {
 
 		assert.ok(settings.stats);
 		assert.ok(settings.throwErrorOnBrokenSymbolicLink);
+	});
+
+	it('should return the `fs` option with custom method', () => {
+		const customReaddirSync = () => [];
+
+		const settings = new Settings({
+			fs: { readdirSync: customReaddirSync }
+		});
+
+		assert.strictEqual(settings.fs.readdirSync, customReaddirSync);
 	});
 });
