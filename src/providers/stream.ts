@@ -3,7 +3,6 @@ import * as stream from 'stream';
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import { Entry, ErrnoException, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
 import Provider from './provider';
 
 class TransformStream extends stream.Transform {
@@ -30,7 +29,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 		const readable: NodeJS.ReadableStream = this.api(root, task, options);
 
 		return readable
-			.on('error', (err: ErrnoException) => utils.errno.isEnoentCodeError(err) ? null : transform.emit('error', err))
+			.on('error', (err: ErrnoException) => transform.emit('error', err))
 			.pipe(transform);
 	}
 

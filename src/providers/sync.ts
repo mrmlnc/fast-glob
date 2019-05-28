@@ -1,7 +1,6 @@
 import { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
-import { Entry, EntryItem, ErrnoException, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
+import { Entry, EntryItem, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
@@ -14,17 +13,9 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
 
-		try {
-			const entries: Entry[] = this.api(root, task, options);
+		const entries: Entry[] = this.api(root, task, options);
 
-			return entries.map<EntryItem>(options.transform);
-		} catch (err) {
-			if (utils.errno.isEnoentCodeError(err as ErrnoException)) {
-				return [];
-			}
-
-			throw err;
-		}
+		return entries.map<EntryItem>(options.transform);
 	}
 
 	/**

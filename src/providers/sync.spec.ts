@@ -5,7 +5,6 @@ import * as assert from 'assert';
 import { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
 import Settings, { TransformFunction } from '../settings';
-import * as tests from '../tests/index';
 import { Entry } from '../types/index';
 import ProviderSync from './sync';
 
@@ -24,12 +23,6 @@ class TestProviderSync extends ProviderSync {
 
 	constructor(protected _settings: Settings = new Settings()) {
 		super(_settings);
-	}
-}
-
-class TestProviderSyncWithEnoent extends TestProviderSync {
-	public api(): never {
-		throw new tests.EnoentErrnoException();
 	}
 }
 
@@ -101,19 +94,6 @@ describe('Providers → ProviderSync', () => {
 			const provider = new TestProviderSync(settings);
 
 			const expected: string[] = ['cake'];
-
-			const actual = provider.read(task);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should returns empty array if provided cwd does not exists', () => {
-			const task = getTask();
-			const settings = new Settings();
-
-			const provider = new TestProviderSyncWithEnoent(settings);
-
-			const expected: string[] = [];
 
 			const actual = provider.read(task);
 

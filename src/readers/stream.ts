@@ -5,7 +5,6 @@ import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
 import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
 import Reader from './reader';
 
 export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
@@ -13,7 +12,15 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	protected _stat: typeof fsStat.stat = fsStat.stat;
 
 	public dynamic(root: string, options: ReaderOptions): NodeJS.ReadableStream {
-		return this._walkStream(root, options);
+		const walk = this._walkStream(root, options);
+
+		walk.once('error', (error: ErrnoException) => {
+			if (this._isFatalError(error)) {
+				walk.emit('error', error);
+			}
+		});
+
+		return walk;
 	}
 
 	public static(patterns: string[], options: ReaderOptions): NodeJS.ReadableStream {
@@ -48,11 +55,11 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		return this._getStat(filepath)
 			.then((stats) => this._makeEntry(stats, pattern))
 			.catch((error: ErrnoException) => {
-				if (utils.errno.isEnoentCodeError(error) || this._settings.suppressErrors) {
-					return null;
+				if (this._isFatalError(error)) {
+					throw error;
 				}
 
-				throw error;
+				return null;
 			});
 	}
 

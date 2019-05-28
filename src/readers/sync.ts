@@ -4,7 +4,6 @@ import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
 import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
 import Reader from './reader';
 
 export default class ReaderSync extends Reader<Entry[]> {
@@ -12,7 +11,15 @@ export default class ReaderSync extends Reader<Entry[]> {
 	protected _statSync: typeof fsStat.statSync = fsStat.statSync;
 
 	public dynamic(root: string, options: ReaderOptions): Entry[] {
-		return this._walkSync(root, options);
+		try {
+			return this._walkSync(root, options);
+		} catch (error) {
+			if (this._isFatalError(error as ErrnoException)) {
+				throw error;
+			}
+
+			return [];
+		}
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): Entry[] {
@@ -38,11 +45,11 @@ export default class ReaderSync extends Reader<Entry[]> {
 
 			return this._makeEntry(stats, pattern);
 		} catch (error) {
-			if (utils.errno.isEnoentCodeError(error as ErrnoException) || this._settings.suppressErrors) {
-				return null;
+			if (this._isFatalError(error as ErrnoException)) {
+				throw error;
 			}
 
-			throw error;
+			return null;
 		}
 	}
 

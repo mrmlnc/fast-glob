@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import Settings from '../settings';
-import { Entry, Pattern, ReaderOptions } from '../types/index';
+import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types/index';
 import * as utils from '../utils/index';
 
 export default abstract class Reader<T> {
@@ -27,5 +27,9 @@ export default abstract class Reader<T> {
 		}
 
 		return entry;
+	}
+
+	protected _isFatalError(error: ErrnoException): boolean {
+		return !utils.errno.isEnoentCodeError(error) && !this._settings.suppressErrors;
 	}
 }

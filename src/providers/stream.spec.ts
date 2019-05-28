@@ -31,12 +31,6 @@ class TestProviderStream extends ProviderStream {
 	}
 }
 
-class TestProviderWithEnoent extends TestProviderStream {
-	public api(): NodeJS.ReadableStream {
-		return this._reader.fake('dynamic', new tests.EnoentErrnoException());
-	}
-}
-
 class TestProviderWithErrno extends TestProviderStream {
 	public api(): NodeJS.ReadableStream {
 		return this._reader.fake('dynamic', new Error('Boom'));
@@ -120,17 +114,6 @@ describe('Providers → ProviderStream', () => {
 			const expected: string[] = ['cake'];
 
 			const actual = await getEntries(settings, task, TestProviderStream);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should returns empty array if provided cwd does not exists', async () => {
-			const task = getTask();
-			const settings = new Settings();
-
-			const expected: string[] = [];
-
-			const actual = await getEntries(settings, task, TestProviderWithEnoent);
 
 			assert.deepStrictEqual(actual, expected);
 		});

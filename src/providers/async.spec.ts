@@ -31,12 +31,6 @@ class TestProviderAsync extends ProviderAsync {
 	}
 }
 
-class TestProviderAsyncWithEnoent extends TestProviderAsync {
-	public api(): NodeJS.ReadableStream {
-		return this._reader.fake('dynamic', new tests.EnoentErrnoException());
-	}
-}
-
 class TestProviderAsyncWithErrno extends TestProviderAsync {
 	public api(): NodeJS.ReadableStream {
 		return this._reader.fake('dynamic', new Error('Boom'));
@@ -103,17 +97,6 @@ describe('Providers → ProviderAsync', () => {
 			const provider = new TestProviderAsync(settings);
 
 			const expected: string[] = ['cake'];
-
-			const actual = await provider.read(task);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should returns empty array if provided cwd does not exists', async () => {
-			const task = getTask();
-			const provider = new TestProviderAsyncWithEnoent();
-
-			const expected: string[] = [];
 
 			const actual = await provider.read(task);
 

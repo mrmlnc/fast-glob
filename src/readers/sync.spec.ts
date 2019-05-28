@@ -44,12 +44,34 @@ describe('Readers → ReaderSync', () => {
 	});
 
 	describe('.dynamic', () => {
-		it('should return entries', () => {
+		it('should return an empty array when walk throw an ENOENT error', () => {
 			const reader = getReader();
 
-			reader.dynamic('root', {} as ReaderOptions);
+			reader.walkSync.throws(new tests.EnoentErrnoException());
 
-			assert.ok(reader.walkSync.calledOnce);
+			const actual = reader.dynamic('root', {} as ReaderOptions);
+
+			assert.strictEqual(actual.length, 0);
+		});
+
+		it('should return an empty array when walk throw an EPERM error when the `suppressErrors` option is enabled', () => {
+			const reader = getReader({ suppressErrors: true });
+
+			reader.walkSync.throws(new tests.EpermErrnoException());
+
+			const actual = reader.dynamic('root', {} as ReaderOptions);
+
+			assert.strictEqual(actual.length, 0);
+		});
+
+		it('should re-throw non-ENOENT error', () => {
+			const reader = getReader();
+
+			reader.walkSync.throws(new tests.EpermErrnoException());
+
+			const expectedErrorMessageRe = /EPERM error/;
+
+			assert.throws(() => reader.dynamic('root', {} as ReaderOptions), expectedErrorMessageRe);
 		});
 	});
 

@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import { EventEmitter } from 'events';
 
 import { Stats } from '@nodelib/fs.macchiato';
 import * as fsStat from '@nodelib/fs.stat';
@@ -44,12 +45,48 @@ describe('Readers → ReaderStream', () => {
 	});
 
 	describe('.dynamic', () => {
-		it('should return entries', () => {
+		it('should not re-throw ENOENT error', (done) => {
 			const reader = getReader();
+			const emitter = new EventEmitter();
 
-			reader.dynamic('root', {} as ReaderOptions);
+			reader.walkStream.returns(emitter);
 
-			assert.ok(reader.walkStream.calledOnce);
+			const stream = reader.dynamic('root', {} as ReaderOptions);
+
+			stream.once('end', done);
+
+			emitter.emit('error', new tests.EnoentErrnoException());
+			emitter.emit('end');
+		});
+
+		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', (done) => {
+			const reader = getReader({ suppressErrors: true });
+			const emitter = new EventEmitter();
+
+			reader.walkStream.returns(emitter);
+
+			const stream = reader.dynamic('root', {} as ReaderOptions);
+
+			stream.once('end', done);
+
+			emitter.emit('error', new tests.EpermErrnoException());
+			emitter.emit('end');
+		});
+
+		it('should re-throw non-ENOENT error', (done) => {
+			const reader = getReader();
+			const emitter = new EventEmitter();
+
+			reader.walkStream.returns(emitter);
+
+			const stream = reader.dynamic('root', {} as ReaderOptions);
+
+			stream.once('error', (error: ErrnoException) => {
+				assert.strictEqual(error.code, 'EPERM');
+				done();
+			});
+
+			emitter.emit('error', new tests.EpermErrnoException());
 		});
 	});
 

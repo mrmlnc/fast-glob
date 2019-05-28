@@ -1,7 +1,6 @@
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import { Entry, EntryItem, ErrnoException, ReaderOptions } from '../types/index';
-import * as utils from '../utils/index';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
@@ -19,8 +18,11 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 		return new Promise((resolve, reject) => {
 			const stream: NodeJS.ReadableStream = this.api(root, task, options);
 
-			stream.on('error', (err: ErrnoException) => {
-				utils.errno.isEnoentCodeError(err) ? resolve([]) : reject(err);
+			stream.on('error', (error: ErrnoException) => {
+				if (error) {
+					reject(error);
+				}
+
 				stream.pause();
 			});
 
