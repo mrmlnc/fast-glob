@@ -73,9 +73,15 @@ smoke.suite('Smoke → Static (stats)', [
 		fgOptions: {
 			stats: true,
 			transform: (entry) => {
-				assert.ok((entry as Entry).dirent.isFile());
+				const obj = entry as Entry;
 
-				return (entry as Entry).path;
+				if (obj.stats === undefined) {
+					assert.fail('the `stats` property is not defined');
+				} else {
+					assert.ok(obj.stats.isFile());
+				}
+
+				return obj.path;
 			}
 		}
 	}

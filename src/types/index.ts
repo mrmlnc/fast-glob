@@ -16,6 +16,7 @@ export interface ReaderOptions extends fsWalk.Options {
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	fs: FileSystemAdapter;
+	stats: boolean;
 	transform(entry: Entry): EntryItem;
 }
 
