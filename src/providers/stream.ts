@@ -1,9 +1,8 @@
 import * as stream from 'stream';
 
-import FileSystemStream from '../adapters/fs-stream';
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry, ReaderOptions } from '../types/index';
+import { Entry, ErrnoException, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 class TransformStream extends stream.Transform {
@@ -20,13 +19,6 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	protected _reader: ReaderStream = new ReaderStream(this._settings);
 
 	/**
-	 * Returns FileSystem adapter.
-	 */
-	public get fsAdapter(): FileSystemStream {
-		return new FileSystemStream(this._settings);
-	}
-
-	/**
 	 * Use stream API to read entries for Task.
 	 */
 	public read(task: Task): NodeJS.ReadableStream {
@@ -37,7 +29,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 		const readable: NodeJS.ReadableStream = this.api(root, task, options);
 
 		return readable
-			.on('error', (err: NodeJS.ErrnoException) => this.isEnoentCodeError(err) ? null : transform.emit('error', err))
+			.on('error', (err: ErrnoException) => transform.emit('error', err))
 			.pipe(transform);
 	}
 

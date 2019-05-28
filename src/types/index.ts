@@ -2,6 +2,8 @@ import * as fsWalk from '@nodelib/fs.walk';
 
 import * as micromatch from 'micromatch';
 
+export type ErrnoException = NodeJS.ErrnoException;
+
 export type Entry = fsWalk.Entry;
 export type EntryItem = string | Entry;
 

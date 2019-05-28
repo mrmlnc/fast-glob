@@ -13,17 +13,9 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 		const root = this.getRootDirectory(task);
 		const options = this.getReaderOptions(task);
 
-		try {
-			const entries: Entry[] = this.api(root, task, options);
+		const entries: Entry[] = this.api(root, task, options);
 
-			return entries.map<EntryItem>(options.transform);
-		} catch (err) {
-			if (this.isEnoentCodeError(err as NodeJS.ErrnoException)) {
-				return [];
-			}
-
-			throw err;
-		}
+		return entries.map<EntryItem>(options.transform);
 	}
 
 	/**

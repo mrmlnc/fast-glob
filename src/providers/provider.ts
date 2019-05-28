@@ -68,11 +68,4 @@ export default abstract class Provider<T> {
 			matchBase: this._settings.matchBase
 		};
 	}
-
-	/**
-	 * Returns true if error has ENOENT code.
-	 */
-	public isEnoentCodeError(err: NodeJS.ErrnoException): boolean {
-		return err.code === 'ENOENT';
-	}
 }

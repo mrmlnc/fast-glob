@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import * as pkg from './index';
 import { Task } from './managers/tasks';
-import { EntryItem } from './types/index';
+import { EntryItem, ErrnoException } from './types/index';
 
 describe('Package', () => {
 	describe('.sync', () => {
@@ -116,7 +116,7 @@ describe('Package', () => {
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
 			stream.on('data', (entry: EntryItem) => actual.push(entry));
-			stream.on('error', (err: NodeJS.ErrnoException) => assert.fail(err));
+			stream.on('error', (err: ErrnoException) => assert.fail(err));
 			stream.on('end', () => {
 				actual.sort();
 				assert.deepStrictEqual(actual, expected);
@@ -139,7 +139,7 @@ describe('Package', () => {
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			stream.on('data', (entry: EntryItem) => actual.push(entry));
-			stream.on('error', (err: NodeJS.ErrnoException) => assert.fail(err));
+			stream.on('error', (err: ErrnoException) => assert.fail(err));
 			stream.on('end', () => {
 				actual.sort();
 				assert.deepStrictEqual(actual, expected);

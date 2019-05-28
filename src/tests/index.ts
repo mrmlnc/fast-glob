@@ -24,7 +24,15 @@ export class EnoentErrnoException extends Error {
 	public readonly code: string = 'ENOENT';
 
 	constructor() {
-		super();
+		super('ENOENT error');
+	}
+}
+
+export class EpermErrnoException extends Error {
+	public readonly code: string = 'EPERM';
+
+	constructor() {
+		super('EPERM error');
 	}
 }
 

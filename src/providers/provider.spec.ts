@@ -3,7 +3,6 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
-import * as tests from '../tests';
 import { MicromatchOptions } from '../types/index';
 import Provider from './provider';
 
@@ -103,28 +102,6 @@ describe('Providers → Provider', () => {
 			const actual = provider.getMicromatchOptions();
 
 			assert.deepStrictEqual(actual, expected);
-		});
-	});
-
-	describe('.isEnoentCodeError', () => {
-		it('should return true for ENOENT error', () => {
-			const provider = getProvider();
-
-			const error = new tests.EnoentErrnoException();
-
-			const actual = provider.isEnoentCodeError(error);
-
-			assert.ok(actual);
-		});
-
-		it('should return false for non-ENOENT error', () => {
-			const provider = getProvider();
-
-			const error = new Error();
-
-			const actual = provider.isEnoentCodeError(error);
-
-			assert.ok(!actual);
 		});
 	});
 });
