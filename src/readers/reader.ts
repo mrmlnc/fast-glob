@@ -1,11 +1,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import * as fsStat from '@nodelib/fs.stat';
+
 import Settings from '../settings';
 import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types/index';
 import * as utils from '../utils/index';
 
 export default abstract class Reader<T> {
+	protected readonly _fsStatSettings: fsStat.Settings = new fsStat.Settings({
+		followSymbolicLink: this._settings.followSymbolicLinks,
+		fs: this._settings.fs,
+		throwErrorOnBrokenSymbolicLink: this._settings.followSymbolicLinks
+	});
+
 	constructor(protected readonly _settings: Settings) { }
 
 	public abstract dynamic(root: string, options: ReaderOptions): T;

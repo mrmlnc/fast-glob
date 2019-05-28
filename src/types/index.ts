@@ -13,8 +13,9 @@ export type PatternsGroup = Record<string, Pattern[]>;
 
 export interface ReaderOptions extends fsWalk.Options {
 	basePath: string | null;
-	entryFilter: EntryFilterFunction;
 	deepFilter: DeepFilterFunction;
+	entryFilter: EntryFilterFunction;
+	fs: FileSystemAdapter;
 	transform(entry: Entry): EntryItem;
 }
 
@@ -23,3 +24,5 @@ export type EntryFilterFunction = fsWalk.EntryFilterFunction;
 export type DeepFilterFunction = fsWalk.DeepFilterFunction;
 export type EntryTransformerFunction = (entry: Entry) => EntryItem;
 export type MicromatchOptions = micromatch.Options;
+
+export type FileSystemAdapter = fsWalk.FileSystemAdapter;
