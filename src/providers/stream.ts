@@ -29,7 +29,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 		const readable: NodeJS.ReadableStream = this.api(root, task, options);
 
 		return readable
-			.on('error', (err: ErrnoException) => transform.emit('error', err))
+			.on('error', (error: ErrnoException) => transform.emit('error', error))
 			.pipe(transform);
 	}
 
