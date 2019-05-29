@@ -38,7 +38,7 @@ describe('Utils → Stream', () => {
 
 			mergedStream.on('error', (err: number) => actual.push(err));
 
-			mergedStream.on('finish', () => {
+			mergedStream.once('finish', () => {
 				assert.deepStrictEqual(actual, expected);
 
 				done();

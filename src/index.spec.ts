@@ -116,8 +116,8 @@ describe('Package', () => {
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
 			stream.on('data', (entry: EntryItem) => actual.push(entry));
-			stream.on('error', (err: ErrnoException) => assert.fail(err));
-			stream.on('end', () => {
+			stream.once('error', (err: ErrnoException) => assert.fail(err));
+			stream.once('end', () => {
 				actual.sort();
 				assert.deepStrictEqual(actual, expected);
 				done();
@@ -139,8 +139,8 @@ describe('Package', () => {
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			stream.on('data', (entry: EntryItem) => actual.push(entry));
-			stream.on('error', (err: ErrnoException) => assert.fail(err));
-			stream.on('end', () => {
+			stream.once('error', (err: ErrnoException) => assert.fail(err));
+			stream.once('end', () => {
 				actual.sort();
 				assert.deepStrictEqual(actual, expected);
 				done();

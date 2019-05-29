@@ -48,9 +48,9 @@ const getEntries = (settings: Settings, task: Task, api: typeof TestProviderStre
 
 		const stream = provider.read(task);
 
-		stream.on('error', reject);
 		stream.on('data', (entry: EntryItem) => entries.push(entry));
-		stream.on('end', () => resolve(entries));
+		stream.once('error', reject);
+		stream.once('end', () => resolve(entries));
 	});
 };
 

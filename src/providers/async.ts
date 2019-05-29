@@ -18,7 +18,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 		return new Promise((resolve, reject) => {
 			const stream: NodeJS.ReadableStream = this.api(root, task, options);
 
-			stream.on('error', (error: ErrnoException) => {
+			stream.once('error', (error: ErrnoException) => {
 				if (error) {
 					reject(error);
 				}
@@ -27,7 +27,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 			});
 
 			stream.on('data', (entry: Entry) => entries.push(options.transform(entry)));
-			stream.on('end', () => resolve(entries));
+			stream.once('end', () => resolve(entries));
 		});
 	}
 
