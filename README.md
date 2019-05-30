@@ -355,8 +355,8 @@ first/
 If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
 
 ```js
-fg.sync(['**/*.md', '!**/second']); // ['first/file.txt']
-fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.txt']
+fg.sync(['**/*.md', '!**/second']); // ['first/file.md']
+fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.md']
 ```
 
 > :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
