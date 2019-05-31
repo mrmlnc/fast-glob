@@ -144,7 +144,7 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
  * Returns true if the entry match any of the given RegExp's.
  */
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
-	const filepath = entry.replace(/^\.(\\\\|\/)/g, '');
+	const filepath = entry.replace(/^\.[\\\/]/, '');
 
 	return patternsRe.some((patternRe) => patternRe.test(filepath));
 }
