@@ -143,6 +143,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
 
 				const entry = tests.getDirectoryEntry({
+					name: '.directory',
 					path: path.join('fixtures', '.directory')
 				});
 
@@ -155,6 +156,7 @@ describe('Providers → Filters → Deep', () => {
 				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.getDirectoryEntry({
+					name: '.directory',
 					path: path.join('fixtures', '.directory')
 				});
 

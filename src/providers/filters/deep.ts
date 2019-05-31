@@ -86,7 +86,7 @@ export default class DeepFilter {
 	 * Returns «true» for a directory whose name starts with a period if «dot» option is disabled.
 	 */
 	private _isSkippedDotDirectory(entry: Entry): boolean {
-		return !this._settings.dot && utils.path.isDotDirectory(entry.path);
+		return !this._settings.dot && entry.name.startsWith('.');
 	}
 
 	/**
