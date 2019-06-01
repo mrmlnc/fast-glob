@@ -16,7 +16,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 		const entries: EntryItem[] = [];
 
 		return new Promise((resolve, reject) => {
-			const stream: NodeJS.ReadableStream = this.api(root, task, options);
+			const stream = this.api(root, task, options);
 
 			stream.once('error', (error: ErrnoException) => {
 				if (error) {

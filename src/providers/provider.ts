@@ -9,21 +9,12 @@ import ErrorFilter from './filters/error';
 import EntryTransformer from './transformers/entry';
 
 export default abstract class Provider<T> {
-	public readonly errorFilter: ErrorFilter;
-	public readonly entryFilter: EntryFilter;
-	public readonly deepFilter: DeepFilter;
-	public readonly entryTransformer: EntryTransformer;
+	public readonly errorFilter: ErrorFilter = new ErrorFilter(this._settings);
+	public readonly entryFilter: EntryFilter = new EntryFilter(this._settings, this.getMicromatchOptions());
+	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this.getMicromatchOptions());
+	public readonly entryTransformer: EntryTransformer = new EntryTransformer(this._settings);
 
-	private readonly _micromatchOptions: MicromatchOptions;
-
-	constructor(protected readonly _settings: Settings) {
-		this._micromatchOptions = this.getMicromatchOptions();
-
-		this.errorFilter = new ErrorFilter(_settings);
-		this.entryFilter = new EntryFilter(_settings, this._micromatchOptions);
-		this.deepFilter = new DeepFilter(_settings, this._micromatchOptions);
-		this.entryTransformer = new EntryTransformer(_settings);
-	}
+	constructor(protected readonly _settings: Settings) { }
 
 	/**
 	 * The main logic of reading the directories that must be implemented by each providers.

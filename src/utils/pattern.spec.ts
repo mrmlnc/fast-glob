@@ -40,7 +40,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.convertToPositivePattern', () => {
 		it('should returns converted positive pattern', () => {
-			const expected: Pattern = '*.js';
+			const expected = '*.js';
 
 			const actual = util.convertToPositivePattern('!*.js');
 
@@ -48,7 +48,7 @@ describe('Utils → Pattern', () => {
 		});
 
 		it('should returns pattern without changes', () => {
-			const expected: Pattern = '*.js';
+			const expected = '*.js';
 
 			const actual = util.convertToPositivePattern('*.js');
 
@@ -58,7 +58,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.convertToNegativePattern', () => {
 		it('should returns converted negative pattern', () => {
-			const expected: Pattern = '!*.js';
+			const expected = '!*.js';
 
 			const actual = util.convertToNegativePattern('*.js');
 
@@ -102,7 +102,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.getNegativePatterns', () => {
 		it('should returns only negative patterns', () => {
-			const expected: Pattern[] = ['!*.spec.js'];
+			const expected = ['!*.spec.js'];
 
 			const actual = util.getNegativePatterns(['*.js', '!*.spec.js', '*.ts']);
 
@@ -120,7 +120,7 @@ describe('Utils → Pattern', () => {
 
 	describe('.getPositivePatterns', () => {
 		it('should returns only positive patterns', () => {
-			const expected: Pattern[] = ['*.js', '*.ts'];
+			const expected = ['*.js', '*.ts'];
 
 			const actual = util.getPositivePatterns(['*.js', '!*.spec.js', '*.ts']);
 

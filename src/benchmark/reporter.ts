@@ -12,9 +12,9 @@ export default class Reporter {
 	}
 
 	private _formatMeta(): string {
-		const matches: string = 'Entries: ' + this._formatValue(this._results.entries, '');
-		const errors: string = 'Errors: ' + this._formatValue(this._results.errors, '');
-		const retries: string = 'Retries: ' + this._formatValue(this._results.retries, '');
+		const matches = 'Entries: ' + this._formatValue(this._results.entries, '');
+		const errors = 'Errors: ' + this._formatValue(this._results.errors, '');
+		const retries = 'Retries: ' + this._formatValue(this._results.retries, '');
 
 		return [matches, errors, retries].join(' | ');
 	}

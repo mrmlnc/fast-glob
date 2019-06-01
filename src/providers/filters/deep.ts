@@ -12,9 +12,9 @@ export default class DeepFilter {
 	 */
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const maxPatternDepth = this._getMaxPatternDepth(positive);
-		const negativeRe: PatternRe[] = this._getNegativePatternsRe(negative);
+		const negativeRe = this._getNegativePatternsRe(negative);
 
-		return (entry: Entry) => this._filter(basePath, entry, negativeRe, maxPatternDepth);
+		return (entry) => this._filter(basePath, entry, negativeRe, maxPatternDepth);
 	}
 
 	/**
@@ -30,7 +30,7 @@ export default class DeepFilter {
 	 * Returns RegExp's for patterns that can affect the depth of reading.
 	 */
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
-		const affectDepthOfReadingPatterns: Pattern[] = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
+		const affectDepthOfReadingPatterns = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
 
 		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
 	}

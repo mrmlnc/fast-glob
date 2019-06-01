@@ -54,7 +54,7 @@ export default class Runner {
 	 * Runs a single suite in the child process and returns the measurements of his work.
 	 */
 	public suite(suitePath: string): SuiteMeasures {
-		const env: Record<string, string> = {
+		const env: NodeJS.ProcessEnv = {
 			NODE_ENV: 'production',
 			BENCHMARK_BASE_DIR: this._basedir,
 			BENCHMARK_PATTERN: this._options.pattern
@@ -114,11 +114,11 @@ export default class Runner {
 	}
 
 	public packs(): void {
-		const suitesPath: string = path.join(__dirname, 'suites', this._options.type);
-		const suites: string[] = this.getSuites(suitesPath);
+		const suitesPath = path.join(__dirname, 'suites', this._options.type);
+		const suites = this.getSuites(suitesPath);
 
 		for (const filepath of suites) {
-			const suitePath: string = path.join(suitesPath, filepath);
+			const suitePath = path.join(suitesPath, filepath);
 
 			let result = this.suitePack(suitePath, 0);
 

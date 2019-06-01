@@ -56,7 +56,7 @@ describe('Providers → ProviderSync', () => {
 			const task = getTask();
 			const provider = new TestProviderSync();
 
-			const expected: string[] = ['dynamic'];
+			const expected = ['dynamic'];
 
 			const actual = provider.read(task);
 
@@ -67,7 +67,7 @@ describe('Providers → ProviderSync', () => {
 			const task = getTask(/* dynamic */ false);
 			const provider = new TestProviderSync();
 
-			const expected: string[] = ['static'];
+			const expected = ['static'];
 
 			const actual = provider.read(task);
 
@@ -79,7 +79,7 @@ describe('Providers → ProviderSync', () => {
 			const settings = new Settings({ stats: true });
 			const provider = new TestProviderSync(settings);
 
-			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
+			const expected = [{ path: 'dynamic' } as Entry];
 
 			const actual = provider.read(task);
 
@@ -93,7 +93,7 @@ describe('Providers → ProviderSync', () => {
 			const settings = new Settings({ transform });
 			const provider = new TestProviderSync(settings);
 
-			const expected: string[] = ['cake'];
+			const expected = ['cake'];
 
 			const actual = provider.read(task);
 

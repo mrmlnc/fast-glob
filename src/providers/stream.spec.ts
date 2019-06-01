@@ -78,7 +78,7 @@ describe('Providers → ProviderStream', () => {
 			const task = getTask();
 			const settings = new Settings();
 
-			const expected: string[] = ['dynamic'];
+			const expected = ['dynamic'];
 
 			const actual = await getEntries(settings, task, TestProviderStream);
 
@@ -89,7 +89,7 @@ describe('Providers → ProviderStream', () => {
 			const task = getTask(/* dynamic */ false);
 			const settings = new Settings();
 
-			const expected: string[] = ['static'];
+			const expected = ['static'];
 
 			const actual = await getEntries(settings, task, TestProviderStream);
 
@@ -100,7 +100,7 @@ describe('Providers → ProviderStream', () => {
 			const task = getTask();
 			const settings = new Settings({ stats: true });
 
-			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
+			const expected = [{ path: 'dynamic' } as Entry];
 
 			const actual = await getEntries(settings, task, TestProviderStream);
 
@@ -111,7 +111,7 @@ describe('Providers → ProviderStream', () => {
 			const task = getTask();
 			const settings = new Settings({ transform: () => 'cake' });
 
-			const expected: string[] = ['cake'];
+			const expected = ['cake'];
 
 			const actual = await getEntries(settings, task, TestProviderStream);
 

@@ -61,7 +61,7 @@ describe('Providers → ProviderAsync', () => {
 			const task = getTask();
 			const provider = new TestProviderAsync();
 
-			const expected: string[] = ['dynamic'];
+			const expected = ['dynamic'];
 
 			const actual = await provider.read(task);
 
@@ -72,7 +72,7 @@ describe('Providers → ProviderAsync', () => {
 			const task = getTask(/* dynamic */ false);
 			const provider = new TestProviderAsync();
 
-			const expected: string[] = ['static'];
+			const expected = ['static'];
 
 			const actual = await provider.read(task);
 
@@ -84,7 +84,7 @@ describe('Providers → ProviderAsync', () => {
 			const settings = new Settings({ stats: true });
 			const provider = new TestProviderAsync(settings);
 
-			const expected: Entry[] = [{ path: 'dynamic' } as Entry];
+			const expected = [{ path: 'dynamic' } as Entry];
 
 			const actual = await provider.read(task);
 
@@ -96,7 +96,7 @@ describe('Providers → ProviderAsync', () => {
 			const settings = new Settings({ transform: () => 'cake' });
 			const provider = new TestProviderAsync(settings);
 
-			const expected: string[] = ['cake'];
+			const expected = ['cake'];
 
 			const actual = await provider.read(task);
 

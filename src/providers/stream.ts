@@ -26,7 +26,7 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 		const options = this.getReaderOptions(task);
 		const transform = new TransformStream(options);
 
-		const readable: NodeJS.ReadableStream = this.api(root, task, options);
+		const readable = this.api(root, task, options);
 
 		return readable
 			.on('error', (error: ErrnoException) => transform.emit('error', error))

@@ -13,10 +13,10 @@ export default class EntryFilter {
 	 * Returns filter for directories.
 	 */
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const positiveRe: PatternRe[] = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
-		const negativeRe: PatternRe[] = utils.pattern.convertPatternsToRe(negative, this._micromatchOptions);
+		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
+		const negativeRe = utils.pattern.convertPatternsToRe(negative, this._micromatchOptions);
 
-		return (entry: Entry) => this._filter(entry, positiveRe, negativeRe);
+		return (entry) => this._filter(entry, positiveRe, negativeRe);
 	}
 
 	/**

@@ -30,12 +30,12 @@ export function getMeasures(matches: number, time: number, memory: number): stri
 	return JSON.stringify({ matches, time, memory } as SuiteMeasures);
 }
 
-export function getAverageValue(raw: number[]): number {
-	return raw.reduce((a, b) => a + b, 0) / raw.length;
+export function getAverageValue(values: number[]): number {
+	return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-export function getStdev(raw: number[]): number {
-	return stdev(raw);
+export function getStdev(values: number[]): number {
+	return stdev(values);
 }
 
 export function getEnvAsInteger(name: string): number | undefined {
