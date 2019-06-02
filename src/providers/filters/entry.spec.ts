@@ -3,7 +3,6 @@ import * as assert from 'assert';
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
 import { EntryFilterFunction, Pattern } from '../../types/index';
-import * as utils from '../../utils/index';
 import EntryFilter from './entry';
 
 function getEntryFilterInstance(options?: Options): EntryFilter {
@@ -27,20 +26,10 @@ describe('Providers → Filters → Entry', () => {
 		});
 	});
 
-	describe('.call', () => {
-		describe('Filter by «unique» option', () => {
-			it('should return true for unique entry when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for non-unique entry when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
+	describe('.getFilter', () => {
+		describe('options.unique', () => {
+			it('should return `false` when an option is enabled', () => {
+				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
@@ -52,20 +41,7 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return true for non-unique entry when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false, unique: false });
-
-				const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-				// Create index record
-				filter(entry);
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should not build the index when option is disabled', () => {
+			it('should not build the index when an option is disabled', () => {
 				const filterInstance = getEntryFilterInstance({ onlyFiles: false, unique: false });
 
 				const filter = filterInstance.getFilter(['**/*'], []);
@@ -78,9 +54,9 @@ describe('Providers → Filters → Entry', () => {
 			});
 		});
 
-		describe('Filter by excluded directories', () => {
-			it('should return false for excluded directory', () => {
-				const filter = getFilter(['**/*', '!**/directory'], ['**/directory'], { onlyFiles: false });
+		describe('options.onlyFiles', () => {
+			it('should return `false` for the directory entry when an option is enabled', () => {
+				const filter = getFilter(['**/*'], []);
 
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 
@@ -89,167 +65,41 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return false for files in excluded directory', () => {
-				const filter = getFilter(['**/*', '!**/directory/**'], ['**/directory/**'], { onlyFiles: false });
+			it('should return `true` for the file entry when an option is enabled', () => {
+				const filter = getFilter(['**/*'], []);
+
+				const entry = tests.entry.builder().path('root/file.txt').file().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+		});
+
+		describe('options.onlyDirectories', () => {
+			it('should return `false` for the directory entry when an option is enabled', () => {
+				const filter = getFilter(['**/*'], [], { onlyDirectories: true });
+
+				const entry = tests.entry.builder().path('root/file.txt').file().build();
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return `true` for the directory entry when an option is enabled', () => {
+				const filter = getFilter(['**/*'], [], { onlyDirectories: true });
 
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);
 
-				assert.ok(!actual);
+				assert.ok(actual);
 			});
 		});
 
-		describe('Filter by entry type', () => {
-			describe('The «onlyFiles» option', () => {
-				it('should return true for file when option is enabled', () => {
-					const filter = getFilter(['**/*'], []);
-
-					const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-					const actual = filter(entry);
-
-					assert.ok(actual);
-				});
-
-				it('should return true for file when option is disabled', () => {
-					const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-					const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-					const actual = filter(entry);
-
-					assert.ok(actual);
-				});
-
-				it('should return false for directory when option is enabled', () => {
-					const filter = getFilter(['**/*'], []);
-
-					const entry = tests.entry.builder().path('root/directory').directory().build();
-
-					const actual = filter(entry);
-
-					assert.ok(!actual);
-				});
-
-				it('should return true for directory when option is disabled', () => {
-					const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-					const entry = tests.entry.builder().path('root/directory').directory().build();
-
-					const actual = filter(entry);
-
-					assert.ok(actual);
-				});
-			});
-
-			describe('The «onlyDirectories» option', () => {
-				it('should return false for file when option is enabled', () => {
-					const filter = getFilter(['**/*'], [], { onlyFiles: false, onlyDirectories: true });
-
-					const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-					const actual = filter(entry);
-
-					assert.ok(!actual);
-				});
-
-				it('should return true for file when option is disabled', () => {
-					const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-					const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-					const actual = filter(entry);
-
-					assert.ok(actual);
-				});
-
-				it('should return true for directory when option is enabled', () => {
-					const filter = getFilter(['**/*'], [], { onlyFiles: false, onlyDirectories: true });
-
-					const entry = tests.entry.builder().path('root/directory').directory().build();
-
-					const actual = filter(entry);
-
-					assert.ok(actual);
-				});
-
-				it('should return false for directory when option is disabled', () => {
-					const filter = getFilter(['**/*'], []);
-
-					const entry = tests.entry.builder().path('root/directory').directory().build();
-
-					const actual = filter(entry);
-
-					assert.ok(!actual);
-				});
-			});
-		});
-
-		describe('Filter by «dot» option', () => {
-			it('should return true for file that starting with a period when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
-
-				const entry = tests.entry.builder().path('root/.file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for file that starting with a period when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/.file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-
-			it('should return true for directory that starting with a period when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
-
-				const entry = tests.entry.builder().path('root/.directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for directory that starting with a period when option is disabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.entry.builder().path('root/.directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
-		describe('Filter by absolute negative patterns', () => {
-			it('should return true when `absolute` option is disabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return true for file that no matched by negative pattern when `absolute` option is enabled', () => {
-				const filter = getFilter(['**/*'], ['*'], { absolute: true });
-
-				const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for file that excluded by negative pattern with globstar when `absolute` option is enabled', () => {
+		describe('options.absolute', () => {
+			it('should return `false` when an entry match to the negative pattern', () => {
 				const filter = getFilter(['**/*'], ['**/*'], { absolute: true });
 
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
@@ -259,32 +109,20 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return false for file that excluded by absolute negative patterns when `absolute` option is enabled', () => {
-				const negative = utils.path.makeAbsolute(process.cwd(), '**').replace(/\\/g, '/');
-				const filter = getFilter(['**/*'], [negative], { absolute: true });
+			it('should return `false` when an entry do not match to the negative pattern', () => {
+				const filter = getFilter(['**/*'], ['*'], { absolute: true });
 
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
 				const actual = filter(entry);
 
-				assert.ok(!actual);
+				assert.ok(actual);
 			});
 		});
 
-		describe('Filter by patterns', () => {
-			it('should return true for file that matched to patterns', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return false for file that not matched to patterns', () => {
-				const filter = getFilter(['**/*.md'], [], { onlyFiles: false });
-
+		describe('Pattern', () => {
+			it('should return `false` when an entry match to the negative pattern', () => {
+				const filter = getFilter(['**/*'], ['**/*']);
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
 				const actual = filter(entry);
@@ -292,9 +130,8 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return false for file that excluded by negative patterns', () => {
-				const filter = getFilter(['**/*', '!**/*.txt'], ['**/*.txt'], { onlyFiles: false });
-
+			it('should return `false` when an entry do not match to the positive pattern', () => {
+				const filter = getFilter(['*'], []);
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
 				const actual = filter(entry);
@@ -302,69 +139,27 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return true for directory that matched to patterns', () => {
-				const filter = getFilter(['**/directory/**'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return true for directory that matched to static patterns', () => {
-				const filter = getFilter(['root/directory'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/directory').directory().build();
+			it('should return `true` when an entry match to the positive pattern', () => {
+				const filter = getFilter(['**/*'], []);
+				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
 				const actual = filter(entry);
 
 				assert.ok(actual);
-			});
-
-			it('should return false for directory that not matched to patterns', () => {
-				const filter = getFilter(['**/super_directory/**'], [], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-
-			it('should return false for directory that matched to negative static pattern', () => {
-				const filter = getFilter(['**'], ['root/directory'], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-
-			it('should return false for directory that matched to negative pattern with globstar', () => {
-				const filter = getFilter(['**'], ['root/directory/**'], { onlyFiles: false });
-
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
 			});
 		});
+	});
 
-		describe('Immutability', () => {
-			it('should return the data without changes', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false });
+	describe('Immutability', () => {
+		it('should return the data without changes', () => {
+			const filter = getFilter(['**/*'], []);
 
-				const entry = tests.entry.builder().path('root/directory').directory().build();
+			const reference = tests.entry.builder().path('root/file.txt').directory().build();
+			const entry = tests.entry.builder().path('root/file.txt').directory().build();
 
-				const expected = entry.path;
+			filter(entry);
 
-				filter(entry);
-
-				assert.strictEqual(entry.path, expected);
-			});
+			assert.deepStrictEqual(entry, reference);
 		});
 	});
 });
