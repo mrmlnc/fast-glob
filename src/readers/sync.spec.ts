@@ -47,7 +47,7 @@ describe('Readers → ReaderSync', () => {
 		it('should return an empty array when walk throw an ENOENT error', () => {
 			const reader = getReader();
 
-			reader.walkSync.throws(new tests.EnoentErrnoException());
+			reader.walkSync.throws(tests.errno.getEnoent());
 
 			const actual = reader.dynamic('root', {} as ReaderOptions);
 
@@ -57,7 +57,7 @@ describe('Readers → ReaderSync', () => {
 		it('should return an empty array when walk throw an EPERM error when the `suppressErrors` option is enabled', () => {
 			const reader = getReader({ suppressErrors: true });
 
-			reader.walkSync.throws(new tests.EpermErrnoException());
+			reader.walkSync.throws(tests.errno.getEperm());
 
 			const actual = reader.dynamic('root', {} as ReaderOptions);
 
@@ -67,9 +67,9 @@ describe('Readers → ReaderSync', () => {
 		it('should re-throw non-ENOENT error', () => {
 			const reader = getReader();
 
-			reader.walkSync.throws(new tests.EpermErrnoException());
+			reader.walkSync.throws(tests.errno.getEperm());
 
-			const expectedErrorMessageRe = /EPERM error/;
+			const expectedErrorMessageRe = /Error: EPERM: operation not permitted/;
 
 			assert.throws(() => reader.dynamic('root', {} as ReaderOptions), expectedErrorMessageRe);
 		});
@@ -93,7 +93,7 @@ describe('Readers → ReaderSync', () => {
 		it('should not re-throw ENOENT error', () => {
 			const reader = getReader();
 
-			reader.statSync.onFirstCall().throws(new tests.EnoentErrnoException());
+			reader.statSync.onFirstCall().throws(tests.errno.getEnoent());
 			reader.statSync.onSecondCall().returns(new Stats());
 
 			const actual = reader.static(['a.txt', 'b.txt'], {
@@ -107,7 +107,7 @@ describe('Readers → ReaderSync', () => {
 		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', () => {
 			const reader = getReader({ suppressErrors: true });
 
-			reader.statSync.onFirstCall().throws(new tests.EpermErrnoException());
+			reader.statSync.onFirstCall().throws(tests.errno.getEperm());
 			reader.statSync.onSecondCall().returns(new Stats());
 
 			const actual = reader.static(['a.txt', 'b.txt'], {
@@ -121,9 +121,9 @@ describe('Readers → ReaderSync', () => {
 		it('should re-throw non-ENOENT error', () => {
 			const reader = getReader();
 
-			reader.statSync.throws(new tests.EpermErrnoException());
+			reader.statSync.throws(tests.errno.getEperm());
 
-			const expectedErrorMessageRe = /EPERM error/;
+			const expectedErrorMessageRe = /Error: EPERM: operation not permitted/;
 
 			assert.throws(() => reader.static(['a.txt', 'b.txt'], {} as ReaderOptions), expectedErrorMessageRe);
 		});

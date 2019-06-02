@@ -55,7 +55,7 @@ describe('Readers → ReaderStream', () => {
 
 			stream.once('end', done);
 
-			emitter.emit('error', new tests.EnoentErrnoException());
+			emitter.emit('error', tests.errno.getEnoent());
 			emitter.emit('end');
 		});
 
@@ -69,7 +69,7 @@ describe('Readers → ReaderStream', () => {
 
 			stream.once('end', done);
 
-			emitter.emit('error', new tests.EpermErrnoException());
+			emitter.emit('error', tests.errno.getEperm());
 			emitter.emit('end');
 		});
 
@@ -86,7 +86,7 @@ describe('Readers → ReaderStream', () => {
 				done();
 			});
 
-			emitter.emit('error', new tests.EpermErrnoException());
+			emitter.emit('error', tests.errno.getEperm());
 		});
 	});
 
@@ -114,7 +114,7 @@ describe('Readers → ReaderStream', () => {
 		it('should not re-throw ENOENT error', (done) => {
 			const reader = getReader();
 
-			reader.stat.onFirstCall().yields(new tests.EnoentErrnoException());
+			reader.stat.onFirstCall().yields(tests.errno.getEnoent());
 			reader.stat.onSecondCall().yields(null, new Stats());
 
 			const entries: Entry[] = [];
@@ -133,7 +133,7 @@ describe('Readers → ReaderStream', () => {
 		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', (done) => {
 			const reader = getReader({ suppressErrors: true });
 
-			reader.stat.onFirstCall().yields(new tests.EpermErrnoException());
+			reader.stat.onFirstCall().yields(tests.errno.getEperm());
 			reader.stat.onSecondCall().yields(null, new Stats());
 
 			const entries: Entry[] = [];
@@ -152,7 +152,7 @@ describe('Readers → ReaderStream', () => {
 		it('should re-throw non-ENOENT error', (done) => {
 			const reader = getReader();
 
-			reader.stat.yields(new tests.EpermErrnoException());
+			reader.stat.yields(tests.errno.getEperm());
 
 			const stream = reader.static(['a.txt', 'b.txt'], {} as ReaderOptions);
 
