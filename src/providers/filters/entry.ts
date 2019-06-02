@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import Settings from '../../settings';
 import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
 import * as utils from '../../utils/index';

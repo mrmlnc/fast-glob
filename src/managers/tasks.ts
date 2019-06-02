@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/index';
 import * as utils from '../utils/index';
