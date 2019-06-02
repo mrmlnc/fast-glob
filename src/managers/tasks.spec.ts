@@ -1,22 +1,62 @@
 import * as assert from 'assert';
 
 import Settings from '../settings';
-import { PatternsGroup } from '../types/index';
+import { Pattern, PatternsGroup } from '../types/index';
 import * as manager from './tasks';
 import { Task } from './tasks';
+
+class TaskBuilder {
+	private readonly _task: Task = {
+		base: '.',
+		dynamic: true,
+		patterns: [],
+		positive: [],
+		negative: []
+	};
+
+	public base(base: string): this {
+		this._task.base = base;
+
+		return this;
+	}
+
+	public static(): this {
+		this._task.dynamic = false;
+
+		return this;
+	}
+
+	public positive(pattern: Pattern): this {
+		this._task.patterns.push(pattern);
+		this._task.positive.push(pattern);
+
+		return this;
+	}
+
+	public negative(pattern: Pattern): this {
+		this._task.patterns.push(`!${pattern}`);
+		this._task.negative.push(pattern);
+
+		return this;
+	}
+
+	public build(): Task {
+		return this._task;
+	}
+}
+
+function getTaskBuilder(): TaskBuilder {
+	return new TaskBuilder();
+}
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
 		it('should return task with negative patterns from «ignore» option', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
-			const expected: Task[] = [{
-				base: 'a',
-				dynamic: true,
-				patterns: ['a/*', '!*.md', '!*.txt'],
-				positive: ['a/*'],
-				negative: ['*.md', '*.txt']
-			}];
+			const expected = [
+				getTaskBuilder().base('a').positive('a/*').negative('*.md').negative('*.txt').build()
+			];
 
 			const actual = manager.generate(['a/*', '!*.md'], settings);
 
@@ -26,21 +66,9 @@ describe('Managers → Task', () => {
 		it('should return static and dynamic tasks', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
-			const expected: Task[] = [
-				{
-					base: 'a',
-					dynamic: false,
-					patterns: ['a/file.json', '!b/*.md', '!*.txt'],
-					positive: ['a/file.json'],
-					negative: ['b/*.md', '*.txt']
-				},
-				{
-					base: 'b',
-					dynamic: true,
-					patterns: ['b/*', '!b/*.md', '!*.txt'],
-					positive: ['b/*'],
-					negative: ['b/*.md', '*.txt']
-				}
+			const expected = [
+				getTaskBuilder().base('a').static().positive('a/file.json').negative('b/*.md').negative('*.txt').build(),
+				getTaskBuilder().base('b').positive('b/*').negative('b/*.md').negative('*.txt').build()
 			];
 
 			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], settings);
@@ -48,24 +76,12 @@ describe('Managers → Task', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should return only dynamic patterns when the `caseSensitiveMatch` option is enabled', () => {
+		it('should return only dynamic tasks when the `caseSensitiveMatch` option is enabled', () => {
 			const settings = new Settings({ caseSensitiveMatch: false });
 
-			const expected: Task[] = [
-				{
-					base: 'a',
-					dynamic: true,
-					patterns: ['a/file.json', '!b/*.md'],
-					positive: ['a/file.json'],
-					negative: ['b/*.md']
-				},
-				{
-					base: 'b',
-					dynamic: true,
-					patterns: ['b/*', '!b/*.md'],
-					positive: ['b/*'],
-					negative: ['b/*.md']
-				}
+			const expected = [
+				getTaskBuilder().base('a').positive('a/file.json').negative('b/*.md').build(),
+				getTaskBuilder().base('b').positive('b/*').negative('b/*.md').build()
 			];
 
 			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], settings);
@@ -75,28 +91,10 @@ describe('Managers → Task', () => {
 	});
 
 	describe('.convertPatternsToTasks', () => {
-		it('should return global task when positive patterns have a global pattern', () => {
-			const expected: Task[] = [{
-				base: '.',
-				dynamic: true,
-				patterns: ['*', '!*.md'],
-				positive: ['*'],
-				negative: ['*.md']
-			}];
-
-			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return global task with negative patterns from «ignore» patterns', () => {
-			const expected: Task[] = [{
-				base: '.',
-				dynamic: true,
-				patterns: ['*', '!*.md'],
-				positive: ['*'],
-				negative: ['*.md']
-			}];
+		it('should return one task when positive patterns have a global pattern', () => {
+			const expected = [
+				getTaskBuilder().positive('*').negative('*.md').build()
+			];
 
 			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
 
@@ -104,21 +102,9 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return two tasks', () => {
-			const expected: Task[] = [
-				{
-					base: 'a',
-					dynamic: true,
-					patterns: ['a/*', '!b/*.md'],
-					positive: ['a/*'],
-					negative: ['b/*.md']
-				},
-				{
-					base: 'b',
-					dynamic: true,
-					patterns: ['b/*', '!b/*.md'],
-					positive: ['b/*'],
-					negative: ['b/*.md']
-				}
+			const expected = [
+				getTaskBuilder().base('a').positive('a/*').negative('b/*.md').build(),
+				getTaskBuilder().base('b').positive('b/*').negative('b/*.md').build()
 			];
 
 			const actual = manager.convertPatternsToTasks(['a/*', 'b/*'], ['b/*.md'], /* dynamic */ true);
@@ -176,15 +162,22 @@ describe('Managers → Task', () => {
 		});
 	});
 
+	describe('.convertPatternGroupsToTasks', () => {
+		it('should return two tasks', () => {
+			const expected = [
+				getTaskBuilder().base('a').positive('a/*').negative('b/*.md').build(),
+				getTaskBuilder().base('b').positive('b/*').negative('b/*.md').build()
+			];
+
+			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, ['b/*.md'], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
 	describe('.convertPatternGroupToTask', () => {
 		it('should return created dynamic task', () => {
-			const expected: Task = {
-				base: '.',
-				dynamic: true,
-				patterns: ['*', '!*.md'],
-				positive: ['*'],
-				negative: ['*.md']
-			};
+			const expected = getTaskBuilder().positive('*').negative('*.md').build();
 
 			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md'], /* dynamic */ true);
 
@@ -192,54 +185,9 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return created static task', () => {
-			const expected: Task = {
-				base: '.',
-				dynamic: false,
-				patterns: ['file', '!file.md'],
-				positive: ['file'],
-				negative: ['file.md']
-			};
+			const expected = getTaskBuilder().static().positive('.gitignore').negative('.git*').build();
 
-			const actual = manager.convertPatternGroupToTask('.', ['file'], ['file.md'], /* dynamic */ false);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-	});
-
-	describe('.convertPatternGroupsToTasks', () => {
-		it('should return one task without negative patterns', () => {
-			const expected: Task[] = [{
-				base: 'a',
-				dynamic: true,
-				patterns: ['a/*'],
-				positive: ['a/*'],
-				negative: []
-			}];
-
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'] }, [], /* dynamic */ true);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should return two tasks with negative patterns', () => {
-			const expected: Task[] = [
-				{
-					base: 'a',
-					dynamic: true,
-					patterns: ['a/*', '!b/*.md'],
-					positive: ['a/*'],
-					negative: ['b/*.md']
-				},
-				{
-					base: 'b',
-					dynamic: true,
-					patterns: ['b/*', '!b/*.md'],
-					positive: ['b/*'],
-					negative: ['b/*.md']
-				}
-			];
-
-			const actual = manager.convertPatternGroupsToTasks({ a: ['a/*'], b: ['b/*'] }, ['b/*.md'], /* dynamic */ true);
+			const actual = manager.convertPatternGroupToTask('.', ['.gitignore'], ['.git*'], /* dynamic */ false);
 
 			assert.deepStrictEqual(actual, expected);
 		});

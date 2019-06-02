@@ -10,9 +10,6 @@ export interface Task {
 	negative: Pattern[];
 }
 
-/**
- * Generate tasks based on parent directory of each pattern.
- */
 export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	const positivePatterns = getPositivePatterns(patterns);
 	const negativePatterns = getNegativePatternsAsPositive(patterns, settings.ignore);
@@ -30,9 +27,6 @@ export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	return staticTasks.concat(dynamicTasks);
 }
 
-/**
- * Convert patterns to tasks based on parent directory of each pattern.
- */
 export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): Task[] {
 	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
 
@@ -47,16 +41,10 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 	return convertPatternGroupsToTasks(positivePatternsGroup, negative, dynamic);
 }
 
-/**
- * Return only positive patterns.
- */
 export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 	return utils.pattern.getPositivePatterns(patterns);
 }
 
-/**
- * Return only negative patterns.
- */
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
 	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
 	const positive = negative.map(utils.pattern.convertToPositivePattern);
@@ -64,9 +52,6 @@ export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Patte
 	return positive;
 }
 
-/**
- * Group patterns by base directory of each pattern.
- */
 export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup {
 	return patterns.reduce((collection, pattern) => {
 		const base = utils.pattern.getBaseDirectory(pattern);
@@ -81,18 +66,12 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 	}, {} as PatternsGroup);
 }
 
-/**
- * Convert group of patterns to tasks.
- */
 export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], dynamic: boolean): Task[] {
 	return Object.keys(positive).map((base) => {
 		return convertPatternGroupToTask(base, positive[base], negative, dynamic);
 	});
 }
 
-/**
- * Create a task for positive and negative patterns.
- */
 export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): Task {
 	return {
 		base,
