@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/index';
 import * as utils from '../utils/index';
@@ -74,10 +76,10 @@ export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: P
 
 export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): Task {
 	return {
-		base,
 		dynamic,
 		positive,
 		negative,
+		base: utils.path.platformify(base),
 		patterns: ([] as Pattern[]).concat(positive, negative.map(utils.pattern.convertToNegativePattern))
 	};
 }

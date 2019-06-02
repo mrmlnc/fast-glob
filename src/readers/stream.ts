@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as stream from 'stream';
+import { PassThrough } from 'stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
@@ -26,29 +26,29 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	public static(patterns: string[], options: ReaderOptions): NodeJS.ReadableStream {
 		const filepaths = patterns.map(this._getFullEntryPath, this);
 
-		const transform = new stream.Transform({ objectMode: true });
+		const stream = new PassThrough({ objectMode: true });
 
-		transform._transform = (index: number, _enc, done) => {
+		stream._write = (index: number, _enc, done) => {
 			return this._getEntry(filepaths[index], patterns[index])
 				.then((entry) => {
 					if (entry !== null && options.entryFilter(entry)) {
-						transform.push(entry);
+						stream.push(entry);
 					}
 
 					if (index === filepaths.length - 1) {
-						transform.end();
+						stream.end();
 					}
 
 					done();
 				})
-				.catch((error) => transform.emit('error', error));
+				.catch(done);
 		};
 
 		for (let i = 0; i < filepaths.length; i++) {
-			transform.write(i);
+			stream.write(i);
 		}
 
-		return transform;
+		return stream;
 	}
 
 	private _getEntry(filepath: string, pattern: Pattern): Promise<Entry | null> {

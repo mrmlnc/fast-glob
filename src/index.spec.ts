@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as pkg from './index';
-import { Task } from './managers/tasks';
+import * as tests from './tests/index';
 import { EntryItem, ErrnoException } from './types/index';
 
 describe('Package', () => {
@@ -155,13 +155,9 @@ describe('Package', () => {
 		});
 
 		it('should return tasks', () => {
-			const expected: Task[] = [{
-				base: '.',
-				dynamic: true,
-				patterns: ['*'],
-				positive: ['*'],
-				negative: []
-			}];
+			const expected = [
+				tests.task.builder().base('.').positive('*').build()
+			];
 
 			const actual = pkg.generateTasks(['*']);
 
@@ -169,13 +165,9 @@ describe('Package', () => {
 		});
 
 		it('should return tasks with negative patterns', () => {
-			const expected: Task[] = [{
-				base: '.',
-				dynamic: true,
-				patterns: ['*', '!*.txt', '!*.md'],
-				positive: ['*'],
-				negative: ['*.txt', '*.md']
-			}];
+			const expected = [
+				tests.task.builder().base('.').positive('*').negative('*.txt').negative('*.md').build()
+			];
 
 			const actual = pkg.generateTasks(['*', '!*.txt'], { ignore: ['*.md'] });
 

@@ -1,134 +1,115 @@
-// tslint:disable max-classes-per-file
-
 import * as assert from 'assert';
+import { PassThrough } from 'stream';
+
+import * as sinon from 'sinon';
 
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import Settings from '../settings';
+import Settings, { Options } from '../settings';
 import * as tests from '../tests/index';
-import { Entry, EntryItem } from '../types/index';
+import { Entry, EntryItem, ErrnoException } from '../types/index';
 import ProviderStream from './stream';
 
-class TestReaderStream extends ReaderStream {
-	public dynamic(): NodeJS.ReadableStream {
-		return this.fake({ path: 'dynamic' } as Entry);
+class TestProvider extends ProviderStream {
+	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+
+	constructor(options?: Options) {
+		super(new Settings(options));
 	}
 
-	public static(): NodeJS.ReadableStream {
-		return this.fake({ path: 'static' } as Entry);
-	}
-
-	public fake(value: EntryItem, error?: Error | null): NodeJS.ReadableStream {
-		return new tests.FakeStream(value, error ? error : null, { encoding: 'utf-8', objectMode: true });
+	public get reader(): sinon.SinonStubbedInstance<ReaderStream> {
+		return this._reader as unknown as sinon.SinonStubbedInstance<ReaderStream>;
 	}
 }
 
-class TestProviderStream extends ProviderStream {
-	protected readonly _reader: TestReaderStream = new TestReaderStream(this._settings);
-
-	constructor(protected _settings: Settings = new Settings()) {
-		super(_settings);
-	}
+function getProvider(options?: Options): TestProvider {
+	return new TestProvider(options);
 }
 
-class TestProviderWithErrno extends TestProviderStream {
-	public api(): NodeJS.ReadableStream {
-		return this._reader.fake('dynamic', new Error('Boom'));
-	}
-}
+function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
+	const reader = new PassThrough({ objectMode: true });
 
-/**
- * Wrapper for easily testing Stream API.
- */
-const getEntries = (settings: Settings, task: Task, api: typeof TestProviderStream): Promise<EntryItem[]> => {
+	provider.reader.dynamic.returns(reader);
+	provider.reader.static.returns(reader);
+
+	reader.push(entry);
+	reader.push(null);
+
 	return new Promise((resolve, reject) => {
-		const entries: EntryItem[] = [];
+		const items: EntryItem[] = [];
 
-		const provider = new api(settings);
+		const api = provider.read(task);
 
-		const stream = provider.read(task);
-
-		stream.on('data', (entry: EntryItem) => entries.push(entry));
-		stream.once('error', reject);
-		stream.once('end', () => resolve(entries));
+		api.on('data', (item: EntryItem) => items.push(item));
+		api.once('error', reject);
+		api.once('end', () => resolve(items));
 	});
-};
-
-function getTask(dynamic: boolean = true): Task {
-	return {
-		dynamic,
-		base: 'fixtures',
-		patterns: ['**/*'],
-		positive: ['**/*'],
-		negative: []
-	};
 }
 
 describe('Providers → ProviderStream', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const provider = new TestProviderStream();
+			const provider = getProvider();
 
 			assert.ok(provider instanceof ProviderStream);
 		});
 	});
 
 	describe('.read', () => {
-		it('should returns entries for dynamic entries', async () => {
-			const task = getTask();
-			const settings = new Settings();
+		it('should return entries for dynamic entries', async () => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').positive('*').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const expected = ['dynamic'];
+			const expected = ['root/file.txt'];
 
-			const actual = await getEntries(settings, task, TestProviderStream);
+			const actual = await getEntries(provider, task, entry);
 
+			assert.strictEqual(provider.reader.dynamic.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should returns entries for static entries', async () => {
-			const task = getTask(/* dynamic */ false);
-			const settings = new Settings();
+		it('should return entries for static entries', async () => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').static().positive('root/file.txt').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const expected = ['static'];
+			const expected = ['root/file.txt'];
 
-			const actual = await getEntries(settings, task, TestProviderStream);
+			const actual = await getEntries(provider, task, entry);
 
+			assert.strictEqual(provider.reader.static.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should returns entries (stats)', async () => {
-			const task = getTask();
-			const settings = new Settings({ stats: true });
+		it('should call the transform function when it is presented', async () => {
+			const transform = sinon.stub();
+			const provider = getProvider({ transform });
+			const task = tests.task.builder().base('.').positive('*').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const expected = [{ path: 'dynamic' } as Entry];
+			await getEntries(provider, task, entry);
 
-			const actual = await getEntries(settings, task, TestProviderStream);
-
-			assert.deepStrictEqual(actual, expected);
+			assert.strictEqual(transform.callCount, 1);
 		});
 
-		it('should returns transformed entries', async () => {
-			const task = getTask();
-			const settings = new Settings({ transform: () => 'cake' });
+		it('should emit error to the transform stream', (done) => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').positive('*').build();
+			const stream = new PassThrough({
+				read(): void {
+					stream.emit('error', tests.errno.getEnoent());
+				}
+			});
 
-			const expected = ['cake'];
+			provider.reader.dynamic.returns(stream);
 
-			const actual = await getEntries(settings, task, TestProviderStream);
+			const actual = provider.read(task);
 
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should throw error', async () => {
-			const task = getTask();
-			const settings = new Settings();
-
-			try {
-				await getEntries(settings, task, TestProviderWithErrno);
-
-				throw new Error('Wow');
-			} catch (err) {
-				assert.strictEqual((err as Error).message, 'Boom');
-			}
+			actual.once('error', (error: ErrnoException) => {
+				assert.strictEqual(error.code, 'ENOENT');
+				done();
+			});
 		});
 	});
 });

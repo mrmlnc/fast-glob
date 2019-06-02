@@ -3,12 +3,25 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
-import { MicromatchOptions } from '../types/index';
+import * as tests from '../tests/index';
+import { MicromatchOptions, ReaderOptions } from '../types/index';
 import Provider from './provider';
 
 export class TestProvider extends Provider<Array<{}>> {
-	public read(_task: Task): Array<{}> {
+	public read(): Array<{}> {
 		return [];
+	}
+
+	public getRootDirectory(task: Task): string {
+		return this._getRootDirectory(task);
+	}
+
+	public getReaderOptions(task: Task): ReaderOptions {
+		return this._getReaderOptions(task);
+	}
+
+	public getMicromatchOptions(): MicromatchOptions {
+		return this._getMicromatchOptions();
 	}
 }
 
@@ -30,20 +43,22 @@ describe('Providers → Provider', () => {
 	describe('.getRootDirectory', () => {
 		it('should return root directory for reader with global base (.)', () => {
 			const provider = getProvider();
+			const task = tests.task.builder().build();
 
 			const expected = process.cwd();
 
-			const actual = provider.getRootDirectory({ base: '.' } as Task);
+			const actual = provider.getRootDirectory(task);
 
 			assert.strictEqual(actual, expected);
 		});
 
 		it('should return root directory for reader with non-global base (fixtures)', () => {
 			const provider = getProvider();
+			const task = tests.task.builder().base('root').build();
 
-			const expected = path.join(process.cwd(), 'fixtures');
+			const expected = path.join(process.cwd(), 'root');
 
-			const actual = provider.getRootDirectory({ base: 'fixtures' } as Task);
+			const actual = provider.getRootDirectory(task);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -52,14 +67,9 @@ describe('Providers → Provider', () => {
 	describe('.getReaderOptions', () => {
 		it('should return options for reader with global base (.)', () => {
 			const provider = getProvider();
+			const task = tests.task.builder().base('.').positive('*').build();
 
-			const actual = provider.getReaderOptions({
-				base: '.',
-				dynamic: true,
-				patterns: ['**/*'],
-				positive: ['**/*'],
-				negative: []
-			});
+			const actual = provider.getReaderOptions(task);
 
 			assert.strictEqual(actual.basePath, '');
 			assert.strictEqual(actual.concurrency, Infinity);
@@ -73,18 +83,13 @@ describe('Providers → Provider', () => {
 			assert.strictEqual(typeof actual.transform, 'function');
 		});
 
-		it('should return options for reader with non-global base (fixtures)', () => {
+		it('should return options for reader with non-global base', () => {
 			const provider = getProvider();
+			const task = tests.task.builder().base('root').positive('*').build();
 
-			const actual = provider.getReaderOptions({
-				base: 'fixtures',
-				dynamic: true,
-				patterns: ['**/*'],
-				positive: ['**/*'],
-				negative: []
-			});
+			const actual = provider.getReaderOptions(task);
 
-			assert.strictEqual(actual.basePath, 'fixtures');
+			assert.strictEqual(actual.basePath, 'root');
 		});
 	});
 

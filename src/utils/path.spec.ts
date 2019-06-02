@@ -4,11 +4,21 @@ import * as path from 'path';
 import * as util from './path';
 
 describe('Utils → Path', () => {
-	describe('.normalize', () => {
+	describe('.unixify', () => {
 		it('should return path with converted slashes', () => {
 			const expected = 'directory/nested/file.md';
 
 			const actual = util.unixify('directory\\nested/file.md');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('.platformify', () => {
+		it('should return path with converted slashes', () => {
+			const expected = path.join('directory', 'nested', 'file.md');
+
+			const actual = util.platformify('directory/nested/file.md');
 
 			assert.strictEqual(actual, expected);
 		});

@@ -43,9 +43,6 @@ export interface SuitePackResult {
 export default class Runner {
 	constructor(private readonly _basedir: string, private readonly _options: RunnerOptions) { }
 
-	/**
-	 * Runs child process.
-	 */
 	public execNodeProcess(args: string[], options: Partial<execa.SyncOptions>): string {
 		return execa.sync('node', args, options).stdout;
 	}
@@ -69,9 +66,6 @@ export default class Runner {
 		}
 	}
 
-	/**
-	 * Runs a pack of suites.
-	 */
 	public suitePack(suitePath: string, retries: number): SuitePackResult {
 		const results: SuitePackResult = {
 			name: path.basename(suitePath),

@@ -1,8 +1,5 @@
 import merge2 = require('merge2');
 
-/**
- * Merge multiple streams and propagate their errors into one stream in parallel.
- */
 export function merge(streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream {
 	/**
 	 * Multiplexing leads to the creation of a new stream.

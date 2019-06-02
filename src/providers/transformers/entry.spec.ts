@@ -7,24 +7,24 @@ import { EntryTransformerFunction } from '../../types';
 import * as utils from '../../utils/index';
 import EntryTransformer from './entry';
 
-function getEntryTransformerInstance(options?: Options): EntryTransformer {
+function getEntryTransformer(options?: Options): EntryTransformer {
 	return new EntryTransformer(new Settings(options));
 }
 
 function getTransformer(options?: Options): EntryTransformerFunction {
-	return getEntryTransformerInstance(options).getTransformer();
+	return getEntryTransformer(options).getTransformer();
 }
 
 describe('Providers → Transformers → Entry', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const filter = getEntryTransformerInstance();
+			const filter = getEntryTransformer();
 
 			assert.ok(filter instanceof EntryTransformer);
 		});
 	});
 
-	describe('.getFilter', () => {
+	describe('.getTransformer', () => {
 		it('should return transformed entry as string when options is not provided', () => {
 			const transformer = getTransformer();
 			const entry = tests.entry.builder().path('root/file.txt').file().build();

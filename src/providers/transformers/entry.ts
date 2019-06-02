@@ -8,7 +8,7 @@ export default class EntryTransformer {
 	constructor(private readonly _settings: Settings) { }
 
 	public getTransformer(): EntryTransformerFunction {
-		return (entry: Entry) => this._transform(entry);
+		return (entry) => this._transform(entry);
 	}
 
 	private _transform(entry: Entry): EntryItem {
@@ -17,12 +17,12 @@ export default class EntryTransformer {
 		}
 
 		if (this._settings.markDirectories && entry.dirent.isDirectory()) {
-			entry.path = path.join(entry.path, path.sep);
+			entry.path += path.sep;
 		}
 
 		entry.path = utils.path.unixify(entry.path);
 
-		const item: EntryItem = this._settings.stats ? entry : entry.path;
+		const item = this._settings.stats ? entry : entry.path;
 
 		if (this._settings.transform === null) {
 			return item;

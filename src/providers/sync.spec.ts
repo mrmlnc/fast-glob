@@ -1,111 +1,79 @@
-// tslint:disable max-classes-per-file
-
 import * as assert from 'assert';
 
-import { Task } from '../managers/tasks';
+import * as sinon from 'sinon';
+
 import ReaderSync from '../readers/sync';
-import Settings, { TransformFunction } from '../settings';
-import { Entry } from '../types/index';
+import Settings, { Options } from '../settings';
+import * as tests from '../tests/index';
 import ProviderSync from './sync';
 
-class TestReaderSync extends ReaderSync {
-	public dynamic(): Entry[] {
-		return [{ path: 'dynamic' } as Entry];
+class TestProvider extends ProviderSync {
+	protected _reader: ReaderSync = sinon.createStubInstance(ReaderSync) as unknown as ReaderSync;
+
+	constructor(options?: Options) {
+		super(new Settings(options));
 	}
 
-	public static(): Entry[] {
-		return [{ path: 'static' } as Entry];
-	}
-}
-
-class TestProviderSync extends ProviderSync {
-	protected readonly _reader: ReaderSync = new TestReaderSync(this._settings);
-
-	constructor(protected _settings: Settings = new Settings()) {
-		super(_settings);
+	public get reader(): sinon.SinonStubbedInstance<ReaderSync> {
+		return this._reader as unknown as sinon.SinonStubbedInstance<ReaderSync>;
 	}
 }
 
-class TestProviderSyncWithErrno extends TestProviderSync {
-	public api(): never {
-		throw new Error('Boom');
-	}
-}
-
-function getTask(dynamic: boolean = true): Task {
-	return {
-		dynamic,
-		base: 'fixtures',
-		patterns: ['**/*'],
-		positive: ['**/*'],
-		negative: []
-	};
+function getProvider(options?: Options): TestProvider {
+	return new TestProvider(options);
 }
 
 describe('Providers → ProviderSync', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const provider = new TestProviderSync();
+			const provider = getProvider();
 
 			assert.ok(provider instanceof ProviderSync);
 		});
 	});
 
 	describe('.read', () => {
-		it('should returns entries for dynamic task', () => {
-			const task = getTask();
-			const provider = new TestProviderSync();
+		it('should return entries for dynamic task', () => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').positive('*').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const expected = ['dynamic'];
+			provider.reader.dynamic.returns([entry]);
 
-			const actual = provider.read(task);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should returns entries for static task', () => {
-			const task = getTask(/* dynamic */ false);
-			const provider = new TestProviderSync();
-
-			const expected = ['static'];
+			const expected = ['root/file.txt'];
 
 			const actual = provider.read(task);
 
+			assert.strictEqual(provider.reader.dynamic.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should returns entries (stats)', () => {
-			const task = getTask();
-			const settings = new Settings({ stats: true });
-			const provider = new TestProviderSync(settings);
+		it('should return entries for static task', () => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').static().positive('root/file.txt').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const expected = [{ path: 'dynamic' } as Entry];
+			provider.reader.static.returns([entry]);
+
+			const expected = ['root/file.txt'];
 
 			const actual = provider.read(task);
 
+			assert.strictEqual(provider.reader.static.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should returns transformed entries', () => {
-			const transform: TransformFunction<string> = () => 'cake';
+		it('should call the transform function when it is presented', () => {
+			const transform = sinon.stub();
+			const provider = getProvider({ transform });
+			const task = tests.task.builder().base('.').positive('*').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const task = getTask();
-			const settings = new Settings({ transform });
-			const provider = new TestProviderSync(settings);
+			provider.reader.dynamic.returns([entry]);
 
-			const expected = ['cake'];
+			provider.read(task);
 
-			const actual = provider.read(task);
-
-			assert.deepStrictEqual(actual, expected);
-		});
-
-		it('should throw error', () => {
-			const task = getTask();
-			const settings = new Settings();
-			const provider = new TestProviderSyncWithErrno(settings);
-
-			assert.throws(() => provider.read(task), /Boom/);
+			assert.strictEqual(transform.callCount, 1);
 		});
 	});
 });
