@@ -62,11 +62,7 @@ export default class EntryFilter {
 		return this._isMatchToPatterns(fullpath, negativeRe);
 	}
 
-	/**
-	 * First, just trying to apply patterns to the path.
-	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
-	 */
 	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
-		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + path.sep, patternsRe);
+		return utils.pattern.matchAny(filepath, patternsRe);
 	}
 }
