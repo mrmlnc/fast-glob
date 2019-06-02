@@ -27,10 +27,9 @@ export default class DeepFilter {
 	}
 
 	private _filter(basePath: string, entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
-		const basePathDepth = basePath.split(path.posix.sep).length;
-		const depth = entry.path.split(path.sep).length - (basePath === '' ? 0 : basePathDepth) - 1;
+		const depth = this._getEntryDepth(basePath, entry.path);
 
-		if (this._isSkippedByDeepOption(depth)) {
+		if (this._isSkippedByDeep(depth)) {
 			return false;
 		}
 
@@ -49,12 +48,19 @@ export default class DeepFilter {
 		return this._isSkippedByNegativePatterns(entry, negativeRe);
 	}
 
-	private _isSkippedByDeepOption(entryDepth: number): boolean {
+	private _getEntryDepth(basePath: string, entryPath: string): number {
+		const basePathDepth = basePath.split(path.sep).length;
+		const entryPathDepth = entryPath.split(path.sep).length;
+
+		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
+	}
+
+	private _isSkippedByDeep(entryDepth: number): boolean {
 		return !this._settings.deep || (typeof this._settings.deep === 'number' && entryDepth >= this._settings.deep);
 	}
 
 	private _isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
-		return maxPatternDepth !== Infinity && entryDepth >= maxPatternDepth;
+		return maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
 	}
 
 	private _isSkippedSymbolicLink(entry: Entry): boolean {

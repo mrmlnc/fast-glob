@@ -15,7 +15,7 @@ smoke.suite('Smoke → Deep', [
 	{
 		pattern: 'fixtures/**',
 		globOptions: { ignore: ['!fixtures/{*/,}*'] },
-		fgOptions: { deep: 1 }
+		fgOptions: { deep: 2 }
 	}
 ]);
 
@@ -30,6 +30,6 @@ smoke.suite('Smoke → Deep (cwd)', [
 		pattern: '**',
 		cwd: 'fixtures',
 		globOptions: { ignore: ['!{*/,}*'] },
-		fgOptions: { deep: 1 }
+		fgOptions: { deep: 2 }
 	}
 ]);

@@ -141,28 +141,28 @@ The current working directory in which to search.
   * Type: `number|boolean`
   * Default: `true`
 
-The deep option can be set to `true` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep.
+The deep option can be set to `true` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep. The countdown begins with `1`.
 
 For example, you have the following tree:
 
-```
-test
-└── one
-    └── two
-        └── index.js
+```js
+dir/
+└── one/            // 1
+    └── two/        // 2
+        └── file.js // 3
 ```
 
 > :book: If you specify a pattern with some base directory, this directory will not participate in the calculation of the depth of the found directories. Think of it as a `cwd` option.
 
 ```js
-fg('test/**', { onlyFiles: false, deep: 0 });
-// -> ['test/one']
-fg('test/**', { onlyFiles: false, deep: 1 });
-// -> ['test/one', 'test/one/two']
+fg('dir/**', { onlyFiles: false, deep: 1 });
+// -> ['dir/one']
+fg('dir/**', { onlyFiles: false, deep: 2 });
+// -> ['dir/one', 'dir/one/two']
 
-fg('**', { onlyFiles: false, cwd: 'test', deep: 0 });
+fg('**', { onlyFiles: false, cwd: 'dir', deep: 1 });
 // -> ['one']
-fg('**', { onlyFiles: false, cwd: 'test', deep: 1 });
+fg('**', { onlyFiles: false, cwd: 'dir', deep: 2 });
 // -> ['one', 'one/two']
 ```
 
