@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as path from 'path';
 
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
@@ -14,8 +13,8 @@ function getDeepFilterInstance(options?: Options): DeepFilter {
 	});
 }
 
-function getFilter(positive: Pattern[], negative: Pattern[], options?: Options): EntryFilterFunction {
-	return getDeepFilterInstance(options).getFilter('base', positive, negative);
+function getFilter(base: string, positive: Pattern[], negative: Pattern[], options?: Options): EntryFilterFunction {
+	return getDeepFilterInstance(options).getFilter(base, positive, negative);
 }
 
 describe('Providers → Filters → Deep', () => {
@@ -27,84 +26,38 @@ describe('Providers → Filters → Deep', () => {
 		});
 	});
 
-	describe('.filter', () => {
-		describe('Skip by options.deep', () => {
-			it('should return «false» when option is disabled', () => {
-				const filter = getFilter(['fixtures/**'], [], { deep: false });
-
-				const entry = tests.getDirectoryEntry();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-
-			it('should return «false» when the entry has depth greater than options.deep', () => {
-				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', 'one', 'two', 'three')
-				});
+	describe('.getFilter', () => {
+		describe('options.deep', () => {
+			it('should return `false` when option is disabled', () => {
+				const filter = getFilter('.', ['**/*'], [], { deep: false });
+				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
 
-			it('should return «false» when the entry has depth equal to options.deep', () => {
-				const filter = getFilter(['fixtures/**'], [], { deep: 1 });
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', 'one', 'two')
-				});
+			it('should return `false` when the depth of entry is greater than the allowable (without base)', () => {
+				const filter = getFilter('', ['**/*'], [], { deep: 1 });
+				const entry = tests.entry.builder().path('root/one/two').directory().build();
 
 				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
 
-			it('should return «true» when the entry has depth less then options.deep', () => {
-				const filter = getFilter(['fixtures/**'], [], { deep: 2 });
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', 'one', 'two')
-				});
+			it('should return `false` when the depth of entry is greater than the allowable (with base as current level)', () => {
+				const filter = getFilter('.', ['**/*'], [], { deep: 1 });
+				const entry = tests.entry.builder().path('root/one/two').directory().build();
 
 				const actual = filter(entry);
 
-				assert.ok(actual);
-			});
-		});
-
-		describe('Skip by max pattern depth', () => {
-			it('should return «true» when max pattern depth is Infinity', () => {
-				const filter = getFilter(['fixtures/**'], []);
-
-				const entry = tests.getDirectoryEntry();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
+				assert.ok(!actual);
 			});
 
-			it('should return «true» when max pattern depth is greater then entry depth', () => {
-				const filter = getFilter(['fixtures/*/*/*'], []);
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', 'one', 'two')
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «false» when max pattern depth is less then entry depth', () => {
-				const filter = getFilter(['fixtures/*'], []);
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', 'one', 'two', 'three', 'four')
-				});
+			it('should return `false` when the depth of entry is greater than the allowable (with nested base)', () => {
+				const filter = getFilter('root/one', ['root/one/**/*'], [], { deep: 1 });
+				const entry = tests.entry.builder().path('root/one/two').directory().build();
 
 				const actual = filter(entry);
 
@@ -112,25 +65,10 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Skip by «followSymbolicLinks» option', () => {
-			it('should return «true» for symlinked directory when option is enabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry({
-					isSymbolicLink: true
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «false» for symbolic link when option is disabled', () => {
-				const filter = getFilter(['**/*'], [], { followSymbolicLinks: false });
-
-				const entry = tests.getDirectoryEntry({
-					isSymbolicLink: true
-				});
+		describe('Max pattern depth', () => {
+			it('should return `false` when the depth of entry is greater that the pattern depth', () => {
+				const filter = getFilter('root', ['root/*'], []);
+				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);
 
@@ -138,25 +76,10 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Skip by «dot» option', () => {
-			it('should return «true» for directory that starting with a period when option is enabled', () => {
-				const filter = getFilter(['**/*'], [], { onlyFiles: false, dot: true });
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', '.directory')
-				});
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «false» for directory that starting with a period when option is disabled', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry({
-					path: path.join('fixtures', '.directory')
-				});
+		describe('options.followSymbolicLinks', () => {
+			it('should return `false` when an entry is symbolic link and option is disabled', () => {
+				const filter = getFilter('.', ['**/*'], [], { followSymbolicLinks: false });
+				const entry = tests.entry.builder().path('root/directory').directory().symlink().build();
 
 				const actual = filter(entry);
 
@@ -164,70 +87,57 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Skip by negative patterns', () => {
-			it('should return «true» when negative patterns is not defined', () => {
-				const filter = getFilter(['**/*'], []);
-
-				const entry = tests.getDirectoryEntry();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «true» when the directory does not match to negative patterns', () => {
-				const filter = getFilter(['**/*'], ['**/pony/**']);
-
-				const entry = tests.getDirectoryEntry();
+		describe('options.dot', () => {
+			it('should return `false` when an entry basename starts with dot and option is disabled', () => {
+				const filter = getFilter('.', ['**/*'], [], { dot: false });
+				const entry = tests.entry.builder().path('root/.directory').directory().build();
 
 				const actual = filter(entry);
 
-				assert.ok(actual);
+				assert.ok(!actual);
 			});
+		});
 
-			it('should return «true» when negative patterns has no effect to depth reading', () => {
-				const filter = getFilter(['**/*'], ['*', '**/*']);
-
-				const entry = tests.getDirectoryEntry();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return «false» when the directory match to negative patterns', () => {
-				const filter = getFilter(['**/*'], ['fixtures/directory']);
-
-				const entry = tests.getDirectoryEntry();
+		describe('Pattern', () => {
+			it('should return `false` when an entry match to the negative pattern', () => {
+				const filter = getFilter('.', ['**/*'], ['root/**']);
+				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);
 
 				assert.ok(!actual);
 			});
 
-			it('should return «false» when the directory match to negative patterns with effect to depth reading', () => {
-				const filter = getFilter(['**/*'], ['fixtures/**']);
-
-				const entry = tests.getDirectoryEntry();
+			it('should return `true` when the negative pattern has no effect to depth reading', () => {
+				const filter = getFilter('.', ['**/*'], ['**/*']);
+				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);
 
-				assert.ok(!actual);
+				assert.ok(actual);
+			});
+
+			it('should return `true`', () => {
+				const filter = getFilter('.', ['**/*'], []);
+				const entry = tests.entry.builder().path('root/directory').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
 			});
 		});
 	});
 
 	describe('Immutability', () => {
 		it('should return the data without changes', () => {
-			const filter = getFilter(['**/*'], [], { onlyFiles: false });
+			const filter = getFilter('.', ['**/*'], []);
 
-			const entry = tests.getDirectoryEntry();
-
-			const expected = entry.path;
+			const reference = tests.entry.builder().path('root/directory').directory().build();
+			const entry = tests.entry.builder().path('root/directory').directory().build();
 
 			filter(entry);
 
-			assert.strictEqual(entry.path, expected);
+			assert.deepStrictEqual(entry, reference);
 		});
 	});
 });

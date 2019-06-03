@@ -8,9 +8,9 @@ import Settings, { Options } from '../settings';
 import { Entry, Pattern } from '../types';
 import Reader from './reader';
 
-class FakeReader extends Reader<never[]> {
-	constructor(_options: Options = {}) {
-		super(new Settings(_options));
+class TestReader extends Reader<never[]> {
+	constructor(options?: Options) {
+		super(new Settings(options));
 	}
 
 	public dynamic(): never[] {
@@ -30,18 +30,22 @@ class FakeReader extends Reader<never[]> {
 	}
 }
 
+function getReader(options?: Options): TestReader {
+	return new TestReader(options);
+}
+
 describe('Readers → Reader', () => {
 	describe('Constructor', () => {
 		it('should create instance of class', () => {
-			const reader = new FakeReader();
+			const reader = getReader();
 
-			assert.ok(reader instanceof FakeReader);
+			assert.ok(reader instanceof TestReader);
 		});
 	});
 
 	describe('.getFullEntryPath', () => {
 		it('should return path to entry', () => {
-			const reader = new FakeReader();
+			const reader = getReader();
 
 			const expected = path.join(process.cwd(), 'config.json');
 
@@ -53,7 +57,7 @@ describe('Readers → Reader', () => {
 
 	describe('.makeEntry', () => {
 		it('should return created entry', () => {
-			const reader = new FakeReader();
+			const reader = getReader();
 			const pattern = 'config.json';
 
 			const actual = reader.makeEntry(new Stats(), pattern);
@@ -64,7 +68,7 @@ describe('Readers → Reader', () => {
 		});
 
 		it('should return created entry with fs.Stats', () => {
-			const reader = new FakeReader({ stats: true });
+			const reader = getReader({ stats: true });
 			const pattern = 'config.json';
 
 			const actual = reader.makeEntry(new Stats(), pattern);

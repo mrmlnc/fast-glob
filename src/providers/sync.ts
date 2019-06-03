@@ -6,21 +6,15 @@ import Provider from './provider';
 export default class ProviderSync extends Provider<EntryItem[]> {
 	protected _reader: ReaderSync = new ReaderSync(this._settings);
 
-	/**
-	 * Use sync API to read entries for Task.
-	 */
 	public read(task: Task): EntryItem[] {
-		const root = this.getRootDirectory(task);
-		const options = this.getReaderOptions(task);
+		const root = this._getRootDirectory(task);
+		const options = this._getReaderOptions(task);
 
-		const entries: Entry[] = this.api(root, task, options);
+		const entries = this.api(root, task, options);
 
 		return entries.map<EntryItem>(options.transform);
 	}
 
-	/**
-	 * Returns founded paths.
-	 */
 	public api(root: string, task: Task, options: ReaderOptions): Entry[] {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);

@@ -9,38 +9,20 @@ import ErrorFilter from './filters/error';
 import EntryTransformer from './transformers/entry';
 
 export default abstract class Provider<T> {
-	public readonly errorFilter: ErrorFilter;
-	public readonly entryFilter: EntryFilter;
-	public readonly deepFilter: DeepFilter;
-	public readonly entryTransformer: EntryTransformer;
+	public readonly errorFilter: ErrorFilter = new ErrorFilter(this._settings);
+	public readonly entryFilter: EntryFilter = new EntryFilter(this._settings, this._getMicromatchOptions());
+	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this._getMicromatchOptions());
+	public readonly entryTransformer: EntryTransformer = new EntryTransformer(this._settings);
 
-	private readonly _micromatchOptions: MicromatchOptions;
+	constructor(protected readonly _settings: Settings) { }
 
-	constructor(protected readonly _settings: Settings) {
-		this._micromatchOptions = this.getMicromatchOptions();
-
-		this.errorFilter = new ErrorFilter(_settings);
-		this.entryFilter = new EntryFilter(_settings, this._micromatchOptions);
-		this.deepFilter = new DeepFilter(_settings, this._micromatchOptions);
-		this.entryTransformer = new EntryTransformer(_settings);
-	}
-
-	/**
-	 * The main logic of reading the directories that must be implemented by each providers.
-	 */
 	public abstract read(_task: Task): T;
 
-	/**
-	 * Returns root path to scanner.
-	 */
-	public getRootDirectory(task: Task): string {
+	protected _getRootDirectory(task: Task): string {
 		return path.resolve(this._settings.cwd, task.base);
 	}
 
-	/**
-	 * Returns options for reader.
-	 */
-	public getReaderOptions(task: Task): ReaderOptions {
+	protected _getReaderOptions(task: Task): ReaderOptions {
 		const basePath = task.base === '.' ? '' : task.base;
 
 		return {
@@ -57,10 +39,7 @@ export default abstract class Provider<T> {
 		};
 	}
 
-	/**
-	 * Returns options for micromatch.
-	 */
-	public getMicromatchOptions(): MicromatchOptions {
+	protected _getMicromatchOptions(): MicromatchOptions {
 		return {
 			dot: this._settings.dot,
 			nobrace: !this._settings.braceExpansion,

@@ -18,24 +18,18 @@ class TransformStream extends stream.Transform {
 export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	protected _reader: ReaderStream = new ReaderStream(this._settings);
 
-	/**
-	 * Use stream API to read entries for Task.
-	 */
 	public read(task: Task): NodeJS.ReadableStream {
-		const root = this.getRootDirectory(task);
-		const options = this.getReaderOptions(task);
+		const root = this._getRootDirectory(task);
+		const options = this._getReaderOptions(task);
 		const transform = new TransformStream(options);
 
-		const readable: NodeJS.ReadableStream = this.api(root, task, options);
+		const readable = this.api(root, task, options);
 
 		return readable
-			.on('error', (err: ErrnoException) => transform.emit('error', err))
+			.once('error', (error: ErrnoException) => transform.emit('error', error))
 			.pipe(transform);
 	}
 
-	/**
-	 * Returns founded paths.
-	 */
 	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);

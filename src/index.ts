@@ -9,9 +9,6 @@ import * as utils from './utils/index';
 
 type Task = taskManager.Task;
 
-/**
- * Synchronous API.
- */
 function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
@@ -20,9 +17,6 @@ function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	return utils.array.flatten(works);
 }
 
-/**
- * Asynchronous API.
- */
 function async(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
@@ -35,9 +29,6 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 	return Promise.all(works).then(utils.array.flatten);
 }
 
-/**
- * Stream API.
- */
 function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
@@ -46,9 +37,6 @@ function stream(source: Pattern | Pattern[], options?: Options): NodeJS.Readable
 	return utils.stream.merge(works);
 }
 
-/**
- * Return a set of tasks based on provided patterns.
- */
 function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
 	assertPatternsInput(source);
 
@@ -58,9 +46,6 @@ function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
 	return taskManager.generate(patterns, settings);
 }
 
-/**
- * Returns a set of works based on provided tasks and class of the provider.
- */
 function getWorks<T>(source: Pattern | Pattern[], _Provider: new (settings: Settings) => Provider<T>, options?: Options): T[] {
 	const patterns = ([] as Pattern[]).concat(source);
 	const settings = new Settings(options);
