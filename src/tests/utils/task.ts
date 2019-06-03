@@ -5,7 +5,7 @@ import { Pattern } from '../../types/index';
 
 class TaskBuilder {
 	private readonly _task: Task = {
-		base: '.',
+		base: '',
 		dynamic: true,
 		patterns: [],
 		positive: [],

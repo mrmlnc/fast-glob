@@ -43,7 +43,7 @@ describe('Providers → Provider', () => {
 	describe('.getRootDirectory', () => {
 		it('should return root directory for reader with global base (.)', () => {
 			const provider = getProvider();
-			const task = tests.task.builder().build();
+			const task = tests.task.builder().base('.').build();
 
 			const expected = process.cwd();
 

@@ -49,7 +49,7 @@ describe('Managers → Task', () => {
 	describe('.convertPatternsToTasks', () => {
 		it('should return one task when positive patterns have a global pattern', () => {
 			const expected = [
-				tests.task.builder().positive('*').negative('*.md').build()
+				tests.task.builder().base('.').positive('*').negative('*.md').build()
 			];
 
 			const actual = manager.convertPatternsToTasks(['*'], ['*.md'], /* dynamic */ true);
@@ -133,7 +133,7 @@ describe('Managers → Task', () => {
 
 	describe('.convertPatternGroupToTask', () => {
 		it('should return created dynamic task', () => {
-			const expected = tests.task.builder().positive('*').negative('*.md').build();
+			const expected = tests.task.builder().base('.').positive('*').negative('*.md').build();
 
 			const actual = manager.convertPatternGroupToTask('.', ['*'], ['*.md'], /* dynamic */ true);
 
@@ -141,7 +141,7 @@ describe('Managers → Task', () => {
 		});
 
 		it('should return created static task', () => {
-			const expected = tests.task.builder().static().positive('.gitignore').negative('.git*').build();
+			const expected = tests.task.builder().base('.').static().positive('.gitignore').negative('.git*').build();
 
 			const actual = manager.convertPatternGroupToTask('.', ['.gitignore'], ['.git*'], /* dynamic */ false);
 
