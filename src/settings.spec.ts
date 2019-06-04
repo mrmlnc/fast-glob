@@ -11,6 +11,7 @@ describe('Settings', () => {
 		assert.ok(settings.deep);
 		assert.deepStrictEqual(settings.ignore, []);
 		assert.ok(!settings.dot);
+		assert.ok(!settings.objectMode);
 		assert.ok(!settings.stats);
 		assert.ok(settings.onlyFiles);
 		assert.ok(!settings.onlyDirectories);
@@ -43,6 +44,15 @@ describe('Settings', () => {
 
 		assert.ok(!settings.onlyFiles);
 		assert.ok(settings.onlyDirectories);
+	});
+
+	it('should set the "objectMode" option when the "stats" is enabled', () => {
+		const settings = new Settings({
+			stats: true
+		});
+
+		assert.ok(settings.objectMode);
+		assert.ok(settings.stats);
 	});
 
 	it('should set the "throwErrorOnBrokenSymbolicLink" option to "true" when the "stats" option is enabled', () => {

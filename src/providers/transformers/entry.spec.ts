@@ -36,15 +36,26 @@ describe('Providers → Transformers → Entry', () => {
 			assert.strictEqual(actual, expected);
 		});
 
-		it('should return transformed entry as object when the `stats` option is enabled', () => {
-			const transformer = getTransformer({ stats: true });
+		it('should return transformed entry as object when the `objectMode` option is enabled', () => {
+			const transformer = getTransformer({ objectMode: true });
 			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
 			const expected = entry;
 
 			const actual = transformer(entry);
 
-			assert.deepEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return transformed entry as object when the `stats` option is enabled', () => {
+			const transformer = getTransformer({ stats: true });
+			const entry = tests.entry.builder().path('root/file.txt').file().stats().build();
+
+			const expected = entry;
+
+			const actual = transformer(entry);
+
+			assert.deepStrictEqual(actual, expected);
 		});
 
 		it('should return entry with absolute filepath when the `absolute` option is enabled', () => {

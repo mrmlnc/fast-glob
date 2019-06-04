@@ -35,6 +35,10 @@ export interface Options {
 	 */
 	dot?: boolean;
 	/**
+	 * Return `Entry` object instead of filepath.
+	 */
+	objectMode?: boolean;
+	/**
 	 * Return `fs.Stats` with `path` property instead of file path.
 	 */
 	stats?: boolean;
@@ -100,30 +104,34 @@ export interface Options {
 }
 
 export default class Settings {
-	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
-	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
-	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
-	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
-	public readonly dot: boolean = this._getValue(this._options.dot, false);
-	public readonly stats: boolean = this._getValue(this._options.stats, false);
-	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
-	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
-	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
-	public readonly throwErrorOnBrokenSymbolicLink: boolean = this.stats && this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
-	public readonly unique: boolean = this._getValue(this._options.unique, true);
-	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
 	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
-	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
-	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
-	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
-	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
+	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
+	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
+	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
+	public readonly dot: boolean = this._getValue(this._options.dot, false);
+	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
+	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
 	public readonly fs: FileSystemAdapter = this._getFileSystemMethods(this._options.fs);
+	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
+	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
+	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
+	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
+	public readonly objectMode: boolean = this._getValue(this._options.objectMode, false);
+	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
+	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
+	public readonly stats: boolean = this._getValue(this._options.stats, false);
+	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
+	public readonly throwErrorOnBrokenSymbolicLink: boolean = this.stats && this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
+	public readonly unique: boolean = this._getValue(this._options.unique, true);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;
+		}
+		if (this.stats) {
+			this.objectMode = true;
 		}
 	}
 

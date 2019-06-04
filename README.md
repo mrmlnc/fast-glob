@@ -180,6 +180,13 @@ An array of glob patterns to exclude matches.
 
 Allow patterns to match filenames starting with a period (files & directories), even if the pattern does not explicitly have a period in that spot.
 
+#### objectMode
+
+  * Type: `boolean`
+  * Default: `false`
+
+Return an [`Entry`](#entry) object instead of filepath.
+
 #### stats
 
   * Type: `boolean`

@@ -22,6 +22,10 @@ export default class EntryTransformer {
 
 		entry.path = utils.path.unixify(entry.path);
 
-		return this._settings.stats ? entry : entry.path;
+		if (this._settings.objectMode) {
+			return entry;
+		}
+
+		return entry.path;
 	}
 }
