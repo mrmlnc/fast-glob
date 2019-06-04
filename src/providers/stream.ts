@@ -1,19 +1,9 @@
-import * as stream from 'stream';
+import { Readable } from 'stream';
 
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import { Entry, ErrnoException, ReaderOptions } from '../types/index';
 import Provider from './provider';
-
-class TransformStream extends stream.Transform {
-	constructor(private readonly _options: ReaderOptions) {
-		super({ objectMode: true });
-	}
-
-	public _transform(entry: Entry, _encoding: string, callback: Function): void {
-		callback(null, this._options.transform(entry));
-	}
-}
 
 export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	protected _reader: ReaderStream = new ReaderStream(this._settings);
@@ -21,13 +11,16 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 	public read(task: Task): NodeJS.ReadableStream {
 		const root = this._getRootDirectory(task);
 		const options = this._getReaderOptions(task);
-		const transform = new TransformStream(options);
 
-		const readable = this.api(root, task, options);
+		const source = this.api(root, task, options);
+		const dest = new Readable({ objectMode: true, read: () => { /* noop */ } });
 
-		return readable
-			.once('error', (error: ErrnoException) => transform.emit('error', error))
-			.pipe(transform);
+		source
+			.once('error', (error: ErrnoException) => dest.emit('error', error))
+			.on('data', (entry: Entry) => dest.emit('data', options.transform(entry)))
+			.once('end', () => dest.emit('end'));
+
+		return dest;
 	}
 
 	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
