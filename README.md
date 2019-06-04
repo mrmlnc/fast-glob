@@ -291,38 +291,6 @@ Allow glob patterns without slashes to match a file path based on its basename. 
 Suppress any errors from reader. Works only with Node.js 10.10+.
 Can be useful when the directory has entries with a special level of access.
 
-#### transform
-
-  * Type: `Function`
-  * Default: `null`
-
-Allows you to transform a path or `fs.Stats` object before sending to the array.
-
-```js
-const fg = require('fast-glob');
-
-const entries1 = fg.sync(['**/*.scss']);
-const entries2 = fg.sync(['**/*.scss'], { transform: (entry) => '_' + entry });
-
-console.log(entries1); // ['a.scss', 'b.scss']
-console.log(entries2); // ['_a.scss', '_b.scss']
-```
-
-If you are using **TypeScript**, you probably want to specify your own type of the returned array.
-
-```ts
-import * as fg from 'fast-glob';
-
-interface IMyOwnEntry {
-	path: string;
-}
-
-const entries: IMyOwnEntry[] = fg.sync<IMyOwnEntry>(['*.md'], {
-	transform: (entry) => typeof entry === 'string' ? { path: entry } : { path: entry.path }
-	// Will throw compilation error for non-IMyOwnEntry types (boolean, for example)
-});
-```
-
 #### fs
 
 * Type: `FileSystemAdapter`

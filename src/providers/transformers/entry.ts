@@ -22,12 +22,6 @@ export default class EntryTransformer {
 
 		entry.path = utils.path.unixify(entry.path);
 
-		const item = this._settings.stats ? entry : entry.path;
-
-		if (this._settings.transform === null) {
-			return item;
-		}
-
-		return this._settings.transform(item);
+		return this._settings.stats ? entry : entry.path;
 	}
 }

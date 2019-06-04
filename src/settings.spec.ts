@@ -24,7 +24,6 @@ describe('Settings', () => {
 		assert.ok(settings.extglob);
 		assert.ok(settings.caseSensitiveMatch);
 		assert.ok(!settings.matchBase);
-		assert.strictEqual(settings.transform, null);
 		assert.ok(!settings.suppressErrors);
 		assert.deepStrictEqual(settings.fs, DEFAULT_FILE_SYSTEM_ADAPTER);
 	});

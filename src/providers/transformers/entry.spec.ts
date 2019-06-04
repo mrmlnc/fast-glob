@@ -47,17 +47,6 @@ describe('Providers → Transformers → Entry', () => {
 			assert.deepEqual(actual, expected);
 		});
 
-		it('should apply custom transform function', () => {
-			const transformer = getTransformer({ transform: () => 'cake' });
-			const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-			const expected = 'cake';
-
-			const actual = transformer(entry);
-
-			assert.strictEqual(actual, expected);
-		});
-
 		it('should return entry with absolute filepath when the `absolute` option is enabled', () => {
 			const transformer = getTransformer({ absolute: true });
 			const entry = tests.entry.builder().path('root/file.txt').file().build();

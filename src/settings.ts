@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 
-import { EntryItem, FileSystemAdapter, Pattern } from './types/index';
-
-export type TransformFunction<T> = (entry: EntryItem) => T;
+import { FileSystemAdapter, Pattern } from './types/index';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -13,7 +11,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-export interface Options<T = EntryItem> {
+export interface Options {
 	/**
 	 * The maximum number of concurrent calls to `fs.readdir`.
 	 */
@@ -91,10 +89,6 @@ export interface Options<T = EntryItem> {
 	 */
 	matchBase?: boolean;
 	/**
-	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
-	 */
-	transform?: TransformFunction<T> | null;
-	/**
 	 * Suppress any errors from reader.
 	 * Can be useful when the directory has entries with a special level of access.
 	 */
@@ -124,7 +118,6 @@ export default class Settings {
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
-	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
 	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
 	public readonly fs: FileSystemAdapter = this._getFileSystemMethods(this._options.fs);
 

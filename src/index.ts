@@ -3,7 +3,7 @@ import ProviderAsync from './providers/async';
 import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
-import Settings, { Options, TransformFunction } from './settings';
+import Settings, { Options } from './settings';
 import { EntryItem, Pattern } from './types/index';
 import * as utils from './utils/index';
 
@@ -78,7 +78,6 @@ export {
 
 	Options,
 	Settings,
-	TransformFunction,
 	Task,
 	EntryItem
 };

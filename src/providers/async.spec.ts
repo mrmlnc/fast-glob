@@ -74,17 +74,6 @@ describe('Providers → ProviderAsync', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should call the transform function when it is presented', async () => {
-			const transform = sinon.stub();
-			const provider = getProvider({ transform });
-			const task = tests.task.builder().base('.').positive('*').build();
-			const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-			await getEntries(provider, task, entry);
-
-			assert.strictEqual(transform.callCount, 1);
-		});
-
 		it('should throw error', async () => {
 			const provider = getProvider();
 			const task = tests.task.builder().base('.').positive('*').build();
