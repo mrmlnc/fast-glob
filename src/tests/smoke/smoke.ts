@@ -160,5 +160,5 @@ function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
 		...opts
 	};
 
-	return fg.sync(pattern, options).sort() as string[];
+	return fg.sync(pattern, options).sort();
 }

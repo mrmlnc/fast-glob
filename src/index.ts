@@ -4,11 +4,17 @@ import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
 import Settings, { Options } from './settings';
-import { EntryItem, Pattern } from './types/index';
+import { Entry, EntryItem, Pattern } from './types/index';
 import * as utils from './utils/index';
 
 type Task = taskManager.Task;
 
+type EntryObjectModePredicate = { [P in keyof Pick<Options, 'objectMode'>]-?: true };
+type EntryStatsPredicate = { [P in keyof Pick<Options, 'stats'>]-?: true };
+type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
+
+function sync(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Entry[];
+function sync(source: Pattern | Pattern[], options?: Options): string[];
 function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
@@ -17,6 +23,8 @@ function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	return utils.array.flatten(works);
 }
 
+function async(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Promise<Entry[]>;
+function async(source: Pattern | Pattern[], options?: Options): Promise<string[]>;
 function async(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
