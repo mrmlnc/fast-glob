@@ -23,7 +23,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		return walk;
 	}
 
-	public static(patterns: string[], options: ReaderOptions): NodeJS.ReadableStream {
+	public static(patterns: Pattern[], options: ReaderOptions): NodeJS.ReadableStream {
 		const filepaths = patterns.map(this._getFullEntryPath, this);
 
 		const stream = new PassThrough({ objectMode: true });

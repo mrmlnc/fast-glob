@@ -18,7 +18,7 @@ function sync(source: Pattern | Pattern[], options?: Options): string[];
 function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
-	const works = getWorks<EntryItem[]>(source, ProviderSync, options);
+	const works = getWorks(source, ProviderSync, options);
 
 	return utils.array.flatten(works);
 }
@@ -32,7 +32,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 		return Promise.reject(error);
 	}
 
-	const works = getWorks<Promise<EntryItem[]>>(source, ProviderAsync, options);
+	const works = getWorks(source, ProviderAsync, options);
 
 	return Promise.all(works).then(utils.array.flatten);
 }
@@ -40,7 +40,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
-	const works = getWorks<NodeJS.ReadableStream>(source, ProviderStream, options);
+	const works = getWorks(source, ProviderStream, options);
 
 	return utils.stream.merge(works);
 }
