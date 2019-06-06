@@ -55,15 +55,6 @@ describe('Settings', () => {
 		assert.ok(settings.stats);
 	});
 
-	it('should set the "throwErrorOnBrokenSymbolicLink" option to "true" when the "stats" option is enabled', () => {
-		const settings = new Settings({
-			stats: true
-		});
-
-		assert.ok(settings.stats);
-		assert.ok(settings.throwErrorOnBrokenSymbolicLink);
-	});
-
 	it('should return the `fs` option with custom method', () => {
 		const customReaddirSync = () => [];
 
