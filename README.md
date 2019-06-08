@@ -138,10 +138,10 @@ The current working directory in which to search.
 
 #### deep
 
-  * Type: `number|boolean`
-  * Default: `true`
+  * Type: `number`
+  * Default: `Infinity`
 
-The deep option can be set to `true` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep. The countdown begins with `1`.
+The deep option can be set to `Infinity` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep. The countdown begins with `1`.
 
 For example, you have the following tree:
 

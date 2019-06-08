@@ -28,8 +28,8 @@ describe('Providers → Filters → Deep', () => {
 
 	describe('.getFilter', () => {
 		describe('options.deep', () => {
-			it('should return `false` when option is disabled', () => {
-				const filter = getFilter('.', ['**/*'], [], { deep: false });
+			it('should return `false` when option has 0 as value', () => {
+				const filter = getFilter('.', ['**/*'], [], { deep: 0 });
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);

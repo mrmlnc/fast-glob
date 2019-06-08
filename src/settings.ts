@@ -24,7 +24,7 @@ export interface Options {
 	 * The deep option can be set to true to traverse the entire directory structure,
 	 * or it can be set to a number to only traverse that many levels deep.
 	 */
-	deep?: number | boolean;
+	deep?: number;
 	/**
 	 * Add an array of glob patterns to exclude matches.
 	 */
@@ -109,7 +109,7 @@ export default class Settings {
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
-	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
+	public readonly deep: number = this._getValue(this._options.deep, Infinity);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
