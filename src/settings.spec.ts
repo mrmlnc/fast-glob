@@ -11,6 +11,7 @@ describe('Settings', () => {
 		assert.ok(settings.deep);
 		assert.deepStrictEqual(settings.ignore, []);
 		assert.ok(!settings.dot);
+		assert.ok(!settings.objectMode);
 		assert.ok(!settings.stats);
 		assert.ok(settings.onlyFiles);
 		assert.ok(!settings.onlyDirectories);
@@ -24,7 +25,6 @@ describe('Settings', () => {
 		assert.ok(settings.extglob);
 		assert.ok(settings.caseSensitiveMatch);
 		assert.ok(!settings.matchBase);
-		assert.strictEqual(settings.transform, null);
 		assert.ok(!settings.suppressErrors);
 		assert.deepStrictEqual(settings.fs, DEFAULT_FILE_SYSTEM_ADAPTER);
 	});
@@ -46,13 +46,13 @@ describe('Settings', () => {
 		assert.ok(settings.onlyDirectories);
 	});
 
-	it('should set the "throwErrorOnBrokenSymbolicLink" option to "true" when the "stats" option is enabled', () => {
+	it('should set the "objectMode" option when the "stats" is enabled', () => {
 		const settings = new Settings({
 			stats: true
 		});
 
+		assert.ok(settings.objectMode);
 		assert.ok(settings.stats);
-		assert.ok(settings.throwErrorOnBrokenSymbolicLink);
 	});
 
 	it('should return the `fs` option with custom method', () => {

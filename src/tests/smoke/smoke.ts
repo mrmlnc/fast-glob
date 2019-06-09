@@ -12,7 +12,7 @@ export interface SmokeTest {
 	ignore?: Pattern;
 	cwd?: string;
 	globOptions?: glob.IOptions;
-	fgOptions?: Options<string>;
+	fgOptions?: Options;
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
@@ -152,13 +152,13 @@ function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
 /**
  * Return entries from the `fast-glob` package with sorting.
  */
-function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options<string>): string[] {
-	const options: Options<string> = {
+function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
+	const options: Options = {
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
 		onlyFiles: false,
 		...opts
 	};
 
-	return fg.sync(pattern, options).sort() as string[];
+	return fg.sync(pattern, options).sort();
 }

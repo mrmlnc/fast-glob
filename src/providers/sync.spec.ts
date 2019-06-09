@@ -62,18 +62,5 @@ describe('Providers → ProviderSync', () => {
 			assert.strictEqual(provider.reader.static.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
-
-		it('should call the transform function when it is presented', () => {
-			const transform = sinon.stub();
-			const provider = getProvider({ transform });
-			const task = tests.task.builder().base('.').positive('*').build();
-			const entry = tests.entry.builder().path('root/file.txt').file().build();
-
-			provider.reader.dynamic.returns([entry]);
-
-			provider.read(task);
-
-			assert.strictEqual(transform.callCount, 1);
-		});
 	});
 });

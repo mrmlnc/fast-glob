@@ -5,14 +5,6 @@ import * as util from './stream';
 
 describe('Utils → Stream', () => {
 	describe('.merge', () => {
-		it('should return source stream as is, when he is alone', () => {
-			const source = new stream.PassThrough();
-
-			const actual = util.merge([source]);
-
-			assert.strictEqual(actual, source);
-		});
-
 		it('should merge two streams into one stream', () => {
 			const first = new stream.PassThrough();
 			const second = new stream.PassThrough();

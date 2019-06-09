@@ -17,7 +17,7 @@ export default abstract class Reader<T> {
 	constructor(protected readonly _settings: Settings) { }
 
 	public abstract dynamic(root: string, options: ReaderOptions): T;
-	public abstract static(filepath: string[], options: ReaderOptions): T;
+	public abstract static(patterns: Pattern[], options: ReaderOptions): T;
 
 	protected _getFullEntryPath(filepath: string): string {
 		return path.resolve(this._settings.cwd, filepath);

@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 
-import { EntryItem, FileSystemAdapter, Pattern } from './types/index';
-
-export type TransformFunction<T> = (entry: EntryItem) => T;
+import { FileSystemAdapter, Pattern } from './types/index';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -13,7 +11,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-export interface Options<T = EntryItem> {
+export interface Options {
 	/**
 	 * The maximum number of concurrent calls to `fs.readdir`.
 	 */
@@ -26,7 +24,7 @@ export interface Options<T = EntryItem> {
 	 * The deep option can be set to true to traverse the entire directory structure,
 	 * or it can be set to a number to only traverse that many levels deep.
 	 */
-	deep?: number | boolean;
+	deep?: number;
 	/**
 	 * Add an array of glob patterns to exclude matches.
 	 */
@@ -36,6 +34,10 @@ export interface Options<T = EntryItem> {
 	 * even if the pattern does not explicitly have a period in that spot.
 	 */
 	dot?: boolean;
+	/**
+	 * Return `Entry` object instead of filepath.
+	 */
+	objectMode?: boolean;
 	/**
 	 * Return `fs.Stats` with `path` property instead of file path.
 	 */
@@ -91,10 +93,6 @@ export interface Options<T = EntryItem> {
 	 */
 	matchBase?: boolean;
 	/**
-	 * Allows you to transform a path or `fs.Stats` object before sending to the array.
-	 */
-	transform?: TransformFunction<T> | null;
-	/**
 	 * Suppress any errors from reader.
 	 * Can be useful when the directory has entries with a special level of access.
 	 */
@@ -106,31 +104,34 @@ export interface Options<T = EntryItem> {
 }
 
 export default class Settings {
-	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
-	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
-	public readonly deep: number | boolean = this._getValue(this._options.deep, true);
-	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
-	public readonly dot: boolean = this._getValue(this._options.dot, false);
-	public readonly stats: boolean = this._getValue(this._options.stats, false);
-	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
-	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
-	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
-	public readonly throwErrorOnBrokenSymbolicLink: boolean = this.stats && this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
-	public readonly unique: boolean = this._getValue(this._options.unique, true);
-	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
 	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
-	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
-	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
-	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
-	public readonly transform: TransformFunction<EntryItem> | null = this._getValue(this._options.transform, null);
-	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
+	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
+	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
+	public readonly deep: number = this._getValue(this._options.deep, Infinity);
+	public readonly dot: boolean = this._getValue(this._options.dot, false);
+	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
+	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
 	public readonly fs: FileSystemAdapter = this._getFileSystemMethods(this._options.fs);
+	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
+	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
+	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
+	public readonly matchBase: boolean = this._getValue(this._options.matchBase, false);
+	public readonly objectMode: boolean = this._getValue(this._options.objectMode, false);
+	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
+	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);
+	public readonly stats: boolean = this._getValue(this._options.stats, false);
+	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
+	public readonly throwErrorOnBrokenSymbolicLink: boolean = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, false);
+	public readonly unique: boolean = this._getValue(this._options.unique, true);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;
+		}
+		if (this.stats) {
+			this.objectMode = true;
 		}
 	}
 

@@ -42,11 +42,12 @@ export default abstract class Provider<T> {
 	protected _getMicromatchOptions(): MicromatchOptions {
 		return {
 			dot: this._settings.dot,
+			matchBase: this._settings.matchBase,
 			nobrace: !this._settings.braceExpansion,
-			noglobstar: !this._settings.globstar,
-			noext: !this._settings.extglob,
 			nocase: !this._settings.caseSensitiveMatch,
-			matchBase: this._settings.matchBase
+			noext: !this._settings.extglob,
+			noglobstar: !this._settings.globstar,
+			posix: true
 		};
 	}
 }

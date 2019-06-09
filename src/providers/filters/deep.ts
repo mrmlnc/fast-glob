@@ -56,7 +56,7 @@ export default class DeepFilter {
 	}
 
 	private _isSkippedByDeep(entryDepth: number): boolean {
-		return !this._settings.deep || (typeof this._settings.deep === 'number' && entryDepth >= this._settings.deep);
+		return entryDepth >= this._settings.deep;
 	}
 
 	private _isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {

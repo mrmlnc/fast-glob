@@ -3,20 +3,28 @@ import ProviderAsync from './providers/async';
 import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
-import Settings, { Options, TransformFunction } from './settings';
-import { EntryItem, Pattern } from './types/index';
+import Settings, { Options } from './settings';
+import { Entry, EntryItem, Pattern } from './types/index';
 import * as utils from './utils/index';
 
 type Task = taskManager.Task;
 
+type EntryObjectModePredicate = { [P in keyof Pick<Options, 'objectMode'>]-?: true };
+type EntryStatsPredicate = { [P in keyof Pick<Options, 'stats'>]-?: true };
+type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
+
+function sync(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Entry[];
+function sync(source: Pattern | Pattern[], options?: Options): string[];
 function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
 	assertPatternsInput(source);
 
-	const works = getWorks<EntryItem[]>(source, ProviderSync, options);
+	const works = getWorks(source, ProviderSync, options);
 
 	return utils.array.flatten(works);
 }
 
+function async(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Promise<Entry[]>;
+function async(source: Pattern | Pattern[], options?: Options): Promise<string[]>;
 function async(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
@@ -24,7 +32,7 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 		return Promise.reject(error);
 	}
 
-	const works = getWorks<Promise<EntryItem[]>>(source, ProviderAsync, options);
+	const works = getWorks(source, ProviderAsync, options);
 
 	return Promise.all(works).then(utils.array.flatten);
 }
@@ -32,8 +40,13 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
 	assertPatternsInput(source);
 
-	const works = getWorks<NodeJS.ReadableStream>(source, ProviderStream, options);
+	const works = getWorks(source, ProviderStream, options);
 
+	/**
+	 * The stream returned by the provider cannot work with an asynchronous iterator.
+	 * To support asynchronous iterators, regardless of the number of tasks, we always multiplex streams.
+	 * This affects performance (+25%). I don't see best solution right now.
+	 */
 	return utils.stream.merge(works);
 }
 
@@ -78,7 +91,6 @@ export {
 
 	Options,
 	Settings,
-	TransformFunction,
 	Task,
 	EntryItem
 };
