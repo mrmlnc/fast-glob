@@ -42,6 +42,11 @@ function stream(source: Pattern | Pattern[], options?: Options): NodeJS.Readable
 
 	const works = getWorks(source, ProviderStream, options);
 
+	/**
+	 * The stream returned by the provider cannot work with an asynchronous iterator.
+	 * To support asynchronous iterators, regardless of the number of tasks, we always multiplex streams.
+	 * This affects performance (+25%). I don't see best solution right now.
+	 */
 	return utils.stream.merge(works);
 }
 
