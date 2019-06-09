@@ -103,7 +103,8 @@ describe('Providers → Provider', () => {
 				nobrace: false,
 				nocase: false,
 				noext: false,
-				noglobstar: false
+				noglobstar: false,
+				posix: true
 			};
 
 			const actual = provider.getMicromatchOptions();
