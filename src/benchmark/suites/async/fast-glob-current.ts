@@ -11,7 +11,7 @@ const settings = new Settings({
 
 const timeStart = utils.timeStart();
 
-glob.async(process.env.BENCHMARK_PATTERN as string, settings)
+glob(process.env.BENCHMARK_PATTERN as string, settings)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

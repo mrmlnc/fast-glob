@@ -51,7 +51,7 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			try {
 				/* tslint:disable-next-line no-any */
-				await pkg.async(null as any);
+				await pkg(null as any);
 				throw new Error('An unexpected error was found.');
 			} catch (error) {
 				assert.strictEqual((error as Error).toString(), 'TypeError: Patterns must be a string or an array of strings');
@@ -69,7 +69,7 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual = await pkg.async(['fixtures/**/*.md']);
+			const actual = await pkg(['fixtures/**/*.md']);
 
 			actual.sort();
 
@@ -86,7 +86,7 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual = await pkg.async(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
+			const actual = await pkg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			actual.sort();
 

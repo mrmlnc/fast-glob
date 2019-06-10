@@ -13,19 +13,9 @@ type EntryObjectModePredicate = { [P in keyof Pick<Options, 'objectMode'>]-?: tr
 type EntryStatsPredicate = { [P in keyof Pick<Options, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
-function sync(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Entry[];
-function sync(source: Pattern | Pattern[], options?: Options): string[];
-function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
-	assertPatternsInput(source);
-
-	const works = getWorks(source, ProviderSync, options);
-
-	return utils.array.flatten(works);
-}
-
-function async(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Promise<Entry[]>;
-function async(source: Pattern | Pattern[], options?: Options): Promise<string[]>;
-function async(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
+function FastGlob(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Promise<Entry[]>;
+function FastGlob(source: Pattern | Pattern[], options?: Options): Promise<string[]>;
+function FastGlob(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
 	} catch (error) {
@@ -37,26 +27,38 @@ function async(source: Pattern | Pattern[], options?: Options): Promise<EntryIte
 	return Promise.all(works).then(utils.array.flatten);
 }
 
-function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
-	assertPatternsInput(source);
+namespace FastGlob {
+	export function sync(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Entry[];
+	export function sync(source: Pattern | Pattern[], options?: Options): string[];
+	export function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
+		assertPatternsInput(source);
 
-	const works = getWorks(source, ProviderStream, options);
+		const works = getWorks(source, ProviderSync, options);
 
-	/**
-	 * The stream returned by the provider cannot work with an asynchronous iterator.
-	 * To support asynchronous iterators, regardless of the number of tasks, we always multiplex streams.
-	 * This affects performance (+25%). I don't see best solution right now.
-	 */
-	return utils.stream.merge(works);
-}
+		return utils.array.flatten(works);
+	}
 
-function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
-	assertPatternsInput(source);
+	export function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
+		assertPatternsInput(source);
 
-	const patterns = ([] as Pattern[]).concat(source);
-	const settings = new Settings(options);
+		const works = getWorks(source, ProviderStream, options);
 
-	return taskManager.generate(patterns, settings);
+		/**
+		 * The stream returned by the provider cannot work with an asynchronous iterator.
+		 * To support asynchronous iterators, regardless of the number of tasks, we always multiplex streams.
+		 * This affects performance (+25%). I don't see best solution right now.
+		 */
+		return utils.stream.merge(works);
+	}
+
+	export function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
+		assertPatternsInput(source);
+
+		const patterns = ([] as Pattern[]).concat(source);
+		const settings = new Settings(options);
+
+		return taskManager.generate(patterns, settings);
+	}
 }
 
 function getWorks<T>(source: Pattern | Pattern[], _Provider: new (settings: Settings) => Provider<T>, options?: Options): T[] {
@@ -82,15 +84,4 @@ function isString(source: unknown): source is string {
 	return typeof source === 'string';
 }
 
-export default async;
-export {
-	async,
-	sync,
-	stream,
-	generateTasks,
-
-	Options,
-	Settings,
-	Task,
-	EntryItem
-};
+export = FastGlob;
