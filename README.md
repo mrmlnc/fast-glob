@@ -283,12 +283,14 @@ Enable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode f
 * Case-sensitive for `test/file.*` pattern: `test/file.md`
 * Case-insensitive for `test/file.*` pattern: `test/file.md`, `test/File.md`
 
-#### matchBase
+#### baseNameMatch
 
   * Type: `boolean`
   * Default: `false`
 
 Allow glob patterns without slashes to match a file path based on its basename. For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
+
+> :book: This option has no affect to negative patterns from any source (patterns, `ignore`).
 
 #### suppressErrors
 
@@ -404,7 +406,7 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `noglobstar` | [`globstar`](#globstar) |
 | `noext`      | [`extglob`](#extglob) |
 | `nocase`     | [`caseSensitiveMatch`](#caseSensitiveMatch) |
-| `matchBase`  | [`matchbase`](#matchbase) |
+| `matchBase`  | [`baseNameMatch`](#baseNameMatch) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |
 | `follow`     | [`followSymbolicLinks`](#followSymbolicLinks) |

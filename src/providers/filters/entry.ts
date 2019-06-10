@@ -31,7 +31,9 @@ export default class EntryFilter {
 			return false;
 		}
 
-		return this._isMatchToPatterns(entry.path, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
+		const filepath = this._settings.baseNameMatch ? entry.name : entry.path;
+
+		return this._isMatchToPatterns(filepath, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
 	}
 
 	private _isDuplicateEntry(entry: Entry): boolean {

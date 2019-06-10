@@ -6,27 +6,27 @@ describe('Settings', () => {
 	it('should return instance with default values', () => {
 		const settings = new Settings();
 
+		assert.deepStrictEqual(settings.fs, DEFAULT_FILE_SYSTEM_ADAPTER);
+		assert.deepStrictEqual(settings.ignore, []);
+		assert.ok(!settings.absolute);
+		assert.ok(!settings.baseNameMatch);
+		assert.ok(!settings.dot);
+		assert.ok(!settings.markDirectories);
+		assert.ok(!settings.objectMode);
+		assert.ok(!settings.onlyDirectories);
+		assert.ok(!settings.stats);
+		assert.ok(!settings.suppressErrors);
+		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
+		assert.ok(settings.braceExpansion);
+		assert.ok(settings.caseSensitiveMatch);
+		assert.ok(settings.deep);
+		assert.ok(settings.extglob);
+		assert.ok(settings.followSymbolicLinks);
+		assert.ok(settings.globstar);
+		assert.ok(settings.onlyFiles);
+		assert.ok(settings.unique);
 		assert.strictEqual(settings.concurrency, Infinity);
 		assert.strictEqual(settings.cwd, process.cwd());
-		assert.ok(settings.deep);
-		assert.deepStrictEqual(settings.ignore, []);
-		assert.ok(!settings.dot);
-		assert.ok(!settings.objectMode);
-		assert.ok(!settings.stats);
-		assert.ok(settings.onlyFiles);
-		assert.ok(!settings.onlyDirectories);
-		assert.ok(settings.followSymbolicLinks);
-		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
-		assert.ok(settings.unique);
-		assert.ok(!settings.markDirectories);
-		assert.ok(!settings.absolute);
-		assert.ok(settings.braceExpansion);
-		assert.ok(settings.globstar);
-		assert.ok(settings.extglob);
-		assert.ok(settings.caseSensitiveMatch);
-		assert.ok(!settings.matchBase);
-		assert.ok(!settings.suppressErrors);
-		assert.deepStrictEqual(settings.fs, DEFAULT_FILE_SYSTEM_ADAPTER);
 	});
 
 	it('should return instance with custom values', () => {

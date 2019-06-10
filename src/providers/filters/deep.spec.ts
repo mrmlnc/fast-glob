@@ -108,6 +108,15 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
+			it('should return `treu` when the positive pattern has no affect to depth reading, but the `baseNameMatch` is enabled', () => {
+				const filter = getFilter('.', ['*'], [], { baseNameMatch: true });
+				const entry = tests.entry.builder().path('root/directory').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
 			it('should return `true` when the negative pattern has no effect to depth reading', () => {
 				const filter = getFilter('.', ['**/*'], ['**/*']);
 				const entry = tests.entry.builder().path('root/directory').directory().build();

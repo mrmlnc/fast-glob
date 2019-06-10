@@ -60,7 +60,7 @@ export default class DeepFilter {
 	}
 
 	private _isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
-		return maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
+		return !this._settings.baseNameMatch && maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
 	}
 
 	private _isSkippedSymbolicLink(entry: Entry): boolean {
