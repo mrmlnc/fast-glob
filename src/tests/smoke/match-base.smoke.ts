@@ -7,6 +7,6 @@ smoke.suite('Smoke → MatchBase', [
 		pattern: '*.md',
 		cwd: 'fixtures',
 		globOptions: { matchBase: true },
-		fgOptions: { matchBase: true }
+		fgOptions: { baseNameMatch: true }
 	}
 ]);
