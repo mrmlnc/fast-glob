@@ -109,8 +109,30 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return `false` when an entry do not match to the negative pattern', () => {
+			it('should return `true` when an entry do not match to the negative pattern', () => {
 				const filter = getFilter(['**/*'], ['*'], { absolute: true });
+
+				const entry = tests.entry.builder().path('root/file.txt').file().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+		});
+
+		describe('options.baseNameMatch', () => {
+			it('should return `false` when an option is disabled', () => {
+				const filter = getFilter(['*'], []);
+
+				const entry = tests.entry.builder().path('root/file.txt').file().build();
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return `true` when an option is enabled', () => {
+				const filter = getFilter(['*'], [], { baseNameMatch: true });
 
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
 
