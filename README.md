@@ -32,7 +32,6 @@ $ npm install --save fast-glob
 const fg = require('fast-glob');
 
 fg(['src/**/*.js', '!src/**/*.spec.js']).then((entries) => console.log(entries));
-fg.async(['src/**/*.js', '!src/**/*.spec.js']).then((entries) => console.log(entries));
 ```
 
 #### Synchronous
@@ -61,7 +60,6 @@ stream.once('end', () => console.log(entries));
 ## API
 
 ### fg(patterns, [options])
-### fg.async(patterns, [options])
 
 Returns a `Promise` with an array of matching [entries](#entry).
 
