@@ -4,9 +4,7 @@ import glob = require('glob');
 
 import * as utils from '../../utils';
 
-import { IOptions } from 'glob';
-
-const options: IOptions = {
+const options: glob.IOptions = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
 	nosort: true,
 	nounique: true,
