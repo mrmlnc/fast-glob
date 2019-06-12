@@ -3,19 +3,17 @@ import ProviderAsync from './providers/async';
 import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
-import Settings, { Options } from './settings';
-import { Entry, EntryItem, Pattern } from './types/index';
+import Settings, { Options as OptionsInternal } from './settings';
+import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types/index';
 import * as utils from './utils/index';
 
-type Task = taskManager.Task;
-
-type EntryObjectModePredicate = { [P in keyof Pick<Options, 'objectMode'>]-?: true };
-type EntryStatsPredicate = { [P in keyof Pick<Options, 'stats'>]-?: true };
+type EntryObjectModePredicate = { [P in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
+type EntryStatsPredicate = { [P in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
-function FastGlob(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Promise<Entry[]>;
-function FastGlob(source: Pattern | Pattern[], options?: Options): Promise<string[]>;
-function FastGlob(source: Pattern | Pattern[], options?: Options): Promise<EntryItem[]> {
+function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
+function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
+function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
 	try {
 		assertPatternsInput(source);
 	} catch (error) {
@@ -28,9 +26,15 @@ function FastGlob(source: Pattern | Pattern[], options?: Options): Promise<Entry
 }
 
 namespace FastGlob {
-	export function sync(source: Pattern | Pattern[], options: Options & EntryObjectPredicate): Entry[];
-	export function sync(source: Pattern | Pattern[], options?: Options): string[];
-	export function sync(source: Pattern | Pattern[], options?: Options): EntryItem[] {
+	export type Options = OptionsInternal;
+	export type Entry = EntryInternal;
+	export type Task = taskManager.Task;
+	export type Pattern = PatternInternal;
+	export type FileSystemAdapter = FileSystemAdapterInternal;
+
+	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
+	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
+	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
 		assertPatternsInput(source);
 
 		const works = getWorks(source, ProviderSync, options);
@@ -38,7 +42,7 @@ namespace FastGlob {
 		return utils.array.flatten(works);
 	}
 
-	export function stream(source: Pattern | Pattern[], options?: Options): NodeJS.ReadableStream {
+	export function stream(source: PatternInternal | PatternInternal[], options?: OptionsInternal): NodeJS.ReadableStream {
 		assertPatternsInput(source);
 
 		const works = getWorks(source, ProviderStream, options);
@@ -51,18 +55,18 @@ namespace FastGlob {
 		return utils.stream.merge(works);
 	}
 
-	export function generateTasks(source: Pattern | Pattern[], options?: Options): Task[] {
+	export function generateTasks(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Task[] {
 		assertPatternsInput(source);
 
-		const patterns = ([] as Pattern[]).concat(source);
+		const patterns = ([] as PatternInternal[]).concat(source);
 		const settings = new Settings(options);
 
 		return taskManager.generate(patterns, settings);
 	}
 }
 
-function getWorks<T>(source: Pattern | Pattern[], _Provider: new (settings: Settings) => Provider<T>, options?: Options): T[] {
-	const patterns = ([] as Pattern[]).concat(source);
+function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new (settings: Settings) => Provider<T>, options?: OptionsInternal): T[] {
+	const patterns = ([] as PatternInternal[]).concat(source);
 	const settings = new Settings(options);
 
 	const tasks = taskManager.generate(patterns, settings);
