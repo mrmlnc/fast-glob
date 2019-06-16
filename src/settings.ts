@@ -11,97 +11,143 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
+// tslint:disable no-redundant-jsdoc
 export interface Options {
 	/**
-	 * The maximum number of concurrent calls to `fs.readdir`.
+	 * Return the absolute path for entries.
+	 *
+	 * @default false
+	 */
+	absolute?: boolean;
+	/**
+	 * If set to `true`, then patterns without slashes will be matched against
+	 * the basename of the path if it contains slashes.
+	 *
+	 * @default false
+	 */
+	baseNameMatch?: boolean;
+	/**
+	 * Enables Bash-like brace expansion.
+	 *
+	 * @default true
+	 */
+	braceExpansion?: boolean;
+	/**
+	 * Enables a case-sensitive mode for matching files.
+	 *
+	 * @default true
+	 */
+	caseSensitiveMatch?: boolean;
+	/**
+	 * Specifies the maximum number of concurrent requests from a reader to read
+	 * directories.
+	 *
+	 * @default Infinity
 	 */
 	concurrency?: number;
 	/**
 	 * The current working directory in which to search.
+	 *
+	 * @default process.cwd()
 	 */
 	cwd?: string;
 	/**
-	 * The deep option can be set to true to traverse the entire directory structure,
-	 * or it can be set to a number to only traverse that many levels deep.
+	 * Specifies the maximum depth of a read directory relative to the start
+	 * directory.
+	 *
+	 * @default Infinity
 	 */
 	deep?: number;
 	/**
-	 * Add an array of glob patterns to exclude matches.
-	 */
-	ignore?: Pattern[];
-	/**
-	 * Allow patterns to match filenames starting with a period (files & directories),
-	 * even if the pattern does not explicitly have a period in that spot.
+	 * Allow patterns to match entries that begin with a period (`.`).
+	 *
+	 * @default false
 	 */
 	dot?: boolean;
 	/**
-	 * Return `Entry` object instead of filepath.
-	 */
-	objectMode?: boolean;
-	/**
-	 * Return `fs.Stats` with `path` property instead of file path.
-	 */
-	stats?: boolean;
-	/**
-	 * Return only files.
-	 */
-	onlyFiles?: boolean;
-	/**
-	 * Return only directories.
-	 */
-	onlyDirectories?: boolean;
-	/**
-	 * Indicates whether to traverse descendants of symbolic link directories.
-	 * Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
-	 */
-	followSymbolicLinks?: boolean;
-	/**
-	 * Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`.
-	 */
-	throwErrorOnBrokenSymbolicLink?: boolean;
-	/**
-	 * Prevent duplicate results.
-	 */
-	unique?: boolean;
-	/**
-	 * Add a `/` character to directory entries.
-	 */
-	markDirectories?: boolean;
-	/**
-	 * Return absolute paths for matched entries.
-	 */
-	absolute?: boolean;
-	/**
-	 * Enable expansion of brace patterns.
-	 */
-	braceExpansion?: boolean;
-	/**
-	 * Enable matching with globstars (`**`).
-	 */
-	globstar?: boolean;
-	/**
-	 * Enable extglob support, so that extglobs are regarded as literal characters.
+	 * Enables Bash-like `extglob` functionality.
+	 *
+	 * @default true
 	 */
 	extglob?: boolean;
 	/**
-	 * Enable a case-sensitive regex for matching files.
+	 * Indicates whether to traverse descendants of symbolic link directories.
+	 *
+	 * @default true
 	 */
-	caseSensitiveMatch?: boolean;
+	followSymbolicLinks?: boolean;
 	/**
-	 * Allow glob patterns without slashes to match a file path based on its basename.
-	 * For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
+	 * Custom implementation of methods for working with the file system.
+	 *
+	 * @default fs.*
 	 */
-	baseNameMatch?: boolean;
+	fs?: Partial<FileSystemAdapter>;
 	/**
-	 * Suppress any errors from reader.
-	 * Can be useful when the directory has entries with a special level of access.
+	 * Enables recursively repeats a pattern containing `**`.
+	 * If `false`, `**` behaves exactly like `*`.
+	 *
+	 * @default true
+	 */
+	globstar?: boolean;
+	/**
+	 * An array of glob patterns to exclude matches.
+	 * This is an alternative way to use negative patterns.
+	 *
+	 * @default []
+	 */
+	ignore?: Pattern[];
+	/**
+	 * Mark the directory path with the final slash.
+	 *
+	 * @default false
+	 */
+	markDirectories?: boolean;
+	/**
+	 * Returns objects (instead of strings) describing entries.
+	 *
+	 * @default false
+	 */
+	objectMode?: boolean;
+	/**
+	 * Return only directories.
+	 *
+	 * @default false
+	 */
+	onlyDirectories?: boolean;
+	/**
+	 * Return only files.
+	 *
+	 * @default true
+	 */
+	onlyFiles?: boolean;
+	/**
+	 * Enables an object mode (`objectMode`) with an additional `stats` field.
+	 *
+	 * @default false
+	 */
+	stats?: boolean;
+	/**
+	 * By default this package suppress only `ENOENT` errors.
+	 * Set to `true` to suppress any error.
+	 *
+	 * @default false
 	 */
 	suppressErrors?: boolean;
 	/**
-	 * Custom implementation of methods for working with the file system.
+	 * Throw an error when symbolic link is broken if `true` or safely
+	 * return `lstat` call if `false`.
+	 *
+	 * @default false
 	 */
-	fs?: Partial<FileSystemAdapter>;
+	throwErrorOnBrokenSymbolicLink?: boolean;
+	/**
+	 * Ensures that the returned entries are unique.
+	 *
+	 * @default true
+	 */
+	unique?: boolean;
 }
+// tslint:enable no-redundant-jsdoc
 
 export default class Settings {
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);

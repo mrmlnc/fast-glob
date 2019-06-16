@@ -1,7 +1,7 @@
 {
   "name": "fast-glob",
   "version": "2.2.6",
-  "description": "Is a faster `node-glob` alternative",
+  "description": "It's a very fast and efficient glob library for Node.js",
   "license": "MIT",
   "repository": "mrmlnc/fast-glob",
   "author": {

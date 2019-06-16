@@ -1,145 +1,233 @@
-# :rocket: fast-glob
+# fast-glob
 
-> Is a faster [`node-glob`](https://github.com/isaacs/node-glob) alternative.
+> It's a very fast and efficient [glob][glob_definition] library for [Node.js][node_js].
 
-## :bulb: Highlights
+This package provides methods for traversing the file system and returning pathnames that matched a defined set of a specified pattern according to the rules used by the Unix Bash shell with some simplifications, meanwhile results are returned in **arbitrary order**. Quick, simple, effective.
 
-  * :rocket: Fast by using Streams and Promises. Uses [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) and [micromatch](https://github.com/jonschlinkert/micromatch).
-  * :beginner: User-friendly, since it supports multiple and negated patterns (`['*', '!*.md']`).
-  * :vertical_traffic_light: Rational, because it doesn't read excluded directories (`!**/node_modules/**`).
-  * :gear: Universal, because it supports Synchronous, Promise and Stream API.
-  * :money_with_wings: Economy, because it provides `fs.Stats` for matched path if you wanted.
+## Table of Contents
 
-## Donate
+<details>
+<summary><strong>Details</strong></summary>
 
-If you want to thank me, or promote your Issue.
+* [Highlights](#highlights)
+* [Donation](#donation)
+* [Old and modern mode](#old-and-modern-mode)
+* [Pattern syntax](#pattern-syntax)
+  * [Basic syntax](#basic-syntax)
+  * [Advanced syntax](#advanced-syntax)
+* [Installation](#installation)
+* [API](#api)
+  * [Asynchronous](#asynchronous)
+  * [Synchronous](#synchronous)
+  * [Stream](#stream)
+    * [patterns](#patterns)
+    * [[options]](#options)
+* [Options](#options-1)
+  * [Common](#common)
+    * [concurrency](#concurrency)
+    * [cwd](#cwd)
+    * [deep](#deep)
+    * [followSymbolicLinks](#followsymboliclinks)
+    * [fs](#fs)
+    * [ignore](#ignore)
+    * [suppressErrors](#suppresserrors)
+    * [throwErrorOnBrokenSymbolicLink](#throwerroronbrokensymboliclink)
+  * [Output control](#output-control)
+    * [absolute](#absolute)
+    * [markDirectories](#markdirectories)
+    * [objectMode](#objectmode)
+    * [onlyDirectories](#onlydirectories)
+    * [onlyFiles](#onlyfiles)
+    * [stats](#stats)
+    * [unique](#unique)
+  * [Matching control](#matching-control)
+    * [braceExpansion](#braceexpansion)
+    * [caseSensitiveMatch](#casesensitivematch)
+    * [dot](#dot)
+    * [extglob](#extglob)
+    * [globstar](#globstar)
+    * [baseNameMatch](#basenamematch)
+* [FAQ](#faq)
+  * [How to write patterns on Windows?](#how-to-write-patterns-on-windows)
+  * [Why are parentheses match wrong?](#why-are-parentheses-match-wrong)
+  * [How to exclude directory from reading?](#how-to-exclude-directory-from-reading)
+  * [How to use UNC path?](#how-to-use-unc-path)
+  * [Compatible with `node-glob`?](#compatible-with-node-glob)
+* [Benchmarks](#benchmarks)
+  * [Server](#server)
+  * [Nettop](#nettop)
+* [Changelog](#changelog)
+* [License](#license)
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/mrmlnc)
+</details>
 
-> Sorry, but I have work and support for packages requires some time after work. I will be glad of your support and PR's.
+## Highlights
 
-## Install
+* Fast. Probably the fastest.
+* Supports multiple and negative patterns.
+* Synchronous, Promise and Stream API.
+* Object mode. Can return more than just strings.
+* Error-tolerant.
 
-```
-$ npm install --save fast-glob
-```
+## Donation
 
-## Usage
+Do you like this project? Support it by donating, creating an issue or pull request.
 
-#### Asynchronous
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)][paypal_mrmlnc]
 
-```js
-const fg = require('fast-glob');
+## Old and modern mode
 
-fg(['src/**/*.js', '!src/**/*.spec.js']).then((entries) => console.log(entries));
-```
+This package works in two modes, depending on the environment in which it is used.
 
-#### Synchronous
+* **Old mode**. Node.js below 10.10 or when the `stats` option is *enabled*.
+* **Modern mode**. Node.js 10.10+ and the `stats` option is *disabled*.
 
-```js
-const fg = require('fast-glob');
+The modern mode is faster. Learn more about the [internal mechanism][nodelib_fs_scandir_old_and_modern_modern].
 
-const entries = fg.sync(['src/**/*.js', '!src/**/*.spec.js']);
-console.log(entries);
-```
+## Pattern syntax
 
-#### Stream
+> :warning: Always use forward-slashes in glob expressions (patterns and [`ignore`](#ignore) option). Use backslashes for escaping characters.
 
-```js
-const fg = require('fast-glob');
+There is more than one form of syntax: basic and advanced. Below is a brief overview of the supported features. Also pay attention to our [FAQ](#faq).
 
-const stream = fg.stream(['src/**/*.js', '!src/**/*.spec.js']);
+> :book: This package uses a [`micromatch`][micromatch] as a library for pattern matching.
 
-const entries = [];
+### Basic syntax
 
-stream.on('data', (entry) => entries.push(entry));
-stream.once('error', console.log);
-stream.once('end', () => console.log(entries));
+* An asterisk (`*`) — matches everything except slashes (path separators), hidden files (names starting with `.`).
+* A double star or globstar (`**`) — matches zero or more directories.
+* Question mark (`?`) – matches any single character except slashes (path separators).
+* Sequence (`[seq]`) — matches any character in sequence.
+
+> :book: A few additional words about the [basic matching behavior][picomatch_matching_behavior].
+
+Some examples:
+
+* `src/**/*.js` — matches all files in the `src` directory (any level of nesting) that have the `.js` extension.
+* `src/*.??` — matches all files in the `src` directory (only first level of nesting) that have a two-character extension.
+* `file-[01].js` — matches files: `file-0.js`, `file-1.js`.
+
+### Advanced syntax
+
+* [Escapes characters][micromatch_backslashes] (`\\`) — matching special characters (`$^*+?()[]`) as literals.
+* [POSIX character classes][picomatch_posix_brackets] (`[[:digit:]]`).
+* [Extended globs][micromatch_extglobs] (`?(pattern-list)`).
+* [Bash style brace expansions][micromatch_braces] (`{}`).
+* [Regexp character classes][micromatch_regex_character_classes] (`[1-5]`).
+* [Regex groups][regular_expressions_brackets] (`(a|b)`).
+
+> :book: A few additional words about the [advanced matching behavior][micromatch_extended_globbing].
+
+Some examples:
+
+* `src/**/*.{css,scss)` — matches all files in the `src` directory (any level of nesting) that have the `.css` or `.scss` extension.
+* `file-[[:digit:]].js` — matches files: `file-0.js`, `file-1.js`, …, `file-9.js`.
+* `file-{1..3}.js` — matches files: `file-1.js`, `file-2.js`, `file-3.js`.
+* `file-(1|2)` — matches files: `file-1.js`, `file-2.js`.
+
+## Installation
+
+```console
+npm install fast-glob
 ```
 
 ## API
 
-### fg(patterns, [options])
+### Asynchronous
 
-Returns a `Promise` with an array of matching [entries](#entry).
+```js
+fg(patterns, [options])
+```
 
-### fg.sync(patterns, [options])
+Returns a `Promise` with an array of matching entries.
 
-Returns an array of matching [entries](#entry).
+```js
+const fg = require('fast-glob');
 
-### fg.stream(patterns, [options])
+const entries = await fg(['.editorconfig', '**/index.js'], { dot: true });
 
-Returns a [`ReadableStream`](https://nodejs.org/api/stream.html#stream_readable_streams) when the `data` event will be emitted with [`Entry`](#entry).
+// ['.editorconfig', 'services/index.js']
+```
 
-#### patterns
+### Synchronous
 
-  * Type: `string|string[]`
+```js
+fg.sync(patterns, [options])
+```
 
-This package does not respect the order of patterns. First, all the negative patterns are applied, and only then the positive patterns.
+Returns an array of matching entries.
 
-#### options
+```js
+const fg = require('fast-glob');
 
-  * Type: `Object`
+const entries = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
 
-See [options](#options-1) section for more detailed information.
+// ['.editorconfig', 'services/index.js']
+```
 
-### fg.generateTasks(patterns, [options])
+### Stream
 
-Return a set of tasks based on provided patterns. All tasks satisfy the `Task` interface:
+```js
+fg.stream(patterns, [options])
+```
 
-```ts
-interface Task {
-  /**
-   * Parent directory for all patterns inside this task.
-   */
-  base: string;
-  /**
-   * Dynamic or static patterns are in this task.
-   */
-  dynamic: boolean;
-  /**
-   * All patterns.
-   */
-  patterns: string[];
-  /**
-   * Only positive patterns.
-   */
-  positive: string[];
-  /**
-   * Only negative patterns without ! symbol.
-   */
-  negative: string[];
+Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` event will be emitted with matching entry.
+
+```js
+const fg = require('fast-glob');
+
+const stream = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
+
+for await (const entry of stream) {
+	// .editorconfig
+	// services/index.js
 }
 ```
 
-## Entry
+#### patterns
 
-The entry which can be a `string` if the [`stats`](#stats) option is disabled, otherwise `fs.Stats` with two additional `path` and `depth` properties.
+* Required: `true`
+* Type: `string | string[]`
+
+Any correct pattern(s).
+
+> :1234: [Pattern syntax](#pattern-syntax)
+>
+> :warning: This package does not respect the order of patterns. First, all the negative patterns are applied, and only then the positive patterns. If you want to get a certain order of records, use sorting or split calls.
+
+#### [options]
+
+* Required: `false`
+* Type: [`Options`](#options-1)
+
+See [Options](#options-1) section.
 
 ## Options
 
+### Common options
+
 #### concurrency
 
-  * Type: `number`
-  * Default: `Infinity`
+* Type: `number`
+* Default: `Infinity`
 
-The maximum number of concurrent calls to `fs.readdir`.
+Specifies the maximum number of concurrent requests from a reader to read directories.
 
-See more more detailed description in the [`fs.walk`](https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk#concurrency) repository.
+> :book: The higher the number, the higher the performance and load on the file system. If you want to read in quiet mode, set the value to a comfortable number or `4 * os.cpus().length` (4 is default size of [thread pool work scheduling][libuv_threadpool]).
 
 #### cwd
 
-  * Type: `string`
-  * Default: `process.cwd()`
+* Type: `string`
+* Default: `process.cwd()`
 
 The current working directory in which to search.
 
 #### deep
 
-  * Type: `number`
-  * Default: `Infinity`
+* Type: `number`
+* Default: `Infinity`
 
-The deep option can be set to `Infinity` to traverse the entire directory structure, or it can be set to a *number* to only traverse that many levels deep. The countdown begins with `1`.
+Specifies the maximum depth of a read directory relative to the start directory.
 
 For example, you have the following tree:
 
@@ -150,153 +238,26 @@ dir/
         └── file.js // 3
 ```
 
-> :book: If you specify a pattern with some base directory, this directory will not participate in the calculation of the depth of the found directories. Think of it as a `cwd` option.
-
 ```js
-fg('dir/**', { onlyFiles: false, deep: 1 });
-// -> ['dir/one']
-fg('dir/**', { onlyFiles: false, deep: 2 });
-// -> ['dir/one', 'dir/one/two']
+// With base directory
+fg.sync('dir/**', { onlyFiles: false, deep: 1 }); // ['dir/one']
+fg.sync('dir/**', { onlyFiles: false, deep: 2 }); // ['dir/one', 'dir/one/two']
 
-fg('**', { onlyFiles: false, cwd: 'dir', deep: 1 });
-// -> ['one']
-fg('**', { onlyFiles: false, cwd: 'dir', deep: 2 });
-// -> ['one', 'one/two']
+// With cwd option
+fg.sync('**', { onlyFiles: false, cwd: 'dir', deep: 1 }); // ['one']
+fg.sync('**', { onlyFiles: false, cwd: 'dir', deep: 2 }); // ['one', 'one/two']
 ```
 
-#### ignore
-
-  * Type: `string[]`
-  * Default: `[]`
-
-An array of glob patterns to exclude matches.
-
-#### dot
-
-  * Type: `boolean`
-  * Default: `false`
-
-Allow patterns to match filenames starting with a period (files & directories), even if the pattern does not explicitly have a period in that spot.
-
-#### objectMode
-
-  * Type: `boolean`
-  * Default: `false`
-
-Return an [`Entry`](#entry) object instead of filepath.
-
-#### stats
-
-  * Type: `boolean`
-  * Default: `false`
-
-Return `fs.Stats` with two additional `path` and `depth` properties instead of a `string`.
-
-#### onlyFiles
-
-  * Type: `boolean`
-  * Default: `true`
-
-Return only files.
-
-#### onlyDirectories
-
-  * Type: `boolean`
-  * Default: `false`
-
-Return only directories.
+> :book: If you specify a pattern with some base directory, this directory will not participate in the calculation of the depth of the found directories. Think of it as a [`cwd`](#cwd) option.
 
 #### followSymbolicLinks
 
-  * Type: `boolean`
-  * Default: `true`
+* Type: `boolean`
+* Default: `true`
 
 Indicates whether to traverse descendants of symbolic link directories.
 
-> :book: Also, if the `stats` option is specified, it tries to get `fs.Stats` for symbolic link file.
-
-#### throwErrorOnBrokenSymbolicLink
-
-  * Type: `boolean`
-  * Default: `true`
-
-Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`. Always `false` when the `stats` option is disabled.
-
-> :book: This option has no effect on errors when reading the symbolic link directory.
-
-#### unique
-
-  * Type: `boolean`
-  * Default: `true`
-
-Prevent duplicate results.
-
-#### markDirectories
-
-  * Type: `boolean`
-  * Default: `false`
-
-Add a `/` character to directory entries.
-
-#### absolute
-
-  * Type: `boolean`
-  * Default: `false`
-
-Return absolute paths for matched entries.
-
-> :book: Note that you need to use this option if you want to use absolute negative patterns like `${__dirname}/*.md`.
-
-#### braceExpansion
-
-  * Type: `boolean`
-  * Default: `true`
-
-Enable expansion of brace patterns.
-
-#### globstar
-
-  * Type: `boolean`
-  * Default: `true`
-
-Enable matching with globstars (`**`).
-
-#### extglob
-
-  * Type: `boolean`
-  * Default: `true`
-
-Enable extglob support, so that extglobs are regarded as literal characters.
-
-#### caseSensitiveMatch
-
-  * Type: `boolean`
-  * Default: `true`
-
-Enable a [case-sensitive](https://en.wikipedia.org/wiki/Case_sensitivity) mode for matching files.
-
-##### Examples
-
-* File System: `test/file.md`, `test/File.md`
-* Case-sensitive for `test/file.*` pattern: `test/file.md`
-* Case-insensitive for `test/file.*` pattern: `test/file.md`, `test/File.md`
-
-#### baseNameMatch
-
-  * Type: `boolean`
-  * Default: `false`
-
-Allow glob patterns without slashes to match a file path based on its basename. For example, `a?b` would match the path `/xyz/123/acb`, but not `/xyz/acb/123`.
-
-> :book: This option has no affect to negative patterns from any source (patterns, `ignore`).
-
-#### suppressErrors
-
-  * Type: `boolean`
-  * Default: `false`
-
-Suppress any errors from reader. Works only with Node.js 10.10+.
-Can be useful when the directory has entries with a special level of access.
+> :book: If the [`stats`](#stats) option is specified, the information about the symbolic link (`fs.lstat`) will be replaced with information about the entry (`fs.stat`) behind it.
 
 #### fs
 
@@ -306,55 +267,280 @@ Can be useful when the directory has entries with a special level of access.
 Custom implementation of methods for working with the file system.
 
 ```ts
-interface FileSystemAdapter {
-    lstat: typeof fs.lstat;
-    stat: typeof fs.stat;
-    lstatSync: typeof fs.lstatSync;
-    statSync: typeof fs.statSync;
-    readdir: typeof fs.readdir;
-    readdirSync: typeof fs.readdirSync;
+export interface FileSystemAdapter {
+    lstat?: typeof fs.lstat;
+    stat?: typeof fs.stat;
+    lstatSync?: typeof fs.lstatSync;
+    statSync?: typeof fs.statSync;
+    readdir?: typeof fs.readdir;
+    readdirSync?: typeof fs.readdirSync;
 }
 ```
 
-## How to exclude directory from reading?
+#### ignore
 
-You can use a negative pattern like this: `!**/node_modules` or `!**/node_modules/**`. Also you can use `ignore` option. Just look at the example below.
+* Type: `string[]`
+* Default: `[]`
 
-```
-first/
-├── file.md
-└── second
-    └── file.txt
-```
-
-If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
+An array of glob patterns to exclude matches. This is an alternative way to use negative patterns.
 
 ```js
-fg.sync(['**/*.md', '!**/second']); // ['first/file.md']
-fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.md']
+dir/
+├── package-lock.json
+└── package.json
 ```
-
-> :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
-
-You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
-
-## Why are parentheses match wrong?
 
 ```js
-fg.sync(['(special-*file).txt']) // → [] for files: ['(special-*file).txt']
+fg.sync(['*.json', '!package-lock.json']);            // ['package.json']
+fg.sync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
 ```
 
-Refers to Bash. You need to escape special characters:
+#### suppressErrors
+
+* Type: `boolean`
+* Default: `false`
+
+By default this package suppress only `ENOENT` errors. Set to `true` to suppress any error.
+
+> :book: Can be useful when the directory has entries with a special level of access.
+
+#### throwErrorOnBrokenSymbolicLink
+
+* Type: `boolean`
+* Default: `false`
+
+Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`.
+
+> :book: This option has no effect on errors when reading the symbolic link directory.
+
+### Output control
+
+#### absolute
+
+* Type: `boolean`
+* Default: `false`
+
+Return the absolute path for entries.
 
 ```js
-fg.sync(['\\(special-*file\\).txt']) // → ['(special-*file).txt']
+fg.sync('*.js', { absolute: false }); // ['index.js']
+fg.sync('*.js', { absolute: true });  // ['/home/user/index.js']
 ```
 
-Read more about [«Matching special characters as literals»](https://github.com/micromatch/picomatch#matching-special-characters-as-literals).
+> :book: This option is required if you want to use negative patterns with absolute path, for example, `!${__dirname}/*.js`.
+
+#### markDirectories
+
+* Type: `boolean`
+* Default: `false`
+
+Mark the directory path with the final slash.
+
+```js
+fs.sync('*', { onlyFiles: false, markDirectories: false }); // ['index.js', 'controllers']
+fs.sync('*', { onlyFiles: false, markDirectories: true });  // ['index.js', 'controllers/']
+```
+
+#### objectMode
+
+* Type: `boolean`
+* Default: `false`
+
+Returns objects (instead of strings) describing entries.
+
+```js
+fg.sync('*', { objectMode: false }); // ['src/index.js']
+fg.sync('*', { objectMode: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent> }]
+```
+
+The object has the following fields:
+
+* name (`string`) — the last part of the path (basename)
+* path (`string`) — full path relative to the pattern base directory
+* dirent ([`fs.Dirent`][node_js_fs_class_fs_dirent]) — instance of `fs.Direct`
+
+> :book: An object is an internal representation of entry, so getting it does not affect performance.
+
+#### onlyDirectories
+
+* Type: `boolean`
+* Default: `false`
+
+Return only directories.
+
+```js
+fg.sync('*', { onlyDirectories: false }); // ['index.js', 'src']
+fg.sync('*', { onlyDirectories: true });  // ['src']
+```
+
+> :book: If `true`, the [`onlyFiles`](#onlyfiles) option is automatically `false`.
+
+#### onlyFiles
+
+* Type: `boolean`
+* Default: `false`
+
+Return only files.
+
+```js
+fg.sync('*', { onlyFiles: false }); // ['index.js', 'src']
+fg.sync('*', { onlyFiles: true });  // ['index.js']
+```
+
+#### stats
+
+* Type: `boolean`
+* Default: `false`
+
+Enables an [object mode](#objectmode) with an additional field:
+
+* stats ([`fs.Stats`][node_js_fs_class_fs_stats]) — instance of `fs.Stats`
+
+```js
+fg.sync('*', { stats: false }); // ['src/index.js']
+fg.sync('*', { stats: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent>, stats: <fs.Stats> }]
+```
+
+> :book: Returns `fs.stat` instead of `fs.lstat` for symbolic links when the [`followSymbolicLinks`](#followsymboliclinks) option is specified.
+>
+> :warning: Unlike [object mode](#objectmode) this mode requires additional calls to the file system. On average, this mode is slower at least twice. See [old and modern mode](#old-and-modern-mode) for more details.
+
+#### unique
+
+* Type: `boolean`
+* Default: `true`
+
+Ensures that the returned entries are unique.
+
+```js
+fg.sync(['*.json', 'package.json'], { unique: false }); // ['package.json', 'package.json']
+fg.sync(['*.json', 'package.json'], { unique: true });  // ['package.json']
+```
+
+If `true` and similar entries are found, the result is the first found.
+
+### Matching control
+
+#### braceExpansion
+
+* Type: `boolean`
+* Default: `true`
+
+Enables Bash-like brace expansion.
+
+> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or mode [detailed description][micromatch_braces].
+
+```js
+dir/
+├── abd
+├── acd
+└── a{b,c}d
+```
+
+```js
+fg.sync('a{b,c}d', { braceExpansion: false }); // ['a{b,c}d']
+fg.sync('a{b,c}d', { braceExpansion: true });  // ['abd', 'acd']
+```
+
+#### caseSensitiveMatch
+
+* Type: `boolean`
+* Default: `true`
+
+Enables a [case-sensitive][wikipedia_case_sensitivity] mode for matching files.
+
+```js
+dir/
+├── file.txt
+└── File.txt
+```
+
+```js
+fg.sync('file.txt', { caseSensitiveMatch: false }); // ['file.txt', 'File.txt']
+fg.sync('file.txt', { caseSensitiveMatch: true });  // ['file.txt']
+```
+
+#### dot
+
+* Type: `boolean`
+* Default: `false`
+
+Allow patterns to match entries that begin with a period (`.`).
+
+> :book: Note that an explicit dot in a portion of the pattern will always match dot files.
+
+```js
+dir/
+├── .editorconfig
+└── package.json
+```
+
+```js
+fg.sync('file.txt', { dot: false }); // ['package.json']
+fg.sync('file.txt', { dot: true });  // ['.editorconfig', 'package.json']
+```
+
+#### extglob
+
+* Type: `boolean`
+* Default: `true`
+
+Enables Bash-like `extglob` functionality.
+
+> :1234: [Syntax description][micromatch_extglobs].
+
+```js
+dir/
+├── README.md
+└── package.json
+```
+
+```js
+fg.sync('*.+(json|md)', { extglob: false }); // []
+fg.sync('*.+(json|md)', { extglob: true });  // ['README.md', 'package.json']
+```
+
+#### globstar
+
+* Type: `boolean`
+* Default: `true`
+
+Enables recursively repeats a pattern containing `**`. If `false`, `**` behaves exactly like `*`.
+
+```js
+dir/
+└── a
+    └── b
+```
+
+```js
+fg.sync('**', { onlyFiles: false, globstar: false }); // ['a']
+fg.sync('**', { onlyFiles: false, globstar: true });  // ['a', 'a/b']
+```
+
+#### baseNameMatch
+
+* Type: `boolean`
+* Default: `false`
+
+If set to `true`, then patterns without slashes will be matched against the basename of the path if it contains slashes.
+
+```js
+dir/
+└── one/
+    └── file.md
+```
+
+```js
+fg.sync('*.md', { baseNameMatch: false }); // []
+fg.sync('*.md', { baseNameMatch: true });  // ['one/file.md']
+```
+
+## FAQ
 
 ## How to write patterns on Windows?
 
-Always use forward-slashes in glob expressions (patterns and `ignore` option). Use backslashes for escaping characters. With the `cwd` option use a convenient format.
+Always use forward-slashes in glob expressions (patterns and [`ignore`](#ignore) option). Use backslashes for escaping characters. With the [`cwd`](#cwd) option use a convenient format.
 
 **Bad**
 
@@ -374,13 +560,54 @@ Always use forward-slashes in glob expressions (patterns and `ignore` option). U
 ]
 ```
 
-> :book: Use the [`normalize-path`](https://www.npmjs.com/package/normalize-path) or the [`unixify`](https://www.npmjs.com/package/unixify) package to convert Windows-style path to a Unix-style path.
+> :book: Use the [`normalize-path`][npm_normalize_path] or the [`unixify`][npm_unixify] package to convert Windows-style path to a Unix-style path.
 
-Read more about [matching with backslashes](https://github.com/micromatch/micromatch#backslashes).
+Read more about [matching with backslashes][micromatch_backslashes].
+
+## Why are parentheses match wrong?
+
+```js
+dir/
+└── (special-*file).txt
+```
+
+```js
+fg.sync(['(special-*file).txt']) // []
+```
+
+Refers to Bash. You need to escape special characters:
+
+```js
+fg.sync(['\\(special-*file\\).txt']) // ['(special-*file).txt']
+```
+
+Read more about [matching special characters as literals][picomatch_matching_special_characters_as_literals].
+
+## How to exclude directory from reading?
+
+You can use a negative pattern like this: `!**/node_modules` or `!**/node_modules/**`. Also you can use [`ignore`](#ignore) option. Just look at the example below.
+
+```js
+first/
+├── file.md
+└── second/
+    └── file.txt
+```
+
+If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
+
+```js
+fg.sync(['**/*.md', '!**/second']);                 // ['first/file.md']
+fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.md']
+```
+
+> :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
+
+You have to understand that if you write the pattern to exclude directories, then the directory will not be read under any circumstances.
 
 ## How to use UNC path?
 
-You cannot use UNC paths as patterns (due to syntax), but you can use them as `cwd` directory.
+You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (due to syntax), but you can use them as `cwd` directory.
 
 ```ts
 fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
@@ -388,8 +615,6 @@ fg.sync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
 ```
 
 ## Compatible with `node-glob`?
-
-Not fully, because `fast-glob` does not implement all options of `node-glob`. See table below.
 
 | node-glob    | fast-glob |
 | :----------: | :-------: |
@@ -400,42 +625,75 @@ Not fully, because `fast-glob` does not implement all options of `node-glob`. Se
 | `mark`       | [`markDirectories`](#markdirectories) |
 | `nosort`     | – |
 | `nounique`   | [`unique`](#unique) |
-| `nobrace`    | [`braceExpansion`](#braceExpansion) |
+| `nobrace`    | [`braceExpansion`](#braceexpansion) |
 | `noglobstar` | [`globstar`](#globstar) |
 | `noext`      | [`extglob`](#extglob) |
-| `nocase`     | [`caseSensitiveMatch`](#caseSensitiveMatch) |
-| `matchBase`  | [`baseNameMatch`](#baseNameMatch) |
+| `nocase`     | [`caseSensitiveMatch`](#casesensitivematch) |
+| `matchBase`  | [`baseNameMatch`](#basenamematch) |
 | `nodir`      | [`onlyFiles`](#onlyfiles) |
 | `ignore`     | [`ignore`](#ignore) |
-| `follow`     | [`followSymbolicLinks`](#followSymbolicLinks) |
+| `follow`     | [`followSymbolicLinks`](#followsymboliclinks) |
 | `realpath`   | – |
 | `absolute`   | [`absolute`](#absolute) |
 
 ## Benchmarks
 
-**Tech specs:**
+### Server
 
-Server: [Vultr Bare Metal](https://www.vultr.com/pricing/baremetal)
+Link: [Vultr Bare Metal][vultr_pricing_baremetal]
 
-  * Processor: E3-1270v6 (8 CPU)
-  * RAM: 32GB
-  * Disk: SSD
+* Processor: E3-1270v6 (8 CPU)
+* RAM: 32GB
+* Disk: SSD ([Intel DC S3520 SSDSC2BB240G7][intel_ssd])
 
-You can see results [here](https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c) for latest release.
+You can see results [here][github_gist_benchmark_server] for latest release.
 
-## Related
+### Nettop
 
-  * [readdir-enhanced](https://github.com/BigstickCarpet/readdir-enhanced) – Fast functional replacement for `fs.readdir()`.
-  * [globby](https://github.com/sindresorhus/globby) – User-friendly glob matching.
-  * [node-glob](https://github.com/isaacs/node-glob) – «Standard» glob functionality for Node.js
-  * [bash-glob](https://github.com/micromatch/bash-glob) – Bash-powered globbing for node.js.
-  * [glob-stream](https://github.com/gulpjs/glob-stream) – A Readable Stream interface over node-glob that used in the [gulpjs](https://github.com/gulpjs/gulp).
-  * [tiny-glob](https://github.com/terkelg/tiny-glob) – Tiny and extremely fast library to match files and folders using glob patterns.
+Link: [Zotac bi323][zotac_bi323]
+
+* Processor: Intel N3150 (4 CPU)
+* RAM: 8GB
+* Disk: SSD ([Silicon Power SP060GBSS3S55S25][silicon_power_ssd])
+
+You can see results [here][github_gist_benchmark_nettop] for latest release.
 
 ## Changelog
 
-See the [Releases section of our GitHub project](https://github.com/mrmlnc/fast-glob/releases) for changelogs for each release version.
+See the [Releases section of our GitHub project][github_releases] for changelog for each release version.
 
 ## License
 
 This software is released under the terms of the MIT license.
+
+[bash_hackers_syntax_expansion_brace]: https://wiki.bash-hackers.org/syntax/expansion/brace
+[github_gist_benchmark_nettop]: https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c#file-fast_glob_benchmark_nettop-txt
+[github_gist_benchmark_server]: https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c#file-fast_glob_benchmark_server-txt
+[github_releases]: https://github.com/mrmlnc/fast-glob/releases
+[glob_definition]: https://en.wikipedia.org/wiki/Glob_(programming)
+[glob_linux_man]: http://man7.org/linux/man-pages/man3/glob.3.html
+[intel_ssd]: https://ark.intel.com/content/www/us/en/ark/products/93012/intel-ssd-dc-s3520-series-240gb-2-5in-sata-6gb-s-3d1-mlc.html
+[libuv_threadpool]: http://docs.libuv.org/en/v1.x/threadpool.html
+[micromatch_backslashes]: https://github.com/micromatch/micromatch#backslashes
+[micromatch_braces]: https://github.com/micromatch/braces
+[micromatch_extended_globbing]: https://github.com/micromatch/micromatch#extended-globbing
+[micromatch_extglobs]: https://github.com/micromatch/micromatch#extglobs
+[micromatch_regex_character_classes]: https://github.com/micromatch/micromatch#regex-character-classes
+[micromatch]: https://github.com/micromatch/micromatch
+[node_js_fs_class_fs_dirent]: https://nodejs.org/api/fs.html#fs_class_fs_dirent
+[node_js_fs_class_fs_stats]: https://nodejs.org/api/fs.html#fs_class_fs_stats
+[node_js_stream_readable_streams]: https://nodejs.org/api/stream.html#stream_readable_streams
+[node_js]: https://nodejs.org/en
+[nodelib_fs_scandir_old_and_modern_modern]: https://github.com/nodelib/nodelib/blob/master/packages/fs/fs.scandir/README.md#old-and-modern-mode
+[npm_normalize_path]: https://www.npmjs.com/package/normalize-path
+[npm_unixify]: https://www.npmjs.com/package/unixify
+[paypal_mrmlnc]:https://paypal.me/mrmlnc
+[picomatch_matching_behavior]: https://github.com/micromatch/picomatch#matching-behavior-vs-bash
+[picomatch_matching_special_characters_as_literals]: https://github.com/micromatch/picomatch#matching-special-characters-as-literals
+[picomatch_posix_brackets]: https://github.com/micromatch/picomatch#posix-brackets
+[regular_expressions_brackets]: https://www.regular-expressions.info/brackets.html
+[silicon_power_ssd]: https://www.silicon-power.com/web/product-1
+[unc_path]: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
+[vultr_pricing_baremetal]: https://www.vultr.com/pricing/baremetal
+[wikipedia_case_sensitivity]: https://en.wikipedia.org/wiki/Case_sensitivity
+[zotac_bi323]: https://www.zotac.com/ee/product/mini_pcs/zbox-bi323
