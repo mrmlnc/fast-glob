@@ -66,13 +66,14 @@ describe('Providers → Provider', () => {
 
 	describe('.getReaderOptions', () => {
 		it('should return options for reader with global base (.)', () => {
-			const provider = getProvider();
+			const settings = new Settings();
+			const provider = getProvider(settings);
 			const task = tests.task.builder().base('.').positive('*').build();
 
 			const actual = provider.getReaderOptions(task);
 
 			assert.strictEqual(actual.basePath, '');
-			assert.strictEqual(actual.concurrency, Infinity);
+			assert.strictEqual(actual.concurrency, settings.concurrency);
 			assert.strictEqual(typeof actual.deepFilter, 'function');
 			assert.strictEqual(typeof actual.entryFilter, 'function');
 			assert.strictEqual(typeof actual.errorFilter, 'function');

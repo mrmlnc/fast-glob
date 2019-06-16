@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as os from 'os';
 
 import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
 
@@ -25,7 +26,7 @@ describe('Settings', () => {
 		assert.ok(settings.globstar);
 		assert.ok(settings.onlyFiles);
 		assert.ok(settings.unique);
-		assert.strictEqual(settings.concurrency, Infinity);
+		assert.strictEqual(settings.concurrency, os.cpus().length);
 		assert.strictEqual(settings.cwd, process.cwd());
 	});
 

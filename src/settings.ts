@@ -1,6 +1,9 @@
 import * as fs from 'fs';
+import * as os from 'os';
 
 import { FileSystemAdapter, Pattern } from './types/index';
+
+const CPU_COUNT = os.cpus().length;
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -42,7 +45,7 @@ export interface Options {
 	 * Specifies the maximum number of concurrent requests from a reader to read
 	 * directories.
 	 *
-	 * @default Infinity
+	 * @default os.cpus().length
 	 */
 	concurrency?: number;
 	/**
@@ -154,7 +157,7 @@ export default class Settings {
 	public readonly baseNameMatch: boolean = this._getValue(this._options.baseNameMatch, false);
 	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
-	public readonly concurrency: number = this._getValue(this._options.concurrency, Infinity);
+	public readonly concurrency: number = this._getValue(this._options.concurrency, CPU_COUNT);
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
 	public readonly deep: number = this._getValue(this._options.deep, Infinity);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);

@@ -209,11 +209,11 @@ See [Options](#options-1) section.
 #### concurrency
 
 * Type: `number`
-* Default: `Infinity`
+* Default: `os.cpus().length`
 
 Specifies the maximum number of concurrent requests from a reader to read directories.
 
-> :book: The higher the number, the higher the performance and load on the file system. If you want to read in quiet mode, set the value to a comfortable number or `4 * os.cpus().length` (4 is default size of [thread pool work scheduling][libuv_threadpool]).
+> :book: The higher the number, the higher the performance and load on the file system. If you want to read in quiet mode, set the value to a comfortable number or `1`.
 
 #### cwd
 
@@ -673,7 +673,6 @@ This software is released under the terms of the MIT license.
 [glob_definition]: https://en.wikipedia.org/wiki/Glob_(programming)
 [glob_linux_man]: http://man7.org/linux/man-pages/man3/glob.3.html
 [intel_ssd]: https://ark.intel.com/content/www/us/en/ark/products/93012/intel-ssd-dc-s3520-series-240gb-2-5in-sata-6gb-s-3d1-mlc.html
-[libuv_threadpool]: http://docs.libuv.org/en/v1.x/threadpool.html
 [micromatch_backslashes]: https://github.com/micromatch/micromatch#backslashes
 [micromatch_braces]: https://github.com/micromatch/braces
 [micromatch_extended_globbing]: https://github.com/micromatch/micromatch#extended-globbing
