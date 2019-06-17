@@ -428,7 +428,7 @@ If `true` and similar entries are found, the result is the first found.
 
 Enables Bash-like brace expansion.
 
-> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or mode [detailed description][micromatch_braces].
+> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or more [detailed description][micromatch_braces].
 
 ```js
 dir/
