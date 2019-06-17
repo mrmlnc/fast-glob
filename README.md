@@ -79,8 +79,8 @@ Do you like this project? Support it by donating, creating an issue or pull requ
 
 This package works in two modes, depending on the environment in which it is used.
 
-* **Old mode**. Node.js below 10.10 or when the `stats` option is *enabled*.
-* **Modern mode**. Node.js 10.10+ and the `stats` option is *disabled*.
+* **Old mode**. Node.js below 10.10 or when the [`stats`](#stats) option is *enabled*.
+* **Modern mode**. Node.js 10.10+ and the [`stats`](#stats) option is *disabled*.
 
 The modern mode is faster. Learn more about the [internal mechanism][nodelib_fs_scandir_old_and_modern_modern].
 
@@ -607,7 +607,7 @@ You have to understand that if you write the pattern to exclude directories, the
 
 ## How to use UNC path?
 
-You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (due to syntax), but you can use them as `cwd` directory.
+You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (due to syntax), but you can use them as [`cwd`](#cwd) directory.
 
 ```ts
 fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
