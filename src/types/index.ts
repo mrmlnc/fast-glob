@@ -1,7 +1,5 @@
 import * as fsWalk from '@nodelib/fs.walk';
 
-import * as micromatch from 'micromatch';
-
 export type ErrnoException = NodeJS.ErrnoException;
 
 export type Entry = fsWalk.Entry;
@@ -24,8 +22,15 @@ export type ErrorFilterFunction = fsWalk.ErrorFilterFunction;
 export type EntryFilterFunction = fsWalk.EntryFilterFunction;
 export type DeepFilterFunction = fsWalk.DeepFilterFunction;
 export type EntryTransformerFunction = (entry: Entry) => EntryItem;
-export type MicromatchOptions = micromatch.Options & {
+
+export interface MicromatchOptions {
+	dot?: boolean;
+	matchBase?: boolean;
+	nobrace?: boolean;
+	nocase?: boolean;
+	noext?: boolean;
+	noglobstar?: boolean;
 	posix?: boolean;
-};
+}
 
 export type FileSystemAdapter = fsWalk.FileSystemAdapter;
