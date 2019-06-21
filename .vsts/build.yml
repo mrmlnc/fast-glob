@@ -13,7 +13,7 @@ jobs:
       matrix:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
-        (Node.js 11): { node_version: 11.x }
+        (Node.js 12): { node_version: 12.x }
     pool:
       vmImage: 'windows-2019'
     steps:
@@ -26,7 +26,7 @@ jobs:
       matrix:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
-        (Node.js 11): { node_version: 11.x }
+        (Node.js 12): { node_version: 12.x }
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
@@ -39,7 +39,7 @@ jobs:
       matrix:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
-        (Node.js 11): { node_version: 11.x }
+        (Node.js 12): { node_version: 12.x }
     pool:
       vmImage: 'macOS-10.13'
     steps:
