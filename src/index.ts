@@ -31,6 +31,12 @@ namespace FastGlob {
 	export type Task = taskManager.Task;
 	export type Pattern = PatternInternal;
 	export type FileSystemAdapter = FileSystemAdapterInternal;
+	
+	export function async(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
+	export function async(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
+	export function async(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
+		return FastGlob(source, options)
+	}
 
 	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
