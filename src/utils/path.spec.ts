@@ -14,16 +14,6 @@ describe('Utils → Path', () => {
 		});
 	});
 
-	describe('.platformify', () => {
-		it('should return path with converted slashes', () => {
-			const expected = path.join('directory', 'nested', 'file.md');
-
-			const actual = util.platformify('directory/nested/file.md');
-
-			assert.strictEqual(actual, expected);
-		});
-	});
-
 	describe('.makeAbsolute', () => {
 		it('should return absolute filepath', () => {
 			const expected = path.join(process.cwd(), 'file.md');

@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import Settings from '../../settings';
 import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types/index';
 import * as utils from '../../utils/index';
@@ -49,8 +47,8 @@ export default class DeepFilter {
 	}
 
 	private _getEntryDepth(basePath: string, entryPath: string): number {
-		const basePathDepth = basePath.split(path.sep).length;
-		const entryPathDepth = entryPath.split(path.sep).length;
+		const basePathDepth = basePath.split('/').length;
+		const entryPathDepth = entryPath.split('/').length;
 
 		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
 	}

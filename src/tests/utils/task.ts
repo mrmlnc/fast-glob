@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import { Task } from '../../managers/tasks';
 import { Pattern } from '../../types/index';
 
@@ -13,7 +11,7 @@ class TaskBuilder {
 	};
 
 	public base(base: string): this {
-		this._task.base = path.normalize(base);
+		this._task.base = base;
 
 		return this;
 	}
