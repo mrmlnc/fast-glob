@@ -27,6 +27,7 @@ export default abstract class Provider<T> {
 
 		return {
 			basePath,
+			pathSegmentSeparator: '/',
 			concurrency: this._settings.concurrency,
 			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
 			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),

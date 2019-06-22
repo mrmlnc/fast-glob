@@ -17,7 +17,7 @@ class EntryBuilder {
 
 	public path(filepath: string): this {
 		this._entry.name = path.basename(filepath);
-		this._entry.path = path.normalize(filepath);
+		this._entry.path = filepath;
 
 		return this;
 	}

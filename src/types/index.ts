@@ -10,7 +10,6 @@ export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
 export interface ReaderOptions extends fsWalk.Options {
-	basePath: string | null;
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	fs: FileSystemAdapter;
