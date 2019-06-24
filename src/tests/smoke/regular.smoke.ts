@@ -460,7 +460,3 @@ smoke.suite('Smoke → Regular (relative)', [
 	{ pattern: '../{first,second}', cwd: 'fixtures/first' },
 	{ pattern: './../*', cwd: 'fixtures/first' }
 ]);
-
-smoke.suite('Smoke → Regular (cwd & error)', [
-	{ pattern: '**', cwd: 'non-exist-directory' }
-]);

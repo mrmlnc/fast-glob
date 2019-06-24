@@ -12,6 +12,7 @@ export type PatternsGroup = Record<string, Pattern[]>;
 export interface ReaderOptions extends fsWalk.Options {
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
+	errorFilter: ErrorFilterFunction;
 	fs: FileSystemAdapter;
 	stats: boolean;
 	transform(entry: Entry): EntryItem;

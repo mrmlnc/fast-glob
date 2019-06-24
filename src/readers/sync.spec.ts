@@ -48,37 +48,13 @@ describe('Readers → ReaderSync', () => {
 	});
 
 	describe('.dynamic', () => {
-		it('should return an empty array when walk throw an ENOENT error', () => {
+		it('should call fs.walk method', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions();
 
-			reader.walkSync.throws(tests.errno.getEnoent());
+			reader.dynamic('root', readerOptions);
 
-			const actual = reader.dynamic('root', readerOptions);
-
-			assert.strictEqual(actual.length, 0);
-		});
-
-		it('should return an empty array when walk throw an EPERM error when the `suppressErrors` option is enabled', () => {
-			const reader = getReader({ suppressErrors: true });
-			const readerOptions = getReaderOptions();
-
-			reader.walkSync.throws(tests.errno.getEperm());
-
-			const actual = reader.dynamic('root', readerOptions);
-
-			assert.strictEqual(actual.length, 0);
-		});
-
-		it('should re-throw non-ENOENT error', () => {
-			const reader = getReader();
-			const readerOptions = getReaderOptions();
-
-			reader.walkSync.throws(tests.errno.getEperm());
-
-			const expectedErrorMessageRe = /Error: EPERM: operation not permitted/;
-
-			assert.throws(() => reader.dynamic('root', readerOptions), expectedErrorMessageRe);
+			assert.ok(reader.walkSync.called);
 		});
 	});
 
@@ -96,9 +72,27 @@ describe('Readers → ReaderSync', () => {
 			assert.strictEqual(actual[1].name, 'b.txt');
 		});
 
-		it('should not re-throw ENOENT error', () => {
+		it('should throw an error when the filter does not suppress the error', () => {
 			const reader = getReader();
-			const readerOptions = getReaderOptions({ entryFilter: () => true });
+			const readerOptions = getReaderOptions({
+				errorFilter: () => false,
+				entryFilter: () => true
+			});
+
+			reader.statSync.onFirstCall().throws(tests.errno.getEperm());
+			reader.statSync.onSecondCall().returns(new Stats());
+
+			const expectedErrorMessageRe = /Error: EPERM: operation not permitted/;
+
+			assert.throws(() => reader.static(['a.txt', 'b.txt'], readerOptions), expectedErrorMessageRe);
+		});
+
+		it('should do not throw an error when the filter suppress the error', () => {
+			const reader = getReader();
+			const readerOptions = getReaderOptions({
+				errorFilter: () => true,
+				entryFilter: () => true
+			});
 
 			reader.statSync.onFirstCall().throws(tests.errno.getEnoent());
 			reader.statSync.onSecondCall().returns(new Stats());
@@ -109,31 +103,7 @@ describe('Readers → ReaderSync', () => {
 			assert.strictEqual(actual[0].name, 'b.txt');
 		});
 
-		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', () => {
-			const reader = getReader({ suppressErrors: true });
-			const readerOptions = getReaderOptions({ entryFilter: () => true });
-
-			reader.statSync.onFirstCall().throws(tests.errno.getEperm());
-			reader.statSync.onSecondCall().returns(new Stats());
-
-			const actual = reader.static(['a.txt', 'b.txt'], readerOptions);
-
-			assert.strictEqual(actual.length, 1);
-			assert.strictEqual(actual[0].name, 'b.txt');
-		});
-
-		it('should re-throw non-ENOENT error', () => {
-			const reader = getReader();
-			const readerOptions = getReaderOptions();
-
-			reader.statSync.throws(tests.errno.getEperm());
-
-			const expectedErrorMessageRe = /Error: EPERM: operation not permitted/;
-
-			assert.throws(() => reader.static(['a.txt', 'b.txt'], readerOptions), expectedErrorMessageRe);
-		});
-
-		it('should do not include entry when filter exclude it', () => {
+		it('should do not include entry when the filter excludes it', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({ entryFilter: () => false });
 

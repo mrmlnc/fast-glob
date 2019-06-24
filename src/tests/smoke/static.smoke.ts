@@ -62,9 +62,3 @@ smoke.suite('Smoke → Static (relative)', [
 	{ pattern: '../file.md', cwd: 'fixtures/first' },
 	{ pattern: '../../file.md', cwd: 'fixtures/first/nested' }
 ]);
-
-smoke.suite('Smoke → Static (error)', [
-	{
-		pattern: 'non-exist.txt'
-	}
-]);

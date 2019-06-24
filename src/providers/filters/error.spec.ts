@@ -1,7 +1,8 @@
 import * as assert from 'assert';
 
 import Settings, { Options } from '../../settings';
-import { ErrnoException, ErrorFilterFunction } from '../../types/index';
+import * as tests from '../../tests/index';
+import { ErrorFilterFunction } from '../../types/index';
 import ErrorFilter from './error';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
@@ -24,20 +25,28 @@ describe('Providers → Filters → Error', () => {
 	});
 
 	describe('.getFilter', () => {
-		it('should return false when the `suppressErrors` option is disabled', () => {
+		it('should return true for ENOENT error', () => {
 			const filter = getFilter();
 
-			const actual = filter({} as ErrnoException);
-
-			assert.ok(!actual);
-		});
-
-		it('should return true when the `suppressErrors` option is enabled', () => {
-			const filter = getFilter({ suppressErrors: true });
-
-			const actual = filter({} as ErrnoException);
+			const actual = filter(tests.errno.getEnoent());
 
 			assert.ok(actual);
+		});
+
+		it('should return true for EPERM error when the `suppressErrors` options is enabled', () => {
+			const filter = getFilter({ suppressErrors: true });
+
+			const actual = filter(tests.errno.getEperm());
+
+			assert.ok(actual);
+		});
+
+		it('should return false for EPERM error', () => {
+			const filter = getFilter();
+
+			const actual = filter(tests.errno.getEperm());
+
+			assert.ok(!actual);
 		});
 	});
 });

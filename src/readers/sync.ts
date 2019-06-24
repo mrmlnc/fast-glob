@@ -11,15 +11,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 	protected _statSync: typeof fsStat.statSync = fsStat.statSync;
 
 	public dynamic(root: string, options: ReaderOptions): Entry[] {
-		try {
-			return this._walkSync(root, options);
-		} catch (error) {
-			if (this._isFatalError(error as ErrnoException)) {
-				throw error;
-			}
-
-			return [];
-		}
+		return this._walkSync(root, options);
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): Entry[] {
@@ -27,7 +19,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 
 		for (const pattern of patterns) {
 			const filepath = this._getFullEntryPath(pattern);
-			const entry = this._getEntry(filepath, pattern);
+			const entry = this._getEntry(filepath, pattern, options);
 
 			if (entry === null || !options.entryFilter(entry)) {
 				continue;
@@ -39,17 +31,17 @@ export default class ReaderSync extends Reader<Entry[]> {
 		return entries;
 	}
 
-	private _getEntry(filepath: string, pattern: Pattern): Entry | null {
+	private _getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Entry | null {
 		try {
 			const stats = this._getStat(filepath);
 
 			return this._makeEntry(stats, pattern);
 		} catch (error) {
-			if (this._isFatalError(error as ErrnoException)) {
-				throw error;
+			if (options.errorFilter(error as ErrnoException)) {
+				return null;
 			}
 
-			return null;
+			throw error;
 		}
 	}
 
