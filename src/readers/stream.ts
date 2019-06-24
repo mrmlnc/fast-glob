@@ -12,15 +12,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	protected _stat: typeof fsStat.stat = fsStat.stat;
 
 	public dynamic(root: string, options: ReaderOptions): NodeJS.ReadableStream {
-		const walk = this._walkStream(root, options);
-
-		walk.once('error', (error: ErrnoException) => {
-			if (this._isFatalError(error)) {
-				walk.emit('error', error);
-			}
-		});
-
-		return walk;
+		return this._walkStream(root, options);
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): NodeJS.ReadableStream {
@@ -29,7 +21,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		const stream = new PassThrough({ objectMode: true });
 
 		stream._write = (index: number, _enc, done) => {
-			return this._getEntry(filepaths[index], patterns[index])
+			return this._getEntry(filepaths[index], patterns[index], options)
 				.then((entry) => {
 					if (entry !== null && options.entryFilter(entry)) {
 						stream.push(entry);
@@ -51,15 +43,15 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		return stream;
 	}
 
-	private _getEntry(filepath: string, pattern: Pattern): Promise<Entry | null> {
+	private _getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Promise<Entry | null> {
 		return this._getStat(filepath)
 			.then((stats) => this._makeEntry(stats, pattern))
 			.catch((error: ErrnoException) => {
-				if (this._isFatalError(error)) {
-					throw error;
+				if (options.errorFilter(error)) {
+					return null;
 				}
 
-				return null;
+				throw error;
 			});
 	}
 

@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import { EventEmitter } from 'events';
 
 import { Stats } from '@nodelib/fs.macchiato';
 import * as fsStat from '@nodelib/fs.stat';
@@ -49,51 +48,13 @@ describe('Readers → ReaderStream', () => {
 	});
 
 	describe('.dynamic', () => {
-		it('should not re-throw ENOENT error', (done) => {
+		it('should call fs.walk method', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions();
-			const emitter = new EventEmitter();
 
-			reader.walkStream.returns(emitter);
+			reader.dynamic('root', readerOptions);
 
-			const stream = reader.dynamic('root', readerOptions);
-
-			stream.once('end', done);
-
-			emitter.emit('error', tests.errno.getEnoent());
-			emitter.emit('end');
-		});
-
-		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', (done) => {
-			const reader = getReader({ suppressErrors: true });
-			const readerOptions = getReaderOptions();
-			const emitter = new EventEmitter();
-
-			reader.walkStream.returns(emitter);
-
-			const stream = reader.dynamic('root', readerOptions);
-
-			stream.once('end', done);
-
-			emitter.emit('error', tests.errno.getEperm());
-			emitter.emit('end');
-		});
-
-		it('should re-throw non-ENOENT error', (done) => {
-			const reader = getReader();
-			const readerOptions = getReaderOptions();
-			const emitter = new EventEmitter();
-
-			reader.walkStream.returns(emitter);
-
-			const stream = reader.dynamic('root', readerOptions);
-
-			stream.once('error', (error: ErrnoException) => {
-				assert.strictEqual(error.code, 'EPERM');
-				done();
-			});
-
-			emitter.emit('error', tests.errno.getEperm());
+			assert.ok(reader.walkStream.called);
 		});
 	});
 
@@ -117,9 +78,33 @@ describe('Readers → ReaderStream', () => {
 			});
 		});
 
-		it('should not re-throw ENOENT error', (done) => {
+		it('should throw an error when the filter does not suppress the error', (done) => {
 			const reader = getReader();
-			const readerOptions = getReaderOptions({ entryFilter: () => true });
+			const readerOptions = getReaderOptions({
+				errorFilter: () => false,
+				entryFilter: () => true
+			});
+
+			reader.stat.onFirstCall().yields(tests.errno.getEperm());
+			reader.stat.onSecondCall().yields(null, new Stats());
+
+			const entries: Entry[] = [];
+
+			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
+
+			stream.on('data', (entry: Entry) => entries.push(entry));
+			stream.once('error', (error: ErrnoException) => {
+				assert.strictEqual(error.code, 'EPERM');
+				done();
+			});
+		});
+
+		it('should do not throw an error when the filter suppress the error', (done) => {
+			const reader = getReader();
+			const readerOptions = getReaderOptions({
+				errorFilter: () => true,
+				entryFilter: () => true
+			});
 
 			reader.stat.onFirstCall().yields(tests.errno.getEnoent());
 			reader.stat.onSecondCall().yields(null, new Stats());
@@ -130,45 +115,13 @@ describe('Readers → ReaderStream', () => {
 
 			stream.on('data', (entry: Entry) => entries.push(entry));
 			stream.once('end', () => {
+				assert.strictEqual(entries.length, 1);
 				assert.strictEqual(entries[0].name, 'b.txt');
 				done();
 			});
 		});
 
-		it('should not re-throw EPERM error when the `suppressErrors` option is enabled', (done) => {
-			const reader = getReader({ suppressErrors: true });
-			const readerOptions = getReaderOptions({ entryFilter: () => true });
-
-			reader.stat.onFirstCall().yields(tests.errno.getEperm());
-			reader.stat.onSecondCall().yields(null, new Stats());
-
-			const entries: Entry[] = [];
-
-			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
-
-			stream.on('data', (entry: Entry) => entries.push(entry));
-			stream.once('end', () => {
-				assert.strictEqual(entries[0].name, 'b.txt');
-				done();
-			});
-		});
-
-		it('should re-throw non-ENOENT error', (done) => {
-			const reader = getReader();
-			const readerOptions = getReaderOptions();
-
-			reader.stat.yields(tests.errno.getEperm());
-
-			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
-
-			stream.on('data', () => { /* nope */ });
-			stream.once('error', (error: ErrnoException) => {
-				assert.strictEqual(error.code, 'EPERM');
-				done();
-			});
-		});
-
-		it('should do not include entry when filter exclude it', (done) => {
+		it('should do not include entry when the filter excludes it', (done) => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({ entryFilter: () => false });
 
