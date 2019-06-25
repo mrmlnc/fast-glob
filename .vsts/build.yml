@@ -17,9 +17,10 @@ jobs:
     pool:
       vmImage: 'windows-2019'
     steps:
-      - template: build-steps.yml
+      - template: steps-build.yml
         parameters:
           node_version: $(node_version)
+      - template: steps-tests.yml
 
   - job: Linux
     strategy:
@@ -30,9 +31,10 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
-      - template: build-steps.yml
+      - template: steps-build.yml
         parameters:
           node_version: $(node_version)
+      - template: steps-tests.yml
 
   - job: macOS
     strategy:
@@ -41,8 +43,9 @@ jobs:
         (Node.js 10): { node_version: 10.x }
         (Node.js 12): { node_version: 12.x }
     pool:
-      vmImage: 'macOS-10.13'
+      vmImage: 'macOS-10.14'
     steps:
-      - template: build-steps.yml
+      - template: steps-build.yml
         parameters:
           node_version: $(node_version)
+      - template: steps-tests.yml

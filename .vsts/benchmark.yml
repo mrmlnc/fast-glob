@@ -1,0 +1,27 @@
+trigger:
+  branches:
+    include:
+      - master
+      - releases/*
+
+variables:
+  node_version: 12.x
+  benchmark_launches: $(benchmark.launches)
+  benchmark_max_stdev: 10
+  benchmark_retries: 2
+
+jobs:
+  - job: Benchmark
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+      - template: steps-build.yml
+        parameters:
+          node_version: $(node_version)
+          skip_smoke_tests: true
+      - template: steps-benchmark.yml
+        parameters:
+          node_version: $(node_version)
+          benchmark_launches: $(benchmark_launches)
+          benchmark_max_stdev: $(benchmark_max_stdev)
+          benchmark_retries: $(benchmark_retries)
