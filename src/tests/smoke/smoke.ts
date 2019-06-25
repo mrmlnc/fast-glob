@@ -32,9 +32,6 @@ export interface SmokeTest {
 type MochaDefinition = (desc: string, cb: (this: Mocha.Context) => void) => void;
 type DebugCompareTestMarker = '+' | '-';
 
-/**
- * Runs the passed test suite.
- */
 export function suite(name: string, tests: Array<SmokeTest | SmokeTest[]>): void {
 	const testCases = getTestCases(tests);
 
@@ -43,21 +40,17 @@ export function suite(name: string, tests: Array<SmokeTest | SmokeTest[]>): void
 			const title = getTestCaseTitle(test);
 			const definition = getTestCaseMochaDefinition(test);
 
-			definition(title, () => testCaseRunner(test));
+			definition(`${title} (sync)`, () => testCaseRunner(test, getFastGlobEntriesSync));
+			definition(`${title} (async)`, () => testCaseRunner(test, getFastGlobEntriesAsync));
+			definition(`${title} (stream)`, () => testCaseRunner(test, getFastGlobEntriesStream));
 		}
 	});
 }
 
-/**
- * Return flatten list of test cases.
- */
 function getTestCases(tests: Array<SmokeTest | SmokeTest[]>): SmokeTest[] {
 	return ([] as SmokeTest[]).concat(...tests);
 }
 
-/**
- * Return title for one of test cases.
- */
 function getTestCaseTitle(test: SmokeTest): string {
 	let title = `pattern: '${test.pattern}'`;
 
@@ -74,19 +67,13 @@ function getTestCaseTitle(test: SmokeTest): string {
 	return title;
 }
 
-/**
- * Return test case definition for run.
- */
 function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
 	return test.debug ? it.only : it;
 }
 
-/**
- * Runs one of the passed test cases.
- */
-function testCaseRunner(test: SmokeTest): void {
+async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSync | typeof getFastGlobEntriesAsync): Promise<void> {
 	const expected = getNodeGlobEntries(test.pattern, test.ignore, test.cwd, test.globOptions);
-	const actual = getFastGlobEntries(test.pattern, test.ignore, test.cwd, test.fgOptions);
+	const actual = await func(test.pattern, test.ignore, test.cwd, test.fgOptions);
 
 	if (test.debug) {
 		const report = generateDebugReport(expected, actual);
@@ -107,9 +94,6 @@ function testCaseRunner(test: SmokeTest): void {
 	assertAction(actual, expected);
 }
 
-/**
- * Generate debug information for the current run.
- */
 function generateDebugReport(expected: string[], actual: string[]): string | null {
 	const table = new Table();
 
@@ -129,16 +113,10 @@ function generateDebugReport(expected: string[], actual: string[]): string | nul
 	return table.toString();
 }
 
-/**
- * Return marker for test.
- */
 function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
 	return items.indexOf(item) !== -1 ? '+' : '-';
 }
 
-/**
- * Return entries from the `node-glob` package with sorting.
- */
 function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: glob.IOptions): string[] {
 	const options: glob.IOptions = {
 		cwd: cwd || process.cwd(),
@@ -149,16 +127,39 @@ function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
 	return glob.sync(pattern, options).sort();
 }
 
-/**
- * Return entries from the `fast-glob` package with sorting.
- */
-function getFastGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
-	const options: Options = {
+function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
+	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, opts)).sort();
+}
+
+function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
+	return fg(pattern, getFastGlobOptions(ignore, cwd, opts)).then((entries) => {
+		entries.sort();
+
+		return entries;
+	});
+}
+
+function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
+	const entries: string[] = [];
+
+	const stream = fg.stream(pattern, getFastGlobOptions(ignore, cwd, opts));
+
+	return new Promise((resolve, reject) => {
+		stream.on('data', (entry: string) => entries.push(entry));
+		stream.once('error', reject);
+		stream.once('end', () => {
+			entries.sort();
+
+			resolve(entries);
+		});
+	});
+}
+
+function getFastGlobOptions(ignore?: Pattern, cwd?: string, opts?: Options): Options {
+	return {
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
 		onlyFiles: false,
 		...opts
 	};
-
-	return fg.sync(pattern, options).sort();
 }
