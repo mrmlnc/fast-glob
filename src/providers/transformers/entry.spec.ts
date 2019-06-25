@@ -92,5 +92,14 @@ describe('Providers → Transformers → Entry', () => {
 
 			assert.strictEqual(actual, expected);
 		});
+
+		it('should do not mutate the entry when the `markDirectories` option is enabled', () => {
+			const transformer = getTransformer({ markDirectories: true });
+			const entry = tests.entry.builder().path('root/directory').directory().build();
+
+			const actual = transformer(entry);
+
+			assert.notStrictEqual(actual, entry.path);
+		});
 	});
 });

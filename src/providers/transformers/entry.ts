@@ -10,19 +10,24 @@ export default class EntryTransformer {
 	}
 
 	private _transform(entry: Entry): EntryItem {
+		let filepath = entry.path;
+
 		if (this._settings.absolute) {
-			entry.path = utils.path.makeAbsolute(this._settings.cwd, entry.path);
-			entry.path = utils.path.unixify(entry.path);
+			filepath = utils.path.makeAbsolute(this._settings.cwd, filepath);
+			filepath = utils.path.unixify(filepath);
 		}
 
 		if (this._settings.markDirectories && entry.dirent.isDirectory()) {
-			entry.path += '/';
+			filepath += '/';
 		}
 
-		if (this._settings.objectMode) {
-			return entry;
+		if (!this._settings.objectMode) {
+			return filepath;
 		}
 
-		return entry.path;
+		return {
+			...entry,
+			path: filepath
+		};
 	}
 }
