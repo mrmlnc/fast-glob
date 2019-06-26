@@ -1,0 +1,21 @@
+steps:
+  - script: npm run bench-sync
+    displayName: Benchmark (sync)
+    env:
+      BENCHMARK_LAUNCHES: '${{parameters.benchmark_launches}}'
+      BENCHMARK_MAX_STDEV: '${{parameters.benchmark_max_stdev}}'
+      BENCHMARK_RETRIES: '${{parameters.benchmark_retries}}'
+
+  - script: npm run bench-async
+    displayName: Benchmark (async)
+    env:
+      BENCHMARK_LAUNCHES: '${{parameters.benchmark_launches}}'
+      BENCHMARK_MAX_STDEV: '${{parameters.benchmark_max_stdev}}'
+      BENCHMARK_RETRIES: '${{parameters.benchmark_retries}}'
+
+  - script: npm run bench-stream
+    displayName: Benchmark (stream)
+    env:
+      BENCHMARK_LAUNCHES: '${{parameters.benchmark_launches}}'
+      BENCHMARK_MAX_STDEV: '${{parameters.benchmark_max_stdev}}'
+      BENCHMARK_RETRIES: '${{parameters.benchmark_retries}}'

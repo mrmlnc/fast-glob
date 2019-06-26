@@ -13,12 +13,3 @@ steps:
 
   - script: npm run compile
     displayName: Compile Sources
-
-  - script: npm run lint
-    displayName: Run Hygiene Checks
-
-  - script: npm run test
-    displayName: Run Unit Tests
-
-  - script: npm run smoke
-    displayName: Run Smoke Tests

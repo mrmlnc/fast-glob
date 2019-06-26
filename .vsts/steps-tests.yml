@@ -1,0 +1,15 @@
+steps:
+  - script: npm run lint
+    displayName: Run Hygiene Checks
+
+  - script: npm run test
+    displayName: Run Unit Tests
+
+  - script: npm run smoke:sync
+    displayName: Run Smoke Tests (sync)
+
+  - script: npm run smoke:async
+    displayName: Run Smoke Tests (async)
+
+  - script: npm run smoke:stream
+    displayName: Run Smoke Tests (stream)
