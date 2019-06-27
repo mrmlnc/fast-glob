@@ -1,14 +1,11 @@
 import * as path from 'path';
 
-import glob = require('glob');
+import * as glob from '../../../../index';
+import * as utils from '../../../utils';
 
-import * as utils from '../../utils';
-
-const options: glob.IOptions = {
+const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
-	nosort: true,
-	nounique: true,
-	nodir: true
+	unique: false
 };
 
 const timeStart = utils.timeStart();

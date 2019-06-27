@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import * as glob from '../../../index';
-import * as utils from '../../utils';
+import * as glob from '../../../../index';
+import * as utils from '../../../utils';
 
 const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),

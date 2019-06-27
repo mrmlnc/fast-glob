@@ -7,6 +7,7 @@ import Reporter from './reporter';
 import * as utils from './utils';
 
 export interface RunnerOptions {
+	type: string;
 	mode: string;
 	pattern: string;
 	launches: number;
@@ -108,7 +109,7 @@ export default class Runner {
 	}
 
 	public packs(): void {
-		const suitesPath = path.join(__dirname, 'suites', this._options.mode);
+		const suitesPath = path.join(__dirname, 'suites', this._options.type, this._options.mode);
 		const suites = this.getSuites(suitesPath);
 
 		for (const filepath of suites) {

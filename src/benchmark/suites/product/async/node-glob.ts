@@ -1,23 +1,26 @@
 import * as path from 'path';
 
-import fg = require('fast-glob');
+import glob = require('glob');
 
-import * as utils from '../../utils';
+import * as utils from '../../../utils';
 
-const options: fg.Options = {
+const options: glob.IOptions = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
-	unique: false
+	nosort: true,
+	nounique: true,
+	nodir: true
 };
 
 const timeStart = utils.timeStart();
 
-try {
-	const matches = fg.sync(process.env.BENCHMARK_PATTERN as string, options);
+glob(process.env.BENCHMARK_PATTERN as string, options, (error, matches) => {
+	if (error) {
+		process.exit(0);
+	}
+
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
 	const measures = utils.getMeasures(matches.length, time, memory);
 
 	console.info(measures);
-} catch {
-	process.exit(0);
-}
+});

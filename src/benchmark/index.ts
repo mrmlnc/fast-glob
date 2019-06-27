@@ -10,6 +10,7 @@ interface Arguments extends RunnerOptions {
 
 const defaultArgv: Arguments = {
 	basedir: '.',
+	type: process.env.BENCHMARK_TYPE || 'product',
 	mode: process.env.BENCHMARK_MODE || 'async',
 	pattern: process.env.BENCHMARK_PATTERN || '*',
 	launches: utils.getEnvAsInteger('BENCHMARK_LAUNCHES') || 10,
@@ -23,6 +24,6 @@ const argv = minimist<Arguments>(process.argv.slice(2), {
 
 const runner = new Runner(argv.basedir, argv);
 
-logger.head(`Benchmark pattern (${argv.pattern}) with ${argv.launches} launches (${argv.mode})`);
+logger.head(`Benchmark pattern (${argv.pattern}) with ${argv.launches} launches (${argv.type}, ${argv.mode})`);
 logger.newline();
 runner.packs();

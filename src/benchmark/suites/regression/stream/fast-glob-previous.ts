@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import fg = require('fast-glob');
 
-import * as utils from '../../utils';
+import * as utils from '../../../utils';
 
 const options: fg.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
