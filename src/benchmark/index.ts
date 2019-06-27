@@ -25,6 +25,7 @@ const argv = minimist<Arguments>(process.argv.slice(2), {
 
 const runner = new Runner(argv.basedir, argv);
 
-logger.head(`Benchmark pattern (${argv.pattern}) with ${argv.launches} launches (${argv.type}, ${argv.mode})`);
+logger.head(`Benchmark pattern "${argv.pattern}" with ${argv.launches} launches (${argv.type}, ${argv.mode})`);
+logger.head(`Max stdev: ${argv.maxStdev} | Retries: ${argv.retries} | Options: ${JSON.stringify(argv.options)}`);
 logger.newline();
 runner.packs();
