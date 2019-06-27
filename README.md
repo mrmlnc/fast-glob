@@ -176,7 +176,7 @@ Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` ev
 ```js
 const fg = require('fast-glob');
 
-const stream = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
+const stream = fg.stream(['.editorconfig', '**/index.js'], { dot: true });
 
 for await (const entry of stream) {
 	// .editorconfig
