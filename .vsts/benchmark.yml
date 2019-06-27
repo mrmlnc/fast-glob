@@ -6,9 +6,11 @@ trigger:
 
 variables:
   node_version: 12.x
+  benchmark_type: $(benchmark.type)
   benchmark_launches: $(benchmark.launches)
-  benchmark_max_stdev: 10
-  benchmark_retries: 2
+  benchmark_max_stdev: $(benchmark.max_stdev)
+  benchmark_retries: $(benchmark.retries)
+  benchmark_options: $(benchmark.options)
 
 jobs:
   - job: Benchmark
@@ -18,10 +20,11 @@ jobs:
       - template: steps-build.yml
         parameters:
           node_version: $(node_version)
-          skip_smoke_tests: true
       - template: steps-benchmark.yml
         parameters:
           node_version: $(node_version)
+          benchmark_type: $(benchmark_type)
           benchmark_launches: $(benchmark_launches)
           benchmark_max_stdev: $(benchmark_max_stdev)
           benchmark_retries: $(benchmark_retries)
+          benchmark_options: $(benchmark_options)

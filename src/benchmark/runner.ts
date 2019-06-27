@@ -3,15 +3,18 @@ import * as path from 'path';
 
 import execa = require('execa');
 
+import { Options } from '../settings';
 import Reporter from './reporter';
 import * as utils from './utils';
 
 export interface RunnerOptions {
-	type: 'sync' | 'async';
+	type: string;
+	mode: string;
 	pattern: string;
 	launches: number;
 	maxStdev: number;
 	retries: number;
+	options: Options;
 }
 
 export interface SuiteMeasures {
@@ -54,7 +57,8 @@ export default class Runner {
 		const env: NodeJS.ProcessEnv = {
 			NODE_ENV: 'production',
 			BENCHMARK_BASE_DIR: this._basedir,
-			BENCHMARK_PATTERN: this._options.pattern
+			BENCHMARK_PATTERN: this._options.pattern,
+			BENCHMARK_OPTIONS: JSON.stringify(this._options.options)
 		};
 
 		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
@@ -108,7 +112,7 @@ export default class Runner {
 	}
 
 	public packs(): void {
-		const suitesPath = path.join(__dirname, 'suites', this._options.type);
+		const suitesPath = path.join(__dirname, 'suites', this._options.type, this._options.mode);
 		const suites = this.getSuites(suitesPath);
 
 		for (const filepath of suites) {

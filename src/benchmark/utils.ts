@@ -43,3 +43,9 @@ export function getEnvAsInteger(name: string): number | undefined {
 
 	return env ? parseInt(env, 10) : undefined;
 }
+
+export function getEnvAsObject(name: string): Object | undefined {
+	const env = process.env[name];
+
+	return env ? JSON.parse(env) as Object : undefined;
+}

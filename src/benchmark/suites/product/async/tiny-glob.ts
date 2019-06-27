@@ -1,17 +1,17 @@
 import * as path from 'path';
 
-import fg = require('fast-glob');
+import glob = require('tiny-glob');
 
-import * as utils from '../../utils';
+import * as utils from '../../../utils';
 
-const options: fg.Options = {
+const options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
-	unique: false
+	flush: true
 };
 
 const timeStart = utils.timeStart();
 
-fg(process.env.BENCHMARK_PATTERN as string, options)
+glob(process.env.BENCHMARK_PATTERN as string, options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

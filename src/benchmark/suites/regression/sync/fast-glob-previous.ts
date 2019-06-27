@@ -1,17 +1,19 @@
 import * as path from 'path';
 
-import * as glob from '../../../index';
-import * as utils from '../../utils';
+import fg = require('fast-glob');
 
-const options: glob.Options = {
+import * as utils from '../../../utils';
+
+const options: fg.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
-	unique: false
+	unique: false,
+	...JSON.parse(process.env.BENCHMARK_OPTIONS as string)
 };
 
 const timeStart = utils.timeStart();
 
 try {
-	const matches = glob.sync(process.env.BENCHMARK_PATTERN as string, options);
+	const matches = fg.sync(process.env.BENCHMARK_PATTERN as string, options);
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
 	const measures = utils.getMeasures(matches.length, time, memory);
