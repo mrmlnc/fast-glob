@@ -6,7 +6,7 @@ import * as utils from '../../../utils';
 const options: glob.Options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
 	unique: false,
-	objectMode: true
+	...JSON.parse(process.env.BENCHMARK_OPTIONS as string)
 };
 
 const entries: string[] = [];

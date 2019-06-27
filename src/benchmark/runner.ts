@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import execa = require('execa');
 
+import { Options } from '../settings';
 import Reporter from './reporter';
 import * as utils from './utils';
 
@@ -13,6 +14,7 @@ export interface RunnerOptions {
 	launches: number;
 	maxStdev: number;
 	retries: number;
+	options: Options;
 }
 
 export interface SuiteMeasures {
@@ -55,7 +57,8 @@ export default class Runner {
 		const env: NodeJS.ProcessEnv = {
 			NODE_ENV: 'production',
 			BENCHMARK_BASE_DIR: this._basedir,
-			BENCHMARK_PATTERN: this._options.pattern
+			BENCHMARK_PATTERN: this._options.pattern,
+			BENCHMARK_OPTIONS: JSON.stringify(this._options.options)
 		};
 
 		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });

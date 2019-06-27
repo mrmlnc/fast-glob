@@ -33,7 +33,8 @@ describe('Benchmark → Runner', () => {
 		pattern: '*',
 		launches: 3,
 		maxStdev: 3,
-		retries: 5
+		retries: 5,
+		options: {}
 	};
 
 	describe('.suite', () => {
