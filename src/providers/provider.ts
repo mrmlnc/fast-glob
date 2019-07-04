@@ -48,7 +48,8 @@ export default abstract class Provider<T> {
 			nocase: !this._settings.caseSensitiveMatch,
 			noext: !this._settings.extglob,
 			noglobstar: !this._settings.globstar,
-			posix: true
+			posix: true,
+			strictSlashes: false
 		};
 	}
 }
