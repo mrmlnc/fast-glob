@@ -31,6 +31,7 @@ export interface MicromatchOptions {
 	noext?: boolean;
 	noglobstar?: boolean;
 	posix?: boolean;
+	strictSlashes?: boolean;
 }
 
 export type FileSystemAdapter = fsWalk.FileSystemAdapter;
