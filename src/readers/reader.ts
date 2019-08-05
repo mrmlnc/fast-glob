@@ -25,6 +25,7 @@ export default abstract class Reader<T> {
 
 	protected _makeEntry(stats: fs.Stats, pattern: Pattern): Entry {
 		const entry: Entry = {
+			base: pattern,
 			name: pattern,
 			path: pattern,
 			dirent: utils.fs.createDirentFromStats(pattern, stats)

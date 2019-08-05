@@ -2,7 +2,9 @@ import * as fsWalk from '@nodelib/fs.walk';
 
 export type ErrnoException = NodeJS.ErrnoException;
 
-export type Entry = fsWalk.Entry;
+export interface Entry extends fsWalk.Entry {
+	base: string;
+}
 export type EntryItem = string | Entry;
 
 export type Pattern = string;

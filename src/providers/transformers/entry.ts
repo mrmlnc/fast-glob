@@ -5,11 +5,11 @@ import * as utils from '../../utils/index';
 export default class EntryTransformer {
 	constructor(private readonly _settings: Settings) { }
 
-	public getTransformer(): EntryTransformerFunction {
-		return (entry) => this._transform(entry);
+	public getTransformer(basePath: string): EntryTransformerFunction {
+		return (entry) => this._transform(basePath, entry);
 	}
 
-	private _transform(entry: Entry): EntryItem {
+	private _transform(basePath: string, entry: Entry): EntryItem {
 		let filepath = entry.path;
 
 		if (this._settings.absolute) {
@@ -27,6 +27,7 @@ export default class EntryTransformer {
 
 		return {
 			...entry,
+			base: basePath,
 			path: filepath
 		};
 	}

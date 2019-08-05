@@ -12,7 +12,7 @@ function getEntryTransformer(options?: Options): EntryTransformer {
 }
 
 function getTransformer(options?: Options): EntryTransformerFunction {
-	return getEntryTransformer(options).getTransformer();
+	return getEntryTransformer(options).getTransformer('');
 }
 
 describe('Providers → Transformers → Entry', () => {

@@ -9,7 +9,7 @@ export default class DeepFilter {
 		const maxPatternDepth = this._getMaxPatternDepth(positive);
 		const negativeRe = this._getNegativePatternsRe(negative);
 
-		return (entry) => this._filter(basePath, entry, negativeRe, maxPatternDepth);
+		return (entry) => this._filter(basePath, entry as Entry, negativeRe, maxPatternDepth);
 	}
 
 	private _getMaxPatternDepth(patterns: Pattern[]): number {

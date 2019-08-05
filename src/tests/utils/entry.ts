@@ -10,6 +10,7 @@ class EntryBuilder {
 	private _isSymbolicLink: boolean = false;
 
 	private readonly _entry: Entry = {
+		base: '',
 		name: '',
 		path: '',
 		dirent: new Dirent()

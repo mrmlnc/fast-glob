@@ -11,7 +11,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 	protected _statSync: typeof fsStat.statSync = fsStat.statSync;
 
 	public dynamic(root: string, options: ReaderOptions): Entry[] {
-		return this._walkSync(root, options);
+		return this._walkSync(root, options) as Entry[];
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): Entry[] {
