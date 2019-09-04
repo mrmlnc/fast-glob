@@ -120,7 +120,7 @@ Some examples:
 
 Some examples:
 
-* `src/**/*.{css,scss)` — matches all files in the `src` directory (any level of nesting) that have the `.css` or `.scss` extension.
+* `src/**/*.{css,scss}` — matches all files in the `src` directory (any level of nesting) that have the `.css` or `.scss` extension.
 * `file-[[:digit:]].js` — matches files: `file-0.js`, `file-1.js`, …, `file-9.js`.
 * `file-{1..3}.js` — matches files: `file-1.js`, `file-2.js`, `file-3.js`.
 * `file-(1|2)` — matches files: `file-1.js`, `file-2.js`.
