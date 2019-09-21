@@ -4,9 +4,12 @@
 .gitignore
 .vsts
 tsconfig.json
-tslint.json
+.eslintrc.json
 
-# Builded files
+# Log & Cache files
+.eslintcache
+
+# Build files
 out/benchmark
 out/tests
 out/**/*.js.map
