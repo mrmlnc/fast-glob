@@ -87,17 +87,6 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('options.dot', () => {
-			it('should return `false` when an entry basename starts with dot and option is disabled', () => {
-				const filter = getFilter('.', ['**/*'], [], { dot: false });
-				const entry = tests.entry.builder().path('root/.directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
 		describe('Pattern', () => {
 			it('should return `false` when an entry match to the negative pattern', () => {
 				const filter = getFilter('.', ['**/*'], ['root/**']);
@@ -108,7 +97,7 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return `treu` when the positive pattern has no affect to depth reading, but the `baseNameMatch` is enabled', () => {
+			it('should return `true` when the positive pattern has no affect to depth reading, but the `baseNameMatch` is enabled', () => {
 				const filter = getFilter('.', ['*'], [], { baseNameMatch: true });
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 

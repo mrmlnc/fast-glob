@@ -39,10 +39,6 @@ export default class DeepFilter {
 			return false;
 		}
 
-		if (this._isSkippedDotDirectory(entry)) {
-			return false;
-		}
-
 		return this._isSkippedByNegativePatterns(entry, negativeRe);
 	}
 
@@ -63,10 +59,6 @@ export default class DeepFilter {
 
 	private _isSkippedSymbolicLink(entry: Entry): boolean {
 		return !this._settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
-	}
-
-	private _isSkippedDotDirectory(entry: Entry): boolean {
-		return !this._settings.dot && entry.name.startsWith('.');
 	}
 
 	private _isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {

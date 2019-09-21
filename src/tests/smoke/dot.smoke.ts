@@ -17,5 +17,19 @@ smoke.suite('Smoke → Dot', [
 		pattern: 'fixtures/**/*',
 		globOptions: { dot: true },
 		fgOptions: { dot: true }
+	},
+
+	{ pattern: 'fixtures/{.,}*' },
+	{ pattern: 'fixtures/{.*,*}' },
+	{ pattern: 'fixtures/**/{.,}*' },
+	{
+		pattern: 'fixtures/{.**,**}',
+		broken: true,
+		issue: 47
+	},
+	{
+		pattern: 'fixtures/{**/.*,**}',
+		broken: true,
+		issue: 47
 	}
 ]);
