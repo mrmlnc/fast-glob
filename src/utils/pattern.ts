@@ -7,13 +7,14 @@ import micromatch = require('micromatch');
 import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
 
 const GLOBSTAR = '**';
+const ESCAPE_SYMBOL = '\\';
 
 export function isStaticPattern(pattern: Pattern): boolean {
 	return !isDynamicPattern(pattern);
 }
 
 export function isDynamicPattern(pattern: Pattern): boolean {
-	return isGlob(pattern, { strict: false });
+	return isGlob(pattern, { strict: false }) || pattern.indexOf(ESCAPE_SYMBOL) !== -1;
 }
 
 export function convertToPositivePattern(pattern: Pattern): Pattern {
