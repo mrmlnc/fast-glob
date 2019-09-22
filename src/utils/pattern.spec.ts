@@ -150,6 +150,14 @@ describe('Utils → Pattern', () => {
 
 			assert.strictEqual(actual, expected);
 		});
+
+		it('should returns base directory without slash transformation', () => {
+			const expected = '.';
+
+			const actual = util.getBaseDirectory('file-\\(suffix\\).md');
+
+			assert.strictEqual(actual, expected);
+		});
 	});
 
 	describe('.hasGlobStar', () => {

@@ -42,7 +42,7 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 }
 
 export function getBaseDirectory(pattern: Pattern): string {
-	return globParent(pattern);
+	return globParent(pattern, { flipBackslashes: false });
 }
 
 export function hasGlobStar(pattern: Pattern): boolean {
