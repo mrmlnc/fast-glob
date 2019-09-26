@@ -31,6 +31,12 @@ describe('Utils → Pattern', () => {
 			assert.ok(actual);
 		});
 
+		it('should return true for pattern with escape symbol', () => {
+			const actual = util.isDynamicPattern('\\*');
+
+			assert.ok(actual);
+		});
+
 		it('should return false for static pattern', () => {
 			const actual = util.isDynamicPattern('dir');
 
@@ -141,6 +147,14 @@ describe('Utils → Pattern', () => {
 			const expected = 'root';
 
 			const actual = util.getBaseDirectory('root/*.js');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should returns base directory without slash transformation', () => {
+			const expected = '.';
+
+			const actual = util.getBaseDirectory('file-\\(suffix\\).md');
 
 			assert.strictEqual(actual, expected);
 		});
