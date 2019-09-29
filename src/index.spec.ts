@@ -174,4 +174,14 @@ describe('Package', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 	});
+
+	describe('.isDynamicPattern', () => {
+		it('should return true for dynamic pattern', () => {
+			assert.ok(pkg.isDynamicPattern('*'));
+		});
+
+		it('should return false for static pattern', () => {
+			assert.ok(!pkg.isDynamicPattern('abc'));
+		});
+	});
 });

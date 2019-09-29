@@ -1,7 +1,6 @@
 import * as path from 'path';
 
 import globParent = require('glob-parent');
-import isGlob = require('is-glob');
 import micromatch = require('micromatch');
 
 import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
@@ -9,12 +8,44 @@ import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
 
-export function isStaticPattern(pattern: Pattern): boolean {
-	return !isDynamicPattern(pattern);
+const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
+const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[.*]/;
+const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^@!*?+])\(.*\|.*\)/;
+const GLOB_EXTENSION_SYMBOLS_RE = /[@!*?+]\(.*\)/;
+const BRACE_EXPANSIONS_SYMBOL_RE = /{.*(?:,|\.\.).*}/;
+
+interface PatternTypeOptions {
+	braceExpansion?: boolean;
+	caseSensitiveMatch?: boolean;
+	extglob?: boolean;
 }
 
-export function isDynamicPattern(pattern: Pattern): boolean {
-	return isGlob(pattern, { strict: false }) || pattern.indexOf(ESCAPE_SYMBOL) !== -1;
+export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
+	return !isDynamicPattern(pattern, options);
+}
+
+export function isDynamicPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
+	/**
+	 * When the `caseSensitiveMatch` option is disabled, all patterns must be marked as dynamic, because we cannot check
+	 * filepath directly (without read directory).
+	 */
+	if (options.caseSensitiveMatch === false || pattern.includes(ESCAPE_SYMBOL)) {
+		return true;
+	}
+
+	if (COMMON_GLOB_SYMBOLS_RE.test(pattern) || REGEX_CHARACTER_CLASS_SYMBOLS_RE.test(pattern) || REGEX_GROUP_SYMBOLS_RE.test(pattern)) {
+		return true;
+	}
+
+	if (options.extglob !== false && GLOB_EXTENSION_SYMBOLS_RE.test(pattern)) {
+		return true;
+	}
+
+	if (options.braceExpansion !== false && BRACE_EXPANSIONS_SYMBOL_RE.test(pattern)) {
+		return true;
+	}
+
+	return false;
 }
 
 export function convertToPositivePattern(pattern: Pattern): Pattern {

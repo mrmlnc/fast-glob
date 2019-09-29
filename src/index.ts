@@ -63,6 +63,14 @@ namespace FastGlob {
 
 		return taskManager.generate(patterns, settings);
 	}
+
+	export function isDynamicPattern(source: PatternInternal, options?: OptionsInternal): boolean {
+		assertPatternsInput(source);
+
+		const settings = new Settings(options);
+
+		return utils.pattern.isDynamicPattern(source, settings);
+	}
 }
 
 function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new (settings: Settings) => Provider<T>, options?: OptionsInternal): T[] {
