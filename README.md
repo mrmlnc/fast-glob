@@ -24,7 +24,8 @@ This package provides methods for traversing the file system and returning pathn
     * [[options]](#options)
   * [Helpers](#helpers)
     * [generateTasks](#generatetaskspatterns-options)
-* [Options](#options-2)
+    * [isDynamicPattern](#isdynamicpatternpattern-options)
+* [Options](#options-3)
   * [Common](#common)
     * [concurrency](#concurrency)
     * [cwd](#cwd)
@@ -200,9 +201,9 @@ Any correct pattern(s).
 #### [options]
 
 * Required: `false`
-* Type: [`Options`](#options-2)
+* Type: [`Options`](#options-3)
 
-See [Options](#options-2) section.
+See [Options](#options-3) section.
 
 ### Helpers
 
@@ -230,9 +231,30 @@ Any correct pattern(s).
 ##### [options]
 
 * Required: `false`
-* Type: [`Options`](#options-2)
+* Type: [`Options`](#options-3)
 
-See [Options](#options-2) section.
+See [Options](#options-3) section.
+
+#### `isDynamicPattern(pattern, [options])`
+
+```js
+fg.isDynamicPattern('*'); // true
+fg.isDynamicPattern('abc'); // false
+```
+
+##### pattern
+
+* Required: `true`
+* Type: `string`
+
+Any correct pattern.
+
+##### [options]
+
+* Required: `false`
+* Type: [`Options`](#options-3)
+
+See [Options](#options-3) section.
 
 ## Options
 
