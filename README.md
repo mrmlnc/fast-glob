@@ -22,7 +22,9 @@ This package provides methods for traversing the file system and returning pathn
   * [Stream](#stream)
     * [patterns](#patterns)
     * [[options]](#options)
-* [Options](#options-1)
+  * [Helpers](#helpers)
+    * [generateTasks](#generatetaskspatterns-options)
+* [Options](#options-2)
   * [Common](#common)
     * [concurrency](#concurrency)
     * [cwd](#cwd)
@@ -198,9 +200,39 @@ Any correct pattern(s).
 #### [options]
 
 * Required: `false`
-* Type: [`Options`](#options-1)
+* Type: [`Options`](#options-2)
 
-See [Options](#options-1) section.
+See [Options](#options-2) section.
+
+### Helpers
+
+#### `generateTasks(patterns, [options])`
+
+```js
+fg.generateTasks('*');
+
+[{
+    base: '.', // Parent directory for all patterns inside this task
+    dynamic: true, // Dynamic or static patterns are in this task
+    patterns: ['*'],
+    positive: ['*'],
+    negative: []
+}]
+```
+
+##### patterns
+
+* Required: `true`
+* Type: `string | string[]`
+
+Any correct pattern(s).
+
+##### [options]
+
+* Required: `false`
+* Type: [`Options`](#options-2)
+
+See [Options](#options-2) section.
 
 ## Options
 
