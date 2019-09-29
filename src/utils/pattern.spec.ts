@@ -19,28 +19,117 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.isDynamicPattern', () => {
-		it('should return true for dynamic pattern', () => {
-			const actual = util.isDynamicPattern('*');
+		describe('Without options', () => {
+			it('should return true for patterns that include the escape symbol', () => {
+				assert.ok(util.isDynamicPattern('\\'));
+			});
 
-			assert.ok(actual);
+			it('should return true for patterns that include common glob symbols', () => {
+				assert.ok(util.isDynamicPattern('*'));
+				assert.ok(util.isDynamicPattern('abc/*'));
+				assert.ok(util.isDynamicPattern('?'));
+				assert.ok(util.isDynamicPattern('abc/?'));
+				assert.ok(util.isDynamicPattern('!abc'));
+			});
+
+			it('should return true for patterns that include regex group symbols', () => {
+				assert.ok(util.isDynamicPattern('(a|)'));
+				assert.ok(util.isDynamicPattern('(a|b)'));
+				assert.ok(util.isDynamicPattern('abc/(a|b)'));
+			});
+
+			it('should return true for patterns that include regex character class symbols', () => {
+				assert.ok(util.isDynamicPattern('[abc]'));
+				assert.ok(util.isDynamicPattern('abc/[abc]'));
+				assert.ok(util.isDynamicPattern('[^abc]'));
+				assert.ok(util.isDynamicPattern('abc/[^abc]'));
+				assert.ok(util.isDynamicPattern('[1-3]'));
+				assert.ok(util.isDynamicPattern('abc/[1-3]'));
+				assert.ok(util.isDynamicPattern('[[:alpha:][:digit:]]'));
+				assert.ok(util.isDynamicPattern('abc/[[:alpha:][:digit:]]'));
+			});
+
+			it('should return true for patterns that include glob extension symbols', () => {
+				assert.ok(util.isDynamicPattern('@()'));
+				assert.ok(util.isDynamicPattern('@(a)'));
+				assert.ok(util.isDynamicPattern('@(a|b)'));
+				assert.ok(util.isDynamicPattern('abc/!(a|b)'));
+				assert.ok(util.isDynamicPattern('*(a|b)'));
+				assert.ok(util.isDynamicPattern('?(a|b)'));
+				assert.ok(util.isDynamicPattern('+(a|b)'));
+			});
+
+			it('should return true for patterns that include brace expansions symbols', () => {
+				assert.ok(util.isDynamicPattern('{,}'));
+				assert.ok(util.isDynamicPattern('{a,}'));
+				assert.ok(util.isDynamicPattern('{,b}'));
+				assert.ok(util.isDynamicPattern('{a,b}'));
+				assert.ok(util.isDynamicPattern('{1..3}'));
+			});
+
+			it('should return false for "!" symbols when a symbol is not specified first in the string', () => {
+				assert.ok(!util.isDynamicPattern('abc!'));
+			});
+
+			it('should return false for a completely static pattern', () => {
+				assert.ok(!util.isDynamicPattern(''));
+				assert.ok(!util.isDynamicPattern('.'));
+				assert.ok(!util.isDynamicPattern('abc'));
+				assert.ok(!util.isDynamicPattern('~abc'));
+				assert.ok(!util.isDynamicPattern('~/abc'));
+				assert.ok(!util.isDynamicPattern('+~/abc'));
+				assert.ok(!util.isDynamicPattern('@.(abc)'));
+				assert.ok(!util.isDynamicPattern('(a b)'));
+				assert.ok(!util.isDynamicPattern('(a b)'));
+				assert.ok(!util.isDynamicPattern('[abc'));
+			});
+
+			it('should return false for unfinished regex character class', () => {
+				assert.ok(!util.isDynamicPattern('['));
+				assert.ok(!util.isDynamicPattern('[abc'));
+			});
+
+			it('should return false for unfinished regex group', () => {
+				assert.ok(!util.isDynamicPattern('(a|b'));
+				assert.ok(!util.isDynamicPattern('abc/(a|b'));
+			});
+
+			it('should return false for unfinished glob extension', () => {
+				assert.ok(!util.isDynamicPattern('@('));
+				assert.ok(!util.isDynamicPattern('@(a'));
+				assert.ok(!util.isDynamicPattern('@(a|'));
+				assert.ok(!util.isDynamicPattern('@(a|b'));
+			});
+
+			it('should return false for unfinished brace expansions', () => {
+				assert.ok(!util.isDynamicPattern('{'));
+				assert.ok(!util.isDynamicPattern('{a'));
+				assert.ok(!util.isDynamicPattern('{,'));
+				assert.ok(!util.isDynamicPattern('{a,'));
+				assert.ok(!util.isDynamicPattern('{a,b'));
+			});
 		});
 
-		it('should return true for dynamic pattern with question mark glob', () => {
-			const actual = util.isDynamicPattern('?');
+		describe('With options', () => {
+			it('should return true for patterns that include "*?" symbols even when the "extglob" option is disabled', () => {
+				assert.ok(util.isDynamicPattern('*(a|b)', { extglob: false }));
+				assert.ok(util.isDynamicPattern('?(a|b)', { extglob: false }));
+			});
 
-			assert.ok(actual);
-		});
+			it('should return true when the "caseSensitiveMatch" option is enabled', () => {
+				assert.ok(util.isDynamicPattern('a', { caseSensitiveMatch: false }));
+			});
 
-		it('should return true for pattern with escape symbol', () => {
-			const actual = util.isDynamicPattern('\\*');
+			it('should return false for glob extension when the "extglob" option is disabled', () => {
+				assert.ok(!util.isDynamicPattern('@(a|b)', { extglob: false }));
+				assert.ok(!util.isDynamicPattern('abc/!(a|b)', { extglob: false }));
+				assert.ok(!util.isDynamicPattern('+(a|b)', { extglob: false }));
+			});
 
-			assert.ok(actual);
-		});
-
-		it('should return false for static pattern', () => {
-			const actual = util.isDynamicPattern('dir');
-
-			assert.ok(!actual);
+			it('should return false for brace expansions when the "braceExpansion" option is disabled', () => {
+				assert.ok(!util.isDynamicPattern('{a,b}', { braceExpansion: false }));
+				assert.ok(!util.isDynamicPattern('{1..3}', { braceExpansion: false }));
+			});
 		});
 	});
 
