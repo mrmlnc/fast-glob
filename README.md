@@ -51,6 +51,7 @@ This package provides methods for traversing the file system and returning pathn
     * [globstar](#globstar)
     * [baseNameMatch](#basenamematch)
 * [FAQ](#faq)
+  * [What is a static or dynamic pattern?](#what-is-a-static-or-dynamic-pattern)
   * [How to write patterns on Windows?](#how-to-write-patterns-on-windows)
   * [Why are parentheses match wrong?](#why-are-parentheses-match-wrong)
   * [How to exclude directory from reading?](#how-to-exclude-directory-from-reading)
@@ -236,6 +237,8 @@ Any correct pattern(s).
 See [Options](#options-3) section.
 
 #### `isDynamicPattern(pattern, [options])`
+
+> :1234: [What is a static or dynamic pattern?](#what-is-a-static-or-dynamic-pattern)
 
 ```js
 fg.isDynamicPattern('*'); // true
@@ -591,6 +594,23 @@ fg.sync('*.md', { baseNameMatch: true });  // ['one/file.md']
 ```
 
 ## FAQ
+
+## What is a static or dynamic pattern?
+
+All patterns can be divided into two types:
+
+* **static**. A pattern is considered static if it can be used to get an entry on the file system without using matching mechanisms. For example, the `file.js` pattern is a static pattern because we can just verify that it exists on the file system.
+* **dynamic**. A pattern is considered dynamic if it cannot be used directly to find occurrences without using a matching mechanisms. For example, the `*` pattern is a dynamic pattern because we cannot use this pattern directly.
+
+A pattern is considered dynamic if it contains the following characters (`…` — any characters or their absence) or options:
+
+* The [`caseSensitiveMatch`](#casesensitivematch) option is disabled
+* `\\` (the escape character)
+* `*`, `?`, `!` (at the beginning of line)
+* `[…]`
+* `(…|…)`
+* `@(…)`, `!(…)`, `*(…)`, `?(…)`, `+(…)` (respects the [`extglob`](#extglob) option)
+* `{…,…}`, `{…..…}` (respects the [`braceExpansion`](#braceexpansion) option)
 
 ## How to write patterns on Windows?
 
