@@ -1,5 +1,7 @@
 import { SuitePackResult } from './runner';
 
+const FRACTION_DIGITS = 3;
+
 export default class Reporter {
 	constructor(private readonly _results: SuitePackResult) { }
 
@@ -28,8 +30,8 @@ export default class Reporter {
 
 		return [
 			'(' + name.toUpperCase() + ')',
-			this._formatValue(data.average, data.units, 3),
-			'±' + this._formatValue(data.stdev, '%', 3)
+			this._formatValue(data.average, data.units, FRACTION_DIGITS),
+			'±' + this._formatValue(data.stdev, '%', FRACTION_DIGITS)
 		].join(' ');
 	}
 

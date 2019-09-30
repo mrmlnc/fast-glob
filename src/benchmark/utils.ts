@@ -2,14 +2,18 @@ import { SuiteMeasures } from './runner';
 
 import stdev = require('compute-stdev');
 
-export function convertHrtimeToMilliseconds(hrtime: [number, number]): number {
-	const nanoseconds = hrtime[0] * 1e9;
+const NANOSECONDS_IN_SECOND = 1e9;
+const MICROSECONDS_IN_SECOND = 1e6;
+const BYTES_IN_MEGABYTE = 1e6;
 
-	return (nanoseconds + hrtime[1]) / 1e6;
+export function convertHrtimeToMilliseconds(hrtime: [number, number]): number {
+	const nanoseconds = hrtime[0] * NANOSECONDS_IN_SECOND;
+
+	return (nanoseconds + hrtime[1]) / MICROSECONDS_IN_SECOND;
 }
 
 export function convertBytesToMegaBytes(bytes: number): number {
-	return bytes / 1e6;
+	return bytes / MICROSECONDS_IN_SECOND;
 }
 
 export function timeStart(): [number, number] {
@@ -23,7 +27,7 @@ export function timeEnd(start: [number, number]): number {
 }
 
 export function getMemory(): number {
-	return process.memoryUsage().heapUsed / 1024 / 1024;
+	return process.memoryUsage().heapUsed / BYTES_IN_MEGABYTE;
 }
 
 export function getMeasures(matches: number, time: number, memory: number): string {
