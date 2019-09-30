@@ -7,7 +7,7 @@ import * as utils from './utils';
 
 import execa = require('execa');
 
-export interface RunnerOptions {
+export type RunnerOptions = {
 	type: string;
 	mode: string;
 	pattern: string;
@@ -15,33 +15,33 @@ export interface RunnerOptions {
 	maxStdev: number;
 	retries: number;
 	options: Options;
-}
+};
 
-export interface SuiteMeasures {
+export type SuiteMeasures = {
 	matches: number;
 	time: number;
 	memory: number;
-}
+};
 
-export interface Measure {
+export type Measure = {
 	units: string;
 	raw: number[];
 	average: number;
 	stdev: number;
-}
+};
 
-export interface SuitePackMeasures extends Record<string, Measure> {
+export type SuitePackMeasures = {
 	time: Measure;
 	memory: Measure;
-}
+} & Record<string, Measure>;
 
-export interface SuitePackResult {
+export type SuitePackResult = {
 	name: string;
 	errors: number;
 	entries: number;
 	retries: number;
 	measures: SuitePackMeasures;
-}
+};
 
 export default class Runner {
 	constructor(private readonly _basedir: string, private readonly _options: RunnerOptions) { }

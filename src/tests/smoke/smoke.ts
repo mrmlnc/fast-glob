@@ -7,7 +7,7 @@ import { Pattern } from '../../types/index';
 import Table = require('easy-table');
 import glob = require('glob');
 
-export interface SmokeTest {
+export type SmokeTest = {
 	pattern: Pattern;
 	ignore?: Pattern;
 	cwd?: string;
@@ -27,7 +27,7 @@ export interface SmokeTest {
 	 */
 	correct?: boolean;
 	reason?: string;
-}
+};
 
 type MochaDefinition = (desc: string, cb: (this: Mocha.Context) => void) => void;
 type DebugCompareTestMarker = '+' | '-';

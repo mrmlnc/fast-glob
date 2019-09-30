@@ -2,13 +2,13 @@ import Settings from '../settings';
 import { Pattern, PatternsGroup } from '../types/index';
 import * as utils from '../utils/index';
 
-export interface Task {
+export type Task = {
 	base: string;
 	dynamic: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
-}
+};
 
 export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	const positivePatterns = getPositivePatterns(patterns);

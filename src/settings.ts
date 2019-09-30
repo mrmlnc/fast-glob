@@ -14,7 +14,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-export interface Options {
+export type Options = {
 	/**
 	 * Return the absolute path for entries.
 	 *
@@ -148,7 +148,7 @@ export interface Options {
 	 * @default true
 	 */
 	unique?: boolean;
-}
+};
 
 export default class Settings {
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
