@@ -1,6 +1,6 @@
-import stdev = require('compute-stdev');
-
 import { SuiteMeasures } from './runner';
+
+import stdev = require('compute-stdev');
 
 export function convertHrtimeToMilliseconds(hrtime: [number, number]): number {
 	const nanoseconds = hrtime[0] * 1e9;

@@ -1,11 +1,11 @@
 import * as assert from 'assert';
 
-import Table = require('easy-table');
-import glob = require('glob');
-
 import * as fg from '../../index';
 import { Options } from '../../settings';
 import { Pattern } from '../../types/index';
+
+import Table = require('easy-table');
+import glob = require('glob');
 
 export interface SmokeTest {
 	pattern: Pattern;

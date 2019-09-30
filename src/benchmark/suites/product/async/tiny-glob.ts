@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import glob = require('tiny-glob');
-
 import * as utils from '../../../utils';
+
+import glob = require('tiny-glob');
 
 const options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),

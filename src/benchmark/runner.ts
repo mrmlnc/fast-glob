@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import execa = require('execa');
-
 import { Options } from '../settings';
 import Reporter from './reporter';
 import * as utils from './utils';
+
+import execa = require('execa');
 
 export interface RunnerOptions {
 	type: string;

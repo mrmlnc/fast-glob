@@ -1,8 +1,8 @@
-import minimist = require('minimist');
-
 import * as logger from './logger';
 import Runner, { RunnerOptions } from './runner';
 import * as utils from './utils';
+
+import minimist = require('minimist');
 
 interface Arguments extends RunnerOptions {
 	basedir: string;

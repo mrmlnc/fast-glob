@@ -1,9 +1,9 @@
 import * as path from 'path';
 
+import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
+
 import globParent = require('glob-parent');
 import micromatch = require('micromatch');
-
-import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
