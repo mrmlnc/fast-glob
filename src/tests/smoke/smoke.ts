@@ -127,16 +127,16 @@ function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, op
 		...opts
 	};
 
-	return glob.sync(pattern, options).sort();
+	return glob.sync(pattern, options).sort((a, b) => a.localeCompare(b));
 }
 
 function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
-	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, opts)).sort();
+	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, opts)).sort((a, b) => a.localeCompare(b));
 }
 
 function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
 	return fg(pattern, getFastGlobOptions(ignore, cwd, opts)).then((entries) => {
-		entries.sort();
+		entries.sort((a, b) => a.localeCompare(b));
 
 		return entries;
 	});
@@ -151,7 +151,7 @@ function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: stri
 		stream.on('data', (entry: string) => entries.push(entry));
 		stream.once('error', reject);
 		stream.once('end', () => {
-			entries.sort();
+			entries.sort((a, b) => a.localeCompare(b));
 
 			resolve(entries);
 		});

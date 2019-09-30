@@ -24,7 +24,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -41,7 +41,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -71,7 +71,7 @@ describe('Package', () => {
 
 			const actual = await pkg(['fixtures/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -88,7 +88,7 @@ describe('Package', () => {
 
 			const actual = await pkg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -101,7 +101,7 @@ describe('Package', () => {
 		});
 
 		it('should returns entries', (done) => {
-			const expected: EntryItem[] = [
+			const expected: string[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
 				'fixtures/first/nested/directory/file.md',
@@ -111,14 +111,15 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: EntryItem[] = [];
+			const actual: string[] = [];
 
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
-			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort();
+				actual.sort((a, b) => a.localeCompare(b));
+
 				assert.deepStrictEqual(actual, expected);
 				done();
 			});
@@ -134,14 +135,15 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: EntryItem[] = [];
+			const actual: string[] = [];
 
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort();
+				actual.sort((a, b) => a.localeCompare(b));
+
 				assert.deepStrictEqual(actual, expected);
 				done();
 			});
