@@ -179,6 +179,7 @@ export default class Settings {
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;
 		}
+
 		if (this.stats) {
 			this.objectMode = true;
 		}
