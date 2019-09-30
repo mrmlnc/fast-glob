@@ -554,8 +554,8 @@ dir/
 ```
 
 ```js
-fg.sync('file.txt', { dot: false }); // ['package.json']
-fg.sync('file.txt', { dot: true });  // ['.editorconfig', 'package.json']
+fg.sync('*', { dot: false }); // ['package.json']
+fg.sync('*', { dot: true });  // ['.editorconfig', 'package.json']
 ```
 
 #### extglob
