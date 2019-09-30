@@ -3,9 +3,9 @@ import stdev = require('compute-stdev');
 import { SuiteMeasures } from './runner';
 
 export function convertHrtimeToMilliseconds(hrtime: [number, number]): number {
-	const nanoseconds = (hrtime[0] * 1e9) + hrtime[1];
+	const nanoseconds = hrtime[0] * 1e9;
 
-	return nanoseconds / 1e6;
+	return (nanoseconds + hrtime[1]) / 1e6;
 }
 
 export function convertBytesToMegaBytes(bytes: number): number {

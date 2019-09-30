@@ -89,7 +89,8 @@ async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSy
 		assert.fail("This test is marked as «correct», but it doesn't have a reason.");
 	}
 
-	const assertAction = (test.broken || test.correct) ? assert.notDeepStrictEqual : assert.deepStrictEqual;
+	const isInvertedTest = test.broken || test.correct;
+	const assertAction = isInvertedTest ? assert.notDeepStrictEqual : assert.deepStrictEqual;
 
 	assertAction(actual, expected);
 }
