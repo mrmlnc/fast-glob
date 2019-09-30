@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
-import * as pkg from './index';
 import * as tests from './tests/index';
 import { EntryItem, ErrnoException } from './types/index';
+import * as pkg from './index';
 
 describe('Package', () => {
 	describe('.sync', () => {
