@@ -25,6 +25,7 @@ This package provides methods for traversing the file system and returning pathn
   * [Helpers](#helpers)
     * [generateTasks](#generatetaskspatterns-options)
     * [isDynamicPattern](#isdynamicpatternpattern-options)
+    * [escapePath](#escapepathpattern)
 * [Options](#options-3)
   * [Common](#common)
     * [concurrency](#concurrency)
@@ -210,6 +211,8 @@ See [Options](#options-3) section.
 
 #### `generateTasks(patterns, [options])`
 
+Returns the internal representation of patterns ([`Task`](./src/managers/tasks.ts) is a combining patterns by base directory).
+
 ```js
 fg.generateTasks('*');
 
@@ -238,6 +241,8 @@ See [Options](#options-3) section.
 
 #### `isDynamicPattern(pattern, [options])`
 
+Returns `true` if the passed pattern is a dynamic pattern.
+
 > :1234: [What is a static or dynamic pattern?](#what-is-a-static-or-dynamic-pattern)
 
 ```js
@@ -258,6 +263,22 @@ Any correct pattern.
 * Type: [`Options`](#options-3)
 
 See [Options](#options-3) section.
+
+#### `escapePath(pattern)`
+
+Returns a path with escaped special characters (`*?|(){}[]`, `!` at the beginning of line, `@+!` before the opening parenthesis).
+
+```js
+fg.escapePath('!abc'); // \\!abc
+fg.escapePath('C:/Program Files (x86)'); // C:/Program Files \\(x86\\)
+```
+
+##### pattern
+
+* Required: `true`
+* Type: `string`
+
+Any string, for example, a path to a file.
 
 ## Options
 
@@ -533,8 +554,8 @@ dir/
 ```
 
 ```js
-fg.sync('file.txt', { dot: false }); // ['package.json']
-fg.sync('file.txt', { dot: true });  // ['.editorconfig', 'package.json']
+fg.sync('*', { dot: false }); // ['package.json']
+fg.sync('*', { dot: true });  // ['.editorconfig', 'package.json']
 ```
 
 #### extglob

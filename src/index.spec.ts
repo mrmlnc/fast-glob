@@ -184,4 +184,14 @@ describe('Package', () => {
 			assert.ok(!pkg.isDynamicPattern('abc'));
 		});
 	});
+
+	describe('.escapePath', () => {
+		it('should return escaped path', () => {
+			const expected = 'C:/Program Files \\(x86\\)';
+
+			const actual = pkg.escapePath('C:/Program Files (x86)');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
 });

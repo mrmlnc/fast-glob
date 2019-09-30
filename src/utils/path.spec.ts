@@ -23,4 +23,35 @@ describe('Utils → Path', () => {
 			assert.strictEqual(actual, expected);
 		});
 	});
+
+	describe('.escapePattern', () => {
+		it('should return pattern with escaped glob symbols', () => {
+			assert.strictEqual(util.escape('!abc'), '\\!abc');
+			assert.strictEqual(util.escape('*'), '\\*');
+			assert.strictEqual(util.escape('?'), '\\?');
+			assert.strictEqual(util.escape('()'), '\\(\\)');
+			assert.strictEqual(util.escape('{}'), '\\{\\}');
+			assert.strictEqual(util.escape('[]'), '\\[\\]');
+			assert.strictEqual(util.escape('@('), '\\@\\(');
+			assert.strictEqual(util.escape('!('), '\\!\\(');
+			assert.strictEqual(util.escape('*('), '\\*\\(');
+			assert.strictEqual(util.escape('?('), '\\?\\(');
+			assert.strictEqual(util.escape('+('), '\\+\\(');
+		});
+
+		it('should return pattern without additional escape characters', () => {
+			assert.strictEqual(util.escape('\\!abc'), '\\!abc');
+			assert.strictEqual(util.escape('\\*'), '\\*');
+			assert.strictEqual(util.escape('\\!\\('), '\\!\\(');
+		});
+
+		it('should return pattern without escape characters', () => {
+			assert.strictEqual(util.escape('abc!'), 'abc!');
+			assert.strictEqual(util.escape('abc/!abc'), 'abc/!abc');
+			assert.strictEqual(util.escape('+abc'), '+abc');
+			assert.strictEqual(util.escape('abc+'), 'abc+');
+			assert.strictEqual(util.escape('@abc'), '@abc');
+			assert.strictEqual(util.escape('abc@'), 'abc@');
+		});
+	});
 });
