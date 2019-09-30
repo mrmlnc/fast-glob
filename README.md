@@ -211,6 +211,8 @@ See [Options](#options-3) section.
 
 #### `generateTasks(patterns, [options])`
 
+Returns the internal representation of patterns ([`Task`](./src/managers/tasks.ts) is a combining patterns by base directory).
+
 ```js
 fg.generateTasks('*');
 
@@ -239,6 +241,8 @@ See [Options](#options-3) section.
 
 #### `isDynamicPattern(pattern, [options])`
 
+Returns `true` if the passed pattern is a dynamic pattern.
+
 > :1234: [What is a static or dynamic pattern?](#what-is-a-static-or-dynamic-pattern)
 
 ```js
@@ -261,6 +265,8 @@ Any correct pattern.
 See [Options](#options-3) section.
 
 #### `escapePath(pattern)`
+
+Returns a path with escaped special characters (`*?|(){}[]`, `!` at the beginning of line, `@+!` before the opening parenthesis).
 
 ```js
 fg.escapePath('!abc'); // \\!abc
