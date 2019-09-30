@@ -98,7 +98,6 @@ function assertPatternsInput(source: unknown): void | never {
 }
 
 function isString(source: unknown): source is string {
-	/* tslint:disable-next-line strict-type-predicates */
 	return typeof source === 'string';
 }
 

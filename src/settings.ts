@@ -14,7 +14,6 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-// tslint:disable no-redundant-jsdoc
 export interface Options {
 	/**
 	 * Return the absolute path for entries.
@@ -150,7 +149,6 @@ export interface Options {
 	 */
 	unique?: boolean;
 }
-// tslint:enable no-redundant-jsdoc
 
 export default class Settings {
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
