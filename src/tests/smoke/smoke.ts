@@ -115,7 +115,7 @@ function generateDebugReport(expected: string[], actual: string[]): string | nul
 }
 
 function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
-	return items.indexOf(item) !== -1 ? '+' : '-';
+	return items.includes(item) ? '+' : '-';
 }
 
 function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: glob.IOptions): string[] {

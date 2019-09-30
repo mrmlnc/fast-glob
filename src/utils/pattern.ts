@@ -77,7 +77,7 @@ export function getBaseDirectory(pattern: Pattern): string {
 }
 
 export function hasGlobStar(pattern: Pattern): boolean {
-	return pattern.indexOf(GLOBSTAR) !== -1;
+	return pattern.includes(GLOBSTAR);
 }
 
 export function endsWithSlashGlobStar(pattern: Pattern): boolean {
