@@ -7,8 +7,8 @@ import Settings, { Options as OptionsInternal } from './settings';
 import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types/index';
 import * as utils from './utils/index';
 
-type EntryObjectModePredicate = { [P in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
-type EntryStatsPredicate = { [P in keyof Pick<OptionsInternal, 'stats'>]-?: true };
+type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
+type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
 function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
