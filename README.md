@@ -25,6 +25,7 @@ This package provides methods for traversing the file system and returning pathn
   * [Helpers](#helpers)
     * [generateTasks](#generatetaskspatterns-options)
     * [isDynamicPattern](#isdynamicpatternpattern-options)
+    * [escapePath](#escapepathpattern)
 * [Options](#options-3)
   * [Common](#common)
     * [concurrency](#concurrency)
@@ -258,6 +259,20 @@ Any correct pattern.
 * Type: [`Options`](#options-3)
 
 See [Options](#options-3) section.
+
+#### `escapePath(pattern)`
+
+```js
+fg.escapePath('!abc'); // \\!abc
+fg.escapePath('C:/Program Files (x86)'); // C:/Program Files \\(x86\\)
+```
+
+##### pattern
+
+* Required: `true`
+* Type: `string`
+
+Any string, for example, a path to a file.
 
 ## Options
 

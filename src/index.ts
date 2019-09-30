@@ -71,6 +71,12 @@ namespace FastGlob {
 
 		return utils.pattern.isDynamicPattern(source, settings);
 	}
+
+	export function escapePath(source: PatternInternal): PatternInternal {
+		assertPatternsInput(source);
+
+		return utils.path.escape(source);
+	}
 }
 
 function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new (settings: Settings) => Provider<T>, options?: OptionsInternal): T[] {
