@@ -3,6 +3,7 @@ import { ErrnoException } from '../../types';
 class SystemError extends Error implements ErrnoException {
 	constructor(public readonly code: string, message: string) {
 		super(`${code}: ${message}`);
+		this.name = 'SystemError';
 	}
 }
 
