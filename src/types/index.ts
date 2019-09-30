@@ -10,12 +10,12 @@ export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
 export interface ReaderOptions extends fsWalk.Options {
+	transform(entry: Entry): EntryItem;
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	errorFilter: ErrorFilterFunction;
 	fs: FileSystemAdapter;
 	stats: boolean;
-	transform(entry: Entry): EntryItem;
 }
 
 export type ErrorFilterFunction = fsWalk.ErrorFilterFunction;
