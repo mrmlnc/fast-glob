@@ -104,6 +104,24 @@ describe('Benchmark → Utils', () => {
 		});
 	});
 
+	describe('.getEnvironmentAsString', () => {
+		it('should return string', () => {
+			const expected = 'text';
+
+			const actual = utils.getEnvironmentAsString('FG_TEST_ENV_STRING', 'text');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should return default value', () => {
+			const expected = '';
+
+			const actual = utils.getEnvironmentAsString('NON_EXIST_ENV_VARIABLE', '');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
 	describe('.getEnvironmentAsInteger', () => {
 		it('should return integer', () => {
 			const expected = 1;

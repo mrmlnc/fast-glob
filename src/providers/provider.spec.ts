@@ -80,7 +80,7 @@ describe('Providers → Provider', () => {
 			assert.ok(actual.followSymbolicLinks);
 			assert.strictEqual(typeof actual.fs, 'object');
 			assert.ok(!actual.stats);
-			assert.ok(!actual.throwErrorOnBrokenSymbolicLink);
+			assert.ok(actual.throwErrorOnBrokenSymbolicLink === false);
 			assert.strictEqual(typeof actual.transform, 'function');
 		});
 

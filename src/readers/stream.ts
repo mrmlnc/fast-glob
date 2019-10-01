@@ -58,7 +58,7 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 	private _getStat(filepath: string): Promise<fs.Stats> {
 		return new Promise((resolve, reject) => {
 			this._stat(filepath, this._fsStatSettings, (error: NodeJS.ErrnoException | null, stats) => {
-				return error ? reject(error) : resolve(stats);
+				return error === null ? resolve(stats) : reject(error);
 			});
 		});
 	}

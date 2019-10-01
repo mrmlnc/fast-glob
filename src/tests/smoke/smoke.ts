@@ -54,15 +54,15 @@ function getTestCases(tests: Array<SmokeTest | SmokeTest[]>): SmokeTest[] {
 function getTestCaseTitle(test: SmokeTest): string {
 	let title = `pattern: '${test.pattern}'`;
 
-	if (test.ignore) {
+	if (test.ignore !== undefined) {
 		title += `, ignore: '${test.ignore}'`;
 	}
 
-	if (test.broken) {
+	if (test.broken !== undefined) {
 		title += ` (broken - ${test.issue})`;
 	}
 
-	if (test.correct) {
+	if (test.correct !== undefined) {
 		title += ' (correct)';
 	}
 
@@ -70,28 +70,28 @@ function getTestCaseTitle(test: SmokeTest): string {
 }
 
 function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
-	return test.debug ? it.only : it;
+	return test.debug === true ? it.only : it;
 }
 
 async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSync | typeof getFastGlobEntriesAsync): Promise<void> {
 	const expected = getNodeGlobEntries(test.pattern, test.ignore, test.cwd, test.globOptions);
 	const actual = await func(test.pattern, test.ignore, test.cwd, test.fgOptions);
 
-	if (test.debug) {
+	if (test.debug === true) {
 		const report = generateDebugReport(expected, actual);
 
 		console.log(report);
 	}
 
-	if (test.broken && !test.issue) {
+	if (test.broken === true && test.issue === undefined) {
 		assert.fail("This test is marked as «broken», but it doesn't have a issue key.");
 	}
 
-	if (test.correct && !test.reason) {
+	if (test.correct === true && test.reason === undefined) {
 		assert.fail("This test is marked as «correct», but it doesn't have a reason.");
 	}
 
-	const isInvertedTest = test.broken || test.correct;
+	const isInvertedTest = test.broken === true || test.correct === true;
 	const assertAction = isInvertedTest ? assert.notDeepStrictEqual : assert.deepStrictEqual;
 
 	assertAction(actual, expected);
@@ -122,8 +122,8 @@ function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
 
 function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: glob.IOptions): string[] {
 	const entries = glob.sync(pattern, {
-		cwd: cwd || process.cwd(),
-		ignore: ignore ? [ignore] : [],
+		cwd: cwd === undefined ? process.cwd() : cwd,
+		ignore: ignore === undefined ? [] : [ignore],
 		...options
 	});
 
@@ -162,8 +162,8 @@ function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: stri
 
 function getFastGlobOptions(ignore?: Pattern, cwd?: string, options?: Options): Options {
 	return {
-		cwd: cwd || process.cwd(),
-		ignore: ignore ? [ignore] : [],
+		cwd: cwd === undefined ? process.cwd() : cwd,
+		ignore: ignore === undefined ? [] : [ignore],
 		onlyFiles: false,
 		...options
 	};

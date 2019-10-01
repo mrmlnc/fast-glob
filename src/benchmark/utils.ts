@@ -44,14 +44,20 @@ export function getStdev(values: number[]): number {
 	return stdev(values);
 }
 
-export function getEnvironmentAsInteger(name: string): number | undefined {
+export function getEnvironmentAsString(name: string, value: string): string {
 	const environment = process.env[name];
 
-	return environment ? parseInt(environment, 10) : undefined;
+	return environment === undefined ? value : environment;
 }
 
-export function getEnvironmentAsObject(name: string): object | undefined {
+export function getEnvironmentAsInteger(name: string, value: number): number {
 	const environment = process.env[name];
 
-	return environment ? JSON.parse(environment) as object : undefined;
+	return environment === undefined ? value : parseInt(environment, 10);
+}
+
+export function getEnvironmentAsObject(name: string, value: object): object {
+	const environment = process.env[name];
+
+	return environment === undefined ? value : JSON.parse(environment) as object;
 }

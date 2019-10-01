@@ -14,7 +14,7 @@ const options: glob.IOptions = {
 const timeStart = utils.timeStart();
 
 glob(process.env.BENCHMARK_PATTERN as string, options, (error, matches) => {
-	if (error) {
+	if (error !== null) {
 		process.exit(0);
 	}
 
