@@ -1,6 +1,6 @@
 import { SuiteMeasures } from './runner';
 
-import stdev = require('compute-stdev');
+import stdev = require('compute-stdev'); // eslint-disable-line @typescript-eslint/no-require-imports
 
 const NANOSECONDS_IN_SECOND = 1e9;
 const MICROSECONDS_IN_SECOND = 1e6;

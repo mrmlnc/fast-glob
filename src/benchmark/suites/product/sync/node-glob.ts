@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import * as utils from '../../../utils';
+import * as glob from 'glob';
 
-import glob = require('glob');
+import * as utils from '../../../utils';
 
 const options: glob.IOptions = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),

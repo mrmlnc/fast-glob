@@ -5,7 +5,7 @@ import { Options } from '../settings';
 import Reporter from './reporter';
 import * as utils from './utils';
 
-import execa = require('execa');
+import execa = require('execa'); // eslint-disable-line @typescript-eslint/no-require-imports
 
 export type RunnerOptions = {
 	type: string;

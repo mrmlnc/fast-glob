@@ -1,8 +1,8 @@
+import * as minimist from 'minimist';
+
 import * as logger from './logger';
 import Runner, { RunnerOptions } from './runner';
 import * as utils from './utils';
-
-import minimist = require('minimist');
 
 const PROCESS_FIRST_ARGUMENT_INDEX = 2;
 const DEFAULT_BENCHMARK_LAUNCHES = 10;

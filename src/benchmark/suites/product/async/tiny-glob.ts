@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import * as utils from '../../../utils';
 
-import glob = require('tiny-glob');
+import glob = require('tiny-glob'); // eslint-disable-line @typescript-eslint/no-require-imports
 
 const options = {
 	cwd: path.join(process.cwd(), process.env.BENCHMARK_BASE_DIR as string),
