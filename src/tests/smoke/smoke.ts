@@ -30,7 +30,7 @@ export type SmokeTest = {
 	reason?: string;
 };
 
-type MochaDefinition = (desc: string, cb: (this: Mocha.Context) => void) => void;
+type MochaDefinition = Mocha.TestFunction | Mocha.ExclusiveTestFunction;
 type DebugCompareTestMarker = '+' | '-';
 
 export function suite(name: string, tests: Array<SmokeTest | SmokeTest[]>): void {
