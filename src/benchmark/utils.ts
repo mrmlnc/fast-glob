@@ -30,7 +30,7 @@ export function getMemory(): number {
 	return process.memoryUsage().heapUsed / BYTES_IN_MEGABYTE;
 }
 
-export function getMeasures(matches: number, time: number, memory: number): string {
+export function formatMeasures(matches: number, time: number, memory: number): string {
 	return JSON.stringify({ matches, time, memory } as SuiteMeasures);
 }
 

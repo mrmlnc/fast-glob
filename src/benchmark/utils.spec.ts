@@ -78,7 +78,7 @@ describe('Benchmark → Utils', () => {
 		it('should return measures', () => {
 			const expected = '{"matches":1,"time":1,"memory":1}';
 
-			const actual = utils.getMeasures(1, 1, 1);
+			const actual = utils.formatMeasures(1, 1, 1);
 
 			assert.strictEqual(actual, expected);
 		});

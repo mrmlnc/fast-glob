@@ -15,7 +15,7 @@ try {
 	const matches = glob.sync(process.env.BENCHMARK_PATTERN as string, options);
 	const memory = utils.getMemory();
 	const time = utils.timeEnd(timeStart);
-	const measures = utils.getMeasures(matches.length, time, memory);
+	const measures = utils.formatMeasures(matches.length, time, memory);
 
 	console.info(measures);
 } catch {

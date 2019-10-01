@@ -14,7 +14,7 @@ glob(process.env.BENCHMARK_PATTERN as string, options)
 	.then((matches) => {
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);
-		const measures = utils.getMeasures(matches.length, time, memory);
+		const measures = utils.formatMeasures(matches.length, time, memory);
 
 		console.info(measures);
 	})
