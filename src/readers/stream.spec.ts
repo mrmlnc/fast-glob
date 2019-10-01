@@ -6,7 +6,7 @@ import * as fsWalk from '@nodelib/fs.walk';
 import * as sinon from 'sinon';
 
 import Settings, { Options } from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import { Entry, ErrnoException, ReaderOptions } from '../types';
 import ReaderStream from './stream';
 

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 
 import Settings, { Options } from '../../settings';
 import * as tests from '../../tests';
-import { EntryFilterFunction, Pattern } from '../../types/index';
+import { EntryFilterFunction, Pattern } from '../../types';
 import DeepFilter from './deep';
 
 function getDeepFilterInstance(options?: Options): DeepFilter {

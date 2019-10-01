@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
-import * as fg from '../../index';
+import * as fg from '../..';
 import { Options } from '../../settings';
-import { Pattern } from '../../types/index';
+import { Pattern } from '../../types';
 
 import Table = require('easy-table');
 import glob = require('glob');

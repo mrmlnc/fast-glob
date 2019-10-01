@@ -6,8 +6,8 @@ import * as sinon from 'sinon';
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import Settings, { Options } from '../settings';
-import * as tests from '../tests/index';
-import { Entry, EntryItem, ErrnoException } from '../types/index';
+import * as tests from '../tests';
+import { Entry, EntryItem, ErrnoException } from '../types';
 import ProviderAsync from './async';
 
 class TestProvider extends ProviderAsync {

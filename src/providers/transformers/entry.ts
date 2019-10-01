@@ -1,6 +1,6 @@
 import Settings from '../../settings';
 import { Entry, EntryItem, EntryTransformerFunction } from '../../types';
-import * as utils from '../../utils/index';
+import * as utils from '../../utils';
 
 export default class EntryTransformer {
 	constructor(private readonly _settings: Settings) { }

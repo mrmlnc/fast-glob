@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
+import { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 import globParent = require('glob-parent');
 import micromatch = require('micromatch');

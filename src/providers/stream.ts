@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry, ErrnoException, ReaderOptions } from '../types/index';
+import { Entry, ErrnoException, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export default class ProviderStream extends Provider<NodeJS.ReadableStream> {

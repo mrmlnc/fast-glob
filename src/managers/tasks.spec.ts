@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 
 import Settings from '../settings';
-import * as tests from '../tests/index';
-import { PatternsGroup } from '../types/index';
+import * as tests from '../tests';
+import { PatternsGroup } from '../types';
 import * as manager from './tasks';
 
 describe('Managers → Task', () => {

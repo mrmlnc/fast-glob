@@ -1,6 +1,6 @@
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry, EntryItem, ReaderOptions } from '../types/index';
+import { Entry, EntryItem, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {

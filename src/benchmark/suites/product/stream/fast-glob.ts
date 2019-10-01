@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as glob from '../../../../index';
+import * as glob from '../../../..';
 import * as utils from '../../../utils';
 
 const options: glob.Options = {

@@ -2,9 +2,9 @@ import * as assert from 'assert';
 import * as path from 'path';
 
 import Settings, { Options } from '../../settings';
-import * as tests from '../../tests/index';
+import * as tests from '../../tests';
 import { EntryTransformerFunction } from '../../types';
-import * as utils from '../../utils/index';
+import * as utils from '../../utils';
 import EntryTransformer from './entry';
 
 function getEntryTransformer(options?: Options): EntryTransformer {

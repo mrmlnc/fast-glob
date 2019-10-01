@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 
-import { FileSystemAdapter, Pattern } from './types/index';
+import { FileSystemAdapter, Pattern } from './types';
 
 const CPU_COUNT = os.cpus().length;
 
