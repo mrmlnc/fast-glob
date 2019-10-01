@@ -35,7 +35,7 @@ function getReader(options?: Options): TestReader {
 }
 
 function getReaderOptions(options: Partial<ReaderOptions> = {}): ReaderOptions {
-	return { ...options } as ReaderOptions;
+	return { ...options } as unknown as ReaderOptions;
 }
 
 describe('Readers → ReaderSync', () => {

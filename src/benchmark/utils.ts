@@ -31,7 +31,9 @@ export function getMemory(): number {
 }
 
 export function formatMeasures(matches: number, time: number, memory: number): string {
-	return JSON.stringify({ matches, time, memory } as SuiteMeasures);
+	const measures: SuiteMeasures = { matches, time, memory };
+
+	return JSON.stringify(measures);
 }
 
 export function getAverageValue(values: number[]): number {
