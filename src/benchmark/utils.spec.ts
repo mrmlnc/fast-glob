@@ -104,39 +104,39 @@ describe('Benchmark → Utils', () => {
 		});
 	});
 
-	describe('.getEnvAsInteger', () => {
+	describe('.getEnvironmentAsInteger', () => {
 		it('should return integer', () => {
 			const expected = 1;
 
-			const actual = utils.getEnvAsInteger('FG_TEST_ENV_INTEGER');
+			const actual = utils.getEnvironmentAsInteger('FG_TEST_ENV_INTEGER', 0);
 
 			assert.strictEqual(actual, expected);
 		});
 
-		it('should return undefined', () => {
-			const expected = undefined;
+		it('should return default value', () => {
+			const expected = 0;
 
-			const actual = utils.getEnvAsInteger('NON_EXIST_ENV_VARIABLE');
+			const actual = utils.getEnvironmentAsInteger('NON_EXIST_ENV_VARIABLE', 0);
 
 			assert.strictEqual(actual, expected);
 		});
 	});
 
-	describe('.getEnvAsObject', () => {
+	describe('.getEnvironmentAsObject', () => {
 		it('should return object', () => {
 			const expected = { value: true };
 
-			const actual = utils.getEnvAsObject('FG_TEST_ENV_OBJECT');
+			const actual = utils.getEnvironmentAsObject('FG_TEST_ENV_OBJECT', {});
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should return undefined', () => {
-			const expected = undefined;
+		it('should return default value', () => {
+			const expected = {};
 
-			const actual = utils.getEnvAsObject('NON_EXIST_ENV_VARIABLE');
+			const actual = utils.getEnvironmentAsObject('NON_EXIST_ENV_VARIABLE', {});
 
-			assert.strictEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

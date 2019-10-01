@@ -18,10 +18,10 @@ const defaultArgv: Arguments = {
 	type: process.env.BENCHMARK_TYPE || 'product',
 	mode: process.env.BENCHMARK_MODE || 'async',
 	pattern: process.env.BENCHMARK_PATTERN || '*',
-	launches: utils.getEnvAsInteger('BENCHMARK_LAUNCHES') || DEFAULT_BENCHMARK_LAUNCHES,
-	maxStdev: utils.getEnvAsInteger('BENCHMARK_MAX_STDEV') || DEFAULT_BENCHMARK_MAX_STDEV,
-	retries: utils.getEnvAsInteger('BENCHMARK_RETRIES') || DEFAULT_BENCHMARK_RETRIES,
-	options: utils.getEnvAsObject('BENCHMARK_OPTIONS') || {}
+	launches: utils.getEnvironmentAsInteger('BENCHMARK_LAUNCHES') || DEFAULT_BENCHMARK_LAUNCHES,
+	maxStdev: utils.getEnvironmentAsInteger('BENCHMARK_MAX_STDEV') || DEFAULT_BENCHMARK_MAX_STDEV,
+	retries: utils.getEnvironmentAsInteger('BENCHMARK_RETRIES') || DEFAULT_BENCHMARK_RETRIES,
+	options: utils.getEnvironmentAsObject('BENCHMARK_OPTIONS') || {}
 };
 
 const argv = minimist<Arguments>(process.argv.slice(PROCESS_FIRST_ARGUMENT_INDEX), {

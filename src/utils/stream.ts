@@ -4,7 +4,7 @@ export function merge(streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream {
 	const mergedStream = merge2(streams);
 
 	streams.forEach((stream) => {
-		stream.once('error', (err) => mergedStream.emit('error', err));
+		stream.once('error', (error) => mergedStream.emit('error', error));
 	});
 
 	return mergedStream;

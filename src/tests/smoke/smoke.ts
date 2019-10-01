@@ -120,32 +120,34 @@ function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
 	return items.includes(item) ? '+' : '-';
 }
 
-function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: glob.IOptions): string[] {
-	const options: glob.IOptions = {
+function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: glob.IOptions): string[] {
+	const entries = glob.sync(pattern, {
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
-		...opts
-	};
+		...options
+	});
 
-	return glob.sync(pattern, options).sort((a, b) => a.localeCompare(b));
+	entries.sort((a, b) => a.localeCompare(b));
+
+	return entries;
 }
 
-function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
-	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, opts)).sort((a, b) => a.localeCompare(b));
+function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): string[] {
+	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, options)).sort((a, b) => a.localeCompare(b));
 }
 
-function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
-	return fg(pattern, getFastGlobOptions(ignore, cwd, opts)).then((entries) => {
+function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): Promise<string[]> {
+	return fg(pattern, getFastGlobOptions(ignore, cwd, options)).then((entries) => {
 		entries.sort((a, b) => a.localeCompare(b));
 
 		return entries;
 	});
 }
 
-function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
+function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): Promise<string[]> {
 	const entries: string[] = [];
 
-	const stream = fg.stream(pattern, getFastGlobOptions(ignore, cwd, opts));
+	const stream = fg.stream(pattern, getFastGlobOptions(ignore, cwd, options));
 
 	return new Promise((resolve, reject) => {
 		stream.on('data', (entry: string) => entries.push(entry));
@@ -158,11 +160,11 @@ function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: stri
 	});
 }
 
-function getFastGlobOptions(ignore?: Pattern, cwd?: string, opts?: Options): Options {
+function getFastGlobOptions(ignore?: Pattern, cwd?: string, options?: Options): Options {
 	return {
 		cwd: cwd || process.cwd(),
 		ignore: ignore ? [ignore] : [],
 		onlyFiles: false,
-		...opts
+		...options
 	};
 }

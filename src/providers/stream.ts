@@ -13,14 +13,14 @@ export default class ProviderStream extends Provider<NodeJS.ReadableStream> {
 		const options = this._getReaderOptions(task);
 
 		const source = this.api(root, task, options);
-		const dest = new Readable({ objectMode: true, read: () => { /* noop */ } });
+		const destination = new Readable({ objectMode: true, read: () => { /* noop */ } });
 
 		source
-			.once('error', (error: ErrnoException) => dest.emit('error', error))
-			.on('data', (entry: Entry) => dest.emit('data', options.transform(entry)))
-			.once('end', () => dest.emit('end'));
+			.once('error', (error: ErrnoException) => destination.emit('error', error))
+			.on('data', (entry: Entry) => destination.emit('data', options.transform(entry)))
+			.once('end', () => destination.emit('end'));
 
-		return dest;
+		return destination;
 	}
 
 	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {

@@ -54,14 +54,17 @@ export default class Runner {
 	 * Runs a single suite in the child process and returns the measurements of his work.
 	 */
 	public suite(suitePath: string): SuiteMeasures {
-		const env: NodeJS.ProcessEnv = {
+		const environment: NodeJS.ProcessEnv = {
 			NODE_ENV: 'production',
 			BENCHMARK_BASE_DIR: this._basedir,
 			BENCHMARK_PATTERN: this._options.pattern,
 			BENCHMARK_OPTIONS: JSON.stringify(this._options.options)
 		};
 
-		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
+		// eslint-disable-next-line unicorn/prevent-abbreviations
+		const execaOptions: execa.SyncOptions = { env: environment, extendEnv: true };
+
+		const stdout = this.execNodeProcess([suitePath], execaOptions);
 
 		try {
 			return JSON.parse(stdout) as SuiteMeasures;
