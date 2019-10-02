@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import execa = require('execa');
-
 import { Options } from '../settings';
 import Reporter from './reporter';
 import * as utils from './utils';
 
-export interface RunnerOptions {
+import execa = require('execa'); // eslint-disable-line @typescript-eslint/no-require-imports
+
+export type RunnerOptions = {
 	type: string;
 	mode: string;
 	pattern: string;
@@ -15,33 +15,33 @@ export interface RunnerOptions {
 	maxStdev: number;
 	retries: number;
 	options: Options;
-}
+};
 
-export interface SuiteMeasures {
+export type SuiteMeasures = {
 	matches: number;
 	time: number;
 	memory: number;
-}
+};
 
-export interface Measure {
+export type Measure = {
 	units: string;
 	raw: number[];
 	average: number;
 	stdev: number;
-}
+};
 
-export interface SuitePackMeasures extends Record<string, Measure> {
+export type SuitePackMeasures = {
 	time: Measure;
 	memory: Measure;
-}
+};
 
-export interface SuitePackResult {
+export type SuitePackResult = {
 	name: string;
 	errors: number;
 	entries: number;
 	retries: number;
 	measures: SuitePackMeasures;
-}
+};
 
 export default class Runner {
 	constructor(private readonly _basedir: string, private readonly _options: RunnerOptions) { }
@@ -54,14 +54,17 @@ export default class Runner {
 	 * Runs a single suite in the child process and returns the measurements of his work.
 	 */
 	public suite(suitePath: string): SuiteMeasures {
-		const env: NodeJS.ProcessEnv = {
+		const environment: NodeJS.ProcessEnv = {
 			NODE_ENV: 'production',
 			BENCHMARK_BASE_DIR: this._basedir,
 			BENCHMARK_PATTERN: this._options.pattern,
 			BENCHMARK_OPTIONS: JSON.stringify(this._options.options)
 		};
 
-		const stdout = this.execNodeProcess([suitePath], { env, extendEnv: true });
+		// eslint-disable-next-line unicorn/prevent-abbreviations
+		const execaOptions: execa.SyncOptions = { env: environment, extendEnv: true };
+
+		const stdout = this.execNodeProcess([suitePath], execaOptions);
 
 		try {
 			return JSON.parse(stdout) as SuiteMeasures;

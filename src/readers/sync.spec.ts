@@ -6,7 +6,7 @@ import * as fsWalk from '@nodelib/fs.walk';
 import * as sinon from 'sinon';
 
 import Settings, { Options } from '../settings';
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import { ReaderOptions } from '../types';
 import ReaderSync from './sync';
 
@@ -35,7 +35,7 @@ function getReader(options?: Options): TestReader {
 }
 
 function getReaderOptions(options: Partial<ReaderOptions> = {}): ReaderOptions {
-	return { ...options } as ReaderOptions;
+	return { ...options } as unknown as ReaderOptions;
 }
 
 describe('Readers → ReaderSync', () => {

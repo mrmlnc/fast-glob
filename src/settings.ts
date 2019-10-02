@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 
-import { FileSystemAdapter, Pattern } from './types/index';
+import { FileSystemAdapter, Pattern } from './types';
 
 const CPU_COUNT = os.cpus().length;
 
@@ -14,8 +14,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync
 };
 
-// tslint:disable no-redundant-jsdoc
-export interface Options {
+export type Options = {
 	/**
 	 * Return the absolute path for entries.
 	 *
@@ -149,8 +148,7 @@ export interface Options {
 	 * @default true
 	 */
 	unique?: boolean;
-}
-// tslint:enable no-redundant-jsdoc
+};
 
 export default class Settings {
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
@@ -179,6 +177,7 @@ export default class Settings {
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;
 		}
+
 		if (this.stats) {
 			this.objectMode = true;
 		}

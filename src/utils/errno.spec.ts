@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import * as tests from '../tests/index';
+import * as tests from '../tests';
 import * as util from './errno';
 
 describe('Utils → Errno', () => {

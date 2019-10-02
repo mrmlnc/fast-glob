@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types/index';
+import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
 
 export default class ReaderSync extends Reader<Entry[]> {

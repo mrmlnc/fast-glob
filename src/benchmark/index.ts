@@ -1,25 +1,30 @@
-import minimist = require('minimist');
+import * as minimist from 'minimist';
 
 import * as logger from './logger';
 import Runner, { RunnerOptions } from './runner';
 import * as utils from './utils';
 
-interface Arguments extends RunnerOptions {
+const PROCESS_FIRST_ARGUMENT_INDEX = 2;
+const DEFAULT_BENCHMARK_LAUNCHES = 10;
+const DEFAULT_BENCHMARK_MAX_STDEV = 3;
+const DEFAULT_BENCHMARK_RETRIES = 5;
+
+type Arguments = RunnerOptions & {
 	basedir: string;
-}
+};
 
 const defaultArgv: Arguments = {
 	basedir: '.',
-	type: process.env.BENCHMARK_TYPE || 'product',
-	mode: process.env.BENCHMARK_MODE || 'async',
-	pattern: process.env.BENCHMARK_PATTERN || '*',
-	launches: utils.getEnvAsInteger('BENCHMARK_LAUNCHES') || 10,
-	maxStdev: utils.getEnvAsInteger('BENCHMARK_MAX_STDEV') || 3,
-	retries: utils.getEnvAsInteger('BENCHMARK_RETRIES') || 5,
-	options: utils.getEnvAsObject('BENCHMARK_OPTIONS') || {}
+	type: utils.getEnvironmentAsString('BENCHMARK_TYPE', 'product'),
+	mode: utils.getEnvironmentAsString('BENCHMARK_MODE', 'async'),
+	pattern: utils.getEnvironmentAsString('BENCHMARK_PATTERN', '*'),
+	launches: utils.getEnvironmentAsInteger('BENCHMARK_LAUNCHES', DEFAULT_BENCHMARK_LAUNCHES),
+	maxStdev: utils.getEnvironmentAsInteger('BENCHMARK_MAX_STDEV', DEFAULT_BENCHMARK_MAX_STDEV),
+	retries: utils.getEnvironmentAsInteger('BENCHMARK_RETRIES', DEFAULT_BENCHMARK_RETRIES),
+	options: utils.getEnvironmentAsObject('BENCHMARK_OPTIONS', {})
 };
 
-const argv = minimist<Arguments>(process.argv.slice(2), {
+const argv = minimist<Arguments>(process.argv.slice(PROCESS_FIRST_ARGUMENT_INDEX), {
 	default: defaultArgv
 });
 

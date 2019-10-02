@@ -3,8 +3,8 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
-import * as tests from '../tests/index';
-import { MicromatchOptions, ReaderOptions } from '../types/index';
+import * as tests from '../tests';
+import { MicromatchOptions, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export class TestProvider extends Provider<Array<{}>> {
@@ -80,7 +80,7 @@ describe('Providers → Provider', () => {
 			assert.ok(actual.followSymbolicLinks);
 			assert.strictEqual(typeof actual.fs, 'object');
 			assert.ok(!actual.stats);
-			assert.ok(!actual.throwErrorOnBrokenSymbolicLink);
+			assert.ok(actual.throwErrorOnBrokenSymbolicLink === false);
 			assert.strictEqual(typeof actual.transform, 'function');
 		});
 

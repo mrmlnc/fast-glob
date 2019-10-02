@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
-import { MicromatchOptions, ReaderOptions } from '../types/index';
+import { MicromatchOptions, ReaderOptions } from '../types';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 import ErrorFilter from './filters/error';

@@ -11,7 +11,7 @@ describe('Benchmark → Utils', () => {
 		process.env.FG_TEST_ENV_OBJECT = '{ "value": true }';
 
 		process.hrtime = (() => [0, 1e7]) as NodeJS.HRTime;
-		process.memoryUsage = () => ({ external: 0, rss: 0, heapTotal: 0, heapUsed: 10 * 1024 * 1024 });
+		process.memoryUsage = () => ({ external: 0, rss: 0, heapTotal: 0, heapUsed: 10 * 1e6 });
 	});
 
 	after(() => {
@@ -78,7 +78,7 @@ describe('Benchmark → Utils', () => {
 		it('should return measures', () => {
 			const expected = '{"matches":1,"time":1,"memory":1}';
 
-			const actual = utils.getMeasures(1, 1, 1);
+			const actual = utils.formatMeasures(1, 1, 1);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -104,39 +104,57 @@ describe('Benchmark → Utils', () => {
 		});
 	});
 
-	describe('.getEnvAsInteger', () => {
-		it('should return integer', () => {
-			const expected = 1;
+	describe('.getEnvironmentAsString', () => {
+		it('should return string', () => {
+			const expected = 'text';
 
-			const actual = utils.getEnvAsInteger('FG_TEST_ENV_INTEGER');
+			const actual = utils.getEnvironmentAsString('FG_TEST_ENV_STRING', 'text');
 
 			assert.strictEqual(actual, expected);
 		});
 
-		it('should return undefined', () => {
-			const expected = undefined;
+		it('should return default value', () => {
+			const expected = '';
 
-			const actual = utils.getEnvAsInteger('NON_EXIST_ENV_VARIABLE');
+			const actual = utils.getEnvironmentAsString('NON_EXIST_ENV_VARIABLE', '');
 
 			assert.strictEqual(actual, expected);
 		});
 	});
 
-	describe('.getEnvAsObject', () => {
+	describe('.getEnvironmentAsInteger', () => {
+		it('should return integer', () => {
+			const expected = 1;
+
+			const actual = utils.getEnvironmentAsInteger('FG_TEST_ENV_INTEGER', 0);
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should return default value', () => {
+			const expected = 0;
+
+			const actual = utils.getEnvironmentAsInteger('NON_EXIST_ENV_VARIABLE', 0);
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('.getEnvironmentAsObject', () => {
 		it('should return object', () => {
 			const expected = { value: true };
 
-			const actual = utils.getEnvAsObject('FG_TEST_ENV_OBJECT');
+			const actual = utils.getEnvironmentAsObject('FG_TEST_ENV_OBJECT', {});
 
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should return undefined', () => {
-			const expected = undefined;
+		it('should return default value', () => {
+			const expected = {};
 
-			const actual = utils.getEnvAsObject('NON_EXIST_ENV_VARIABLE');
+			const actual = utils.getEnvironmentAsObject('NON_EXIST_ENV_VARIABLE', {});
 
-			assert.strictEqual(actual, expected);
+			assert.deepStrictEqual(actual, expected);
 		});
 	});
 });

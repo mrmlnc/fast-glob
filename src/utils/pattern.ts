@@ -1,9 +1,9 @@
 import * as path from 'path';
 
-import globParent = require('glob-parent');
-import micromatch = require('micromatch');
+import * as globParent from 'glob-parent';
+import * as micromatch from 'micromatch';
 
-import { MicromatchOptions, Pattern, PatternRe } from '../types/index';
+import { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -14,11 +14,11 @@ const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^@!*?+])\(.*\|.*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[@!*?+]\(.*\)/;
 const BRACE_EXPANSIONS_SYMBOLS_RE = /{.*(?:,|\.\.).*}/;
 
-interface PatternTypeOptions {
+type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
-}
+};
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
@@ -77,7 +77,7 @@ export function getBaseDirectory(pattern: Pattern): string {
 }
 
 export function hasGlobStar(pattern: Pattern): boolean {
-	return pattern.indexOf(GLOBSTAR) !== -1;
+	return pattern.includes(GLOBSTAR);
 }
 
 export function endsWithSlashGlobStar(pattern: Pattern): boolean {
@@ -125,7 +125,7 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
 }
 
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
-	const filepath = entry.replace(/^\.[\\\/]/, '');
+	const filepath = entry.replace(/^\.[\\/]/, '');
 
 	return patternsRe.some((patternRe) => patternRe.test(filepath));
 }

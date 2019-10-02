@@ -39,7 +39,7 @@ describe('Benchmark → Runner', () => {
 
 	describe('.suite', () => {
 		it('should returns measures', () => {
-			const runner = new RunnerFakeProcess('basedir', {} as RunnerOptions);
+			const runner = new RunnerFakeProcess('basedir', runnerOptions);
 
 			const expected: SuiteMeasures = {
 				matches: 1,
@@ -53,7 +53,7 @@ describe('Benchmark → Runner', () => {
 		});
 
 		it('should throw error', () => {
-			const runner = new RunnerFakeProcessError('basedir', {} as RunnerOptions);
+			const runner = new RunnerFakeProcessError('basedir', runnerOptions);
 
 			assert.throws(() => runner.suite('suitePath'), /Ops! Broken suite run\./);
 		});

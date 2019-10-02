@@ -1,13 +1,13 @@
 import * as assert from 'assert';
 
-import * as pkg from './index';
-import * as tests from './tests/index';
-import { EntryItem, ErrnoException } from './types/index';
+import * as tests from './tests';
+import { EntryItem, ErrnoException } from './types';
+import * as pkg from '.';
 
 describe('Package', () => {
 	describe('.sync', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* tslint:disable-next-line no-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.sync(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 
@@ -24,7 +24,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -41,7 +41,7 @@ describe('Package', () => {
 
 			const actual = pkg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -50,7 +50,7 @@ describe('Package', () => {
 	describe('.async', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			try {
-				/* tslint:disable-next-line no-any */
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				await pkg(null as any);
 				throw new Error('An unexpected error was found.');
 			} catch (error) {
@@ -71,7 +71,7 @@ describe('Package', () => {
 
 			const actual = await pkg(['fixtures/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -88,7 +88,7 @@ describe('Package', () => {
 
 			const actual = await pkg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			actual.sort();
+			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -96,12 +96,12 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* tslint:disable-next-line no-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.stream(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 
 		it('should returns entries', (done) => {
-			const expected: EntryItem[] = [
+			const expected: string[] = [
 				'fixtures/file.md',
 				'fixtures/first/file.md',
 				'fixtures/first/nested/directory/file.md',
@@ -111,14 +111,15 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: EntryItem[] = [];
+			const actual: string[] = [];
 
 			const stream = pkg.stream(['fixtures/**/*.md']);
 
-			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort();
+				actual.sort((a, b) => a.localeCompare(b));
+
 				assert.deepStrictEqual(actual, expected);
 				done();
 			});
@@ -134,14 +135,15 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md'
 			];
 
-			const actual: EntryItem[] = [];
+			const actual: string[] = [];
 
 			const stream = pkg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			stream.on('data', (entry: EntryItem) => actual.push(entry));
+			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort();
+				actual.sort((a, b) => a.localeCompare(b));
+
 				assert.deepStrictEqual(actual, expected);
 				done();
 			});
@@ -150,7 +152,7 @@ describe('Package', () => {
 
 	describe('.generateTasks', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* tslint:disable-next-line no-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.generateTasks(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 

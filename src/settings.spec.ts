@@ -57,7 +57,7 @@ describe('Settings', () => {
 	});
 
 	it('should return the `fs` option with custom method', () => {
-		const customReaddirSync = () => [];
+		const customReaddirSync = (): never[] => [];
 
 		const settings = new Settings({
 			fs: { readdirSync: customReaddirSync }

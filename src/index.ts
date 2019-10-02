@@ -4,11 +4,11 @@ import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
 import Settings, { Options as OptionsInternal } from './settings';
-import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types/index';
-import * as utils from './utils/index';
+import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import * as utils from './utils';
 
-type EntryObjectModePredicate = { [P in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
-type EntryStatsPredicate = { [P in keyof Pick<OptionsInternal, 'stats'>]-?: true };
+type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
+type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
 function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
@@ -25,6 +25,8 @@ function FastGlob(source: PatternInternal | PatternInternal[], options?: Options
 	return Promise.all(works).then(utils.array.flatten);
 }
 
+// https://github.com/typescript-eslint/typescript-eslint/issues/60
+// eslint-disable-next-line no-redeclare
 namespace FastGlob {
 	export type Options = OptionsInternal;
 	export type Entry = EntryInternal;
@@ -98,7 +100,6 @@ function assertPatternsInput(source: unknown): void | never {
 }
 
 function isString(source: unknown): source is string {
-	/* tslint:disable-next-line strict-type-predicates */
 	return typeof source === 'string';
 }
 

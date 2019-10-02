@@ -1,13 +1,14 @@
 import * as assert from 'assert';
 
-import Table = require('easy-table');
-import glob = require('glob');
+import * as glob from 'glob';
 
-import * as fg from '../../index';
+import * as fg from '../..';
 import { Options } from '../../settings';
-import { Pattern } from '../../types/index';
+import { Pattern } from '../../types';
 
-export interface SmokeTest {
+import Table = require('easy-table'); // eslint-disable-line @typescript-eslint/no-require-imports
+
+export type SmokeTest = {
 	pattern: Pattern;
 	ignore?: Pattern;
 	cwd?: string;
@@ -27,9 +28,9 @@ export interface SmokeTest {
 	 */
 	correct?: boolean;
 	reason?: string;
-}
+};
 
-type MochaDefinition = (desc: string, cb: (this: Mocha.Context) => void) => void;
+type MochaDefinition = Mocha.TestFunction | Mocha.ExclusiveTestFunction;
 type DebugCompareTestMarker = '+' | '-';
 
 export function suite(name: string, tests: Array<SmokeTest | SmokeTest[]>): void {
@@ -54,13 +55,15 @@ function getTestCases(tests: Array<SmokeTest | SmokeTest[]>): SmokeTest[] {
 function getTestCaseTitle(test: SmokeTest): string {
 	let title = `pattern: '${test.pattern}'`;
 
-	if (test.ignore) {
+	if (test.ignore !== undefined) {
 		title += `, ignore: '${test.ignore}'`;
 	}
-	if (test.broken) {
+
+	if (test.broken !== undefined) {
 		title += ` (broken - ${test.issue})`;
 	}
-	if (test.correct) {
+
+	if (test.correct !== undefined) {
 		title += ' (correct)';
 	}
 
@@ -68,28 +71,29 @@ function getTestCaseTitle(test: SmokeTest): string {
 }
 
 function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
-	return test.debug ? it.only : it;
+	return test.debug === true ? it.only : it;
 }
 
 async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSync | typeof getFastGlobEntriesAsync): Promise<void> {
 	const expected = getNodeGlobEntries(test.pattern, test.ignore, test.cwd, test.globOptions);
 	const actual = await func(test.pattern, test.ignore, test.cwd, test.fgOptions);
 
-	if (test.debug) {
+	if (test.debug === true) {
 		const report = generateDebugReport(expected, actual);
 
 		console.log(report);
 	}
 
-	if (test.broken && !test.issue) {
+	if (test.broken === true && test.issue === undefined) {
 		assert.fail("This test is marked as «broken», but it doesn't have a issue key.");
 	}
 
-	if (test.correct && !test.reason) {
+	if (test.correct === true && test.reason === undefined) {
 		assert.fail("This test is marked as «correct», but it doesn't have a reason.");
 	}
 
-	const assertAction = (test.broken || test.correct) ? assert.notDeepStrictEqual : assert.deepStrictEqual;
+	const isInvertedTest = test.broken === true || test.correct === true;
+	const assertAction = isInvertedTest ? assert.notDeepStrictEqual : assert.deepStrictEqual;
 
 	assertAction(actual, expected);
 }
@@ -114,52 +118,54 @@ function generateDebugReport(expected: string[], actual: string[]): string | nul
 }
 
 function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
-	return items.indexOf(item) !== -1 ? '+' : '-';
+	return items.includes(item) ? '+' : '-';
 }
 
-function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: glob.IOptions): string[] {
-	const options: glob.IOptions = {
-		cwd: cwd || process.cwd(),
-		ignore: ignore ? [ignore] : [],
-		...opts
-	};
+function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: glob.IOptions): string[] {
+	const entries = glob.sync(pattern, {
+		cwd: cwd === undefined ? process.cwd() : cwd,
+		ignore: ignore === undefined ? [] : [ignore],
+		...options
+	});
 
-	return glob.sync(pattern, options).sort();
+	entries.sort((a, b) => a.localeCompare(b));
+
+	return entries;
 }
 
-function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): string[] {
-	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, opts)).sort();
+function getFastGlobEntriesSync(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): string[] {
+	return fg.sync(pattern, getFastGlobOptions(ignore, cwd, options)).sort((a, b) => a.localeCompare(b));
 }
 
-function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
-	return fg(pattern, getFastGlobOptions(ignore, cwd, opts)).then((entries) => {
-		entries.sort();
+function getFastGlobEntriesAsync(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): Promise<string[]> {
+	return fg(pattern, getFastGlobOptions(ignore, cwd, options)).then((entries) => {
+		entries.sort((a, b) => a.localeCompare(b));
 
 		return entries;
 	});
 }
 
-function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: string, opts?: Options): Promise<string[]> {
+function getFastGlobEntriesStream(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: Options): Promise<string[]> {
 	const entries: string[] = [];
 
-	const stream = fg.stream(pattern, getFastGlobOptions(ignore, cwd, opts));
+	const stream = fg.stream(pattern, getFastGlobOptions(ignore, cwd, options));
 
 	return new Promise((resolve, reject) => {
 		stream.on('data', (entry: string) => entries.push(entry));
 		stream.once('error', reject);
 		stream.once('end', () => {
-			entries.sort();
+			entries.sort((a, b) => a.localeCompare(b));
 
 			resolve(entries);
 		});
 	});
 }
 
-function getFastGlobOptions(ignore?: Pattern, cwd?: string, opts?: Options): Options {
+function getFastGlobOptions(ignore?: Pattern, cwd?: string, options?: Options): Options {
 	return {
-		cwd: cwd || process.cwd(),
-		ignore: ignore ? [ignore] : [],
+		cwd: cwd === undefined ? process.cwd() : cwd,
+		ignore: ignore === undefined ? [] : [ignore],
 		onlyFiles: false,
-		...opts
+		...options
 	};
 }
