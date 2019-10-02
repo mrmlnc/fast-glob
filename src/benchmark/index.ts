@@ -9,9 +9,9 @@ const DEFAULT_BENCHMARK_LAUNCHES = 10;
 const DEFAULT_BENCHMARK_MAX_STDEV = 3;
 const DEFAULT_BENCHMARK_RETRIES = 5;
 
-type Arguments = {
+type Arguments = RunnerOptions & {
 	basedir: string;
-} & RunnerOptions;
+};
 
 const defaultArgv: Arguments = {
 	basedir: '.',

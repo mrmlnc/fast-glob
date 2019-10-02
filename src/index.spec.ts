@@ -7,7 +7,7 @@ import * as pkg from '.';
 describe('Package', () => {
 	describe('.sync', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.sync(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 
@@ -50,7 +50,7 @@ describe('Package', () => {
 	describe('.async', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			try {
-				/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				await pkg(null as any);
 				throw new Error('An unexpected error was found.');
 			} catch (error) {
@@ -96,7 +96,7 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.stream(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 
@@ -152,7 +152,7 @@ describe('Package', () => {
 
 	describe('.generateTasks', () => {
 		it('should throw an error when input values can not pass validation', () => {
-			/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			assert.throws(() => pkg.generateTasks(null as any), /TypeError: Patterns must be a string or an array of strings/);
 		});
 

@@ -9,14 +9,14 @@ export type Pattern = string;
 export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
-export type ReaderOptions = {
+export type ReaderOptions = fsWalk.Options & {
 	transform(entry: Entry): EntryItem;
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	errorFilter: ErrorFilterFunction;
 	fs: FileSystemAdapter;
 	stats: boolean;
-} & fsWalk.Options;
+};
 
 export type ErrorFilterFunction = fsWalk.ErrorFilterFunction;
 export type EntryFilterFunction = fsWalk.EntryFilterFunction;

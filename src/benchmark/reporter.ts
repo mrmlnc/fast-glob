@@ -1,4 +1,4 @@
-import { SuitePackResult } from './runner';
+import { SuitePackResult, SuitePackMeasures } from './runner';
 
 const FRACTION_DIGITS = 3;
 
@@ -22,10 +22,12 @@ export default class Reporter {
 	}
 
 	private _formatMeasures(): string {
-		return Object.keys(this._results.measures).map(this._formatMeasure, this).join(' | ');
+		const keys = Object.keys(this._results.measures) as Array<keyof SuitePackMeasures>;
+
+		return keys.map(this._formatMeasure, this).join(' | ');
 	}
 
-	private _formatMeasure(name: string): string {
+	private _formatMeasure(name: keyof SuitePackMeasures): string {
 		const data = this._results.measures[name];
 
 		return [

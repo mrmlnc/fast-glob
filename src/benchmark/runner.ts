@@ -33,7 +33,7 @@ export type Measure = {
 export type SuitePackMeasures = {
 	time: Measure;
 	memory: Measure;
-} & Record<string, Measure>;
+};
 
 export type SuitePackResult = {
 	name: string;
