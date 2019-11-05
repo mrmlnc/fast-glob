@@ -48,6 +48,9 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		};
 
 		for (let i = 0; i < filepaths.length; i++) {
+			if (stream.writableEnded) {
+				break;
+			}
 			stream.write(i);
 		}
 
