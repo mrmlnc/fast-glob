@@ -16,6 +16,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 
 	public static(patterns: Pattern[], options: ReaderOptions): Entry[] {
 		const entries: Entry[] = [];
+		let matches = 0;
 
 		for (const pattern of patterns) {
 			const filepath = this._getFullEntryPath(pattern);
@@ -26,6 +27,9 @@ export default class ReaderSync extends Reader<Entry[]> {
 			}
 
 			entries.push(entry);
+			if (options.maxMatches === ++matches) {
+				break;
+			}
 		}
 
 		return entries;

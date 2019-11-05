@@ -39,6 +39,7 @@ This package provides methods for traversing the file system and returning pathn
   * [Output control](#output-control)
     * [absolute](#absolute)
     * [markDirectories](#markdirectories)
+    * [maxMatches](#maxmatches)
     * [objectMode](#objectmode)
     * [onlyDirectories](#onlydirectories)
     * [onlyFiles](#onlyfiles)
@@ -417,6 +418,18 @@ Mark the directory path with the final slash.
 ```js
 fs.sync('*', { onlyFiles: false, markDirectories: false }); // ['index.js', 'controllers']
 fs.sync('*', { onlyFiles: false, markDirectories: true });  // ['index.js', 'controllers/']
+```
+
+#### maxMatches
+
+* Type: `number`
+* Default: `Infinity`
+
+Limits the number of matches.
+
+```js
+fs.sync('*', { maxMatches: Infinity }); // ['a.js', 'b.js', ...]
+fs.sync('*', { maxMatches: 1 }); // ['a.js']
 ```
 
 #### objectMode

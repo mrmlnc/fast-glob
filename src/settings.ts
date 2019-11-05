@@ -105,6 +105,13 @@ export type Options = {
 	 */
 	markDirectories?: boolean;
 	/**
+	 * Exit after having gathered `maxMatches` matches.
+	 * If given, expects a positive number greater or equal to 1.
+	 *
+	 * @default Infinity
+	 */
+	maxMatches?: number;
+	/**
 	 * Returns objects (instead of strings) describing entries.
 	 *
 	 * @default false
@@ -165,6 +172,8 @@ export default class Settings {
 	public readonly globstar: boolean = this._getValue(this._options.globstar, true);
 	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
+	// If 0 or negative maxMatches is given, we revert to infinite matches
+	public readonly maxMatches: number = Math.max(0, this._getValue(this._options.maxMatches, Infinity)) || Infinity;
 	public readonly objectMode: boolean = this._getValue(this._options.objectMode, false);
 	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
 	public readonly onlyFiles: boolean = this._getValue(this._options.onlyFiles, true);

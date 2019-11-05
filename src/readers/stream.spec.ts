@@ -137,5 +137,50 @@ describe('Readers → ReaderStream', () => {
 				done();
 			});
 		});
+
+		describe('maxMatches', () => {
+			it('can be used to limit matches', (done) => {
+				const reader = getReader();
+				const maxMatches = 2;
+				const readerOptions = getReaderOptions({
+					maxMatches,
+					entryFilter: () => true
+				});
+
+				reader.stat.yields(null, new Stats());
+
+				const entries: Entry[] = [];
+
+				const stream = reader.static(['1.txt', '2.txt', '3.txt'], readerOptions);
+
+				stream.on('data', (entry: Entry) => entries.push(entry));
+				stream.once('end', () => {
+					assert.strictEqual(entries.length, maxMatches);
+					assert.strictEqual(entries[0].name, '1.txt');
+					assert.strictEqual(entries[1].name, '2.txt');
+					done();
+				});
+			});
+
+			it('is ignored if less or equal than 1', (done) => {
+				const reader = getReader();
+				const readerOptions = getReaderOptions({
+					maxMatches: -1,
+					entryFilter: () => true
+				});
+
+				reader.stat.yields(null, new Stats());
+
+				let matches = 0;
+
+				const stream = reader.static(['1.txt', '2.txt', '3.txt'], readerOptions);
+
+				stream.on('data', () => matches++);
+				stream.once('end', () => {
+					assert.strictEqual(matches, 3);
+					done();
+				});
+			});
+		});
 	});
 });

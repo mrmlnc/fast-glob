@@ -113,5 +113,38 @@ describe('Readers → ReaderSync', () => {
 
 			assert.strictEqual(actual.length, 0);
 		});
+
+		describe('maxMatches', () => {
+			it('can be used to limit matches', () => {
+				const reader = getReader();
+				const maxMatches = 2;
+				const readerOptions = getReaderOptions({
+					maxMatches,
+					entryFilter: () => true
+				});
+
+				reader.statSync.returns(new Stats());
+
+				const actual = reader.static(['1.txt', '2.txt', '3.txt'], readerOptions);
+
+				assert.strictEqual(actual.length, maxMatches);
+				assert.strictEqual(actual[0].name, '1.txt');
+				assert.strictEqual(actual[1].name, '2.txt');
+			});
+
+			it('is ignored if less or equal than 1', () => {
+				const reader = getReader();
+				const readerOptions = getReaderOptions({
+					maxMatches: -1,
+					entryFilter: () => true
+				});
+
+				reader.statSync.returns(new Stats());
+
+				const actual = reader.static(['1.txt', '2.txt', '3.txt'], readerOptions);
+
+				assert.strictEqual(actual.length, 3);
+			});
+		});
 	});
 });

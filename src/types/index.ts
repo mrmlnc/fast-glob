@@ -15,6 +15,7 @@ export type ReaderOptions = fsWalk.Options & {
 	entryFilter: EntryFilterFunction;
 	errorFilter: ErrorFilterFunction;
 	fs: FileSystemAdapter;
+	maxMatches: number;
 	stats: boolean;
 };
 

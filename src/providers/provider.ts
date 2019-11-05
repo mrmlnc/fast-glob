@@ -34,6 +34,7 @@ export default abstract class Provider<T> {
 			errorFilter: this.errorFilter.getFilter(),
 			followSymbolicLinks: this._settings.followSymbolicLinks,
 			fs: this._settings.fs,
+			maxMatches: this._settings.maxMatches,
 			stats: this._settings.stats,
 			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
 			transform: this.entryTransformer.getTransformer()

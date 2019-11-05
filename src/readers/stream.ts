@@ -19,15 +19,26 @@ export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
 		const filepaths = patterns.map(this._getFullEntryPath, this);
 
 		const stream = new PassThrough({ objectMode: true });
+		let matches = 0;
 
 		stream._write = (index: number, _enc, done) => {
+			if (options.maxMatches === matches) {
+				// this is not ideal because we are still passing patterns to write
+				// even though we know the stream is already finished. We can't use
+				// .writableEnded either because finding matches is asynchronous
+				// The best we could do is to await the write inside the for loop below
+				// however that would mean that this whole function would become async
+				done();
+				return;
+			}
 			return this._getEntry(filepaths[index], patterns[index], options)
 				.then((entry) => {
 					if (entry !== null && options.entryFilter(entry)) {
 						stream.push(entry);
+						matches++;
 					}
 
-					if (index === filepaths.length - 1) {
+					if (index === filepaths.length - 1 || options.maxMatches === matches) {
 						stream.end();
 					}
 
