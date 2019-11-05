@@ -173,6 +173,7 @@ export default class Settings {
 	public readonly ignore: Pattern[] = this._getValue(this._options.ignore, [] as Pattern[]);
 	public readonly markDirectories: boolean = this._getValue(this._options.markDirectories, false);
 	// If 0 or negative maxMatches is given, we revert to infinite matches
+	// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 	public readonly maxMatches: number = Math.max(0, this._getValue(this._options.maxMatches, Infinity)) || Infinity;
 	public readonly objectMode: boolean = this._getValue(this._options.objectMode, false);
 	public readonly onlyDirectories: boolean = this._getValue(this._options.onlyDirectories, false);
