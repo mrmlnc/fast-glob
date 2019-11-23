@@ -20,6 +20,9 @@ export default class ProviderStream extends Provider<Readable> {
 			.on('data', (entry: Entry) => destination.emit('data', options.transform(entry)))
 			.once('end', () => destination.emit('end'));
 
+		destination
+			.once('close', () => source.destroy());
+
 		return destination;
 	}
 

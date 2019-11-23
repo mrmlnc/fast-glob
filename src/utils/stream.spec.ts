@@ -9,7 +9,7 @@ describe('Utils → Stream', () => {
 			const first = new stream.PassThrough();
 			const second = new stream.PassThrough();
 
-			const expected = 2;
+			const expected = 3;
 
 			const mergedStream = util.merge([first, second]);
 
@@ -39,6 +39,28 @@ describe('Utils → Stream', () => {
 			first.emit('error', 1);
 			second.emit('error', 2);
 			mergedStream.emit('error', 3);
+		});
+
+		it('should propagate close event to source streams', (done) => {
+			const first = new stream.PassThrough();
+			const second = new stream.PassThrough();
+
+			const mergedStream = util.merge([first, second]);
+
+			const expected = [1, 2];
+
+			const actual: number[] = [];
+
+			first.once('close', () => actual.push(1));
+			second.once('close', () => actual.push(2));
+
+			mergedStream.once('finish', () => {
+				assert.deepStrictEqual(actual, expected);
+
+				done();
+			});
+
+			mergedStream.emit('close');
 		});
 	});
 });

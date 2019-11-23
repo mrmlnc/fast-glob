@@ -100,5 +100,23 @@ describe('Providers → ProviderStream', () => {
 				done();
 			});
 		});
+
+		it('should destroy source stream when the destination stream is closed', (done) => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').positive('*').build();
+			const stream = new PassThrough();
+
+			provider.reader.dynamic.returns(stream);
+
+			const actual = provider.read(task);
+
+			actual.once('close', () => {
+				assert.ok(stream.destroyed);
+
+				done();
+			});
+
+			actual.emit('close');
+		});
 	});
 });
