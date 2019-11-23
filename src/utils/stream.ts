@@ -1,6 +1,8 @@
+import { Readable } from 'stream';
+
 import * as merge2 from 'merge2';
 
-export function merge(streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream {
+export function merge(streams: Readable[]): NodeJS.ReadableStream {
 	const mergedStream = merge2(streams);
 
 	streams.forEach((stream) => {

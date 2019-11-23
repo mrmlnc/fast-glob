@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { PassThrough } from 'stream';
+import { PassThrough, Readable } from 'stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
@@ -7,15 +7,15 @@ import * as fsWalk from '@nodelib/fs.walk';
 import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
 
-export default class ReaderStream extends Reader<NodeJS.ReadableStream> {
+export default class ReaderStream extends Reader<Readable> {
 	protected _walkStream: typeof fsWalk.walkStream = fsWalk.walkStream;
 	protected _stat: typeof fsStat.stat = fsStat.stat;
 
-	public dynamic(root: string, options: ReaderOptions): NodeJS.ReadableStream {
+	public dynamic(root: string, options: ReaderOptions): Readable {
 		return this._walkStream(root, options);
 	}
 
-	public static(patterns: Pattern[], options: ReaderOptions): NodeJS.ReadableStream {
+	public static(patterns: Pattern[], options: ReaderOptions): Readable {
 		const filepaths = patterns.map(this._getFullEntryPath, this);
 
 		const stream = new PassThrough({ objectMode: true });
