@@ -1,3 +1,5 @@
+import { Readable } from 'stream';
+
 import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import { Entry, EntryItem, ReaderOptions } from '../types';
@@ -21,7 +23,7 @@ export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 		});
 	}
 
-	public api(root: string, task: Task, options: ReaderOptions): NodeJS.ReadableStream {
+	public api(root: string, task: Task, options: ReaderOptions): Readable {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}
