@@ -6,7 +6,7 @@
   "repository": "mrmlnc/fast-glob",
   "author": {
     "name": "Denis Malinochkin",
-    "url": "canonium.com"
+    "url": "https://mrmlnc.com"
   },
   "engines": {
     "node": ">=8"
