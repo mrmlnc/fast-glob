@@ -9,9 +9,12 @@ export function merge(streams: Readable[]): NodeJS.ReadableStream {
 		stream.once('error', (error) => mergedStream.emit('error', error));
 	});
 
-	mergedStream.once('close', () => {
-		streams.forEach((stream) => stream.emit('close'));
-	});
+	mergedStream.once('close', () => propagateCloseEventToSources(streams));
+	mergedStream.once('end', () => propagateCloseEventToSources(streams));
 
 	return mergedStream;
+}
+
+function propagateCloseEventToSources(streams: Readable[]): void {
+	streams.forEach((stream) => stream.emit('close'));
 }
