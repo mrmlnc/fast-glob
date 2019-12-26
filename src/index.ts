@@ -13,16 +13,14 @@ type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
 function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
 function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
-function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
-	try {
-		assertPatternsInput(source);
-	} catch (error) {
-		return Promise.reject(error);
-	}
+async function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
+	assertPatternsInput(source);
 
 	const works = getWorks(source, ProviderAsync, options);
 
-	return Promise.all(works).then(utils.array.flatten);
+	const result = await Promise.all(works);
+
+	return utils.array.flatten(result);
 }
 
 // https://github.com/typescript-eslint/typescript-eslint/issues/60

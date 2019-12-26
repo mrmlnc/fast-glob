@@ -10,8 +10,8 @@ const ESCAPE_SYMBOL = '\\';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
 const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[.*]/;
-const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^@!*?+])\(.*\|.*\)/;
-const GLOB_EXTENSION_SYMBOLS_RE = /[@!*?+]\(.*\)/;
+const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\(.*\|.*\)/;
+const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\(.*\)/;
 const BRACE_EXPANSIONS_SYMBOLS_RE = /{.*(?:,|\.\.).*}/;
 
 type PatternTypeOptions = {
@@ -125,7 +125,7 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
 }
 
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
-	const filepath = entry.replace(/^\.[\\/]/, '');
+	const filepath = entry.replace(/^\.[/\\]/, '');
 
 	return patternsRe.some((patternRe) => patternRe.test(filepath));
 }
