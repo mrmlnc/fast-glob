@@ -61,7 +61,6 @@ export default class Runner {
 			BENCHMARK_OPTIONS: JSON.stringify(this._options.options)
 		};
 
-		// eslint-disable-next-line unicorn/prevent-abbreviations
 		const execaOptions: execa.SyncOptions = { env: environment, extendEnv: true };
 
 		const stdout = this.execNodeProcess([suitePath], execaOptions);

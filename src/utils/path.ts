@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Pattern } from '../types';
 
-const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([*?|(){}[\]]|^!|[@+!](?=\())/g;
+const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g;
 
 /**
  * Designed to work only with simple paths: `dir\\file`.
