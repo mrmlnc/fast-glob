@@ -116,6 +116,19 @@ export function getMaxNaivePatternsDepth(patterns: Pattern[]): number {
 	}, 0);
 }
 
+export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
+	return patterns.reduce((collection, pattern) => {
+		return collection.concat(expandBraceExpansion(pattern));
+	}, [] as Pattern[]);
+}
+
+export function expandBraceExpansion(pattern: Pattern): Pattern[] {
+	return micromatch.braces(pattern, {
+		expand: true,
+		nodupes: true
+	});
+}
+
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
 	return micromatch.makeRe(pattern, options);
 }

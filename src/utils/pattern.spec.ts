@@ -339,7 +339,27 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.makeRE', () => {
+	describe('.expandPatternsWithBraceExpansion', () => {
+		it('should return an array of expanded patterns with brace expansion', () => {
+			const expected = ['a/b/d', 'a/c/d', 'a/*', 'a/b/c'];
+
+			const actual = util.expandPatternsWithBraceExpansion(['a/{b,c}/d', 'a/{*,b/c}']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.expandBraceExpansion', () => {
+		it('should return an array of expanded patterns with brace expansion without dupes', () => {
+			const expected = ['a/b', 'a/c/d', 'a/c'];
+
+			const actual = util.expandBraceExpansion('a/{b,c/d,{b,c}}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.makeRe', () => {
 		it('should return regexp for provided pattern', () => {
 			const actual = util.makeRe('*.js', {});
 
@@ -354,6 +374,7 @@ describe('Utils → Pattern', () => {
 			assert.ok(actual instanceof RegExp);
 		});
 	});
+
 	describe('.matchAny', () => {
 		it('should return true', () => {
 			const actual = util.matchAny('fixtures/nested/file.txt', [/fixture/, /fixtures\/nested\/file/]);
