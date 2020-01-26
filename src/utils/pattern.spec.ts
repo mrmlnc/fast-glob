@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 
-import { Pattern } from '../types';
+import { Pattern, PatternSegment } from '../types';
+import * as tests from '../tests';
 import * as util from './pattern';
 
 describe('Utils → Pattern', () => {
@@ -380,6 +381,22 @@ describe('Utils → Pattern', () => {
 			const expected: Pattern[] = ['a', '*', 'b', '**', 'c'];
 
 			const actual = util.getPatternParts('a/*/b/**/c', {});
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.getPatternSegments', () => {
+		it('should return an array of pattern segments', () => {
+			const expected: PatternSegment[] = [
+				tests.pattern.segment().pattern('a').build(),
+				tests.pattern.segment().dynamic().pattern('*').build(),
+				tests.pattern.segment().pattern('b').build(),
+				tests.pattern.segment().dynamic().pattern('**').build(),
+				tests.pattern.segment().pattern('c').build()
+			];
+
+			const actual = util.getPatternSegments('a/*/b/**/c', {});
 
 			assert.deepStrictEqual(actual, expected);
 		});
