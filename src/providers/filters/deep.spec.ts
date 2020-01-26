@@ -65,17 +65,6 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Max pattern depth', () => {
-			it('should return `false` when the depth of entry is greater that the pattern depth', () => {
-				const filter = getFilter('root', ['root/*'], []);
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(!actual);
-			});
-		});
-
 		describe('options.followSymbolicLinks', () => {
 			it('should return `false` when an entry is symbolic link and option is disabled', () => {
 				const filter = getFilter('.', ['**/*'], [], { followSymbolicLinks: false });
@@ -87,7 +76,45 @@ describe('Providers → Filters → Deep', () => {
 			});
 		});
 
-		describe('Pattern', () => {
+		describe('Positive pattern', () => {
+			it('should return `false` when an entry does not match to the positive pattern', () => {
+				const filter = getFilter('.', ['non-root/directory'], []);
+				const entry = tests.entry.builder().path('root').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return `false` when an entry starts with "./" and does not match to the positive pattern', () => {
+				const filter = getFilter('.', ['non-root/directory'], []);
+				const entry = tests.entry.builder().path('./root').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(!actual);
+			});
+
+			it('should return `true` when the positive pattern does not match, but the `baseNameMatch` is enabled', () => {
+				const filter = getFilter('.', ['*'], [], { baseNameMatch: true });
+				const entry = tests.entry.builder().path('root/directory').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return `true` when the positive pattern has a globstar', () => {
+				const filter = getFilter('.', ['**/*'], []);
+				const entry = tests.entry.builder().path('root/directory').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+		});
+
+		describe('Negative pattern', () => {
 			it('should return `false` when an entry match to the negative pattern', () => {
 				const filter = getFilter('.', ['**/*'], ['root/**']);
 				const entry = tests.entry.builder().path('root/directory').directory().build();
@@ -97,26 +124,8 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return `true` when the positive pattern has no affect to depth reading, but the `baseNameMatch` is enabled', () => {
-				const filter = getFilter('.', ['*'], [], { baseNameMatch: true });
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
 			it('should return `true` when the negative pattern has no effect to depth reading', () => {
 				const filter = getFilter('.', ['**/*'], ['**/*']);
-				const entry = tests.entry.builder().path('root/directory').directory().build();
-
-				const actual = filter(entry);
-
-				assert.ok(actual);
-			});
-
-			it('should return `true`', () => {
-				const filter = getFilter('.', ['**/*'], []);
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 
 				const actual = filter(entry);

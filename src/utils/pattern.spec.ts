@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { Pattern, PatternSegment, PatternFloatingGroupOfSegments } from '../types';
+import { Pattern, PatternSegment } from '../types';
 import * as tests from '../tests';
 import * as util from './pattern';
 
@@ -397,24 +397,6 @@ describe('Utils → Pattern', () => {
 			];
 
 			const actual = util.getPatternSegments('a/*/b/**/c', {});
-
-			assert.deepStrictEqual(actual, expected);
-		});
-	});
-
-	describe('.getPatternFloatingGroupOfSegments', () => {
-		it('should return float segments of pattern', () => {
-			const expected: PatternFloatingGroupOfSegments[] = [
-				[tests.pattern.segment().pattern('a').build()],
-				[tests.pattern.segment().pattern('b').build()],
-				[
-					tests.pattern.segment().pattern('c').build(),
-					tests.pattern.segment().dynamic().pattern('*').build(),
-					tests.pattern.segment().pattern('d').build()
-				]
-			];
-
-			const actual = util.getPatternFloatingGroupOfSegments('a/**/b/**/c/*/d', {});
 
 			assert.deepStrictEqual(actual, expected);
 		});

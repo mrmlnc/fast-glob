@@ -1,21 +1,20 @@
+import { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 import Settings from '../../settings';
-import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
 import * as utils from '../../utils';
+import PartialMatcher from '../matchers/partial';
 
 export default class DeepFilter {
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const maxPatternDepth = this._getMaxPatternDepth(positive);
+		const matcher = this._getMatcher(positive);
 		const negativeRe = this._getNegativePatternsRe(negative);
 
-		return (entry) => this._filter(basePath, entry, negativeRe, maxPatternDepth);
+		return (entry) => this._filter(basePath, entry, matcher, negativeRe);
 	}
 
-	private _getMaxPatternDepth(patterns: Pattern[]): number {
-		const globstar = patterns.some(utils.pattern.hasGlobStar);
-
-		return globstar ? Infinity : utils.pattern.getMaxNaivePatternsDepth(patterns);
+	private _getMatcher(patterns: Pattern[]): PartialMatcher {
+		return new PartialMatcher(patterns, this._micromatchOptions);
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
@@ -24,14 +23,10 @@ export default class DeepFilter {
 		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
 	}
 
-	private _filter(basePath: string, entry: Entry, negativeRe: PatternRe[], maxPatternDepth: number): boolean {
-		const depth = this._getEntryDepth(basePath, entry.path);
+	private _filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
+		const depth = this._getEntryLevel(basePath, entry.path);
 
 		if (this._isSkippedByDeep(depth)) {
-			return false;
-		}
-
-		if (this._isSkippedByMaxPatternDepth(depth, maxPatternDepth)) {
 			return false;
 		}
 
@@ -39,26 +34,36 @@ export default class DeepFilter {
 			return false;
 		}
 
+		if (this._isSkippedByPositivePatterns(entry, matcher)) {
+			return false;
+		}
+
 		return this._isSkippedByNegativePatterns(entry, negativeRe);
-	}
-
-	private _getEntryDepth(basePath: string, entryPath: string): number {
-		const basePathDepth = basePath.split('/').length;
-		const entryPathDepth = entryPath.split('/').length;
-
-		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
 	}
 
 	private _isSkippedByDeep(entryDepth: number): boolean {
 		return entryDepth >= this._settings.deep;
 	}
 
-	private _isSkippedByMaxPatternDepth(entryDepth: number, maxPatternDepth: number): boolean {
-		return !this._settings.baseNameMatch && maxPatternDepth !== Infinity && entryDepth > maxPatternDepth;
-	}
-
 	private _isSkippedSymbolicLink(entry: Entry): boolean {
 		return !this._settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
+	}
+
+	private _getEntryLevel(basePath: string, entryPath: string): number {
+		const basePathDepth = basePath.split('/').length;
+		const entryPathDepth = entryPath.split('/').length;
+
+		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
+	}
+
+	private _isSkippedByPositivePatterns(entry: Entry, matcher: PartialMatcher): boolean {
+		const filepath = entry.path.replace(/^\.[/\\]/, '');
+
+		const parts = filepath.split('/');
+		const level = parts.length - 1;
+		const part = parts[level];
+
+		return !this._settings.baseNameMatch && !matcher.match(level, part);
 	}
 
 	private _isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {

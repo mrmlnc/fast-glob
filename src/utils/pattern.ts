@@ -3,8 +3,7 @@ import * as path from 'path';
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';
 
-import { MicromatchOptions, Pattern, PatternRe, PatternSegment, PatternFloatingGroupOfSegments } from '../types';
-import * as utils from '.';
+import { MicromatchOptions, Pattern, PatternRe, PatternSegment } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -163,12 +162,6 @@ export function getPatternSegments(pattern: Pattern, options: MicromatchOptions)
 			patternRe: makeRe(part, options)
 		};
 	});
-}
-
-export function getPatternFloatingGroupOfSegments(pattern: Pattern, options: MicromatchOptions): PatternFloatingGroupOfSegments[] {
-	const segments = getPatternSegments(pattern, options);
-
-	return utils.array.splitWhen(segments, (segment) => segment.dynamic && hasGlobStar(segment.pattern));
 }
 
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
