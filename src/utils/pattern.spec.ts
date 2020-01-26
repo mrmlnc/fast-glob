@@ -359,6 +359,32 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	describe('.getPatternParts', () => {
+		it('should return an array with a single item with an empty string', () => {
+			const expected: Pattern[] = [''];
+
+			const actual = util.getPatternParts('', {});
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return an array with a single item (micromatch/picomatch#58)', () => {
+			const expected: Pattern[] = ['a*'];
+
+			const actual = util.getPatternParts('a*', {});
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return an array of pattern parts', () => {
+			const expected: Pattern[] = ['a', '*', 'b', '**', 'c'];
+
+			const actual = util.getPatternParts('a/*/b/**/c', {});
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
 	describe('.makeRe', () => {
 		it('should return regexp for provided pattern', () => {
 			const actual = util.makeRe('*.js', {});

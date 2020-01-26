@@ -129,6 +129,20 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 	});
 }
 
+export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
+	const info = micromatch.scan(pattern, {
+		...options,
+		parts: true
+	});
+
+	// See micromatch/picomatch#58 for more details
+	if (info.parts.length === 0) {
+		return [pattern];
+	}
+
+	return info.parts;
+}
+
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
 	return micromatch.makeRe(pattern, options);
 }
