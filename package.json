@@ -26,7 +26,7 @@
     "@types/glob": "^7.1.1",
     "@types/glob-parent": "^5.1.0",
     "@types/merge2": "^1.1.4",
-    "@types/micromatch": "^3.1.0",
+    "@types/micromatch": "^4.0.0",
     "@types/minimist": "^1.2.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.8",
