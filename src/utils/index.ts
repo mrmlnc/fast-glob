@@ -4,6 +4,7 @@ import * as fs from './fs';
 import * as path from './path';
 import * as pattern from './pattern';
 import * as stream from './stream';
+import * as string from './string';
 
 export {
 	array,
@@ -11,5 +12,6 @@ export {
 	fs,
 	path,
 	pattern,
-	stream
+	stream,
+	string
 };
