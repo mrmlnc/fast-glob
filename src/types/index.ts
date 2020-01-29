@@ -9,20 +9,6 @@ export type Pattern = string;
 export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
-export type PatternFloatingGroupOfSegments = PatternSegment[];
-export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;
-
-export type StaticPatternSegment = {
-	dynamic: false;
-	pattern: Pattern;
-};
-
-export type DynamicPatternSegment = {
-	dynamic: true;
-	pattern: Pattern;
-	patternRe: PatternRe;
-};
-
 export type ReaderOptions = fsWalk.Options & {
 	transform(entry: Entry): EntryItem;
 	deepFilter: DeepFilterFunction;

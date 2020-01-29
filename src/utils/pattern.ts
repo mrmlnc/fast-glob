@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';
 
-import { MicromatchOptions, Pattern, PatternRe, PatternSegment } from '../types';
+import { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -141,27 +141,6 @@ export function getPatternParts(pattern: Pattern, options: MicromatchOptions): P
 	}
 
 	return info.parts;
-}
-
-export function getPatternSegments(pattern: Pattern, options: MicromatchOptions): PatternSegment[] {
-	const parts = getPatternParts(pattern, options);
-
-	return parts.map((part) => {
-		const dynamic = isDynamicPattern(part);
-
-		if (!dynamic) {
-			return {
-				dynamic: false,
-				pattern: part
-			};
-		}
-
-		return {
-			dynamic: true,
-			pattern: part,
-			patternRe: makeRe(part, options)
-		};
-	});
 }
 
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
