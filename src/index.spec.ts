@@ -7,8 +7,11 @@ import * as fg from '.';
 describe('Package', () => {
 	describe('.sync', () => {
 		it('should throw an error when input values can not pass validation', () => {
+			const message = 'Patterns must be a string (non empty) or an array of strings';
+
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.sync(null as any), /TypeError: Patterns must be a string or an array of strings/);
+			assert.throws(() => fg.sync(null as any), { message });
+			assert.throws(() => fg.sync(''), { message });
 		});
 
 		it('should returns entries', () => {
@@ -49,13 +52,11 @@ describe('Package', () => {
 
 	describe('.async', () => {
 		it('should throw an error when input values can not pass validation', async () => {
-			try {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				await fg(null as any);
-				throw new Error('An unexpected error was found.');
-			} catch (error) {
-				assert.strictEqual((error as Error).toString(), 'TypeError: Patterns must be a string or an array of strings');
-			}
+			const message = 'Patterns must be a string (non empty) or an array of strings';
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			await assert.rejects(() => fg(null as any), { message });
+			await assert.rejects(() => fg(''), { message });
 		});
 
 		it('should returns entries', async () => {
@@ -96,8 +97,11 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should throw an error when input values can not pass validation', () => {
+			const message = 'Patterns must be a string (non empty) or an array of strings';
+
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.stream(null as any), /TypeError: Patterns must be a string or an array of strings/);
+			assert.throws(() => fg.stream(null as any), { message });
+			assert.throws(() => fg.stream(''), { message });
 		});
 
 		it('should returns entries', (done) => {
@@ -152,8 +156,11 @@ describe('Package', () => {
 
 	describe('.generateTasks', () => {
 		it('should throw an error when input values can not pass validation', () => {
+			const message = 'Patterns must be a string (non empty) or an array of strings';
+
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.generateTasks(null as any), /TypeError: Patterns must be a string or an array of strings/);
+			assert.throws(() => fg.generateTasks(null as any), { message });
+			assert.throws(() => fg.generateTasks(''), { message });
 		});
 
 		it('should return tasks', () => {

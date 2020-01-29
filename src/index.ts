@@ -89,16 +89,13 @@ function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new
 	return tasks.map(provider.read, provider);
 }
 
-function assertPatternsInput(source: unknown): void | never {
-	if (([] as unknown[]).concat(source).every(isString)) {
-		return;
+function assertPatternsInput(input: unknown): void | never {
+	const source = ([] as unknown[]).concat(input);
+	const isValidSource = source.every((item) => utils.string.isString(item) && !utils.string.isEmpty(item));
+
+	if (!isValidSource) {
+		throw new TypeError('Patterns must be a string (non empty) or an array of strings');
 	}
-
-	throw new TypeError('Patterns must be a string or an array of strings');
-}
-
-function isString(source: unknown): source is string {
-	return typeof source === 'string';
 }
 
 export = FastGlob;
