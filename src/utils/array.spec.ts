@@ -12,4 +12,30 @@ describe('Utils → Array', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 	});
+
+	describe('.splitWhen', () => {
+		it('should return one group', () => {
+			const expected = [[1, 2]];
+
+			const actual = util.splitWhen([1, 2], () => false);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return group for each item of array', () => {
+			const expected = [[], [], [], []];
+
+			const actual = util.splitWhen([1, 2, 3], () => true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return two group', () => {
+			const expected = [[1, 2], [4, 5]];
+
+			const actual = util.splitWhen([1, 2, 3, 4, 5], (item) => item === 3);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
 });

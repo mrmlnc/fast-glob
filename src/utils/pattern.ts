@@ -116,6 +116,33 @@ export function getMaxNaivePatternsDepth(patterns: Pattern[]): number {
 	}, 0);
 }
 
+export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
+	return patterns.reduce((collection, pattern) => {
+		return collection.concat(expandBraceExpansion(pattern));
+	}, [] as Pattern[]);
+}
+
+export function expandBraceExpansion(pattern: Pattern): Pattern[] {
+	return micromatch.braces(pattern, {
+		expand: true,
+		nodupes: true
+	});
+}
+
+export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
+	const info = micromatch.scan(pattern, {
+		...options,
+		parts: true
+	});
+
+	// See micromatch/picomatch#58 for more details
+	if (info.parts.length === 0) {
+		return [pattern];
+	}
+
+	return info.parts;
+}
+
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
 	return micromatch.makeRe(pattern, options);
 }

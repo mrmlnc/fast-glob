@@ -18,6 +18,19 @@ smoke.suite('Smoke → Regular', [
 	{ pattern: 'fixtures/{first,second}/**' },
 	{ pattern: 'fixtures/{first,second}/**/*' },
 
+	{ pattern: '@(fixtures)/{first,second}' },
+	{ pattern: '@(fixtures)/{first,second}/*' },
+
+	{ pattern: 'fixtures/*/{first,second}/*' },
+	{ pattern: 'fixtures/*/{first,second}/*/{nested,file.md}' },
+	{ pattern: 'fixtures/**/{first,second}/**' },
+	{ pattern: 'fixtures/**/{first,second}/{nested,file.md}' },
+	{ pattern: 'fixtures/**/{first,second}/**/{nested,file.md}' },
+
+	{ pattern: 'fixtures/{first,second}/{nested,file.md}' },
+	{ pattern: 'fixtures/{first,second}/*/nested/*' },
+	{ pattern: 'fixtures/{first,second}/**/nested/**' },
+
 	{ pattern: 'fixtures/*/{nested,file.md}/*' },
 	{ pattern: 'fixtures/**/{nested,file.md}/*' },
 
@@ -41,6 +54,16 @@ smoke.suite('Smoke → Regular (cwd)', [
 	{ pattern: '{first,second}/*', cwd: 'fixtures' },
 	{ pattern: '{first,second}/**', cwd: 'fixtures' },
 	{ pattern: '{first,second}/**/*', cwd: 'fixtures' },
+
+	{ pattern: '*/{first,second}/*', cwd: 'fixtures' },
+	{ pattern: '*/{first,second}/*/{nested,file.md}', cwd: 'fixtures' },
+	{ pattern: '**/{first,second}/**', cwd: 'fixtures' },
+	{ pattern: '**/{first,second}/{nested,file.md}', cwd: 'fixtures' },
+	{ pattern: '**/{first,second}/**/{nested,file.md}', cwd: 'fixtures' },
+
+	{ pattern: '{first,second}/{nested,file.md}', cwd: 'fixtures' },
+	{ pattern: '{first,second}/*/nested/*', cwd: 'fixtures' },
+	{ pattern: '{first,second}/**/nested/**', cwd: 'fixtures' },
 
 	{ pattern: '*/{nested,file.md}/*', cwd: 'fixtures' },
 	{ pattern: '**/{nested,file.md}/*', cwd: 'fixtures' },
