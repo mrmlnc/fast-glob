@@ -38,6 +38,7 @@ describe('Providers → Matchers → Partial', () => {
 
 		it('should trying to match all patterns', () => {
 			assertMatch(['a/*', 'b/*'], 0, 'b');
+			assertMatch(['non-match', 'a/*/c'], 1, 'b');
 		});
 
 		it('should match a static segment', () => {

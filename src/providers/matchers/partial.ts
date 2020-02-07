@@ -17,13 +17,15 @@ export default class PartialMatcher extends Matcher {
 			}
 
 			/**
-			 * When size of the first group (minus the latest segment) equals to `level`, we do not need reading the next directory,
-			 * because in the next iteration, the path will have more levels than the pattern.
+			 * When size of the first group (minus the latest segment) greater or equals to `level`,
+			 * we do not need reading the next directory, because in the next iteration,
+			 * the path will have more levels than the pattern.
+			 *
 			 * But only if the pattern doesn't have a globstar (we must read all directories).
 			 *
 			 * In this cases we must trying to match other patterns.
 			 */
-			if (info.complete && level === section.length - 1) {
+			if (info.complete && level >= section.length - 1) {
 				continue;
 			}
 
