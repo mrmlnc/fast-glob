@@ -7,49 +7,50 @@ function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Match
 	return new Matcher(patterns, options);
 }
 
-function assertMatch(patterns: Pattern[], level: number, part: string): void | never {
+function assertMatch(patterns: Pattern[], filepath: string): void | never {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(matcher.match(level, part));
+	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns}`);
 }
 
-function assertNotMatch(patterns: Pattern[], level: number, part: string): void | never {
+function assertNotMatch(patterns: Pattern[], filepath: string): void | never {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(!matcher.match(level, part));
+	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns}`);
 }
 
 describe('Providers → Matchers → Partial', () => {
 	describe('.match', () => {
 		it('should handle patterns with globstar', () => {
-			assertMatch(['**'], 0, 'a');
-			assertMatch(['**'], 1, 'b');
-			assertMatch(['**/a'], 0, 'a');
-			assertMatch(['**/a'], 1, 'a');
-			assertNotMatch(['a/**'], 0, 'b');
-			assertMatch(['a/**'], 1, 'b');
+			assertMatch(['**'], 'a');
+			assertMatch(['**'], './a');
+			assertMatch(['**/a'], 'a');
+			assertMatch(['**/a'], 'b/a');
+			assertMatch(['a/**'], 'a/b');
+			assertNotMatch(['a/**'], 'b');
 		});
 
 		it('should do not match the latest segment', () => {
-			assertMatch(['b', 'b/*'], 0, 'b');
-			assertNotMatch(['*'], 0, 'a');
-			assertNotMatch(['a/*'], 1, 'b');
+			assertMatch(['b/*'], 'b');
+			assertNotMatch(['*'], 'a');
+			assertNotMatch(['a/*'], 'a/b');
 		});
 
 		it('should trying to match all patterns', () => {
-			assertMatch(['a/*', 'b/*'], 0, 'b');
-			assertMatch(['non-match', 'a/*/c'], 1, 'b');
+			assertMatch(['a/*', 'b/*'], 'b');
+			assertMatch(['non-match/b/c', 'a/*/c'], 'a/b');
+			assertNotMatch(['non-match/d/c', 'a/b/c'], 'a/d');
 		});
 
 		it('should match a static segment', () => {
-			assertMatch(['a/b'], 0, 'a');
-			assertNotMatch(['b/b'], 0, 'a');
+			assertMatch(['a/b'], 'a');
+			assertNotMatch(['b/b'], 'a');
 		});
 
 		it('should match a dynamic segment', () => {
-			assertMatch(['*/b'], 0, 'a');
-			assertMatch(['{a,b}/*'], 0, 'a');
-			assertNotMatch(['{a,b}/*'], 0, 'c');
+			assertMatch(['*/b'], 'a');
+			assertMatch(['{a,b}/*'], 'a');
+			assertNotMatch(['{a,b}/*'], 'c');
 		});
 	});
 });
