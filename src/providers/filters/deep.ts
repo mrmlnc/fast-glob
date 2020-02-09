@@ -14,7 +14,7 @@ export default class DeepFilter {
 	}
 
 	private _getMatcher(patterns: Pattern[]): PartialMatcher {
-		return new PartialMatcher(patterns, this._micromatchOptions);
+		return new PartialMatcher(patterns, this._settings, this._micromatchOptions);
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
@@ -57,13 +57,7 @@ export default class DeepFilter {
 	}
 
 	private _isSkippedByPositivePatterns(entry: Entry, matcher: PartialMatcher): boolean {
-		const filepath = entry.path.replace(/^\.[/\\]/, '');
-
-		const parts = filepath.split('/');
-		const level = parts.length - 1;
-		const part = parts[level];
-
-		return !this._settings.baseNameMatch && !matcher.match(level, part);
+		return !this._settings.baseNameMatch && !matcher.match(entry.path);
 	}
 
 	private _isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {

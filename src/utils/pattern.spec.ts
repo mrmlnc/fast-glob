@@ -24,6 +24,10 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('\\'));
 			});
 
+			it('should return true for everything when the `caseSensitiveMatch` option is disabled', () => {
+				assert.ok(util.isDynamicPattern('abc', { caseSensitiveMatch: false }));
+			});
+
 			it('should return true for patterns that include common glob symbols', () => {
 				assert.ok(util.isDynamicPattern('*'));
 				assert.ok(util.isDynamicPattern('abc/*'));
@@ -59,12 +63,30 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('+(a|b)'));
 			});
 
+			it('should return false for glob extension when the `extglob` option is disabled', () => {
+				assert.ok(!util.isDynamicPattern('@()', { extglob: false }));
+				assert.ok(!util.isDynamicPattern('@(a)', { extglob: false }));
+				assert.ok(!util.isDynamicPattern('@(a|b)', { extglob: false }));
+				assert.ok(!util.isDynamicPattern('abc/!(a|b)', { extglob: false }));
+				assert.ok(util.isDynamicPattern('*(a|b)', { extglob: true }));
+				assert.ok(util.isDynamicPattern('?(a|b)', { extglob: true }));
+				assert.ok(!util.isDynamicPattern('+(a|b)', { extglob: false }));
+			});
+
 			it('should return true for patterns that include brace expansions symbols', () => {
 				assert.ok(util.isDynamicPattern('{,}'));
 				assert.ok(util.isDynamicPattern('{a,}'));
 				assert.ok(util.isDynamicPattern('{,b}'));
 				assert.ok(util.isDynamicPattern('{a,b}'));
 				assert.ok(util.isDynamicPattern('{1..3}'));
+			});
+
+			it('should return false for brace extension when the `braceExpansion` option is disabled', () => {
+				assert.ok(!util.isDynamicPattern('{,}', { braceExpansion: false }));
+				assert.ok(!util.isDynamicPattern('{a,}', { braceExpansion: false }));
+				assert.ok(!util.isDynamicPattern('{,b}', { braceExpansion: false }));
+				assert.ok(!util.isDynamicPattern('{a,b}', { braceExpansion: false }));
+				assert.ok(!util.isDynamicPattern('{1..3}', { braceExpansion: false }));
 			});
 
 			it('should return false for "!" symbols when a symbol is not specified first in the string', () => {
@@ -300,42 +322,6 @@ describe('Utils → Pattern', () => {
 			const actual = util.isAffectDepthOfReadingPattern('**/name/*');
 
 			assert.ok(!actual);
-		});
-	});
-
-	describe('.getNaiveDepth', () => {
-		it('should return 0', () => {
-			const expected = 0; // 1 (pattern) - 1 (base directory)
-
-			const actual = util.getNaiveDepth('*.js');
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should returns 1', () => {
-			const expected = 1; // 4 (pattern) - 2 (base directory) - 1
-
-			const actual = util.getNaiveDepth('a/b/*/*.js');
-
-			assert.strictEqual(actual, expected);
-		});
-	});
-
-	describe('.getMaxNaivePatternsDepth', () => {
-		it('should return 1', () => {
-			const expected = 1;
-
-			const actual = util.getMaxNaivePatternsDepth(['*.js', './*.js']);
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should return 2', () => {
-			const expected = 2;
-
-			const actual = util.getMaxNaivePatternsDepth(['*.js', './*/*.js']);
-
-			assert.strictEqual(actual, expected);
 		});
 	});
 

@@ -2,6 +2,7 @@ import * as assert from 'assert';
 
 import * as tests from '../../tests';
 import { Pattern, MicromatchOptions } from '../../types';
+import Settings from '../../settings';
 import Matcher, { PatternInfo } from './matcher';
 
 class TestMatcher extends Matcher {
@@ -11,7 +12,7 @@ class TestMatcher extends Matcher {
 }
 
 function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): TestMatcher {
-	return new TestMatcher(patterns, options);
+	return new TestMatcher(patterns, new Settings(), options);
 }
 
 describe('Providers → Matchers → Matcher', () => {

@@ -1,9 +1,14 @@
 import Matcher from './matcher';
 
 export default class PartialMatcher extends Matcher {
-	public match(level: number, part: string): boolean {
-		for (const info of this._storage) {
-			const section = info.sections[0];
+	public match(filepath: string): boolean {
+		const parts = filepath.split('/');
+		const levels = parts.length;
+
+		const patterns = this._storage.filter((info) => !info.complete || info.segments.length > levels);
+
+		for (const pattern of patterns) {
+			const section = pattern.sections[0];
 
 			/**
 			 * In this case, the pattern has a globstar and we must read all directories unconditionally,
@@ -12,28 +17,25 @@ export default class PartialMatcher extends Matcher {
 			 * fixtures/{a,b}/**
 			 *  ^ true/false  ^ always true
 			*/
-			if (!info.complete && level >= section.length) {
+			if (!pattern.complete && levels > section.length) {
 				return true;
 			}
 
-			/**
-			 * When size of the first group (minus the latest segment) equals to `level`, we do not need reading the next directory,
-			 * because in the next iteration, the path will have more levels than the pattern.
-			 * But only if the pattern doesn't have a globstar (we must read all directories).
-			 *
-			 * In this cases we must trying to match other patterns.
-			 */
-			if (info.complete && level === section.length - 1) {
-				continue;
-			}
+			const match = parts.every((part, index) => {
+				const segment = pattern.segments[index];
 
-			const segment = section[level];
+				if (segment.dynamic && segment.patternRe.test(part)) {
+					return true;
+				}
 
-			if (segment.dynamic && segment.patternRe.test(part)) {
-				return true;
-			}
+				if (!segment.dynamic && segment.pattern === part) {
+					return true;
+				}
 
-			if (!segment.dynamic && segment.pattern === part) {
+				return false;
+			});
+
+			if (match) {
 				return true;
 			}
 		}

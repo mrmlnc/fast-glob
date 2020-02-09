@@ -1,5 +1,6 @@
 import { Pattern, MicromatchOptions, PatternRe } from '../../types';
 import * as utils from '../../utils';
+import Settings from '../../settings';
 
 export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;
 
@@ -29,7 +30,7 @@ export type PatternInfo = {
 export default abstract class Matcher {
 	protected readonly _storage: PatternInfo[] = [];
 
-	constructor(private readonly _patterns: Pattern[], private readonly _options: MicromatchOptions) {
+	constructor(private readonly _patterns: Pattern[], private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {
 		this._fillStorage();
 	}
 
@@ -54,10 +55,10 @@ export default abstract class Matcher {
 	}
 
 	private _getPatternSegments(pattern: Pattern): PatternSegment[] {
-		const parts = utils.pattern.getPatternParts(pattern, this._options);
+		const parts = utils.pattern.getPatternParts(pattern, this._micromatchOptions);
 
 		return parts.map((part) => {
-			const dynamic = utils.pattern.isDynamicPattern(part);
+			const dynamic = utils.pattern.isDynamicPattern(part, this._settings);
 
 			if (!dynamic) {
 				return {
@@ -69,7 +70,7 @@ export default abstract class Matcher {
 			return {
 				dynamic: true,
 				pattern: part,
-				patternRe: utils.pattern.makeRe(part, this._options)
+				patternRe: utils.pattern.makeRe(part, this._micromatchOptions)
 			};
 		});
 	}
