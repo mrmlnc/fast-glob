@@ -14,7 +14,7 @@ export default class DeepFilter {
 	}
 
 	private _getMatcher(patterns: Pattern[]): PartialMatcher {
-		return new PartialMatcher(patterns, this._micromatchOptions);
+		return new PartialMatcher(patterns, this._settings, this._micromatchOptions);
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {

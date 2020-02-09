@@ -1,10 +1,11 @@
 import * as assert from 'assert';
 
 import { Pattern, MicromatchOptions } from '../../types';
+import Settings from '../../settings';
 import Matcher from './partial';
 
 function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Matcher {
-	return new Matcher(patterns, options);
+	return new Matcher(patterns, new Settings(), options);
 }
 
 function assertMatch(patterns: Pattern[], filepath: string): void | never {
