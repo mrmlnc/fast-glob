@@ -90,32 +90,6 @@ export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 	return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
 }
 
-export function getNaiveDepth(pattern: Pattern): number {
-	const base = getBaseDirectory(pattern);
-
-	const patternDepth = pattern.split('/').length;
-	const patternBaseDepth = base.split('/').length;
-
-	/**
-	 * This is a hack for pattern that has no base directory.
-	 *
-	 * This is related to the `*\something\*` pattern.
-	 */
-	if (base === '.') {
-		return patternDepth - patternBaseDepth;
-	}
-
-	return patternDepth - patternBaseDepth - 1;
-}
-
-export function getMaxNaivePatternsDepth(patterns: Pattern[]): number {
-	return patterns.reduce((max, pattern) => {
-		const depth = getNaiveDepth(pattern);
-
-		return depth > max ? depth : max;
-	}, 0);
-}
-
 export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
 	return patterns.reduce((collection, pattern) => {
 		return collection.concat(expandBraceExpansion(pattern));
