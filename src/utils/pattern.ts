@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';
+import * as picomatch from 'picomatch';
 
 import { MicromatchOptions, Pattern, PatternRe } from '../types';
 
@@ -104,7 +105,7 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
-	const info = micromatch.scan(pattern, {
+	const info = picomatch.scan(pattern, {
 		...options,
 		parts: true
 	});
