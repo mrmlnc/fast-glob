@@ -62,7 +62,9 @@ export default class EntryFilter {
 		return this._isMatchToPatterns(fullpath, negativeRe);
 	}
 
-	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[]): boolean {
+	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+		const filepath = utils.path.removeLeadingDotSegment(entryPath);
+
 		return utils.pattern.matchAny(filepath, patternsRe);
 	}
 }
