@@ -87,7 +87,7 @@ describe('Providers → Filters → Deep', () => {
 			});
 
 			it('should return `false` when an entry starts with "./" and does not match to the positive pattern', () => {
-				const filter = getFilter('.', ['non-root/directory'], []);
+				const filter = getFilter('.', ['non-root/*'], []);
 				const entry = tests.entry.builder().path('./root').directory().build();
 
 				const actual = filter(entry);
@@ -95,7 +95,16 @@ describe('Providers → Filters → Deep', () => {
 				assert.ok(!actual);
 			});
 
-			it('should return `true` when the positive pattern does not match, but the `baseNameMatch` is enabled', () => {
+			it('should return `true` when an entry match to the positive pattern with leading dot', () => {
+				const filter = getFilter('.', ['./root/*'], []);
+				const entry = tests.entry.builder().path('./root').directory().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
+			it('should return `true` when the positive pattern does not match by level, but the `baseNameMatch` is enabled', () => {
 				const filter = getFilter('.', ['*'], [], { baseNameMatch: true });
 				const entry = tests.entry.builder().path('root/directory').directory().build();
 

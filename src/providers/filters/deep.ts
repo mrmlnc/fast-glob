@@ -57,7 +57,9 @@ export default class DeepFilter {
 	}
 
 	private _isSkippedByPositivePatterns(entry: Entry, matcher: PartialMatcher): boolean {
-		return !this._settings.baseNameMatch && !matcher.match(entry.path);
+		const filepath = entry.path.replace(/^\.[/\\]/, '');
+
+		return !this._settings.baseNameMatch && !matcher.match(filepath);
 	}
 
 	private _isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
