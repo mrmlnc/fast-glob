@@ -127,7 +127,5 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
 }
 
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
-	const filepath = entry.replace(/^\.[/\\]/, '');
-
-	return patternsRe.some((patternRe) => patternRe.test(filepath));
+	return patternsRe.some((patternRe) => patternRe.test(entry));
 }

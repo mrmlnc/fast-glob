@@ -399,13 +399,5 @@ describe('Utils → Pattern', () => {
 
 			assert.ok(!actual);
 		});
-
-		it('should return true for path with leading slash', () => {
-			const pattern = util.makeRe('*.js', {});
-
-			const actual = util.matchAny('./test.js', [pattern]);
-
-			assert.ok(actual);
-		});
 	});
 });

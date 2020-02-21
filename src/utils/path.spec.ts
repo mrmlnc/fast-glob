@@ -54,4 +54,23 @@ describe('Utils → Path', () => {
 			assert.strictEqual(util.escape('abc@'), 'abc@');
 		});
 	});
+
+	describe('.removeLeadingDotCharacters', () => {
+		it('should return path without changes', () => {
+			assert.strictEqual(util.removeLeadingDotSegment('../a/b'), '../a/b');
+			assert.strictEqual(util.removeLeadingDotSegment('~/a/b'), '~/a/b');
+			assert.strictEqual(util.removeLeadingDotSegment('/a/b'), '/a/b');
+			assert.strictEqual(util.removeLeadingDotSegment('a/b'), 'a/b');
+
+			assert.strictEqual(util.removeLeadingDotSegment('..\\a\\b'), '..\\a\\b');
+			assert.strictEqual(util.removeLeadingDotSegment('~\\a\\b'), '~\\a\\b');
+			assert.strictEqual(util.removeLeadingDotSegment('\\a\\b'), '\\a\\b');
+			assert.strictEqual(util.removeLeadingDotSegment('a\\b'), 'a\\b');
+		});
+
+		it('should return path without leading dit characters', () => {
+			assert.strictEqual(util.removeLeadingDotSegment('./a/b'), 'a/b');
+			assert.strictEqual(util.removeLeadingDotSegment('.\\a\\b'), 'a\\b');
+		});
+	});
 });

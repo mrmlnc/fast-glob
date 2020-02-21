@@ -34,11 +34,13 @@ export default class DeepFilter {
 			return false;
 		}
 
-		if (this._isSkippedByPositivePatterns(entry, matcher)) {
+		const filepath = utils.path.removeLeadingDotSegment(entry.path);
+
+		if (this._isSkippedByPositivePatterns(filepath, matcher)) {
 			return false;
 		}
 
-		return this._isSkippedByNegativePatterns(entry, negativeRe);
+		return this._isSkippedByNegativePatterns(filepath, negativeRe);
 	}
 
 	private _isSkippedByDeep(entryDepth: number): boolean {
@@ -56,11 +58,11 @@ export default class DeepFilter {
 		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
 	}
 
-	private _isSkippedByPositivePatterns(entry: Entry, matcher: PartialMatcher): boolean {
-		return !this._settings.baseNameMatch && !matcher.match(entry.path);
+	private _isSkippedByPositivePatterns(entryPath: string, matcher: PartialMatcher): boolean {
+		return !this._settings.baseNameMatch && !matcher.match(entryPath);
 	}
 
-	private _isSkippedByNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
-		return !utils.pattern.matchAny(entry.path, negativeRe);
+	private _isSkippedByNegativePatterns(entryPath: string, negativeRe: PatternRe[]): boolean {
+		return !utils.pattern.matchAny(entryPath, negativeRe);
 	}
 }

@@ -161,6 +161,15 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
+			it('should return `true` when an entry match to the positive pattern with leading dot', () => {
+				const filter = getFilter(['./**/*'], []);
+				const entry = tests.entry.builder().path('./root/file.txt').file().build();
+
+				const actual = filter(entry);
+
+				assert.ok(actual);
+			});
+
 			it('should return `true` when an entry match to the positive pattern', () => {
 				const filter = getFilter(['**/*'], []);
 				const entry = tests.entry.builder().path('root/file.txt').file().build();
