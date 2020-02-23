@@ -4,7 +4,7 @@ import Reporter from './reporter';
 import { SuitePackResult } from './runner';
 
 describe('Benchmark → Reporter', () => {
-	const results: SuitePackResult = {
+	const result: SuitePackResult = {
 		name: 'name',
 		errors: 0,
 		retries: 1,
@@ -15,29 +15,20 @@ describe('Benchmark → Reporter', () => {
 		}
 	};
 
-	afterEach(() => {
-		results.errors = 0;
-	});
-
-	describe('.toString', () => {
+	describe('.format', () => {
 		it('should returns report', () => {
-			const reporter = new Reporter(results);
+			const reporter = new Reporter();
 
-			const expected = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 0 | Retries: 1';
+			reporter.row(result);
 
-			const actual = reporter.toString();
+			const expected = [
+				'Name  Time, ms  Time stdev, %  Memory, MB  Memory stdev, %  Entries  Errors  Retries',
+				'----  --------  -------------  ----------  ---------------  -------  ------  -------',
+				'name  1.000     0.000          1.000       0.000            1        0       1      ',
+				''
+			].join('\n');
 
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should returns report with errors', () => {
-			results.errors = 1;
-
-			const reporter = new Reporter(results);
-
-			const expected = 'name\n(TIME) 1.000ms ±0.000% | (MEMORY) 1.000MB ±0.000% | Entries: 1 | Errors: 1 | Retries: 1';
-
-			const actual = reporter.toString();
+			const actual = reporter.format();
 
 			assert.strictEqual(actual, expected);
 		});

@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 
 import Runner, { RunnerOptions, SuiteMeasures, SuitePackResult } from './runner';
+import Reporter from './reporter';
 
 class RunnerFakeProcess extends Runner {
 	public execNodeProcess(): string {
@@ -17,8 +18,8 @@ class RunnerFakeProcessError extends Runner {
 class RunnerFakeReport extends RunnerFakeProcess {
 	public results: SuitePackResult[] = [];
 
-	public report(results: SuitePackResult): void {
-		this.results.push(results);
+	public report(_: Reporter, result: SuitePackResult): void {
+		this.results.push(result);
 	}
 
 	public getSuites(): string[] {
