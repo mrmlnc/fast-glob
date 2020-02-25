@@ -105,17 +105,16 @@ export default class Runner {
 		return results;
 	}
 
-	public report(result: SuitePackResult): void {
-		const reporter = new Reporter(result);
-
-		const report = reporter.toString();
-
-		console.log(report);
+	public report(reporter: Reporter, result: SuitePackResult): void {
+		reporter.row(result);
+		reporter.display();
 	}
 
 	public packs(): void {
 		const suitesPath = path.join(__dirname, 'suites', this._options.type, this._options.mode);
 		const suites = this.getSuites(suitesPath);
+
+		const reporter = new Reporter();
 
 		for (const filepath of suites) {
 			const suitePath = path.join(suitesPath, filepath);
@@ -126,8 +125,10 @@ export default class Runner {
 				result = this.suitePack(suitePath, result.retries);
 			}
 
-			this.report(result);
+			this.report(reporter, result);
 		}
+
+		reporter.reset();
 	}
 
 	public getSuites(suitesPath: string): string[] {

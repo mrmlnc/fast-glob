@@ -1,43 +1,55 @@
-import { SuitePackResult, SuitePackMeasures } from './runner';
+import * as logUpdate from 'log-update';
+import * as isCi from 'is-ci';
+
+import { SuitePackResult, Measure } from './runner';
+
+import Table = require('easy-table'); // eslint-disable-line @typescript-eslint/no-require-imports
 
 const FRACTION_DIGITS = 3;
 
 export default class Reporter {
-	constructor(private readonly _results: SuitePackResult) { }
+	private readonly _table: Table = new Table();
+	private readonly _log: logUpdate.LogUpdate = logUpdate.create(process.stdout);
 
-	public toString(): string {
-		return this._formatHeader() + '\n' + this._formatMeasures() + ' | ' + this._formatMeta();
+	public row(result: SuitePackResult): void {
+		this._table.cell('Name', result.name);
+		this._table.cell(`Time, ${result.measures.time.units}`, this._formatMeasureValue(result.measures.time));
+		this._table.cell('Time stdev, %', this._formatMeasureStdevValue(result.measures.time));
+		this._table.cell(`Memory, ${result.measures.memory.units}`, this._formatMeasureValue(result.measures.memory));
+		this._table.cell('Memory stdev, %', this._formatMeasureStdevValue(result.measures.memory));
+		this._table.cell('Entries', result.entries);
+		this._table.cell('Errors', result.errors);
+		this._table.cell('Retries', result.retries);
+		this._table.newRow();
 	}
 
-	private _formatHeader(): string {
-		return this._results.name;
+	public format(): string {
+		return this._table.toString();
 	}
 
-	private _formatMeta(): string {
-		const matches = 'Entries: ' + this._formatValue(this._results.entries, '');
-		const errors = 'Errors: ' + this._formatValue(this._results.errors, '');
-		const retries = 'Retries: ' + this._formatValue(this._results.retries, '');
-
-		return [matches, errors, retries].join(' | ');
+	public display(): void {
+		if (!isCi) {
+			this._log(this.format());
+		}
 	}
 
-	private _formatMeasures(): string {
-		const keys = Object.keys(this._results.measures) as Array<keyof SuitePackMeasures>;
+	public reset(): void {
+		if (isCi) {
+			console.log(this.format());
+		}
 
-		return keys.map(this._formatMeasure, this).join(' | ');
+		this._log.done();
 	}
 
-	private _formatMeasure(name: keyof SuitePackMeasures): string {
-		const data = this._results.measures[name];
-
-		return [
-			'(' + name.toUpperCase() + ')',
-			this._formatValue(data.average, data.units, FRACTION_DIGITS),
-			'±' + this._formatValue(data.stdev, '%', FRACTION_DIGITS)
-		].join(' ');
+	private _formatMeasureValue(measure: Measure): string {
+		return this._formatMeasure(measure.average);
 	}
 
-	private _formatValue(value: number, units: string, faction?: number): string {
-		return value.toFixed(faction).toString() + units;
+	private _formatMeasureStdevValue(measure: Measure): string {
+		return this._formatMeasure(measure.stdev);
+	}
+
+	private _formatMeasure(value: number): string {
+		return value.toFixed(FRACTION_DIGITS);
 	}
 }
