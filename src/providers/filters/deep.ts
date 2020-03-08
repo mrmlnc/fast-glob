@@ -24,9 +24,7 @@ export default class DeepFilter {
 	}
 
 	private _filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
-		const depth = this._getEntryLevel(basePath, entry.path);
-
-		if (this._isSkippedByDeep(depth)) {
+		if (this._isSkippedByDeep(basePath, entry.path)) {
 			return false;
 		}
 
@@ -43,26 +41,38 @@ export default class DeepFilter {
 		return this._isSkippedByNegativePatterns(filepath, negativeRe);
 	}
 
-	private _isSkippedByDeep(entryDepth: number): boolean {
-		return entryDepth >= this._settings.deep;
+	private _isSkippedByDeep(basePath: string, entryPath: string): boolean {
+		/**
+		 * Avoid unnecessary depth calculations when it doesn't matter.
+		 */
+		if (this._settings.deep === Infinity) {
+			return false;
+		}
+
+		return this._getEntryLevel(basePath, entryPath) >= this._settings.deep;
+	}
+
+	private _getEntryLevel(basePath: string, entryPath: string): number {
+		const entryPathDepth = entryPath.split('/').length;
+
+		if (basePath === '') {
+			return entryPathDepth;
+		}
+
+		const basePathDepth = basePath.split('/').length;
+
+		return entryPathDepth - basePathDepth;
 	}
 
 	private _isSkippedSymbolicLink(entry: Entry): boolean {
 		return !this._settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
 	}
 
-	private _getEntryLevel(basePath: string, entryPath: string): number {
-		const basePathDepth = basePath.split('/').length;
-		const entryPathDepth = entryPath.split('/').length;
-
-		return entryPathDepth - (basePath === '' ? 0 : basePathDepth);
-	}
-
 	private _isSkippedByPositivePatterns(entryPath: string, matcher: PartialMatcher): boolean {
 		return !this._settings.baseNameMatch && !matcher.match(entryPath);
 	}
 
-	private _isSkippedByNegativePatterns(entryPath: string, negativeRe: PatternRe[]): boolean {
-		return !utils.pattern.matchAny(entryPath, negativeRe);
+	private _isSkippedByNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+		return !utils.pattern.matchAny(entryPath, patternsRe);
 	}
 }

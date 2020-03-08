@@ -27,7 +27,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this._isSkippedByAbsoluteNegativePatterns(entry, negativeRe)) {
+		if (this._isSkippedByAbsoluteNegativePatterns(entry.path, negativeRe)) {
 			return false;
 		}
 
@@ -52,14 +52,14 @@ export default class EntryFilter {
 		return this._settings.onlyDirectories && !entry.dirent.isDirectory();
 	}
 
-	private _isSkippedByAbsoluteNegativePatterns(entry: Entry, negativeRe: PatternRe[]): boolean {
+	private _isSkippedByAbsoluteNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
 		if (!this._settings.absolute) {
 			return false;
 		}
 
-		const fullpath = utils.path.makeAbsolute(this._settings.cwd, entry.path);
+		const fullpath = utils.path.makeAbsolute(this._settings.cwd, entryPath);
 
-		return this._isMatchToPatterns(fullpath, negativeRe);
+		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
 	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
