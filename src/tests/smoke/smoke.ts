@@ -93,7 +93,7 @@ async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSy
 	}
 
 	const isInvertedTest = test.broken === true || test.correct === true;
-	const assertAction = isInvertedTest ? assert.notDeepStrictEqual : assert.deepStrictEqual;
+	const assertAction: typeof assert.deepStrictEqual = isInvertedTest ? assert.notDeepStrictEqual : assert.deepStrictEqual;
 
 	assertAction(actual, expected);
 }
