@@ -15,12 +15,8 @@ export default class EntryFilter {
 	}
 
 	private _filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
-		if (this._settings.unique) {
-			if (this._isDuplicateEntry(entry)) {
-				return false;
-			}
-
-			this._createIndexRecord(entry);
+		if (this._settings.unique && this._isDuplicateEntry(entry)) {
+			return false;
 		}
 
 		if (this._onlyFileFilter(entry) || this._onlyDirectoryFilter(entry)) {
@@ -33,7 +29,13 @@ export default class EntryFilter {
 
 		const filepath = this._settings.baseNameMatch ? entry.name : entry.path;
 
-		return this._isMatchToPatterns(filepath, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
+		const isMatched = this._isMatchToPatterns(filepath, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
+
+		if (this._settings.unique && isMatched) {
+			this._createIndexRecord(entry);
+		}
+
+		return isMatched;
 	}
 
 	private _isDuplicateEntry(entry: Entry): boolean {
