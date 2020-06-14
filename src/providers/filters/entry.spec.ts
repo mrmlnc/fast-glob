@@ -64,12 +64,21 @@ describe('Providers → Filters → Entry', () => {
 				assert.strictEqual(filterInstance.index.size, 0);
 			});
 
+			it('should do not add an entry to the index when an entry does not match to patterns', () => {
+				const filterInstance = getEntryFilterInstance();
+
+				const filter = filterInstance.getFilter(['**/*.unrelated-file-extension'], []);
+
+				filter(FILE_ENTRY);
+
+				assert.strictEqual(filterInstance.index.size, 0);
+			});
+
 			it('should reject a duplicate entry', () => {
 				const filter = getFilter({
 					positive: ['**/*']
 				});
 
-				// Create index record
 				filter(FILE_ENTRY);
 
 				const actual = filter(FILE_ENTRY);
@@ -77,13 +86,12 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
-			it('should accept a duplicate entry', () => {
+			it('should accept a duplicate entry when an option is disabled', () => {
 				const filter = getFilter({
 					positive: ['**/*'],
 					options: { unique: false }
 				});
 
-				// Create index record
 				filter(FILE_ENTRY);
 
 				const actual = filter(FILE_ENTRY);
