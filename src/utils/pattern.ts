@@ -105,17 +105,29 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
-	const info = picomatch.scan(pattern, {
+	let { parts } = picomatch.scan(pattern, {
 		...options,
 		parts: true
 	});
 
-	// See micromatch/picomatch#58 for more details
-	if (info.parts.length === 0) {
-		return [pattern];
+	/**
+	 * The scan method returns an empty array in some cases.
+	 * See micromatch/picomatch#58 for more details.
+	 */
+	if (parts.length === 0) {
+		parts = [pattern];
 	}
 
-	return info.parts;
+	/**
+	 * The scan method does not return an empty part for the pattern with a forward slash.
+	 * This is another part of micromatch/picomatch#58.
+	 */
+	if (parts[0].startsWith('/')) {
+		parts[0] = parts[0].slice(1);
+		parts.unshift('');
+	}
+
+	return parts;
 }
 
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
