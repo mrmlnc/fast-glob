@@ -346,7 +346,7 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.getPatternParts', () => {
-		it('should return an array with a single item with an empty string', () => {
+		it('should return an array with a single item when the pattern is an empty string', () => {
 			const expected: Pattern[] = [''];
 
 			const actual = util.getPatternParts('', {});
@@ -358,6 +358,14 @@ describe('Utils → Pattern', () => {
 			const expected: Pattern[] = ['a*'];
 
 			const actual = util.getPatternParts('a*', {});
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return the correct set of parts for the pattern with a forward slash (micromatch/picomatch#58)', () => {
+			const expected: Pattern[] = ['', 'lib', '*'];
+
+			const actual = util.getPatternParts('/lib/*', {});
 
 			assert.deepStrictEqual(actual, expected);
 		});
