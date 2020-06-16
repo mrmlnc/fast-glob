@@ -28,6 +28,10 @@ export type SmokeTest = {
 	 */
 	correct?: boolean;
 	reason?: string;
+	/**
+	 * The ability to conditionally run the test.
+	 */
+	condition?: () => boolean;
 };
 
 type MochaDefinition = Mocha.TestFunction | Mocha.ExclusiveTestFunction;
@@ -71,7 +75,15 @@ function getTestCaseTitle(test: SmokeTest): string {
 }
 
 function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
-	return test.debug === true ? it.only : it;
+	if (test.debug === true) {
+		return it.only;
+	}
+
+	if (test.condition?.() === false) {
+		return it.skip;
+	}
+
+	return it;
 }
 
 async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSync | typeof getFastGlobEntriesAsync): Promise<void> {
