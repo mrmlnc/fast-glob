@@ -27,6 +27,15 @@ export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = 
 
 export function isDynamicPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	/**
+	 * A special case with an empty string is necessary for matching patterns that start with a forward slash.
+	 * An empty string cannot be a dynamic pattern.
+	 * For example, the pattern `/lib/*` will be spread into parts: '', 'lib', '*'.
+	 */
+	if (pattern === '') {
+		return false;
+	}
+
+	/**
 	 * When the `caseSensitiveMatch` option is disabled, all patterns must be marked as dynamic, because we cannot check
 	 * filepath directly (without read directory).
 	 */

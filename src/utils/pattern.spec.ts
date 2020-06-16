@@ -20,6 +20,10 @@ describe('Utils → Pattern', () => {
 
 	describe('.isDynamicPattern', () => {
 		describe('Without options', () => {
+			it('should return false for an empty string', () => {
+				assert.ok(!util.isDynamicPattern(''));
+			});
+
 			it('should return true for patterns that include the escape symbol', () => {
 				assert.ok(util.isDynamicPattern('\\'));
 			});
