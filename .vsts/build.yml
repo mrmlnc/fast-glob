@@ -14,8 +14,9 @@ jobs:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
         (Node.js 12): { node_version: 12.x }
+        (Node.js 14): { node_version: 14.x }
     pool:
-      vmImage: 'windows-2019'
+      vmImage: windows-latest
     steps:
       - template: steps-build.yml
         parameters:
@@ -28,8 +29,9 @@ jobs:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
         (Node.js 12): { node_version: 12.x }
+        (Node.js 14): { node_version: 14.x }
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: ubuntu-latest
     steps:
       - template: steps-build.yml
         parameters:
@@ -42,8 +44,9 @@ jobs:
         (Node.js 8): { node_version: 8.x }
         (Node.js 10): { node_version: 10.x }
         (Node.js 12): { node_version: 12.x }
+        (Node.js 14): { node_version: 14.x }
     pool:
-      vmImage: 'macOS-10.14'
+      vmImage: macOS-latest
     steps:
       - template: steps-build.yml
         parameters:
