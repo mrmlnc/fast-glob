@@ -5,7 +5,7 @@ trigger:
       - releases/*
 
 variables:
-  node_version: 12.x
+  node_version: 14.x
   benchmark_type: $(benchmark.type)
   benchmark_launches: $(benchmark.launches)
   benchmark_max_stdev: $(benchmark.max_stdev)
@@ -15,7 +15,7 @@ variables:
 jobs:
   - job: Benchmark
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: ubuntu-latest
     steps:
       - template: steps-build.yml
         parameters:
