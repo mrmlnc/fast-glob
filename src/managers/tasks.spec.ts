@@ -11,7 +11,7 @@ describe('Managers → Task', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
 			const expected = [
-				tests.task.builder().base('a').positive('a/*').negative('*.md').negative('*.txt').build()
+				tests.task.builder().base('a').positive('a/*').negative('*.md').negative('*.txt').negative('a/*.txt').build()
 			];
 
 			const actual = manager.generate(['a/*', '!*.md'], settings);
@@ -23,8 +23,8 @@ describe('Managers → Task', () => {
 			const settings = new Settings({ ignore: ['*.txt'] });
 
 			const expected = [
-				tests.task.builder().base('a').static().positive('a/file.json').negative('b/*.md').negative('*.txt').build(),
-				tests.task.builder().base('b').positive('b/*').negative('b/*.md').negative('*.txt').build()
+				tests.task.builder().base('a').static().positive('a/file.json').negative('b/*.md').negative('*.txt').negative('b/*.txt').build(),
+				tests.task.builder().base('b').positive('b/*').negative('b/*.md').negative('*.txt').negative('b/*.txt').build()
 			];
 
 			const actual = manager.generate(['a/file.json', 'b/*', '!b/*.md'], settings);

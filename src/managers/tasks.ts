@@ -41,8 +41,16 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 	return utils.pattern.getPositivePatterns(patterns);
 }
 
-export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
-	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
+export function getNegativePatternsAsPositive(patterns: Pattern[], ignores: Pattern[]): Pattern[] {
+	const re = /\/\*$/;
+	const negative = utils.pattern.getNegativePatterns(patterns.filter((x) => re.exec(x) === null)).concat(ignores);
+
+	for (const pattern of patterns.filter((x) => re.exec(x) !== null)) {
+		for (const ignore of ignores) {
+			negative.push(pattern.slice(0, Math.max(0, pattern.length - 1)) + ignore);
+		}
+	}
+
 	const positive = negative.map(utils.pattern.convertToPositivePattern);
 
 	return positive;
