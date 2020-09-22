@@ -70,7 +70,7 @@ export default class EntryFilter {
 	 */
 	private _isMatchToPatterns(entrypath: string, patternsRe: PatternRe[]): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entrypath);
-		
+
 		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
 	}
 }
