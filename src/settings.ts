@@ -3,7 +3,7 @@ import * as os from 'os';
 
 import { FileSystemAdapter, Pattern } from './types';
 
-const CPU_COUNT = os.cpus().length;
+const CPU_COUNT = Math.max(os.cpus().length, 1);
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
