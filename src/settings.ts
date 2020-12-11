@@ -3,6 +3,10 @@ import * as os from 'os';
 
 import { FileSystemAdapter, Pattern } from './types';
 
+/**
+ * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
+ * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
+ */
 const CPU_COUNT = Math.max(os.cpus().length, 1);
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
