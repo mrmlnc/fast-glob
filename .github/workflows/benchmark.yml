@@ -1,0 +1,82 @@
+name: Benchmark
+
+on:
+  - push
+
+env:
+  BENCHMARK_LAUNCHES: 100
+  BENCHMARK_MAX_STDEV: 10
+  BENCHMARK_RETRIES: 3
+
+jobs:
+  cancel:
+    name: Cancel previous jobs
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Cancel previous jobs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          workflow_id: 4198440
+          access_token: ${{ github.token }}
+
+  product:
+    name: Product benchmark
+    if: always()
+    needs:
+      - cancel
+    runs-on: ubuntu-latest
+    env:
+      BENCHMARK_TYPE: product
+      BENCHMARK_OPTIONS: '{}'
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+      - name: Install dependencies
+        run: npm install
+      - name: Compile sources
+        run: npm run compile
+      - name: Benchmark (async)
+        run: npm run bench-async
+      - name: Benchmark (stream)
+        run: npm run bench-stream
+      - name: Benchmark (sync)
+        run: npm run bench-sync
+
+  regress:
+    name: Regress benchmark with options (${{ matrix.benchmark_options }})
+    needs:
+      - cancel
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        benchmark_options:
+          - '{}'
+          - '{ "objectMode": true }'
+          - '{ "absolute": true }'
+    env:
+      BENCHMARK_TYPE: regression
+      BENCHMARK_OPTIONS: ${{ matrix.benchmark_options }}
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+      - name: Install dependencies
+        run: npm install
+      - name: Compile sources
+        run: npm run compile
+      - name: Benchmark (async)
+        run: npm run bench-async
+      - name: Benchmark (stream)
+        run: npm run bench-stream
+      - name: Benchmark (sync)
+        run: npm run bench-sync

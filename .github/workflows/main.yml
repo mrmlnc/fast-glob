@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - releases/*
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  cancel:
+    name: Cancel previous jobs
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Cancel previous jobs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          workflow_id: 4197767
+          access_token: ${{ github.token }}
+
+  test:
+    name: Node.js ${{ matrix.node_version }} on ${{ matrix.os }}
+    if: always()
+    needs:
+      - cancel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [8, 10, 12, 14, 15]
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v2
+      - name: Setup environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install dependencies
+        run: npm install
+      - name: Compile sources
+        run: npm run compile
+      - name: Run Hygiene Checks
+        run: npm run lint
+      - name: Run unit tests
+        run: npm run test
+      - name: Run smoke tests (sync)
+        run: npm run smoke:sync
+      - name: Run smoke tests (async)
+        run: npm run smoke:async
+      - name: Run smoke tests (stream)
+        run: npm run smoke:stream
