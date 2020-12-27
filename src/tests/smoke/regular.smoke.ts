@@ -1,5 +1,3 @@
-import * as os from 'os';
-
 import * as smoke from './smoke';
 
 smoke.suite('Smoke → Regular', [
@@ -484,9 +482,4 @@ smoke.suite('Smoke → Regular (relative)', [
 
 	{ pattern: '../{first,second}', cwd: 'fixtures/first' },
 	{ pattern: './../*', cwd: 'fixtures/first' }
-]);
-
-smoke.suite('Smoke → Regular (root)', [
-	// ISSUE-266
-	{ pattern: '/tmp/*', condition: () => os.platform() !== 'win32' }
 ]);
