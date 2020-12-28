@@ -1,6 +1,5 @@
-import * as os from 'os';
-
 import * as smoke from './smoke';
+import * as utils from '..';
 
 smoke.suite('Smoke → CaseSensitiveMatch', [
 	{
@@ -17,6 +16,6 @@ smoke.suite('Smoke → CaseSensitiveMatch', [
 		pattern: '/tmp/*',
 		globOptions: { nocase: true, nodir: false },
 		fgOptions: { caseSensitiveMatch: false, onlyFiles: false },
-		condition: () => os.platform() !== 'win32'
+		condition: () => !utils.platform.isWindows()
 	}
 ]);
