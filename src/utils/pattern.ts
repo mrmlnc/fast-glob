@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as globParent from 'glob-parent';
+import * as globParent from '@snyk/glob-parent';
 import * as micromatch from 'micromatch';
 import * as picomatch from 'picomatch';
 

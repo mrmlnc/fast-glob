@@ -1,6 +1,6 @@
 {
-  "name": "fast-glob",
-  "version": "3.2.5",
+  "name": "@snyk/fast-glob",
+  "version": "3.2.6-patch",
   "description": "It's a very fast and efficient glob library for Node.js",
   "license": "MIT",
   "repository": "mrmlnc/fast-glob",
@@ -52,7 +52,7 @@
   "dependencies": {
     "@nodelib/fs.stat": "^2.0.2",
     "@nodelib/fs.walk": "^1.2.3",
-    "glob-parent": "^5.1.0",
+    "@snyk/glob-parent": "^5.1.2-patch.1",
     "merge2": "^1.3.0",
     "micromatch": "^4.0.2",
     "picomatch": "^2.2.1"
