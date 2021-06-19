@@ -25,15 +25,6 @@ export function generate(patterns: Pattern[], settings: Settings): Task[] {
 
 export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): Task[] {
 	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
-
-	// When we have a global group – there is no reason to divide the patterns into independent tasks.
-	// In this case, the global task covers the rest.
-	if ('.' in positivePatternsGroup) {
-		const task = convertPatternGroupToTask('.', positive, negative, dynamic);
-
-		return [task];
-	}
-
 	return convertPatternGroupsToTasks(positivePatternsGroup, negative, dynamic);
 }
 
