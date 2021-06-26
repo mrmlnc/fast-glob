@@ -257,6 +257,52 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	describe('.getPatternsInsideCurrentDirectory', () => {
+		it('should return patterns', () => {
+			const expected: Pattern[] = ['.', './*', '*', 'a/*'];
+
+			const actual = util.getPatternsInsideCurrentDirectory(['.', './*', '*', 'a/*', '..', '../*', './..', './../*']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.getPatternsOutsideCurrentDirectory', () => {
+		it('should return patterns', () => {
+			const expected: Pattern[] = ['..', '../*', './..', './../*'];
+
+			const actual = util.getPatternsOutsideCurrentDirectory(['.', './*', '*', 'a/*', '..', '../*', './..', './../*']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.isPatternRelatedToParentDirectory', () => {
+		it('should be `false` when the pattern refers to the current directory', () => {
+			const actual = util.isPatternRelatedToParentDirectory('.');
+
+			assert.ok(!actual);
+		});
+
+		it('should be `true` when the pattern equals to `..`', () => {
+			const actual = util.isPatternRelatedToParentDirectory('..');
+
+			assert.ok(actual);
+		});
+
+		it('should be `true` when the pattern starts with `..` segment', () => {
+			const actual = util.isPatternRelatedToParentDirectory('../*');
+
+			assert.ok(actual);
+		});
+
+		it('should be `true` when the pattern starts with `./..` segment', () => {
+			const actual = util.isPatternRelatedToParentDirectory('./../*');
+
+			assert.ok(actual);
+		});
+	});
+
 	describe('.getBaseDirectory', () => {
 		it('should returns base directory', () => {
 			const expected = 'root';
