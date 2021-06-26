@@ -13,6 +13,12 @@
   },
   "main": "out/index.js",
   "typings": "out/index.d.ts",
+  "files": [
+    "out",
+    "!out/{benchmark,tests}",
+    "!out/**/*.map",
+    "!out/**/*.spec.*"
+  ],
   "keywords": [
     "glob",
     "patterns",
