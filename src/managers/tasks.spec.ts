@@ -57,7 +57,20 @@ describe('Managers → Task', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
-		it('should return two tasks', () => {
+		it('should return two tasks when one of patterns contains reference to the parent directory', () => {
+			const expected = [
+				tests.task.builder().base('..').positive('../*.md').build(),
+				tests.task.builder().base('.').positive('*').positive('a/*').negative('*.md').build()
+			];
+
+			const actual = manager.convertPatternsToTasks(['*', 'a/*', '../*.md'], ['*.md'], /* dynamic */ true);
+
+			console.dir(actual, { colors: true });
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return two tasks when all patterns refers to the different base directories', () => {
 			const expected = [
 				tests.task.builder().base('a').positive('a/*').negative('b/*.md').build(),
 				tests.task.builder().base('b').positive('b/*').negative('b/*.md').build()

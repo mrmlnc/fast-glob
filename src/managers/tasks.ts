@@ -23,18 +23,34 @@ export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	return staticTasks.concat(dynamicTasks);
 }
 
+/**
+ * Returns tasks grouped by basic pattern directories.
+ *
+ * Patterns that can be found inside (`./`) and outside (`../`) the current directory are handled separately.
+ * This is necessary because directory traversal starts at the base directory and goes deeper.
+ */
 export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): Task[] {
-	const positivePatternsGroup = groupPatternsByBaseDirectory(positive);
+	const tasks: Task[] = [];
 
-	// When we have a global group – there is no reason to divide the patterns into independent tasks.
-	// In this case, the global task covers the rest.
-	if ('.' in positivePatternsGroup) {
-		const task = convertPatternGroupToTask('.', positive, negative, dynamic);
+	const patternsOutsideCurrentDirectory = utils.pattern.getPatternsOutsideCurrentDirectory(positive);
+	const patternsInsideCurrentDirectory = utils.pattern.getPatternsInsideCurrentDirectory(positive);
 
-		return [task];
+	const outsideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsOutsideCurrentDirectory);
+	const insideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsInsideCurrentDirectory);
+
+	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, [], dynamic));
+
+	/*
+	 * For the sake of reducing future accesses to the file system, we merge all tasks within the current directory
+	 * into a global task, if at least one pattern refers to the root (`.`). In this case, the global task covers the rest.
+	 */
+	if ('.' in insideCurrentDirectoryGroup) {
+		tasks.push(convertPatternGroupToTask('.', patternsInsideCurrentDirectory, negative, dynamic));
+	} else {
+		tasks.push(...convertPatternGroupsToTasks(insideCurrentDirectoryGroup, negative, dynamic));
 	}
 
-	return convertPatternGroupsToTasks(positivePatternsGroup, negative, dynamic);
+	return tasks;
 }
 
 export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
