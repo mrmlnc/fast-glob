@@ -81,6 +81,32 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 	return patterns.filter(isPositivePattern);
 }
 
+/**
+ * Returns patterns that can be applied inside the current directory.
+ *
+ * @example
+ * // ['./*', '*', 'a/*']
+ * getPatternsInsideCurrentDirectory(['./*', '*', 'a/*', '../*', './../*'])
+ */
+export function getPatternsInsideCurrentDirectory(patterns: Pattern[]): Pattern[] {
+	return patterns.filter((pattern) => !isPatternRelatedToParentDirectory(pattern));
+}
+
+/**
+ * Returns patterns to be expanded relative to (outside) the current directory.
+ *
+ * @example
+ * // ['../*', './../*']
+ * getPatternsInsideCurrentDirectory(['./*', '*', 'a/*', '../*', './../*'])
+ */
+export function getPatternsOutsideCurrentDirectory(patterns: Pattern[]): Pattern[] {
+	return patterns.filter(isPatternRelatedToParentDirectory);
+}
+
+export function isPatternRelatedToParentDirectory(pattern: Pattern): boolean {
+	return pattern.startsWith('..') || pattern.startsWith('./..');
+}
+
 export function getBaseDirectory(pattern: Pattern): string {
 	return globParent(pattern, { flipBackslashes: false });
 }
