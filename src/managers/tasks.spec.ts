@@ -59,7 +59,7 @@ describe('Managers → Task', () => {
 
 		it('should return two tasks when one of patterns contains reference to the parent directory', () => {
 			const expected = [
-				tests.task.builder().base('..').positive('../*.md').build(),
+				tests.task.builder().base('..').positive('../*.md').negative('*.md').build(),
 				tests.task.builder().base('.').positive('*').positive('a/*').negative('*.md').build()
 			];
 

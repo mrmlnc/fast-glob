@@ -483,3 +483,24 @@ smoke.suite('Smoke → Regular (relative)', [
 	{ pattern: '../{first,second}', cwd: 'fixtures/first' },
 	{ pattern: './../*', cwd: 'fixtures/first' }
 ]);
+
+smoke.suite('Smoke → Regular (relative & ignore)', [
+	{
+		pattern: './../*',
+		cwd: 'fixtures/first',
+		ignore: '../*',
+		correct: true,
+		reason: 'The `node-glob` package does not exclude files, although the `../*` pattern can be applied here.'
+	},
+	{ pattern: './../*', cwd: 'fixtures/first', ignore: './../*' },
+	{ pattern: './../*', cwd: 'fixtures/first', ignore: '**' },
+
+	{ pattern: '../*', cwd: 'fixtures/first', ignore: '../*' },
+	{ pattern: '../*', cwd: 'fixtures/first', ignore: '**' },
+
+	{ pattern: '../../*', cwd: 'fixtures/first/nested', ignore: '../../*' },
+	{ pattern: '../../*', cwd: 'fixtures/first/nested', ignore: '**' },
+
+	{ pattern: '../{first,second}', cwd: 'fixtures/first', ignore: '../first/**' },
+	{ pattern: '../{first,second}', cwd: 'fixtures/first', ignore: '**/first/**' }
+]);

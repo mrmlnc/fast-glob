@@ -38,7 +38,7 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 	const outsideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsOutsideCurrentDirectory);
 	const insideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsInsideCurrentDirectory);
 
-	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, [], dynamic));
+	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, negative, dynamic));
 
 	/*
 	 * For the sake of reducing future accesses to the file system, we merge all tasks within the current directory
