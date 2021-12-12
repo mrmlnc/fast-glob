@@ -64,9 +64,13 @@ export default class EntryFilter {
 		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
-	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
-		const filepath = utils.path.removeLeadingDotSegment(entryPath);
-
-		return utils.pattern.matchAny(filepath, patternsRe);
+	/**
+	 * First, just trying to apply patterns to the path.
+	 * Second, trying to apply patterns to the path with final slash (need to micromatch to support «directory/**» patterns).
+	 */
+	private _isMatchToPatterns(entrypath: string, patternsRe: PatternRe[]): boolean {
+		const filepath = utils.path.removeLeadingDotSegment(entrypath);
+		
+		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
 	}
 }
