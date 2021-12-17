@@ -112,6 +112,7 @@ describe('Utils → Pattern', () => {
 
 			it('should return false for unfinished regex character class', () => {
 				assert.ok(!util.isDynamicPattern('['));
+				assert.ok(!util.isDynamicPattern('['.repeat(999999)));
 				assert.ok(!util.isDynamicPattern('[abc'));
 			});
 
