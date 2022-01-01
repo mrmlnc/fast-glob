@@ -64,9 +64,13 @@ export default class EntryFilter {
 		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
+	/**
+	 * First, just trying to apply patterns to the path.
+	 * Second, trying to apply patterns to the path with final slash.
+	 */
 	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entryPath);
 
-		return utils.pattern.matchAny(filepath, patternsRe);
+		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
 	}
 }
