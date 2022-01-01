@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as path from 'path';
 
 import * as glob from 'glob';
 
@@ -13,6 +14,8 @@ export type SmokeTest = {
 	ignore?: Pattern;
 	cwd?: string;
 	globOptions?: glob.IOptions;
+	globFilter?: (entry: string, filepath: string) => boolean;
+	globTransform?: (entry: string) => string;
 	fgOptions?: Options;
 	/**
 	 * Allow to run only one test case with debug information.
@@ -87,7 +90,7 @@ function getTestCaseMochaDefinition(test: SmokeTest): MochaDefinition {
 }
 
 async function testCaseRunner(test: SmokeTest, func: typeof getFastGlobEntriesSync | typeof getFastGlobEntriesAsync): Promise<void> {
-	const expected = getNodeGlobEntries(test.pattern, test.ignore, test.cwd, test.globOptions);
+	const expected = getNodeGlobEntries(test);
 	const actual = await func(test.pattern, test.ignore, test.cwd, test.fgOptions);
 
 	if (test.debug === true) {
@@ -133,12 +136,26 @@ function getTestMarker(items: string[], item: string): DebugCompareTestMarker {
 	return items.includes(item) ? '+' : '-';
 }
 
-function getNodeGlobEntries(pattern: Pattern, ignore?: Pattern, cwd?: string, options?: glob.IOptions): string[] {
-	const entries = glob.sync(pattern, {
-		cwd: cwd === undefined ? process.cwd() : cwd,
-		ignore: ignore === undefined ? [] : [ignore],
-		...options
-	});
+function getNodeGlobEntries(options: SmokeTest): string[] {
+	const pattern = options.pattern;
+	const cwd = options.cwd === undefined ? process.cwd() : options.cwd;
+	const ignore = options.ignore === undefined ? [] : [options.ignore];
+	const globFilter = options.globFilter;
+	const globTransform = options.globTransform;
+
+	let entries = glob.sync(pattern, { cwd, ignore, ...options.globOptions });
+
+	if (globFilter !== undefined) {
+		entries = entries.filter((entry) => {
+			const filepath = path.join(cwd, entry);
+
+			return globFilter(entry, filepath);
+		});
+	}
+
+	if (globTransform !== undefined) {
+		entries = entries.map((entry) => globTransform(entry));
+	}
 
 	entries.sort((a, b) => a.localeCompare(b));
 
