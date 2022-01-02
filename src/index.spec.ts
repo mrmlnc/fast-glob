@@ -182,6 +182,17 @@ describe('Package', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should clean up patterns', () => {
+			const expected = [
+				// Clean up duplicated slashes
+				tests.task.builder().base('fixtures').positive('fixtures/*').build()
+			];
+
+			const actual = fg.generateTasks(['fixtures//*']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.isDynamicPattern', () => {
