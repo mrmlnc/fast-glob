@@ -118,6 +118,8 @@ describe('Utils → Pattern', () => {
 
 			it('should return false for unfinished regex group', () => {
 				assert.ok(!util.isDynamicPattern('(a|b'));
+				assert.ok(!util.isDynamicPattern('('.repeat(999999) + 'a|b'));
+				assert.ok(!util.isDynamicPattern('(a' + '|'.repeat(999999) + 'b'));
 				assert.ok(!util.isDynamicPattern('abc/(a|b'));
 			});
 
