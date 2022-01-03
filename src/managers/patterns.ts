@@ -12,6 +12,6 @@ export function transform(patterns: string[]): string[] {
  * This package only works with forward slashes as a path separator.
  * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
  */
-function removeDuplicatedSlashes(pattern: string): string {
+export function removeDuplicatedSlashes(pattern: string): string {
 	return pattern.replace(DOUBLE_SLASH_RE, '/');
 }
