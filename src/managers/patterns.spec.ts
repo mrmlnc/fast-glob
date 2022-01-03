@@ -13,16 +13,16 @@ describe('Managers → Pattern', () => {
 		});
 	});
 
-	describe('.removeDuplicatedSlashes', () => {
+	describe('.removeDuplicateSlashes', () => {
 		it('should do not change patterns', () => {
-			const action = manager.removeDuplicatedSlashes;
+			const action = manager.removeDuplicateSlashes;
 
 			assert.strictEqual(action('directory/file.md'), 'directory/file.md');
 			assert.strictEqual(action('files{.txt,/file.md}'), 'files{.txt,/file.md}');
 		});
 
 		it('should do not change the device path in patterns with UNC parts', () => {
-			const action = manager.removeDuplicatedSlashes;
+			const action = manager.removeDuplicateSlashes;
 
 			assert.strictEqual(action('//?//D://'), '//?/D:/');
 			assert.strictEqual(action('//.//D:///'), '//./D:/');
@@ -32,7 +32,7 @@ describe('Managers → Pattern', () => {
 		});
 
 		it('should remove duplicate slashes in the middle and the of the pattern', () => {
-			const action = manager.removeDuplicatedSlashes;
+			const action = manager.removeDuplicateSlashes;
 
 			assert.strictEqual(action('a//b'), 'a/b');
 			assert.strictEqual(action('b///c'), 'b/c');
@@ -41,7 +41,7 @@ describe('Managers → Pattern', () => {
 		});
 
 		it('should form double slashes at the beginning of the pattern', () => {
-			const action = manager.removeDuplicatedSlashes;
+			const action = manager.removeDuplicateSlashes;
 
 			assert.strictEqual(action('///*'), '//*');
 			assert.strictEqual(action('////?'), '//?');

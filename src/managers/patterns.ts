@@ -5,13 +5,13 @@
 const DOUBLE_SLASH_RE = /(?<!^)\/{2,}/g;
 
 export function transform(patterns: string[]): string[] {
-	return patterns.map((pattern) => removeDuplicatedSlashes(pattern));
+	return patterns.map((pattern) => removeDuplicateSlashes(pattern));
 }
 
 /**
  * This package only works with forward slashes as a path separator.
  * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
  */
-export function removeDuplicatedSlashes(pattern: string): string {
+export function removeDuplicateSlashes(pattern: string): string {
 	return pattern.replace(DOUBLE_SLASH_RE, '/');
 }

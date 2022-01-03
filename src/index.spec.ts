@@ -185,7 +185,7 @@ describe('Package', () => {
 
 		it('should clean up patterns', () => {
 			const expected = [
-				// Clean up duplicated slashes
+				// Clean up duplicate slashes
 				tests.task.builder().base('fixtures').positive('fixtures/*').build()
 			];
 
