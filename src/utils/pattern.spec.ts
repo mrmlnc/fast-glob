@@ -132,10 +132,14 @@ describe('Utils → Pattern', () => {
 
 			it('should return false for unfinished brace expansions', () => {
 				assert.ok(!util.isDynamicPattern('{'));
+				assert.ok(!util.isDynamicPattern('{'.repeat(999999)));
 				assert.ok(!util.isDynamicPattern('{a'));
 				assert.ok(!util.isDynamicPattern('{,'));
 				assert.ok(!util.isDynamicPattern('{a,'));
 				assert.ok(!util.isDynamicPattern('{a,b'));
+				assert.ok(!util.isDynamicPattern('{a' + ','.repeat(999999) + 'b'));
+				assert.ok(!util.isDynamicPattern('{1..'));
+				assert.ok(!util.isDynamicPattern('{1.' + '.'.repeat(999999) + '2'));
 			});
 		});
 
