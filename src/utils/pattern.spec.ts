@@ -125,6 +125,7 @@ describe('Utils → Pattern', () => {
 
 			it('should return false for unfinished glob extension', () => {
 				assert.ok(!util.isDynamicPattern('@('));
+				assert.ok(!util.isDynamicPattern('@' + '('.repeat(999999) + 'a'));
 				assert.ok(!util.isDynamicPattern('@(a'));
 				assert.ok(!util.isDynamicPattern('@(a|'));
 				assert.ok(!util.isDynamicPattern('@(a|b'));
