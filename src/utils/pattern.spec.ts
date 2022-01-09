@@ -82,6 +82,8 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('{a,}'));
 				assert.ok(util.isDynamicPattern('{,b}'));
 				assert.ok(util.isDynamicPattern('{a,b}'));
+				assert.ok(util.isDynamicPattern('{a,b,c}'));
+				assert.ok(util.isDynamicPattern('{a' + ','.repeat(999999) + 'b}'));
 				assert.ok(util.isDynamicPattern('{1..3}'));
 			});
 
