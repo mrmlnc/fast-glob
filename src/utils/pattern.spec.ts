@@ -88,6 +88,7 @@ describe('Utils → Pattern', () => {
 				// The second braces pass
 				assert.ok(util.isDynamicPattern('{a,b,{c,d}'));
 				assert.ok(util.isDynamicPattern('{1..3}'));
+				assert.ok(util.isDynamicPattern('{2..10..2}'));
 			});
 
 			it('should return false for brace extension when the `braceExpansion` option is disabled', () => {
@@ -146,6 +147,10 @@ describe('Utils → Pattern', () => {
 				assert.ok(!util.isDynamicPattern('{a' + ','.repeat(999999) + 'b'));
 				assert.ok(!util.isDynamicPattern('{1..'));
 				assert.ok(!util.isDynamicPattern('{1.' + '.'.repeat(999999) + '2'));
+				assert.ok(!util.isDynamicPattern('{2..10'));
+				assert.ok(!util.isDynamicPattern('{2..10.'));
+				assert.ok(!util.isDynamicPattern('{2..10..'));
+				assert.ok(!util.isDynamicPattern('{2..10..2'));
 			});
 		});
 
