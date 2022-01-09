@@ -84,6 +84,9 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('{a,b}'));
 				assert.ok(util.isDynamicPattern('{a,b,c}'));
 				assert.ok(util.isDynamicPattern('{a' + ','.repeat(999999) + 'b}'));
+				assert.ok(util.isDynamicPattern('{a,b,{c,d}}'));
+				// The second braces pass
+				assert.ok(util.isDynamicPattern('{a,b,{c,d}'));
 				assert.ok(util.isDynamicPattern('{1..3}'));
 			});
 
