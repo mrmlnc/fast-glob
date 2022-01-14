@@ -79,6 +79,7 @@ describe('Utils → Pattern', () => {
 
 			it('should return true for patterns that include brace expansions symbols', () => {
 				assert.ok(util.isDynamicPattern('{,}'));
+				assert.ok(util.isDynamicPattern('abc/{a.txt,}'));
 				assert.ok(util.isDynamicPattern('{a,}'));
 				assert.ok(util.isDynamicPattern('{,b}'));
 				assert.ok(util.isDynamicPattern('{a,b}'));
@@ -88,6 +89,7 @@ describe('Utils → Pattern', () => {
 				// The second braces pass
 				assert.ok(util.isDynamicPattern('{a,b,{c,d}'));
 				assert.ok(util.isDynamicPattern('{1..3}'));
+				assert.ok(util.isDynamicPattern('abc/{1..3}'));
 				assert.ok(util.isDynamicPattern('{2..10..2}'));
 			});
 
@@ -141,6 +143,7 @@ describe('Utils → Pattern', () => {
 				assert.ok(!util.isDynamicPattern('{'));
 				assert.ok(!util.isDynamicPattern('{'.repeat(999999)));
 				assert.ok(!util.isDynamicPattern('{a'));
+				assert.ok(!util.isDynamicPattern('{a}'));
 				assert.ok(!util.isDynamicPattern('{,'));
 				assert.ok(!util.isDynamicPattern('{a,'));
 				assert.ok(!util.isDynamicPattern('{a,b'));

@@ -12,7 +12,7 @@ const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
 const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
 const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\([^(]*\|[^|]*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\([^(]*\)/;
-const BRACE_EXPANSIONS_SYMBOLS_RE = /{[^,.{]*(?:,|\.\.)[^{]*}/;
+const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
 
 type PatternTypeOptions = {
 	braceExpansion?: boolean;
@@ -50,11 +50,29 @@ export function isDynamicPattern(pattern: Pattern, options: PatternTypeOptions =
 		return true;
 	}
 
-	if (options.braceExpansion !== false && BRACE_EXPANSIONS_SYMBOLS_RE.test(pattern)) {
+	if (options.braceExpansion !== false && hasBraceExpansion(pattern)) {
 		return true;
 	}
 
 	return false;
+}
+
+function hasBraceExpansion(pattern: string): boolean {
+	const openingBraceIndex = pattern.indexOf('{');
+
+	if (openingBraceIndex === -1) {
+		return false;
+	}
+
+	const closingBraceIndex = pattern.indexOf('}', openingBraceIndex + 1);
+
+	if (closingBraceIndex === -1) {
+		return false;
+	}
+
+	const braceContent = pattern.slice(openingBraceIndex, closingBraceIndex);
+
+	return BRACE_EXPANSION_SEPARATORS_RE.test(braceContent);
 }
 
 export function convertToPositivePattern(pattern: Pattern): Pattern {
