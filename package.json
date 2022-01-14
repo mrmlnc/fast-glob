@@ -44,7 +44,6 @@
     "eslint": "^6.5.1",
     "eslint-config-mrmlnc": "^1.1.0",
     "execa": "^2.0.4",
-    "fast-glob": "^3.0.4",
     "fdir": "^5.1.0",
     "glob": "^7.1.4",
     "is-ci": "^2.0.0",
