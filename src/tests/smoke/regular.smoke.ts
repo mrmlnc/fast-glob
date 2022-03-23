@@ -504,3 +504,12 @@ smoke.suite('Smoke → Regular (relative & ignore)', [
 	{ pattern: '../{first,second}', cwd: 'fixtures/first', ignore: '../first/**' },
 	{ pattern: '../{first,second}', cwd: 'fixtures/first', ignore: '**/first/**' }
 ]);
+
+smoke.suite('Smoke -> Regular (negative group)', [
+	{
+		pattern: '**/!(*.md)',
+		cwd: 'fixtures/first',
+		broken: true,
+		issue: 357
+	}
+])
