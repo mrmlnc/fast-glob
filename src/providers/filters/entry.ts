@@ -5,7 +5,7 @@ import * as utils from '../../utils';
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
+	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
@@ -28,8 +28,9 @@ export default class EntryFilter {
 		}
 
 		const filepath = this._settings.baseNameMatch ? entry.name : entry.path;
+		const isDirectory = entry.dirent.isDirectory();
 
-		const isMatched = this._isMatchToPatterns(filepath, positiveRe) && !this._isMatchToPatterns(entry.path, negativeRe);
+		const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(entry.path, negativeRe, isDirectory);
 
 		if (this._settings.unique && isMatched) {
 			this._createIndexRecord(entry);
@@ -64,13 +65,18 @@ export default class EntryFilter {
 		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
-	/**
-	 * First, just trying to apply patterns to the path.
-	 * Second, trying to apply patterns to the path with final slash.
-	 */
-	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entryPath);
 
-		return utils.pattern.matchAny(filepath, patternsRe) || utils.pattern.matchAny(filepath + '/', patternsRe);
+		// Trying to match files and directories by patterns.
+		const isMatched = utils.pattern.matchAny(filepath, patternsRe);
+
+		// A pattern with a trailling slash can be used for directory matching.
+		// To apply such pattern, we need to add a tralling slash to the path.
+		if (!isMatched && isDirectory) {
+			return utils.pattern.matchAny(filepath + '/', patternsRe);
+		}
+
+		return isMatched;
 	}
 }
