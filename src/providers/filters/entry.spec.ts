@@ -226,6 +226,20 @@ describe('Providers → Filters → Entry', () => {
 					positive: ['**/*']
 				});
 			});
+
+			it('should try to apply patterns to the path with the trailing slash for directory entry', () => {
+				accept(DIRECTORY_ENTRY, {
+					positive: ['**/'],
+					options: { onlyFiles: false }
+				});
+			});
+
+			it('should not try to apply patterns to the path with the trailing slash for non-directory entry', () => {
+				reject(FILE_ENTRY, {
+					positive: ['**/'],
+					options: { onlyFiles: false }
+				});
+			});
 		});
 	});
 
