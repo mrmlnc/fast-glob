@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import { PassThrough } from 'stream';
 
 import * as sinon from 'sinon';
 
@@ -8,10 +7,11 @@ import ReaderStream from '../readers/stream';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
 import { Entry, EntryItem, ErrnoException } from '../types';
+import ReaderAsync from '../readers/async';
 import ProviderAsync from './async';
 
 class TestProvider extends ProviderAsync {
-	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
 
 	constructor(options?: Options) {
 		super(new Settings(options));
@@ -27,13 +27,8 @@ function getProvider(options?: Options): TestProvider {
 }
 
 function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
-	const reader = new PassThrough({ objectMode: true });
-
-	provider.reader.dynamic.returns(reader);
-	provider.reader.static.returns(reader);
-
-	reader.push(entry);
-	reader.push(null);
+	provider.reader.dynamic.resolves([entry]);
+	provider.reader.static.resolves([entry]);
 
 	return provider.read(task);
 }
@@ -77,13 +72,8 @@ describe('Providers → ProviderAsync', () => {
 		it('should throw error', async () => {
 			const provider = getProvider();
 			const task = tests.task.builder().base('.').positive('*').build();
-			const stream = new PassThrough({
-				read(): void {
-					stream.emit('error', tests.errno.getEnoent());
-				}
-			});
 
-			provider.reader.dynamic.returns(stream);
+			provider.reader.dynamic.rejects(tests.errno.getEnoent());
 
 			try {
 				await provider.read(task);

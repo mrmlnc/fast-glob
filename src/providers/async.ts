@@ -1,29 +1,21 @@
-import { Readable } from 'stream';
-
 import { Task } from '../managers/tasks';
-import ReaderStream from '../readers/stream';
 import { Entry, EntryItem, ReaderOptions } from '../types';
+import ReaderAsync from '../readers/async';
 import Provider from './provider';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	protected _reader: ReaderStream = new ReaderStream(this._settings);
+	protected _reader: ReaderAsync = new ReaderAsync(this._settings);
 
-	public read(task: Task): Promise<EntryItem[]> {
+	public async read(task: Task): Promise<EntryItem[]> {
 		const root = this._getRootDirectory(task);
 		const options = this._getReaderOptions(task);
 
-		const entries: EntryItem[] = [];
+		const entries = await this.api(root, task, options);
 
-		return new Promise((resolve, reject) => {
-			const stream = this.api(root, task, options);
-
-			stream.once('error', reject);
-			stream.on('data', (entry: Entry) => entries.push(options.transform(entry)));
-			stream.once('end', () => resolve(entries));
-		});
+		return entries.map((entry) => options.transform(entry));
 	}
 
-	public api(root: string, task: Task, options: ReaderOptions): Readable {
+	public api(root: string, task: Task, options: ReaderOptions): Promise<Entry[]> {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}
