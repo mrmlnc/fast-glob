@@ -3,12 +3,6 @@ import * as os from 'os';
 
 import { FileSystemAdapter, Pattern } from './types';
 
-/**
- * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
- * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
- */
-const CPU_COUNT = Math.max(os.cpus().length, 1);
-
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
 	lstatSync: fs.lstatSync,
@@ -155,11 +149,19 @@ export type Options = {
 };
 
 export default class Settings {
+	/**
+	 * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
+	 * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
+	 * Also we should account for CPU's returning undefined in case of mocking.
+	 */
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions
+	private readonly _CPU_COUNT: number = Math.max((os.cpus() || []).length, 1);
+
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
 	public readonly baseNameMatch: boolean = this._getValue(this._options.baseNameMatch, false);
 	public readonly braceExpansion: boolean = this._getValue(this._options.braceExpansion, true);
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
-	public readonly concurrency: number = this._getValue(this._options.concurrency, CPU_COUNT);
+	public readonly concurrency: number = this._getValue(this._options.concurrency, this._CPU_COUNT);
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
 	public readonly deep: number = this._getValue(this._options.deep, Infinity);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);
