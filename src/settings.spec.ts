@@ -93,14 +93,6 @@ describe('Settings', () => {
 		assert.strictEqual(settings.fs.readdirSync, customReaddirSync);
 	});
 
-	it('should handle cpus return undefined', () => {
-		// @ts-expect-error
-		cpusStub.returns(undefined);
-
-		const settings = new Settings();
-		assert.strictEqual(settings.concurrency, 1);
-	});
-
 	it('should handle cpus being an empty array', () => {
 		cpusStub.returns([]);
 

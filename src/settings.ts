@@ -154,8 +154,7 @@ export default class Settings {
 	 * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
 	 * Also we should account for CPU's returning undefined in case of mocking.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions
-	private readonly _CPU_COUNT: number = Math.max((os.cpus() || []).length, 1);
+	private readonly _CPU_COUNT: number = Math.max(os.cpus().length, 1);
 
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
 	public readonly baseNameMatch: boolean = this._getValue(this._options.baseNameMatch, false);
