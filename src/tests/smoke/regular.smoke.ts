@@ -511,3 +511,16 @@ smoke.suite('Smoke -> Regular (negative group)', [
 		cwd: 'fixtures/first'
 	}
 ]);
+
+smoke.suite('Smoke -> Regular (segmented lists)', [
+	{
+		pattern: '{book.xml,**/library/*/book.md}',
+		cwd: 'fixtures/third',
+		broken: true,
+		issue: 365
+	},
+	{
+		pattern: '{book.xml,library/**/a/book.md}',
+		cwd: 'fixtures/third'
+	}
+]);
