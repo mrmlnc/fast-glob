@@ -15,7 +15,3 @@ node_modules/
 .tmp/
 .benchmark/
 out/
-
-# Other files
-package-lock.json
-yarn.lock
