@@ -3,7 +3,7 @@ import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } fro
 import * as utils from '../../utils';
 
 export default class EntryFilter {
-	public readonly index: Map<string, undefined> = new Map();
+	public readonly index: Map<unknown, undefined> = new Map();
 
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
@@ -40,7 +40,7 @@ export default class EntryFilter {
 	}
 
 	private _isDuplicateEntry(entry: Entry): boolean {
-		return this.index.has(entry.path);
+		return this.index.has(this._settings.uniqueBy(entry));
 	}
 
 	private _createIndexRecord(entry: Entry): void {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 
-import { FileSystemAdapter, Pattern } from './types';
+import { Entry, FileSystemAdapter, Pattern } from './types';
 
 /**
  * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
@@ -152,6 +152,12 @@ export type Options = {
 	 * @default true
 	 */
 	unique?: boolean;
+	/**
+	 * Overrides the uniqueness value when `unique` is set to `true`.
+	 *
+	 * @default (entry) => entry.path
+	 */
+	uniqueBy?: (entry: Entry) => unknown;
 };
 
 export default class Settings {
@@ -176,6 +182,7 @@ export default class Settings {
 	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
 	public readonly throwErrorOnBrokenSymbolicLink: boolean = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, false);
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
+	public readonly uniqueBy: (entry: Entry) => unknown = this._getValue(this._options.uniqueBy, (entry: Entry) => entry.path);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
