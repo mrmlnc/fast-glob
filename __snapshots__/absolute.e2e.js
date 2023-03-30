@@ -89,6 +89,7 @@ exports['Options Absolute {"pattern":"fixtures/**/*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (sync) 1'] = [
+  "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
   "<root>/README.md",
@@ -96,6 +97,7 @@ exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (async) 1'] = [
+  "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
   "<root>/README.md",
@@ -103,6 +105,7 @@ exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (stream) 1'] = [
+  "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
   "<root>/README.md",

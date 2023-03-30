@@ -5483,6 +5483,7 @@ exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,library/**/a/b
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (sync) 1'] = [
+  "herebyfile.mjs",
   "LICENSE",
   "package.json",
   "README.md",
@@ -5490,6 +5491,7 @@ exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (sync) 1'] =
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (async) 1'] = [
+  "herebyfile.mjs",
   "LICENSE",
   "package.json",
   "README.md",
@@ -5497,6 +5499,7 @@ exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (async) 1'] 
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (stream) 1'] = [
+  "herebyfile.mjs",
   "LICENSE",
   "package.json",
   "README.md",

@@ -3,11 +3,6 @@ name: Benchmark
 on:
   - push
 
-env:
-  BENCHMARK_LAUNCHES: 100
-  BENCHMARK_MAX_STDEV: 10
-  BENCHMARK_RETRIES: 3
-
 jobs:
   product:
     name: Product benchmark
@@ -15,9 +10,6 @@ jobs:
       group: ${{ github.workflow }}-benchmark-product-${{ github.ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
-    env:
-      BENCHMARK_TYPE: product
-      BENCHMARK_OPTIONS: '{}'
     steps:
       - name: Setup repository
         uses: actions/checkout@v3
@@ -30,11 +22,11 @@ jobs:
       - name: Compile sources
         run: npm run compile
       - name: Benchmark (async)
-        run: npm run bench-async
+        run: npm run bench:product:async
       - name: Benchmark (stream)
-        run: npm run bench-stream
+        run: npm run bench:product:stream
       - name: Benchmark (sync)
-        run: npm run bench-sync
+        run: npm run bench:product:sync
 
   regress:
     name: Regress benchmark with options (${{ matrix.benchmark_options }})
@@ -50,7 +42,6 @@ jobs:
           - '{ "objectMode": true }'
           - '{ "absolute": true }'
     env:
-      BENCHMARK_TYPE: regression
       BENCHMARK_OPTIONS: ${{ matrix.benchmark_options }}
     steps:
       - name: Setup repository
@@ -64,8 +55,8 @@ jobs:
       - name: Compile sources
         run: npm run compile
       - name: Benchmark (async)
-        run: npm run bench-async
+        run: npm run bench:regression:async
       - name: Benchmark (stream)
-        run: npm run bench-stream
+        run: npm run bench:regression:stream
       - name: Benchmark (sync)
-        run: npm run bench-sync
+        run: npm run bench:regression:sync
