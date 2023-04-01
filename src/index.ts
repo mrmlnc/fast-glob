@@ -33,6 +33,8 @@ namespace FastGlob {
 	export type Pattern = PatternInternal;
 	export type FileSystemAdapter = FileSystemAdapterInternal;
 
+	export const async = FastGlob;
+
 	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
