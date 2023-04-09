@@ -9,23 +9,11 @@ env:
   BENCHMARK_RETRIES: 3
 
 jobs:
-  cancel:
-    name: Cancel previous jobs
-    if: github.ref != 'refs/heads/master'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Cancel previous jobs
-        uses: styfle/cancel-workflow-action@0.6.0
-        with:
-          workflow_id: 4198440
-          access_token: ${{ github.token }}
-
   product:
     name: Product benchmark
-    if: always()
-    needs:
-      - cancel
+    concurrency:
+      group: ${{ github.workflow }}-benchmark-product-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     env:
       BENCHMARK_TYPE: product
@@ -50,8 +38,9 @@ jobs:
 
   regress:
     name: Regress benchmark with options (${{ matrix.benchmark_options }})
-    needs:
-      - cancel
+    concurrency:
+      group: ${{ github.workflow }}-benchmark-regress-${{ matrix.benchmark_options }}-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

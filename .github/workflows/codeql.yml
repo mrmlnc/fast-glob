@@ -16,6 +16,9 @@ on:
 jobs:
   analyze:
     name: Analyze
+    concurrency:
+      group: ${{ github.workflow }}-codeql-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions:
       actions: read
