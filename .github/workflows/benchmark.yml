@@ -1,7 +1,13 @@
 name: Benchmark
 
 on:
-  - push
+  push:
+    branches:
+      - master
+      - releases/*
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
   product:
