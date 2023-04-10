@@ -37,7 +37,7 @@ class Glob {
 
 		const timeStart = utils.timeStart();
 
-		await new Promise<string[]>((resolve, reject) => {
+		await new Promise<void>((resolve, reject) => {
 			const stream = func();
 
 			stream.once('error', (error) => reject(error));

@@ -29,7 +29,7 @@ export function importFdir(): Promise<typeof import('fdir')> {
 	return import('fdir');
 }
 
-export async function importAndMeasure<T extends () => Promise<unknown>>(func: T): Promise<ReturnType<T>> {
+export async function importAndMeasure<T>(func: () => Promise<T>): Promise<T> {
 	const start = timeStart();
 
 	const result = await func();
