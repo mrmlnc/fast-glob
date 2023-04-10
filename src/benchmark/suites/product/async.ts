@@ -13,22 +13,10 @@ class Glob {
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
-		const action = new Promise<string[]>((resolve, reject) => {
-			glob(this._pattern, {
-				cwd: this._cwd,
-				nosort: true,
-				nounique: true,
-				nodir: true
-			}, (error, matches) => {
-				if (error !== null) {
-					return reject(error);
-				}
-
-				resolve(matches);
-			});
-		});
-
-		await this._measure(() => action);
+		await this._measure(() => glob.glob(this._pattern, {
+			cwd: this._cwd,
+			nodir: true
+		}));
 	}
 
 	public async measureFastGlob(): Promise<void> {

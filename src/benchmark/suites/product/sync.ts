@@ -13,10 +13,8 @@ class Glob {
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
-		this._measure(() => glob.sync(this._pattern, {
+		this._measure(() => glob.globSync(this._pattern, {
 			cwd: this._cwd,
-			nosort: true,
-			nounique: true,
 			nodir: true
 		}));
 	}
