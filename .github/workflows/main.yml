@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 3
     steps:
       - name: Cancel previous jobs
-        uses: styfle/cancel-workflow-action@0.6.0
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
           workflow_id: 4197767
           access_token: ${{ github.token }}
@@ -31,16 +31,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: [8, 10, 12, 14, 16]
+        node_version: [8, 10, 12, 14, 16, 18]
         os:
           - ubuntu-latest
           - macos-latest
           - windows-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
       - name: Install dependencies
