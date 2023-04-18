@@ -32,11 +32,11 @@ jobs:
       BENCHMARK_OPTIONS: '{}'
     steps:
       - name: Setup repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
       - name: Install dependencies
         run: npm install
       - name: Compile sources
@@ -65,11 +65,11 @@ jobs:
       BENCHMARK_OPTIONS: ${{ matrix.benchmark_options }}
     steps:
       - name: Setup repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
       - name: Install dependencies
         run: npm install
       - name: Compile sources
