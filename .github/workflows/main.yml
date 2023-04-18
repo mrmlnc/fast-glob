@@ -9,6 +9,9 @@ on:
     branches:
       - '*'
 
+env:
+  SNAPSHOT_SKIP_PRUNING: 1
+
 jobs:
   cancel:
     name: Cancel previous jobs
@@ -51,9 +54,9 @@ jobs:
         run: npm run lint
       - name: Run unit tests
         run: npm run test
-      - name: Run smoke tests (sync)
-        run: npm run smoke:sync
-      - name: Run smoke tests (async)
-        run: npm run smoke:async
-      - name: Run smoke tests (stream)
-        run: npm run smoke:stream
+      - name: Run e2e tests (sync)
+        run: npm run test:e2e:sync
+      - name: Run e2e tests (async)
+        run: npm run test:e2e:async
+      - name: Run e2e tests (stream)
+        run: npm run test:e2e:stream

@@ -3,5 +3,20 @@
 	"rules": {
 		"no-magic-numbers": "off",
 		"@typescript-eslint/no-magic-numbers": "off"
-	}
+	},
+	"overrides": [
+		{
+			"files": [
+				"**/*.e2e.ts"
+			],
+			"rules": {
+				"unicorn/prevent-abbreviations": [
+					"error",
+					{
+						"checkFilenames": false
+					}
+				]
+			}
+		}
+	]
 }

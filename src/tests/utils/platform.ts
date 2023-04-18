@@ -16,10 +16,18 @@ const IS_MATCHED_BY_MAJOR_AND_MINOR = MAJOR_VERSION === SUPPORTED_MAJOR_VERSION 
  */
 export const IS_SUPPORT_READDIR_WITH_FILE_TYPES = IS_MATCHED_BY_MAJOR || IS_MATCHED_BY_MAJOR_AND_MINOR;
 
+export function isSupportReaddirWithFileTypes(): boolean {
+	return IS_SUPPORT_READDIR_WITH_FILE_TYPES;
+}
+
 export function isWindows(): boolean {
 	return os.platform() === 'win32';
 }
 
-export function isSupportReaddirWithFileTypes(): boolean {
-	return IS_SUPPORT_READDIR_WITH_FILE_TYPES;
+export function isMacos(): boolean {
+	return os.platform() === 'darwin';
+}
+
+export function isUnix(): boolean {
+	return os.platform() === 'linux';
 }
