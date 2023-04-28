@@ -15,7 +15,7 @@ interface Suite {
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: fg.Options | boolean;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -29,7 +29,7 @@ interface Test {
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: fg.Options | boolean;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -38,11 +38,11 @@ interface Test {
 	/**
 	 * The issue related to this test.
 	 */
-	issue?: number | number[];
+	issue?: number[] | number;
 	expected?: () => string[];
 }
 
-type MochaDefinition = Mocha.TestFunction | Mocha.ExclusiveTestFunction;
+type MochaDefinition = Mocha.ExclusiveTestFunction | Mocha.TestFunction;
 
 export function suite(name: string, suite: Suite): void {
 	describe(name, () => {

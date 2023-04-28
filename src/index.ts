@@ -13,7 +13,7 @@ type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMo
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
-function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
+function FastGlob(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
 function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
 async function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
@@ -40,7 +40,7 @@ namespace FastGlob {
 
 	export const async = FastGlob;
 
-	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
+	export function sync(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
 		assertPatternsInput(source);
@@ -131,7 +131,7 @@ function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new
 	return tasks.map(provider.read, provider);
 }
 
-function assertPatternsInput(input: unknown): void | never {
+function assertPatternsInput(input: unknown): never | void {
 	const source = ([] as unknown[]).concat(input);
 	const isValidSource = source.every((item) => utils.string.isString(item) && !utils.string.isEmpty(item));
 

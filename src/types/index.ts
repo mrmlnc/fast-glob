@@ -3,7 +3,7 @@ import type * as fsWalk from '@nodelib/fs.walk';
 export type ErrnoException = NodeJS.ErrnoException;
 
 export type Entry = fsWalk.Entry;
-export type EntryItem = string | Entry;
+export type EntryItem = Entry | string;
 
 export type Pattern = string;
 export type PatternRe = RegExp;

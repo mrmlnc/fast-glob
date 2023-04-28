@@ -3,7 +3,7 @@ import * as utils from '../../utils';
 import type { Pattern, MicromatchOptions, PatternRe } from '../../types';
 import type Settings from '../../settings';
 
-export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;
+export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
 
 interface StaticPatternSegment {
 	dynamic: false;

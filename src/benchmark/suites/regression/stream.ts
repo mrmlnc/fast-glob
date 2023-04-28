@@ -6,7 +6,7 @@ import * as utils from '../../utils';
 
 import type * as fastGlobCurrent from '../../..';
 
-type GlobImplementation = 'previous' | 'current';
+type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => ReturnType<typeof fastGlobCurrent.stream>;
 
