@@ -12,6 +12,7 @@ export default class ReaderAsync extends Reader<Promise<Entry[]>> {
 	public dynamic(root: string, options: ReaderOptions): Promise<Entry[]> {
 		return new Promise((resolve, reject) => {
 			this._walkAsync(root, options, (error, entries) => {
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 				if (error === null) {
 					resolve(entries);
 				} else {
