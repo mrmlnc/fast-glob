@@ -19,7 +19,7 @@ export default class DeepFilter {
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
-		const affectDepthOfReadingPatterns = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
+		const affectDepthOfReadingPatterns = patterns.filter((pattern) => utils.pattern.isAffectDepthOfReadingPattern(pattern));
 
 		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
 	}

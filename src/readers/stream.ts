@@ -18,7 +18,7 @@ export default class ReaderStream extends Reader<Readable> {
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): Readable {
-		const filepaths = patterns.map(this._getFullEntryPath, this);
+		const filepaths = patterns.map((pattern) => this._getFullEntryPath(pattern));
 
 		const stream = new PassThrough({ objectMode: true });
 

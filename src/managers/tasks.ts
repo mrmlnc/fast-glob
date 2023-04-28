@@ -95,7 +95,7 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
 	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
-	const positive = negative.map(utils.pattern.convertToPositivePattern);
+	const positive = negative.map((pattern) => utils.pattern.convertToPositivePattern(pattern));
 
 	return positive;
 }
@@ -128,6 +128,6 @@ export function convertPatternGroupToTask(base: string, positive: Pattern[], neg
 		positive,
 		negative,
 		base,
-		patterns: ([] as Pattern[]).concat(positive, negative.map(utils.pattern.convertToNegativePattern)),
+		patterns: ([] as Pattern[]).concat(positive, negative.map((pattern) => utils.pattern.convertToNegativePattern(pattern))),
 	};
 }
