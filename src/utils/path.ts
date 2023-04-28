@@ -10,13 +10,13 @@ const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
  * Posix: ()*?[\]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
  * Windows: (){}, !+@ before (, ! at the beginning.
  */
-const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
-const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([(){}]|^!|[!+@](?=\())/g;
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[(){}]|^!|[!+@](?=\())/g;
 /**
  * The device path (\\.\ or \\?\).
  * https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths
  */
-const DOS_DEVICE_PATH_RE = /^\\\\([.?])/;
+const DOS_DEVICE_PATH_RE = /^\\\\(?<path>[.?])/;
 /**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
