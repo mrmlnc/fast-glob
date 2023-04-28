@@ -4,7 +4,7 @@ import type Settings from '../../settings';
 import type { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
 
 export default class EntryFilter {
-	public readonly index: Map<string, undefined> = new Map();
+	public readonly index = new Map<string, undefined>();
 
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
