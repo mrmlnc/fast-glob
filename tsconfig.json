@@ -13,6 +13,7 @@
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
+		"noPropertyAccessFromIndexSignature": true,
 
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitAny": true,
