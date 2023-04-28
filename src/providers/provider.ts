@@ -15,7 +15,7 @@ export default abstract class Provider<T> {
 	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this._getMicromatchOptions());
 	public readonly entryTransformer: EntryTransformer = new EntryTransformer(this._settings);
 
-	constructor(protected readonly _settings: Settings) { }
+	constructor(protected readonly _settings: Settings) {}
 
 	public abstract read(_task: Task): T;
 

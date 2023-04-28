@@ -15,7 +15,7 @@ export default abstract class Reader<T> {
 		throwErrorOnBrokenSymbolicLink: this._settings.followSymbolicLinks,
 	});
 
-	constructor(protected readonly _settings: Settings) { }
+	constructor(protected readonly _settings: Settings) {}
 
 	public abstract dynamic(root: string, options: ReaderOptions): T;
 	public abstract static(patterns: Pattern[], options: ReaderOptions): T;

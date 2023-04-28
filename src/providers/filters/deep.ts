@@ -5,7 +5,7 @@ import type { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe 
 import type Settings from '../../settings';
 
 export default class DeepFilter {
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
+	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const matcher = this._getMatcher(positive);
