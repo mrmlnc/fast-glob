@@ -16,8 +16,8 @@ type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;
 
 class TestReader extends ReaderSync {
-	protected _walkSync: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected _statSync: StatSignature = sinon.stub() as unknown as StatSignature;
+	protected override _walkSync: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _statSync: StatSignature = sinon.stub() as unknown as StatSignature;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

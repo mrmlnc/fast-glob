@@ -10,7 +10,7 @@ import ProviderSync from './sync';
 import type { Options } from '../settings';
 
 class TestProvider extends ProviderSync {
-	protected _reader: ReaderSync = sinon.createStubInstance(ReaderSync) as unknown as ReaderSync;
+	protected override _reader: ReaderSync = sinon.createStubInstance(ReaderSync) as unknown as ReaderSync;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

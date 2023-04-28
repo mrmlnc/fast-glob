@@ -15,8 +15,8 @@ import type * as fsWalk from '@nodelib/fs.walk';
 type WalkSignature = typeof fsWalk.walk;
 
 class TestReader extends ReaderAsync {
-	protected _walkAsync: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected override _walkAsync: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

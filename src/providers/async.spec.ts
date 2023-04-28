@@ -13,7 +13,7 @@ import type { Options } from '../settings';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 
 class TestProvider extends ProviderAsync {
-	protected _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
+	protected override _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

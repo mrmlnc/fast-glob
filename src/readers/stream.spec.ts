@@ -16,8 +16,8 @@ type WalkSignature = typeof fsWalk.walkStream;
 type StatSignature = typeof fsStat.stat;
 
 class TestReader extends ReaderStream {
-	protected _walkStream: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected _stat: StatSignature = sinon.stub() as unknown as StatSignature;
+	protected override _walkStream: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _stat: StatSignature = sinon.stub() as unknown as StatSignature;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

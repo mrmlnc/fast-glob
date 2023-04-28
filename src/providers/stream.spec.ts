@@ -13,7 +13,7 @@ import type { Options } from '../settings';
 import type { Task } from '../managers/tasks';
 
 class TestProvider extends ProviderStream {
-	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected override _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
 
 	constructor(options?: Options) {
 		super(new Settings(options));
