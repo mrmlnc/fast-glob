@@ -12,7 +12,7 @@ import type ReaderStream from '../readers/stream';
 import type { Task } from '../managers/tasks';
 
 class TestProvider extends ProviderAsync {
-	protected _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
+	protected override _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
 
 	constructor(options?: Options) {
 		super(new Settings(options));
