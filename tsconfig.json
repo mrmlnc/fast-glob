@@ -3,35 +3,29 @@
 		"target": "es2017",
 		"module": "commonjs",
 		"moduleResolution": "node",
+		"resolveJsonModule": true,
 
 		"rootDir": "src",
 		"outDir": "out",
 
 		"strict": true,
 		"noImplicitOverride": true,
-		"alwaysStrict": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": true,
-		"noPropertyAccessFromIndexSignature": true,
-
-		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": true,
 		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"noFallthroughCasesInSwitch": true,
+
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": false,
 
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"downlevelIteration": true,
 		"declaration": true,
-
-		"pretty": true
-	},
-	"include": [
-		"typings",
-		"src/**/*"
-	]
+		"newLine": "lf",
+		"stripInternal": true
+	}
 }
