@@ -12,7 +12,6 @@ import type * as fsWalk from '@nodelib/fs.walk';
 import type { Options } from '../settings';
 import type { ReaderOptions } from '../types';
 
-
 type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;
 

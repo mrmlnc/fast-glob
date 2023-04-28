@@ -12,7 +12,6 @@ import type ReaderStream from '../readers/stream';
 import type { Options } from '../settings';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 
-
 class TestProvider extends ProviderAsync {
 	protected _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
 

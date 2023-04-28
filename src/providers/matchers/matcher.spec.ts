@@ -7,7 +7,6 @@ import Matcher from './matcher';
 import type { Pattern, MicromatchOptions } from '../../types';
 import type { PatternInfo } from './matcher';
 
-
 class TestMatcher extends Matcher {
 	public get storage(): PatternInfo[] {
 		return this._storage;

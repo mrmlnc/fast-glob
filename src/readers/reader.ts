@@ -8,7 +8,6 @@ import type * as fs from 'fs';
 import type Settings from '../settings';
 import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
 
-
 export default abstract class Reader<T> {
 	protected readonly _fsStatSettings: fsStat.Settings = new fsStat.Settings({
 		followSymbolicLink: this._settings.followSymbolicLinks,

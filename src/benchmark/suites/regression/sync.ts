@@ -6,7 +6,6 @@ import * as utils from '../../utils';
 
 import type * as fastGlobCurrent from '../../..';
 
-
 type GlobImplementation = 'previous' | 'current';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];

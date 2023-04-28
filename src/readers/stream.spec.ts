@@ -12,7 +12,6 @@ import type * as fsWalk from '@nodelib/fs.walk';
 import type { Options } from '../settings';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 
-
 type WalkSignature = typeof fsWalk.walkStream;
 type StatSignature = typeof fsStat.stat;
 
