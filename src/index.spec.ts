@@ -5,6 +5,9 @@ import * as fg from '.';
 
 import type { EntryItem, ErrnoException } from './types';
 
+// Only for validating the input data.
+const invalidInputData = null as unknown as string;
+
 describe('Package', () => {
 	describe('.globSync', () => {
 		it('must be an alias for the .sync method', () => {
@@ -17,7 +20,7 @@ describe('Package', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.sync(null as any), { message });
+			assert.throws(() => fg.sync(invalidInputData), { message });
 			assert.throws(() => fg.sync(''), { message });
 		});
 
@@ -70,7 +73,7 @@ describe('Package', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			await assert.rejects(() => fg(null as any), { message });
+			await assert.rejects(() => fg(invalidInputData), { message });
 			await assert.rejects(() => fg(''), { message });
 		});
 
@@ -123,7 +126,7 @@ describe('Package', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.stream(null as any), { message });
+			assert.throws(() => fg.stream(invalidInputData), { message });
 			assert.throws(() => fg.stream(''), { message });
 		});
 
@@ -184,7 +187,7 @@ describe('Package', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.generateTasks(null as any), { message });
+			assert.throws(() => fg.generateTasks(invalidInputData), { message });
 			assert.throws(() => fg.generateTasks(''), { message });
 		});
 

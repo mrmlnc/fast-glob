@@ -8,6 +8,7 @@ import * as utils from '../../utils';
 type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
+type GlobOptions = fastGlobCurrent.Options;
 
 class Glob {
 	private readonly _options: fastGlobCurrent.Options;
@@ -56,7 +57,7 @@ class Glob {
 	const cwd = path.join(process.cwd(), args[0]);
 	const pattern = args[1];
 	const impl = args[2] as GlobImplementation;
-	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}');
+	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}') as GlobOptions;
 
 	const glob = new Glob(pattern, {
 		cwd,
