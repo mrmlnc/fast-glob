@@ -9,7 +9,7 @@
     "url": "https://mrmlnc.com"
   },
   "engines": {
-    "node": ">=8.6.0"
+    "node": ">=16.14.0"
   },
   "main": "out/index.js",
   "typings": "out/index.d.ts",
@@ -31,7 +31,7 @@
     "@types/merge2": "^1.1.4",
     "@types/micromatch": "^4.0.0",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^14.18.53",
+    "@types/node": "^16.18.39",
     "@types/picomatch": "^2.3.0",
     "@types/sinon": "^7.5.0",
     "bencho": "^0.1.1",
