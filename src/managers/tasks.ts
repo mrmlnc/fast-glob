@@ -3,13 +3,13 @@ import * as utils from '../utils';
 import type Settings from '../settings';
 import type { Pattern, PatternsGroup } from '../types';
 
-export type Task = {
+export interface Task {
 	base: string;
 	dynamic: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
-};
+}
 
 export function generate(input: Pattern[], settings: Settings): Task[] {
 	const patterns = processPatterns(input, settings);
