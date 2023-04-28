@@ -77,7 +77,7 @@ export default class EntryFilter {
 		// A pattern with a trailling slash can be used for directory matching.
 		// To apply such pattern, we need to add a tralling slash to the path.
 		if (!isMatched && isDirectory) {
-			return utils.pattern.matchAny(filepath + '/', patternsRe);
+			return utils.pattern.matchAny(`${filepath}/`, patternsRe);
 		}
 
 		return isMatched;

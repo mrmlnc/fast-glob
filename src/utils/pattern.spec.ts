@@ -85,7 +85,7 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('{,b}'));
 				assert.ok(util.isDynamicPattern('{a,b}'));
 				assert.ok(util.isDynamicPattern('{a,b,c}'));
-				assert.ok(util.isDynamicPattern('{a' + ','.repeat(999_999) + 'b}'));
+				assert.ok(util.isDynamicPattern(`{a${','.repeat(999_999)}b}`));
 				assert.ok(util.isDynamicPattern('{a,b,{c,d}}'));
 				// The second braces pass
 				assert.ok(util.isDynamicPattern('{a,b,{c,d}'));
@@ -127,14 +127,14 @@ describe('Utils → Pattern', () => {
 
 			it('should return false for unfinished regex group', () => {
 				assert.ok(!util.isDynamicPattern('(a|b'));
-				assert.ok(!util.isDynamicPattern('('.repeat(999_999) + 'a|b'));
-				assert.ok(!util.isDynamicPattern('(a' + '|'.repeat(999_999) + 'b'));
+				assert.ok(!util.isDynamicPattern(`${'('.repeat(999_999)}a|b`));
+				assert.ok(!util.isDynamicPattern(`(a${'|'.repeat(999_999)}b`));
 				assert.ok(!util.isDynamicPattern('abc/(a|b'));
 			});
 
 			it('should return false for unfinished glob extension', () => {
 				assert.ok(!util.isDynamicPattern('@('));
-				assert.ok(!util.isDynamicPattern('@' + '('.repeat(999_999) + 'a'));
+				assert.ok(!util.isDynamicPattern(`@${'('.repeat(999_999)}a`));
 				assert.ok(!util.isDynamicPattern('@(a'));
 				assert.ok(!util.isDynamicPattern('@(a|'));
 				assert.ok(!util.isDynamicPattern('@(a|b'));
@@ -148,9 +148,9 @@ describe('Utils → Pattern', () => {
 				assert.ok(!util.isDynamicPattern('{,'));
 				assert.ok(!util.isDynamicPattern('{a,'));
 				assert.ok(!util.isDynamicPattern('{a,b'));
-				assert.ok(!util.isDynamicPattern('{a' + ','.repeat(999_999) + 'b'));
+				assert.ok(!util.isDynamicPattern(`{a${','.repeat(999_999)}b`));
 				assert.ok(!util.isDynamicPattern('{1..'));
-				assert.ok(!util.isDynamicPattern('{1.' + '.'.repeat(999_999) + '2'));
+				assert.ok(!util.isDynamicPattern(`{1.${'.'.repeat(999_999)}2`));
 				assert.ok(!util.isDynamicPattern('{2..10'));
 				assert.ok(!util.isDynamicPattern('{2..10.'));
 				assert.ok(!util.isDynamicPattern('{2..10..'));
