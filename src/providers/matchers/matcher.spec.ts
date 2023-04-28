@@ -27,7 +27,7 @@ describe('Providers → Matchers → Matcher', () => {
 				tests.pattern.info()
 					.section(tests.pattern.segment().pattern('a').build())
 					.section(tests.pattern.segment().pattern('b').build())
-					.build()
+					.build(),
 			];
 
 			const actual = matcher.storage;

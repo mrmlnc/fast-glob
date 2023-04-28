@@ -9,5 +9,5 @@ export {
 	errno,
 	pattern,
 	platform,
-	task
+	task,
 };

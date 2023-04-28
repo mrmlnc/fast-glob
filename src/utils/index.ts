@@ -13,5 +13,5 @@ export {
 	path,
 	pattern,
 	stream,
-	string
+	string,
 };

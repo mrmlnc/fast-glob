@@ -173,7 +173,7 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
 	let { parts } = micromatch.scan(pattern, {
 		...options,
-		parts: true
+		parts: true,
 	});
 
 	/**

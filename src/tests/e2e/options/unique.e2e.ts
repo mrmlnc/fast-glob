@@ -6,15 +6,15 @@ runner.suite('Options Unique', {
 			pattern: ['./file.md', 'file.md', '*'],
 			options: {
 				cwd: 'fixtures',
-				unique: false
-			}
+				unique: false,
+			},
 		},
 		{
 			pattern: ['./file.md', 'file.md', '*'],
 			options: {
 				cwd: 'fixtures',
-				unique: true
-			}
-		}
-	]
+				unique: true,
+			},
+		},
+	],
 });

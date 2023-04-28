@@ -15,7 +15,7 @@ class Glob {
 
 		await this._measure(() => glob.glob(this._pattern, {
 			cwd: this._cwd,
-			nodir: true
+			nodir: true,
 		}));
 	}
 
@@ -26,7 +26,7 @@ class Glob {
 			cwd: this._cwd,
 			unique: false,
 			followSymbolicLinks: false,
-			concurrency: Number.POSITIVE_INFINITY
+			concurrency: Number.POSITIVE_INFINITY,
 		}));
 	}
 

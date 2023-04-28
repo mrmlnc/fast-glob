@@ -27,7 +27,7 @@ export default class EntryTransformer {
 
 		return {
 			...entry,
-			path: filepath
+			path: filepath,
 		};
 	}
 }

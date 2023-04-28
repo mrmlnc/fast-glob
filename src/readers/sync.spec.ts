@@ -76,7 +76,7 @@ describe('Readers → ReaderSync', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({
 				errorFilter: () => false,
-				entryFilter: () => true
+				entryFilter: () => true,
 			});
 
 			reader.statSync.onFirstCall().throws(tests.errno.getEperm());
@@ -91,7 +91,7 @@ describe('Readers → ReaderSync', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({
 				errorFilter: () => true,
-				entryFilter: () => true
+				entryFilter: () => true,
 			});
 
 			reader.statSync.onFirstCall().throws(tests.errno.getEnoent());

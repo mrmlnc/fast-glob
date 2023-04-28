@@ -14,29 +14,29 @@ runner.suite('Options Absolute', {
 		{
 			pattern: 'fixtures/*',
 			options: {
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				absolute: true
+				absolute: true,
 			},
-			issue: 47
+			issue: 47,
 		},
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: 'fixtures/../*',
 			options: {
-				absolute: true
-			}
-		}
-	]
+				absolute: true,
+			},
+		},
+	],
 });
 
 runner.suite('Options Absolute (ignore)', {
@@ -46,33 +46,33 @@ runner.suite('Options Absolute (ignore)', {
 			pattern: 'fixtures/*/*',
 			options: {
 				ignore: ['fixtures/*/nested'],
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: 'fixtures/*/*',
 			options: {
 				ignore: ['**/nested'],
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 
 		{
 			pattern: 'fixtures/*',
 			options: {
 				ignore: [path.posix.join(CWD, 'fixtures', '*')],
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
 				ignore: [path.posix.join(CWD, 'fixtures', '*')],
-				absolute: true
+				absolute: true,
 			},
-			issue: 47
-		}
-	]
+			issue: 47,
+		},
+	],
 });
 
 runner.suite('Options Absolute (cwd)', {
@@ -82,24 +82,24 @@ runner.suite('Options Absolute (cwd)', {
 			pattern: '*',
 			options: {
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: '**/*',
 			options: {
 				cwd: 'fixtures',
-				absolute: true
-			}
-		}
-	]
+				absolute: true,
+			},
+		},
+	],
 });
 
 runner.suite('Options Absolute (cwd & ignore)', {
@@ -110,16 +110,16 @@ runner.suite('Options Absolute (cwd & ignore)', {
 			options: {
 				ignore: ['*/nested'],
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: '*/*',
 			options: {
 				ignore: ['**/nested'],
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 
 		{
@@ -127,24 +127,24 @@ runner.suite('Options Absolute (cwd & ignore)', {
 			options: {
 				ignore: [path.posix.join(CWD, 'fixtures', '*')],
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				ignore: [path.posix.join(CWD, 'fixtures', '*')],
 				cwd: 'fixtures',
-				absolute: true
-			}
+				absolute: true,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				ignore: [path.posix.join(CWD, 'fixtures', '**')],
 				cwd: 'fixtures',
-				absolute: true
-			}
-		}
-	]
+				absolute: true,
+			},
+		},
+	],
 });

@@ -7,7 +7,7 @@ class TaskBuilder {
 		dynamic: true,
 		patterns: [],
 		positive: [],
-		negative: []
+		negative: [],
 	};
 
 	public base(base: string): this {

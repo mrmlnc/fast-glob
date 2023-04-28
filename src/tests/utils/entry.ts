@@ -10,7 +10,7 @@ class EntryBuilder {
 	private readonly _entry: Entry = {
 		name: '',
 		path: '',
-		dirent: new Dirent()
+		dirent: new Dirent(),
 	};
 
 	public path(filepath: string): this {

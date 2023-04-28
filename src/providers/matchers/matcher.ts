@@ -43,7 +43,7 @@ export default abstract class Matcher {
 				complete: sections.length <= 1,
 				pattern,
 				segments,
-				sections
+				sections,
 			});
 		}
 	}
@@ -57,14 +57,14 @@ export default abstract class Matcher {
 			if (!dynamic) {
 				return {
 					dynamic: false,
-					pattern: part
+					pattern: part,
 				};
 			}
 
 			return {
 				dynamic: true,
 				pattern: part,
-				patternRe: utils.pattern.makeRe(part, this._micromatchOptions)
+				patternRe: utils.pattern.makeRe(part, this._micromatchOptions),
 			};
 		});
 	}

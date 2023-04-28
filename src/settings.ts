@@ -15,7 +15,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	stat: fs.stat,
 	statSync: fs.statSync,
 	readdir: fs.readdir,
-	readdirSync: fs.readdirSync
+	readdirSync: fs.readdirSync,
 };
 
 export type Options = {
@@ -197,7 +197,7 @@ export default class Settings {
 	private _getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {
 		return {
 			...DEFAULT_FILE_SYSTEM_ADAPTER,
-			...methods
+			...methods,
 		};
 	}
 }

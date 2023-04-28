@@ -30,7 +30,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual = fg.sync(['fixtures/**/*.md']);
@@ -47,7 +47,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual = fg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
@@ -83,7 +83,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual = await fg(['fixtures/**/*.md']);
@@ -100,7 +100,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual = await fg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
@@ -136,7 +136,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual: string[] = [];
@@ -160,7 +160,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual: string[] = [];
@@ -189,7 +189,7 @@ describe('Package', () => {
 
 		it('should return tasks', () => {
 			const expected = [
-				tests.task.builder().base('.').positive('*').build()
+				tests.task.builder().base('.').positive('*').build(),
 			];
 
 			const actual = fg.generateTasks(['*']);
@@ -199,7 +199,7 @@ describe('Package', () => {
 
 		it('should return tasks with negative patterns', () => {
 			const expected = [
-				tests.task.builder().base('.').positive('*').negative('*.txt').negative('*.md').build()
+				tests.task.builder().base('.').positive('*').negative('*.txt').negative('*.md').build(),
 			];
 
 			const actual = fg.generateTasks(['*', '!*.txt'], { ignore: ['*.md'] });
@@ -210,7 +210,7 @@ describe('Package', () => {
 		it('should clean up patterns', () => {
 			const expected = [
 				// Clean up duplicate slashes
-				tests.task.builder().base('fixtures').positive('fixtures/*').build()
+				tests.task.builder().base('fixtures').positive('fixtures/*').build(),
 			];
 
 			const actual = fg.generateTasks(['fixtures//*']);
