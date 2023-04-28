@@ -77,15 +77,18 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
-		case 'node-glob':
+		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
+		}
 
-		case 'fast-glob':
+		case 'fast-glob': {
 			await glob.measureFastGlob();
 			break;
+		}
 
-		default:
+		default: {
 			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		}
 	}
 })();
