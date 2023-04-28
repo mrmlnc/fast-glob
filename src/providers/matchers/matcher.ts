@@ -31,14 +31,22 @@ export interface PatternInfo {
 export default abstract class Matcher {
 	protected readonly _storage: PatternInfo[] = [];
 
-	constructor(private readonly _patterns: Pattern[], private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {
-		this._fillStorage();
+	readonly #patterns: string[];
+	readonly #settings: Settings;
+	readonly #micromatchOptions: MicromatchOptions;
+
+	constructor(patterns: Pattern[], settings: Settings, micromatchOptions: MicromatchOptions) {
+		this.#patterns = patterns;
+		this.#settings = settings;
+		this.#micromatchOptions = micromatchOptions;
+
+		this.#fillStorage();
 	}
 
-	private _fillStorage(): void {
-		for (const pattern of this._patterns) {
-			const segments = this._getPatternSegments(pattern);
-			const sections = this._splitSegmentsIntoSections(segments);
+	#fillStorage(): void {
+		for (const pattern of this.#patterns) {
+			const segments = this.#getPatternSegments(pattern);
+			const sections = this.#splitSegmentsIntoSections(segments);
 
 			this._storage.push({
 				complete: sections.length <= 1,
@@ -49,11 +57,11 @@ export default abstract class Matcher {
 		}
 	}
 
-	private _getPatternSegments(pattern: Pattern): PatternSegment[] {
-		const parts = utils.pattern.getPatternParts(pattern, this._micromatchOptions);
+	#getPatternSegments(pattern: Pattern): PatternSegment[] {
+		const parts = utils.pattern.getPatternParts(pattern, this.#micromatchOptions);
 
 		return parts.map((part) => {
-			const dynamic = utils.pattern.isDynamicPattern(part, this._settings);
+			const dynamic = utils.pattern.isDynamicPattern(part, this.#settings);
 
 			if (!dynamic) {
 				return {
@@ -65,12 +73,12 @@ export default abstract class Matcher {
 			return {
 				dynamic: true,
 				pattern: part,
-				patternRe: utils.pattern.makeRe(part, this._micromatchOptions),
+				patternRe: utils.pattern.makeRe(part, this.#micromatchOptions),
 			};
 		});
 	}
 
-	private _splitSegmentsIntoSections(segments: PatternSegment[]): PatternSection[] {
+	#splitSegmentsIntoSections(segments: PatternSegment[]): PatternSection[] {
 		return utils.array.splitWhen(segments, (segment) => segment.dynamic && utils.pattern.hasGlobStar(segment.pattern));
 	}
 }

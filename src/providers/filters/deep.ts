@@ -5,55 +5,61 @@ import type { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe 
 import type Settings from '../../settings';
 
 export default class DeepFilter {
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
+	readonly #settings: Settings;
+	readonly #micromatchOptions: MicromatchOptions;
+
+	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
+		this.#settings = settings;
+		this.#micromatchOptions = micromatchOptions;
+	}
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const matcher = this._getMatcher(positive);
-		const negativeRe = this._getNegativePatternsRe(negative);
+		const matcher = this.#getMatcher(positive);
+		const negativeRe = this.#getNegativePatternsRe(negative);
 
-		return (entry) => this._filter(basePath, entry, matcher, negativeRe);
+		return (entry) => this.#filter(basePath, entry, matcher, negativeRe);
 	}
 
-	private _getMatcher(patterns: Pattern[]): PartialMatcher {
-		return new PartialMatcher(patterns, this._settings, this._micromatchOptions);
+	#getMatcher(patterns: Pattern[]): PartialMatcher {
+		return new PartialMatcher(patterns, this.#settings, this.#micromatchOptions);
 	}
 
-	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
+	#getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
 		const affectDepthOfReadingPatterns = patterns.filter((pattern) => utils.pattern.isAffectDepthOfReadingPattern(pattern));
 
-		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
+		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this.#micromatchOptions);
 	}
 
-	private _filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
-		if (this._isSkippedByDeep(basePath, entry.path)) {
+	#filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
+		if (this.#isSkippedByDeep(basePath, entry.path)) {
 			return false;
 		}
 
-		if (this._isSkippedSymbolicLink(entry)) {
+		if (this.#isSkippedSymbolicLink(entry)) {
 			return false;
 		}
 
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
-		if (this._isSkippedByPositivePatterns(filepath, matcher)) {
+		if (this.#isSkippedByPositivePatterns(filepath, matcher)) {
 			return false;
 		}
 
-		return this._isSkippedByNegativePatterns(filepath, negativeRe);
+		return this.#isSkippedByNegativePatterns(filepath, negativeRe);
 	}
 
-	private _isSkippedByDeep(basePath: string, entryPath: string): boolean {
+	#isSkippedByDeep(basePath: string, entryPath: string): boolean {
 		/**
 		 * Avoid unnecessary depth calculations when it doesn't matter.
 		 */
-		if (this._settings.deep === Number.POSITIVE_INFINITY) {
+		if (this.#settings.deep === Number.POSITIVE_INFINITY) {
 			return false;
 		}
 
-		return this._getEntryLevel(basePath, entryPath) >= this._settings.deep;
+		return this.#getEntryLevel(basePath, entryPath) >= this.#settings.deep;
 	}
 
-	private _getEntryLevel(basePath: string, entryPath: string): number {
+	#getEntryLevel(basePath: string, entryPath: string): number {
 		const entryPathDepth = entryPath.split('/').length;
 
 		if (basePath === '') {
@@ -65,15 +71,15 @@ export default class DeepFilter {
 		return entryPathDepth - basePathDepth;
 	}
 
-	private _isSkippedSymbolicLink(entry: Entry): boolean {
-		return !this._settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
+	#isSkippedSymbolicLink(entry: Entry): boolean {
+		return !this.#settings.followSymbolicLinks && entry.dirent.isSymbolicLink();
 	}
 
-	private _isSkippedByPositivePatterns(entryPath: string, matcher: PartialMatcher): boolean {
-		return !this._settings.baseNameMatch && !matcher.match(entryPath);
+	#isSkippedByPositivePatterns(entryPath: string, matcher: PartialMatcher): boolean {
+		return !this.#settings.baseNameMatch && !matcher.match(entryPath);
 	}
 
-	private _isSkippedByNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+	#isSkippedByNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
 		return !utils.pattern.matchAny(entryPath, patternsRe);
 	}
 }

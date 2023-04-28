@@ -1,11 +1,18 @@
 import ReaderAsync from '../readers/async';
 import Provider from './provider';
 
+import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	protected _reader: ReaderAsync = new ReaderAsync(this._settings);
+	protected _reader: ReaderAsync;
+
+	constructor(settings: Settings) {
+		super(settings);
+
+		this._reader = new ReaderAsync(settings);
+	}
 
 	public async read(task: Task): Promise<EntryItem[]> {
 		const root = this._getRootDirectory(task);

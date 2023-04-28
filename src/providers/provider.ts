@@ -10,17 +10,28 @@ import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 
 export default abstract class Provider<T> {
-	public readonly errorFilter: ErrorFilter = new ErrorFilter(this._settings);
-	public readonly entryFilter: EntryFilter = new EntryFilter(this._settings, this._getMicromatchOptions());
-	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this._getMicromatchOptions());
-	public readonly entryTransformer: EntryTransformer = new EntryTransformer(this._settings);
+	public readonly errorFilter: ErrorFilter;
+	public readonly entryFilter: EntryFilter;
+	public readonly deepFilter: DeepFilter;
+	public readonly entryTransformer: EntryTransformer;
 
-	constructor(protected readonly _settings: Settings) {}
+	readonly #settings: Settings;
+
+	constructor(settings: Settings) {
+		this.#settings = settings;
+
+		const micromatchOptions = this._getMicromatchOptions();
+
+		this.errorFilter = new ErrorFilter(settings);
+		this.entryFilter = new EntryFilter(settings, micromatchOptions);
+		this.deepFilter = new DeepFilter(settings, micromatchOptions);
+		this.entryTransformer = new EntryTransformer(settings);
+	}
 
 	public abstract read(_task: Task): T;
 
 	protected _getRootDirectory(task: Task): string {
-		return path.resolve(this._settings.cwd, task.base);
+		return path.resolve(this.#settings.cwd, task.base);
 	}
 
 	protected _getReaderOptions(task: Task): ReaderOptions {
@@ -29,26 +40,26 @@ export default abstract class Provider<T> {
 		return {
 			basePath,
 			pathSegmentSeparator: '/',
-			concurrency: this._settings.concurrency,
+			concurrency: this.#settings.concurrency,
 			deepFilter: this.deepFilter.getFilter(basePath, task.positive, task.negative),
 			entryFilter: this.entryFilter.getFilter(task.positive, task.negative),
 			errorFilter: this.errorFilter.getFilter(),
-			followSymbolicLinks: this._settings.followSymbolicLinks,
-			fs: this._settings.fs,
-			stats: this._settings.stats,
-			throwErrorOnBrokenSymbolicLink: this._settings.throwErrorOnBrokenSymbolicLink,
+			followSymbolicLinks: this.#settings.followSymbolicLinks,
+			fs: this.#settings.fs,
+			stats: this.#settings.stats,
+			throwErrorOnBrokenSymbolicLink: this.#settings.throwErrorOnBrokenSymbolicLink,
 			transform: this.entryTransformer.getTransformer(),
 		};
 	}
 
 	protected _getMicromatchOptions(): MicromatchOptions {
 		return {
-			dot: this._settings.dot,
-			matchBase: this._settings.baseNameMatch,
-			nobrace: !this._settings.braceExpansion,
-			nocase: !this._settings.caseSensitiveMatch,
-			noext: !this._settings.extglob,
-			noglobstar: !this._settings.globstar,
+			dot: this.#settings.dot,
+			matchBase: this.#settings.baseNameMatch,
+			nobrace: !this.#settings.braceExpansion,
+			nocase: !this.#settings.caseSensitiveMatch,
+			noext: !this.#settings.extglob,
+			noglobstar: !this.#settings.globstar,
 			posix: true,
 			strictSlashes: false,
 		};

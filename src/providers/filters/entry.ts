@@ -6,71 +6,77 @@ import type { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe 
 export default class EntryFilter {
 	public readonly index = new Map<string, undefined>();
 
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
+	readonly #settings: Settings;
+	readonly #micromatchOptions: MicromatchOptions;
 
-	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
-		const negativeRe = utils.pattern.convertPatternsToRe(negative, {
-			...this._micromatchOptions,
-			dot: true
-		});
-
-		return (entry) => this._filter(entry, positiveRe, negativeRe);
+	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
+		this.#settings = settings;
+		this.#micromatchOptions = micromatchOptions;
 	}
 
-	private _filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
+		const positiveRe = utils.pattern.convertPatternsToRe(positive, this.#micromatchOptions);
+		const negativeRe = utils.pattern.convertPatternsToRe(negative, {
+			...this.#micromatchOptions,
+			dot: true,
+		});
+
+		return (entry) => this.#filter(entry, positiveRe, negativeRe);
+	}
+
+	#filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
-		if (this._settings.unique && this._isDuplicateEntry(filepath)) {
+		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
 			return false;
 		}
 
-		if (this._onlyFileFilter(entry) || this._onlyDirectoryFilter(entry)) {
+		if (this.#onlyFileFilter(entry) || this.#onlyDirectoryFilter(entry)) {
 			return false;
 		}
 
-		if (this._isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
+		if (this.#isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
 			return false;
 		}
 
 		const isDirectory = entry.dirent.isDirectory();
 
-		const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(filepath, negativeRe, isDirectory);
+		const isMatched = this.#isMatchToPatterns(filepath, positiveRe, isDirectory) && !this.#isMatchToPatterns(filepath, negativeRe, isDirectory);
 
-		if (this._settings.unique && isMatched) {
-			this._createIndexRecord(filepath);
+		if (this.#settings.unique && isMatched) {
+			this.#createIndexRecord(filepath);
 		}
 
 		return isMatched;
 	}
 
-	private _isDuplicateEntry(filepath: string): boolean {
+	#isDuplicateEntry(filepath: string): boolean {
 		return this.index.has(filepath);
 	}
 
-	private _createIndexRecord(filepath: string): void {
+	#createIndexRecord(filepath: string): void {
 		this.index.set(filepath, undefined);
 	}
 
-	private _onlyFileFilter(entry: Entry): boolean {
-		return this._settings.onlyFiles && !entry.dirent.isFile();
+	#onlyFileFilter(entry: Entry): boolean {
+		return this.#settings.onlyFiles && !entry.dirent.isFile();
 	}
 
-	private _onlyDirectoryFilter(entry: Entry): boolean {
-		return this._settings.onlyDirectories && !entry.dirent.isDirectory();
+	#onlyDirectoryFilter(entry: Entry): boolean {
+		return this.#settings.onlyDirectories && !entry.dirent.isDirectory();
 	}
 
-	private _isSkippedByAbsoluteNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
-		if (!this._settings.absolute) {
+	#isSkippedByAbsoluteNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+		if (!this.#settings.absolute) {
 			return false;
 		}
 
-		const fullpath = utils.path.makeAbsolute(this._settings.cwd, entryPath);
+		const fullpath = utils.path.makeAbsolute(this.#settings.cwd, entryPath);
 
 		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
-	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
+	#isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
 		// Trying to match files and directories by patterns.
 		const isMatched = utils.pattern.matchAny(filepath, patternsRe);
 

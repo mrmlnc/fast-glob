@@ -3,11 +3,18 @@ import * as fsWalk from '@nodelib/fs.walk';
 import Reader from './reader';
 import ReaderStream from './stream';
 
+import type Settings from '../settings';
 import type { Entry, ReaderOptions, Pattern } from '../types';
 
 export default class ReaderAsync extends Reader<Promise<Entry[]>> {
 	protected _walkAsync: typeof fsWalk.walk = fsWalk.walk;
-	protected _readerStream: ReaderStream = new ReaderStream(this._settings);
+	protected _readerStream: ReaderStream;
+
+	constructor(settings: Settings) {
+		super(settings);
+
+		this._readerStream = new ReaderStream(settings);
+	}
 
 	public dynamic(root: string, options: ReaderOptions): Promise<Entry[]> {
 		return new Promise((resolve, reject) => {

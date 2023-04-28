@@ -9,13 +9,19 @@ type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob';
 type GlobImplFunction = (...args: any[]) => unknown[];
 
 class Glob {
-	constructor(private readonly _cwd: string, private readonly _pattern: string) {}
+	readonly #cwd: string;
+	readonly #pattern: string;
+
+	constructor(cwd: string, pattern: string) {
+		this.#cwd = cwd;
+		this.#pattern = pattern;
+	}
 
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
-		this._measure(() => glob.globSync(this._pattern, {
-			cwd: this._cwd,
+		this.#measure(() => glob.globSync(this.#pattern, {
+			cwd: this.#cwd,
 			nodir: true,
 		}));
 	}
@@ -23,8 +29,8 @@ class Glob {
 	public async measureFastGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
 
-		this._measure(() => glob.sync(this._pattern, {
-			cwd: this._cwd,
+		this.#measure(() => glob.sync(this.#pattern, {
+			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,
 		}));
@@ -37,13 +43,13 @@ class Glob {
 			.withBasePath()
 			.withRelativePaths()
 			// Other solutions do not include hidden files by default
-			.globWithOptions([this._pattern], { dot: false })
-			.crawl(this._cwd);
+			.globWithOptions([this.#pattern], { dot: false })
+			.crawl(this.#cwd);
 
-		this._measure(() => fdir.sync());
+		this.#measure(() => fdir.sync());
 	}
 
-	private _measure(function_: GlobImplFunction): void {
+	#measure(function_: GlobImplFunction): void {
 		const timeStart = utils.timeStart();
 
 		const matches = function_();

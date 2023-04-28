@@ -4,37 +4,37 @@ import type { Pattern, MicromatchOptions } from '../../types';
 import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
 
 class PatternSegmentBuilder {
-	private readonly _segment: PatternSegment = {
+	readonly #segment: PatternSegment = {
 		dynamic: false,
 		pattern: '',
 	};
 
 	public dynamic(): this {
-		this._segment.dynamic = true;
+		this.#segment.dynamic = true;
 
 		return this;
 	}
 
 	public pattern(pattern: Pattern): this {
-		this._segment.pattern = pattern;
+		this.#segment.pattern = pattern;
 
 		return this;
 	}
 
 	public build(options: MicromatchOptions = {}): PatternSegment {
-		if (!this._segment.dynamic) {
-			return this._segment;
+		if (!this.#segment.dynamic) {
+			return this.#segment;
 		}
 
 		return {
-			...this._segment,
-			patternRe: utils.pattern.makeRe(this._segment.pattern, options),
+			...this.#segment,
+			patternRe: utils.pattern.makeRe(this.#segment.pattern, options),
 		};
 	}
 }
 
 class PatternInfoBuilder {
-	private readonly _section: PatternInfo = {
+	readonly #section: PatternInfo = {
 		complete: true,
 		pattern: '',
 		segments: [],
@@ -42,16 +42,16 @@ class PatternInfoBuilder {
 	};
 
 	public section(...segments: PatternSegment[]): this {
-		this._section.sections.push(segments);
+		this.#section.sections.push(segments);
 
-		if (this._section.segments.length === 0) {
-			this._section.complete = true;
-			this._section.segments.push(...segments);
+		if (this.#section.segments.length === 0) {
+			this.#section.complete = true;
+			this.#section.segments.push(...segments);
 		} else {
-			this._section.complete = false;
+			this.#section.complete = false;
 			const globstar = segment().dynamic().pattern('**').build();
 
-			this._section.segments.push(globstar, ...segments);
+			this.#section.segments.push(globstar, ...segments);
 		}
 
 		return this;
@@ -59,13 +59,13 @@ class PatternInfoBuilder {
 
 	public build(): PatternInfo {
 		return {
-			...this._section,
-			pattern: this._buildPattern(),
+			...this.#section,
+			pattern: this.#buildPattern(),
 		};
 	}
 
-	private _buildPattern(): Pattern {
-		return this._section.segments.map((segment) => segment.pattern).join('/');
+	#buildPattern(): Pattern {
+		return this.#section.segments.map((segment) => segment.pattern).join('/');
 	}
 }
 

@@ -23,7 +23,7 @@ export default class ReaderStream extends Reader<Readable> {
 		const stream = new PassThrough({ objectMode: true });
 
 		stream._write = (index: number, _enc, done) => {
-			this._getEntry(filepaths[index], patterns[index], options)
+			this.#getEntry(filepaths[index], patterns[index], options)
 				.then((entry) => {
 					if (entry !== null && options.entryFilter(entry)) {
 						stream.push(entry);
@@ -45,8 +45,8 @@ export default class ReaderStream extends Reader<Readable> {
 		return stream;
 	}
 
-	private _getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Promise<Entry | null> {
-		return this._getStat(filepath)
+	#getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Promise<Entry | null> {
+		return this.#getStat(filepath)
 			.then((stats) => this._makeEntry(stats, pattern))
 			.catch((error: ErrnoException) => {
 				if (options.errorFilter(error)) {
@@ -57,7 +57,7 @@ export default class ReaderStream extends Reader<Readable> {
 			});
 	}
 
-	private _getStat(filepath: string): Promise<fs.Stats> {
+	#getStat(filepath: string): Promise<fs.Stats> {
 		return new Promise((resolve, reject) => {
 			this._stat(filepath, this._fsStatSettings, (error: NodeJS.ErrnoException | null, stats) => {
 				if (error === null) {

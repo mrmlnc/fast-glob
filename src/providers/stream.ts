@@ -3,11 +3,18 @@ import { Readable } from 'stream';
 import ReaderStream from '../readers/stream';
 import Provider from './provider';
 
+import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 
 export default class ProviderStream extends Provider<Readable> {
-	protected _reader: ReaderStream = new ReaderStream(this._settings);
+	protected _reader: ReaderStream;
+
+	constructor(settings: Settings) {
+		super(settings);
+
+		this._reader = new ReaderStream(settings);
+	}
 
 	public read(task: Task): Readable {
 		const root = this._getRootDirectory(task);
