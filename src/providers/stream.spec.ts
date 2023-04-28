@@ -44,7 +44,9 @@ function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<E
 
 		api.on('data', (item: EntryItem) => items.push(item));
 		api.once('error', reject);
-		api.once('end', () => resolve(items));
+		api.once('end', () => {
+			resolve(items);
+		});
 	});
 }
 
