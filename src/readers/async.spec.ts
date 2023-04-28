@@ -1,14 +1,16 @@
 import * as assert from 'assert';
-
 import { PassThrough } from 'stream';
+
 import * as sinon from 'sinon';
-import type * as fsWalk from '@nodelib/fs.walk';
-import type { Options } from '../settings';
+
 import Settings from '../settings';
-import type { ReaderOptions } from '../types';
 import * as tests from '../tests';
 import ReaderAsync from './async';
 import ReaderStream from './stream';
+
+import type { ReaderOptions } from '../types';
+import type { Options } from '../settings';
+import type * as fsWalk from '@nodelib/fs.walk';
 
 type WalkSignature = typeof fsWalk.walk;
 

@@ -1,11 +1,12 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import type { Options } from '../../settings';
 import Settings from '../../settings';
 import * as tests from '../../tests';
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
 import EntryFilter from './entry';
+
+import type { EntryFilterFunction, Pattern, Entry } from '../../types';
+import type { Options } from '../../settings';
 
 type FilterOptions = {
 	positive: Pattern[];

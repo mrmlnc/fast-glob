@@ -1,5 +1,4 @@
 import type * as fs from 'fs';
-
 import type { Dirent } from '@nodelib/fs.walk';
 
 class DirentFromStats implements fs.Dirent {

@@ -1,13 +1,14 @@
 import * as assert from 'assert';
-import type * as fs from 'fs';
 import * as path from 'path';
 
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
-import type { Options } from '../settings';
 import Settings from '../settings';
-import type { Entry, Pattern } from '../types';
 import Reader from './reader';
+
+import type { Options } from '../settings';
+import type { Entry, Pattern } from '../types';
+import type * as fs from 'fs';
 
 class TestReader extends Reader<never[]> {
 	constructor(options?: Options) {

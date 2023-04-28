@@ -1,6 +1,7 @@
+import * as utils from '../../utils';
+
 import type Settings from '../../settings';
 import type { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
-import * as utils from '../../utils';
 
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();

@@ -1,5 +1,6 @@
-import type { Pattern, MicromatchOptions, PatternRe } from '../../types';
 import * as utils from '../../utils';
+
+import type { Pattern, MicromatchOptions, PatternRe } from '../../types';
 import type Settings from '../../settings';
 
 export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;

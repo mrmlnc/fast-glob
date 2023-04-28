@@ -1,12 +1,13 @@
-import type * as fs from 'fs';
-import type { Readable } from 'stream';
 import { PassThrough } from 'stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
+
+import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
+import type { Readable } from 'stream';
+import type * as fs from 'fs';
 
 export default class ReaderStream extends Reader<Readable> {
 	protected _walkStream: typeof fsWalk.walkStream = fsWalk.walkStream;

@@ -1,9 +1,11 @@
 import { Readable } from 'stream';
 
-import type { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import Provider from './provider';
+
+import type { Task } from '../managers/tasks';
+import type { Entry, ErrnoException, ReaderOptions } from '../types';
+
 
 export default class ProviderStream extends Provider<Readable> {
 	protected _reader: ReaderStream = new ReaderStream(this._settings);

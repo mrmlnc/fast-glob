@@ -3,13 +3,14 @@ import { PassThrough } from 'stream';
 
 import * as sinon from 'sinon';
 
-import type { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import type { Options } from '../settings';
 import Settings from '../settings';
 import * as tests from '../tests';
-import type { Entry, EntryItem, ErrnoException } from '../types';
 import ProviderStream from './stream';
+
+import type { Entry, EntryItem, ErrnoException } from '../types';
+import type { Options } from '../settings';
+import type { Task } from '../managers/tasks';
 
 class TestProvider extends ProviderStream {
 	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;

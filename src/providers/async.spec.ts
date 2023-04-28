@@ -2,14 +2,16 @@ import * as assert from 'assert';
 
 import * as sinon from 'sinon';
 
+import Settings from '../settings';
+import * as tests from '../tests';
+import ReaderAsync from '../readers/async';
+import ProviderAsync from './async';
+
 import type { Task } from '../managers/tasks';
 import type ReaderStream from '../readers/stream';
 import type { Options } from '../settings';
-import Settings from '../settings';
-import * as tests from '../tests';
 import type { Entry, EntryItem, ErrnoException } from '../types';
-import ReaderAsync from '../readers/async';
-import ProviderAsync from './async';
+
 
 class TestProvider extends ProviderAsync {
 	protected _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;

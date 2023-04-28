@@ -1,11 +1,13 @@
-import type * as fs from 'fs';
 import * as path from 'path';
 
 import * as fsStat from '@nodelib/fs.stat';
 
+import * as utils from '../utils';
+
+import type * as fs from 'fs';
 import type Settings from '../settings';
 import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
-import * as utils from '../utils';
+
 
 export default abstract class Reader<T> {
 	protected readonly _fsStatSettings: fsStat.Settings = new fsStat.Settings({

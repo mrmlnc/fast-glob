@@ -1,7 +1,8 @@
 import * as assert from 'assert';
 
-import type { Pattern } from '../types';
 import * as util from './pattern';
+
+import type { Pattern } from '../types';
 
 describe('Utils → Pattern', () => {
 	describe('.isStaticPattern', () => {

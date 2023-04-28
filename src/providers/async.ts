@@ -1,7 +1,8 @@
-import type { Task } from '../managers/tasks';
-import type { Entry, EntryItem, ReaderOptions } from '../types';
 import ReaderAsync from '../readers/async';
 import Provider from './provider';
+
+import type { Task } from '../managers/tasks';
+import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export default class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 	protected _reader: ReaderAsync = new ReaderAsync(this._settings);

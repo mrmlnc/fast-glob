@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 
 import * as tests from './tests';
-import type { EntryItem, ErrnoException } from './types';
 import * as fg from '.';
+
+import type { EntryItem, ErrnoException } from './types';
 
 describe('Package', () => {
 	describe('.globSync', () => {

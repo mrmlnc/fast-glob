@@ -1,15 +1,17 @@
 import * as assert from 'assert';
 
 import { Stats } from '@nodelib/fs.macchiato';
-import type * as fsStat from '@nodelib/fs.stat';
-import type * as fsWalk from '@nodelib/fs.walk';
 import * as sinon from 'sinon';
 
-import type { Options } from '../settings';
 import Settings from '../settings';
 import * as tests from '../tests';
-import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import ReaderStream from './stream';
+
+import type * as fsStat from '@nodelib/fs.stat';
+import type * as fsWalk from '@nodelib/fs.walk';
+import type { Options } from '../settings';
+import type { Entry, ErrnoException, ReaderOptions } from '../types';
+
 
 type WalkSignature = typeof fsWalk.walkStream;
 type StatSignature = typeof fsStat.stat;

@@ -1,6 +1,7 @@
+import * as utils from '../../utils';
+
 import type Settings from '../../settings';
 import type { ErrnoException, ErrorFilterFunction } from '../../types';
-import * as utils from '../../utils';
 
 export default class ErrorFilter {
 	constructor(private readonly _settings: Settings) { }

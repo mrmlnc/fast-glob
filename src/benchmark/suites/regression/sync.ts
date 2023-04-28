@@ -1,9 +1,11 @@
 import * as path from 'path';
+
 import * as bencho from 'bencho';
+
+import * as utils from '../../utils';
 
 import type * as fastGlobCurrent from '../../..';
 
-import * as utils from '../../utils';
 
 type GlobImplementation = 'previous' | 'current';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

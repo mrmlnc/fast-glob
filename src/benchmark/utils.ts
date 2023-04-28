@@ -1,4 +1,5 @@
 import { performance } from 'perf_hooks';
+
 import * as bencho from 'bencho';
 
 export function timeStart(): number {

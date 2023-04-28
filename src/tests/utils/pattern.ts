@@ -1,5 +1,6 @@
-import type { Pattern, MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
+
+import type { Pattern, MicromatchOptions } from '../../types';
 import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
 
 class PatternSegmentBuilder {

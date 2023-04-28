@@ -1,12 +1,13 @@
 import * as path from 'path';
 
-import type { Task } from '../managers/tasks';
-import type Settings from '../settings';
-import type { MicromatchOptions, ReaderOptions } from '../types';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 import ErrorFilter from './filters/error';
 import EntryTransformer from './transformers/entry';
+
+import type { MicromatchOptions, ReaderOptions } from '../types';
+import type Settings from '../settings';
+import type { Task } from '../managers/tasks';
 
 export default abstract class Provider<T> {
 	public readonly errorFilter: ErrorFilter = new ErrorFilter(this._settings);
