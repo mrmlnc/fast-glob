@@ -46,7 +46,7 @@ export default class DeepFilter {
 		/**
 		 * Avoid unnecessary depth calculations when it doesn't matter.
 		 */
-		if (this._settings.deep === Infinity) {
+		if (this._settings.deep === Number.POSITIVE_INFINITY) {
 			return false;
 		}
 

@@ -90,7 +90,7 @@ describe('Providers → Filters → Deep', () => {
 			it('should accept when an option has "Infinity" as value', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_1, {
 					positive: ['**/*'],
-					options: { deep: Infinity },
+					options: { deep: Number.POSITIVE_INFINITY },
 				});
 			});
 		});

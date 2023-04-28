@@ -161,7 +161,7 @@ export default class Settings {
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly concurrency: number = this._getValue(this._options.concurrency, CPU_COUNT);
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
-	public readonly deep: number = this._getValue(this._options.deep, Infinity);
+	public readonly deep: number = this._getValue(this._options.deep, Number.POSITIVE_INFINITY);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
