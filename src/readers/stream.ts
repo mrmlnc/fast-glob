@@ -38,8 +38,8 @@ export default class ReaderStream extends Reader<Readable> {
 				.catch(done);
 		};
 
-		for (let i = 0; i < filepaths.length; i++) {
-			stream.write(i);
+		for (let index = 0; index < filepaths.length; index++) {
+			stream.write(index);
 		}
 
 		return stream;

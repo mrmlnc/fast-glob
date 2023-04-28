@@ -43,10 +43,10 @@ class Glob {
 		this._measure(() => fdir.sync());
 	}
 
-	private _measure(func: GlobImplFunction): void {
+	private _measure(function_: GlobImplFunction): void {
 		const timeStart = utils.timeStart();
 
-		const matches = func();
+		const matches = function_();
 
 		const count = matches.length;
 		const memory = utils.getMemory();

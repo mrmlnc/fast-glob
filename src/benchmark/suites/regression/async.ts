@@ -35,10 +35,10 @@ class Glob {
 		await this._measure(() => glob(this._pattern, this._options));
 	}
 
-	private async _measure(func: GlobImplFunction): Promise<void> {
+	private async _measure(function_: GlobImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
-		const matches = await func();
+		const matches = await function_();
 
 		const count = matches.length;
 		const memory = utils.getMemory();
