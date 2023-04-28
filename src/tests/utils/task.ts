@@ -1,5 +1,5 @@
-import { Task } from '../../managers/tasks';
-import { Pattern } from '../../types';
+import type { Task } from '../../managers/tasks';
+import type { Pattern } from '../../types';
 
 class TaskBuilder {
 	private readonly _task: Task = {

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as bencho from 'bencho';
 
-import * as fastGlobCurrent from '../../..';
+import type * as fastGlobCurrent from '../../..';
 
 import * as utils from '../../utils';
 

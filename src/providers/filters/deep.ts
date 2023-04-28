@@ -1,5 +1,5 @@
-import { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
-import Settings from '../../settings';
+import type { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+import type Settings from '../../settings';
 import * as utils from '../../utils';
 import PartialMatcher from '../matchers/partial';
 

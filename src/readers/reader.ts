@@ -1,10 +1,10 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 import * as path from 'path';
 
 import * as fsStat from '@nodelib/fs.stat';
 
-import Settings from '../settings';
-import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
+import type Settings from '../settings';
+import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
 import * as utils from '../utils';
 
 export default abstract class Reader<T> {

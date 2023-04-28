@@ -1,9 +1,10 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import Settings, { Options } from '../../settings';
+import type { Options } from '../../settings';
+import Settings from '../../settings';
 import * as tests from '../../tests';
-import { EntryFilterFunction, Pattern, Entry } from '../../types';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types';
 import EntryFilter from './entry';
 
 type FilterOptions = {

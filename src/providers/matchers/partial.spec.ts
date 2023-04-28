@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 
-import { Pattern, MicromatchOptions } from '../../types';
+import type { Pattern, MicromatchOptions } from '../../types';
 import Settings from '../../settings';
 import Matcher from './partial';
 

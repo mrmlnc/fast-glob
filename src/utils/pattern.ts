@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';
 
-import { MicromatchOptions, Pattern, PatternRe } from '../types';
+import type { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';

@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 
-import Settings, { Options } from '../../settings';
+import type { Options } from '../../settings';
+import Settings from '../../settings';
 import * as tests from '../../tests';
-import { ErrorFilterFunction } from '../../types';
+import type { ErrorFilterFunction } from '../../types';
 import ErrorFilter from './error';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {

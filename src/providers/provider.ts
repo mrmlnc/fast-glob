@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import { Task } from '../managers/tasks';
-import Settings from '../settings';
-import { MicromatchOptions, ReaderOptions } from '../types';
+import type { Task } from '../managers/tasks';
+import type Settings from '../settings';
+import type { MicromatchOptions, ReaderOptions } from '../types';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 import ErrorFilter from './filters/error';

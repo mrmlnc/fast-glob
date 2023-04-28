@@ -1,5 +1,5 @@
-import Settings from '../../settings';
-import { Entry, EntryItem, EntryTransformerFunction } from '../../types';
+import type Settings from '../../settings';
+import type { Entry, EntryItem, EntryTransformerFunction } from '../../types';
 import * as utils from '../../utils';
 
 export default class EntryTransformer {

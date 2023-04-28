@@ -1,6 +1,6 @@
-import { Task } from '../managers/tasks';
+import type { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
-import { Entry, EntryItem, ReaderOptions } from '../types';
+import type { Entry, EntryItem, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export default class ProviderSync extends Provider<EntryItem[]> {

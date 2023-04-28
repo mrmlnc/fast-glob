@@ -1,6 +1,6 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 
-import { Dirent } from '@nodelib/fs.walk';
+import type { Dirent } from '@nodelib/fs.walk';
 
 class DirentFromStats implements fs.Dirent {
 	public isBlockDevice: fs.Stats['isBlockDevice'];

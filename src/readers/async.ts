@@ -1,5 +1,5 @@
 import * as fsWalk from '@nodelib/fs.walk';
-import { Entry, ReaderOptions, Pattern } from '../types';
+import type { Entry, ReaderOptions, Pattern } from '../types';
 import Reader from './reader';
 import ReaderStream from './stream';
 
