@@ -18,7 +18,7 @@ export default abstract class Reader<T> {
 		this._fsStatSettings = new fsStat.Settings({
 			followSymbolicLink: settings.followSymbolicLinks,
 			fs: settings.fs,
-			throwErrorOnBrokenSymbolicLink: settings.followSymbolicLinks,
+			throwErrorOnBrokenSymbolicLink: settings.throwErrorOnBrokenSymbolicLink,
 		});
 	}
 
