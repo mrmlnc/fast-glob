@@ -1,26 +1,37 @@
-import type * as fs from 'fs';
-import type { Dirent } from '@nodelib/fs.walk';
+import * as fs from 'fs';
 
-class DirentFromStats implements fs.Dirent {
-	public isBlockDevice: fs.Stats['isBlockDevice'];
-	public isCharacterDevice: fs.Stats['isCharacterDevice'];
-	public isDirectory: fs.Stats['isDirectory'];
-	public isFIFO: fs.Stats['isFIFO'];
-	public isFile: fs.Stats['isFile'];
-	public isSocket: fs.Stats['isSocket'];
-	public isSymbolicLink: fs.Stats['isSymbolicLink'];
+import type { FsDirent, FsStats } from '../types';
 
-	constructor(public name: string, stats: fs.Stats) {
-		this.isBlockDevice = stats.isBlockDevice.bind(stats);
-		this.isCharacterDevice = stats.isCharacterDevice.bind(stats);
-		this.isDirectory = stats.isDirectory.bind(stats);
-		this.isFIFO = stats.isFIFO.bind(stats);
-		this.isFile = stats.isFile.bind(stats);
-		this.isSocket = stats.isSocket.bind(stats);
-		this.isSymbolicLink = stats.isSymbolicLink.bind(stats);
+const kStats = Symbol('stats');
+
+type DirentStatsKeysIntersection = 'constructor' | keyof FsDirent & keyof FsStats;
+
+export function createDirentFromStats(name: string, stats: fs.Stats): FsDirent {
+	return new DirentFromStats(name, stats);
+}
+
+// Adapting an internal class in Node.js to mimic the behavior of `fs.Dirent` when creating it manually from `fs.Stats`.
+// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L199C1-L213
+export class DirentFromStats extends fs.Dirent {
+	private readonly [kStats]: fs.Stats;
+
+	constructor(name: string, stats: fs.Stats) {
+		// @ts-expect-error The constructor has parameters, but they are not represented in types.
+		// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L164
+		super(name, null);
+
+		this[kStats] = stats;
 	}
 }
 
-export function createDirentFromStats(name: string, stats: fs.Stats): Dirent {
-	return new DirentFromStats(name, stats);
+for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
+	const name = key as DirentStatsKeysIntersection | 'constructor';
+
+	if (name === 'constructor') {
+		continue;
+	}
+
+	DirentFromStats.prototype[name] = function () {
+		return this[kStats][name]();
+	};
 }

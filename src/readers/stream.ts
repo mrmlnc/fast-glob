@@ -5,9 +5,8 @@ import * as fsWalk from '@nodelib/fs.walk';
 
 import Reader from './reader';
 
-import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import type { Readable } from 'stream';
-import type * as fs from 'fs';
 
 export default class ReaderStream extends Reader<Readable> {
 	protected _walkStream: typeof fsWalk.walkStream = fsWalk.walkStream;
@@ -57,7 +56,7 @@ export default class ReaderStream extends Reader<Readable> {
 			});
 	}
 
-	#getStat(filepath: string): Promise<fs.Stats> {
+	#getStat(filepath: string): Promise<FsStats> {
 		return new Promise((resolve, reject) => {
 			this._stat(filepath, this._fsStatSettings, (error: NodeJS.ErrnoException | null, stats) => {
 				if (error === null) {

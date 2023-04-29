@@ -4,8 +4,7 @@ import * as fsWalk from '@nodelib/fs.walk';
 
 import Reader from './reader';
 
-import type { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
-import type * as fs from 'fs';
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 
 export default class ReaderSync extends Reader<Entry[]> {
 	protected _walkSync: typeof fsWalk.walkSync = fsWalk.walkSync;
@@ -46,7 +45,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 		}
 	}
 
-	#getStat(filepath: string): fs.Stats {
+	#getStat(filepath: string): FsStats {
 		return this._statSync(filepath, this._fsStatSettings);
 	}
 }
