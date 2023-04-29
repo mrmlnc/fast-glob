@@ -36,15 +36,10 @@ export class ReaderAsync extends Reader<Promise<Entry[]>> implements IReaderAsyn
 	public async static(patterns: Pattern[], options: ReaderOptions): Promise<Entry[]> {
 		const entries: Entry[] = [];
 
-		const stream = this._readerStream.static(patterns, options);
+		for await (const entry of this._readerStream.static(patterns, options)) {
+			entries.push(entry as Entry);
+		}
 
-		// After #235, replace it with an asynchronous iterator.
-		return new Promise((resolve, reject) => {
-			stream.once('error', reject);
-			stream.on('data', (entry: Entry) => entries.push(entry));
-			stream.once('end', () => {
-				resolve(entries);
-			});
-		});
+		return entries;
 	}
 }
