@@ -1,5 +1,6 @@
-export function flatten<T>(items: T[][]): T[] {
-	return items.reduce<T[]>((collection, item) => ([] as T[]).concat(collection, item), []);
+export function flatFirstLevel<T>(items: T[][]): T[] {
+	// We do not use `Array.flat` because this is slower than current implementation for your case.
+	return ([] as T[]).concat(...items);
 }
 
 export function splitWhen<T>(items: T[], predicate: (item: T) => boolean): T[][] {
