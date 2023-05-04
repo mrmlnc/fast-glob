@@ -5,8 +5,8 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderAsync from './async';
-import ReaderStream from './stream';
+import { ReaderAsync } from './async';
+import { ReaderStream } from './stream';
 
 import type { ReaderOptions } from '../types';
 import type { Options } from '../settings';

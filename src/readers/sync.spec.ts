@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderSync from './sync';
+import { ReaderSync } from './sync';
 
 import type * as fsStat from '@nodelib/fs.stat';
 import type * as fsWalk from '@nodelib/fs.walk';

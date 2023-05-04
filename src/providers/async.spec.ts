@@ -4,23 +4,26 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderAsync from '../readers/async';
-import ProviderAsync from './async';
+import { ReaderAsync } from '../readers';
+import { ProviderAsync } from './async';
 
+import type { IReaderAsync } from '../readers';
 import type { Task } from '../managers/tasks';
-import type ReaderStream from '../readers/stream';
 import type { Options } from '../settings';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 
+type StubbedReaderAsync = sinon.SinonStubbedInstance<IReaderAsync>;
+
 class TestProvider extends ProviderAsync {
-	protected override _reader: ReaderAsync = sinon.createStubInstance(ReaderAsync) as unknown as ReaderAsync;
+	public readonly reader: StubbedReaderAsync;
 
-	constructor(options?: Options) {
-		super(new Settings(options));
-	}
+	constructor(
+		options?: Options,
+		reader: StubbedReaderAsync = sinon.createStubInstance(ReaderAsync),
+	) {
+		super(reader, new Settings(options));
 
-	public get reader(): sinon.SinonStubbedInstance<ReaderStream> {
-		return this._reader as unknown as sinon.SinonStubbedInstance<ReaderStream>;
+		this.reader = reader;
 	}
 }
 

@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderStream from './stream';
+import { ReaderStream } from './stream';
 
 import type * as fsStat from '@nodelib/fs.stat';
 import type * as fsWalk from '@nodelib/fs.walk';

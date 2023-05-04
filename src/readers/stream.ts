@@ -3,12 +3,17 @@ import { PassThrough } from 'stream';
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import Reader from './reader';
+import { Reader } from './reader';
 
 import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import type { Readable } from 'stream';
 
-export default class ReaderStream extends Reader<Readable> {
+export interface IReaderStream {
+	dynamic: (root: string, options: ReaderOptions) => Readable;
+	static: (patterns: Pattern[], options: ReaderOptions) => Readable;
+}
+
+export class ReaderStream extends Reader<Readable> implements IReaderStream {
 	protected _walkStream: typeof fsWalk.walkStream = fsWalk.walkStream;
 	protected _stat: typeof fsStat.stat = fsStat.stat;
 

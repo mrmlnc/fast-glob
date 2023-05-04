@@ -9,7 +9,7 @@ import type { MicromatchOptions, ReaderOptions } from '../types';
 import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 
-export default abstract class Provider<T> {
+export abstract class Provider<T> {
 	public readonly errorFilter: ErrorFilter;
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;

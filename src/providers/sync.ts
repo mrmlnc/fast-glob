@@ -1,17 +1,17 @@
-import ReaderSync from '../readers/sync';
-import Provider from './provider';
+import { Provider } from './provider';
 
+import type { IReaderSync } from '../readers';
 import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
-export default class ProviderSync extends Provider<EntryItem[]> {
-	protected _reader: ReaderSync;
+export class ProviderSync extends Provider<EntryItem[]> {
+	#reader: IReaderSync;
 
-	constructor(settings: Settings) {
+	constructor(reader: IReaderSync, settings: Settings) {
 		super(settings);
 
-		this._reader = new ReaderSync(settings);
+		this.#reader = reader;
 	}
 
 	public read(task: Task): EntryItem[] {
@@ -25,9 +25,9 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 
 	public api(root: string, task: Task, options: ReaderOptions): Entry[] {
 		if (task.dynamic) {
-			return this._reader.dynamic(root, options);
+			return this.#reader.dynamic(root, options);
 		}
 
-		return this._reader.static(task.patterns, options);
+		return this.#reader.static(task.patterns, options);
 	}
 }

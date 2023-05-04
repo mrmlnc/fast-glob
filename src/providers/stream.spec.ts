@@ -3,24 +3,28 @@ import { PassThrough } from 'stream';
 
 import * as sinon from 'sinon';
 
-import ReaderStream from '../readers/stream';
 import Settings from '../settings';
 import * as tests from '../tests';
-import ProviderStream from './stream';
+import { ProviderStream } from './stream';
+import { ReaderStream } from '../readers';
 
+import type { IReaderStream } from '../readers';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 import type { Options } from '../settings';
 import type { Task } from '../managers/tasks';
 
+type StubbedReaderStream = sinon.SinonStubbedInstance<IReaderStream>;
+
 class TestProvider extends ProviderStream {
-	protected override _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	public readonly reader: StubbedReaderStream;
 
-	constructor(options?: Options) {
-		super(new Settings(options));
-	}
+	constructor(
+		options?: Options,
+		reader: StubbedReaderStream = sinon.createStubInstance(ReaderStream),
+	) {
+		super(reader, new Settings(options));
 
-	public get reader(): sinon.SinonStubbedInstance<ReaderStream> {
-		return this._reader as unknown as sinon.SinonStubbedInstance<ReaderStream>;
+		this.reader = reader;
 	}
 }
 

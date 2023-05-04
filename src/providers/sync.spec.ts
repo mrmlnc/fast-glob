@@ -2,22 +2,26 @@ import * as assert from 'assert';
 
 import * as sinon from 'sinon';
 
-import ReaderSync from '../readers/sync';
+import { ReaderSync } from '../readers';
 import Settings from '../settings';
 import * as tests from '../tests';
-import ProviderSync from './sync';
+import { ProviderSync } from './sync';
 
+import type { IReaderSync } from '../readers';
 import type { Options } from '../settings';
 
+type StubbedReaderSync = sinon.SinonStubbedInstance<IReaderSync>;
+
 class TestProvider extends ProviderSync {
-	protected override _reader: ReaderSync = sinon.createStubInstance(ReaderSync) as unknown as ReaderSync;
+	public readonly reader: StubbedReaderSync;
 
-	constructor(options?: Options) {
-		super(new Settings(options));
-	}
+	constructor(
+		options?: Options,
+		reader: StubbedReaderSync = sinon.createStubInstance(ReaderSync),
+	) {
+		super(reader, new Settings(options));
 
-	public get reader(): sinon.SinonStubbedInstance<ReaderSync> {
-		return this._reader as unknown as sinon.SinonStubbedInstance<ReaderSync>;
+		this.reader = reader;
 	}
 }
 

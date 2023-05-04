@@ -1,19 +1,19 @@
 import { Readable } from 'stream';
 
-import ReaderStream from '../readers/stream';
-import Provider from './provider';
+import { Provider } from './provider';
 
+import type { IReaderStream } from '../readers';
 import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 
-export default class ProviderStream extends Provider<Readable> {
-	protected _reader: ReaderStream;
+export class ProviderStream extends Provider<Readable> {
+	#reader: IReaderStream;
 
-	constructor(settings: Settings) {
+	constructor(reader: IReaderStream, settings: Settings) {
 		super(settings);
 
-		this._reader = new ReaderStream(settings);
+		this.#reader = reader;
 	}
 
 	public read(task: Task): Readable {
@@ -36,9 +36,9 @@ export default class ProviderStream extends Provider<Readable> {
 
 	public api(root: string, task: Task, options: ReaderOptions): Readable {
 		if (task.dynamic) {
-			return this._reader.dynamic(root, options);
+			return this.#reader.dynamic(root, options);
 		}
 
-		return this._reader.static(task.patterns, options);
+		return this.#reader.static(task.patterns, options);
 	}
 }
