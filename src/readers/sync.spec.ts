@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderSync from './sync';
+import { ReaderSync } from './sync';
 
 import type { Options } from '../settings';
 import type { ReaderOptions } from '../types';

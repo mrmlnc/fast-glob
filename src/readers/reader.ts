@@ -7,7 +7,7 @@ import * as utils from '../utils';
 import type Settings from '../settings';
 import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 
-export default abstract class Reader<T> {
+export abstract class Reader<T> {
 	protected readonly _fsStatSettings: fsStat.Settings;
 
 	readonly #settings: Settings;
