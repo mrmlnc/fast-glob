@@ -441,11 +441,16 @@ runner.suite('Patterns Regular (ignore & cwd)', {
 			{ pattern: '**/nested/**/*', options: { ignore: ['*/nested/**/*'], cwd: 'fixtures' } },
 			{ pattern: '**/nested/**/*', options: { ignore: ['**/nested/*'], cwd: 'fixtures' } },
 			{ pattern: '**/nested/**/*', options: { ignore: ['**/nested/**'], cwd: 'fixtures' } },
-			{ pattern: '**/nested/**/*', options: { ignore: ['**/nested/**/*'], cwd: 'fixtures' } }
-		]
-	]
-}
-);
+			{ pattern: '**/nested/**/*', options: { ignore: ['**/nested/**/*'], cwd: 'fixtures' } },
+		],
+
+		[
+			{ pattern: '!(ignore)*', options: { ignore: ['*'], cwd: 'fixtures' } },
+			{ pattern: '!(ignore)*', options: { ignore: ['**'], cwd: 'fixtures' } },
+			{ pattern: '!(ignore)*', options: { ignore: ['**/*'], cwd: 'fixtures' } },
+		],
+	],
+});
 
 runner.suite('Patterns Regular (relative)', {
 	tests: [

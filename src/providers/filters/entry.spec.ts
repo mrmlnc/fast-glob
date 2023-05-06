@@ -262,7 +262,7 @@ describe('Providers → Filters → Entry', () => {
 				reject(entry, {
 					positive: ['**/!(ignore)*.txt'],
 					negative: ['**/files/**/*'],
-					options: { dot: false }
+					options: { dot: false },
 				});
 			});
 		});
