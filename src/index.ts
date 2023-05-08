@@ -84,11 +84,23 @@ namespace FastGlob {
 		return utils.path.escape(source);
 	}
 
+	export function convertPathToPattern(source: string): PatternInternal {
+		assertPatternsInput(source);
+
+		return utils.path.convertPathToPattern(source);
+	}
+
 	export namespace posix {
 		export function escapePath(source: string): PatternInternal {
 			assertPatternsInput(source);
 
 			return utils.path.escapePosixPath(source);
+		}
+
+		export function convertPathToPattern(source: string): PatternInternal {
+			assertPatternsInput(source);
+
+			return utils.path.convertPosixPathToPattern(source);
 		}
 	}
 
@@ -97,6 +109,12 @@ namespace FastGlob {
 			assertPatternsInput(source);
 
 			return utils.path.escapeWindowsPath(source);
+		}
+
+		export function convertPathToPattern(source: string): PatternInternal {
+			assertPatternsInput(source);
+
+			return utils.path.convertWindowsPathToPattern(source);
 		}
 	}
 }

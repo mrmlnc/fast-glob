@@ -239,7 +239,20 @@ describe('Package', () => {
 		});
 	});
 
-	describe('.posix', () => {
+	describe('.convertPathToPattern', () => {
+		it('should return a pattern', () => {
+			// In posix system \\ is a escaping character and it will be escaped before non-special characters.
+			const posix = 'C:\\\\Program Files \\(x86\\)\\*\\*\\*';
+			const windows = 'C:/Program Files \\(x86\\)/**/*';
+			const expected = tests.platform.isWindows() ? windows : posix;
+
+			const actual = fg.convertPathToPattern('C:\\Program Files (x86)\\**\\*');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('posix', () => {
 		describe('.escapePath', () => {
 			it('should return escaped path', () => {
 				const expected = '/directory/\\*\\*/\\*';
@@ -249,14 +262,34 @@ describe('Package', () => {
 				assert.strictEqual(actual, expected);
 			});
 		});
+
+		describe('.convertPathToPattern', () => {
+			it('should return a pattern', () => {
+				const expected = 'a\\*.txt';
+
+				const actual = fg.posix.convertPathToPattern('a\\*.txt');
+
+				assert.strictEqual(actual, expected);
+			});
+		});
 	});
 
-	describe('.win32', () => {
+	describe('win32', () => {
 		describe('.escapePath', () => {
 			it('should return escaped path', () => {
 				const expected = 'C:\\Program Files \\(x86\\)\\**\\*';
 
 				const actual = fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
+
+				assert.strictEqual(actual, expected);
+			});
+		});
+
+		describe('.convertPathToPattern', () => {
+			it('should return a pattern', () => {
+				const expected = 'C:/Program Files \\(x86\\)/**/*';
+
+				const actual = fg.win32.convertPathToPattern('C:\\Program Files (x86)\\**\\*');
 
 				assert.strictEqual(actual, expected);
 			});

@@ -26,6 +26,7 @@ This package provides methods for traversing the file system and returning pathn
     * [generateTasks](#generatetaskspatterns-options)
     * [isDynamicPattern](#isdynamicpatternpattern-options)
     * [escapePath](#escapepathpath)
+	* [convertPathToPattern](#convertpathtopatternpath)
 * [Options](#options-3)
   * [Common](#common)
     * [concurrency](#concurrency)
@@ -293,6 +294,31 @@ fg.posix.escapePath('C:\\Program Files (x86)\\**\\*');
 // C:\\\\Program Files \\(x86\\)\\*\\*\\*
 fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
 // Windows: C:\\Program Files \\(x86\\)\\**\\*
+```
+
+#### `convertPathToPattern(path)`
+
+Converts a path to a pattern depending on the platform, including special character escaping.
+
+* Posix. Works similarly to the `fg.posix.escapePath` method.
+* Windows. Works similarly to the `fg.win32.escapePath` method, additionally converting backslashes to forward slashes in cases where they are not escape characters (`!()+@{}`).
+
+```js
+fg.convertPathToPattern('[OpenSource] mrmlnc – fast-glob (Deluxe Edition) 2014') + '/*.flac';
+// \\[OpenSource\\] mrmlnc – fast-glob \\(Deluxe Edition\\) 2014/*.flac
+
+fg.convertPathToPattern('C:/Program Files (x86)/**/*');
+// Posix: C:/Program Files \\(x86\\)/\\*\\*/\\*
+// Windows: C:/Program Files \\(x86\\)/**/*
+
+fg.convertPathToPattern('C:\\Program Files (x86)\\**\\*');
+// Posix: C:\\\\Program Files \\(x86\\)\\*\\*\\*
+// Windows: C:/Program Files \\(x86\\)/**/*
+
+fg.posix.convertPathToPattern('\\\\?\\c:\\Program Files (x86)') + '/**/*';
+// Posix: \\\\\\?\\\\c:\\\\Program Files \\(x86\\)/**/* (broken pattern)
+fg.win32.convertPathToPattern('\\\\?\\c:\\Program Files (x86)') + '/**/*';
+// Windows: //?/c:/Program Files \\(x86\\)/**/*
 ```
 
 ## Options
@@ -684,11 +710,11 @@ Always use forward-slashes in glob expressions (patterns and [`ignore`](#ignore)
 ```ts
 [
 	'directory/*',
-	path.join(process.cwd(), '**').replace(/\\/g, '/')
+	fg.convertPathToPattern(process.cwd()) + '/**'
 ]
 ```
 
-> :book: Use the [`normalize-path`][npm_normalize_path] or the [`unixify`][npm_unixify] package to convert Windows-style path to a Unix-style path.
+> :book: Use the [`.convertPathToPattern`](#convertpathtopatternpath) package to convert Windows-style path to a Unix-style path.
 
 Read more about [matching with backslashes][micromatch_backslashes].
 
@@ -709,7 +735,7 @@ Refers to Bash. You need to escape special characters:
 fg.sync(['\\(special-*file\\).txt']) // ['(special-*file).txt']
 ```
 
-Read more about [matching special characters as literals][picomatch_matching_special_characters_as_literals].
+Read more about [matching special characters as literals][picomatch_matching_special_characters_as_literals]. Or use the [`.escapePath`](#escapepathpath).
 
 ## How to exclude directory from reading?
 
@@ -735,11 +761,15 @@ You have to understand that if you write the pattern to exclude directories, the
 
 ## How to use UNC path?
 
-You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (due to syntax), but you can use them as [`cwd`](#cwd) directory.
+You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (due to syntax) directly, but you can use them as [`cwd`](#cwd) directory or use the `fg.convertPathToPattern` method.
 
 ```ts
+// cwd
 fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
 fg.sync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
+
+// .convertPathToPattern
+fg.sync(fg.convertPathToPattern('\\\\?\\c:\\Python27') + '/*');
 ```
 
 ## Compatible with `node-glob`?
