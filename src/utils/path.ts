@@ -1,9 +1,17 @@
+import * as os from 'os';
 import * as path from 'path';
 
 import { Pattern } from '../types';
 
+const IS_WINDOWS_PLATFORM = os.platform() === 'win32';
 const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
-const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g;
+/*
+ * All non-escaped special characters.
+ * Posix: ()*?[\]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
+ * Windows: (){}, !+@ before (, ! at the beginning.
+ */
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([(){}]|^!|[!+@](?=\())/g;
 
 /**
  * Designed to work only with simple paths: `dir\\file`.
@@ -14,10 +22,6 @@ export function unixify(filepath: string): string {
 
 export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);
-}
-
-export function escape(pattern: Pattern): Pattern {
-	return pattern.replace(UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }
 
 export function removeLeadingDotSegment(entry: string): string {
@@ -32,4 +36,14 @@ export function removeLeadingDotSegment(entry: string): string {
 	}
 
 	return entry;
+}
+
+export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
+
+export function escapeWindowsPath(pattern: Pattern): Pattern {
+	return pattern.replace(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+}
+
+export function escapePosixPath(pattern: Pattern): Pattern {
+	return pattern.replace(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }

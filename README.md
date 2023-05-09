@@ -25,7 +25,7 @@ This package provides methods for traversing the file system and returning pathn
   * [Helpers](#helpers)
     * [generateTasks](#generatetaskspatterns-options)
     * [isDynamicPattern](#isdynamicpatternpattern-options)
-    * [escapePath](#escapepathpattern)
+    * [escapePath](#escapepathpath)
 * [Options](#options-3)
   * [Common](#common)
     * [concurrency](#concurrency)
@@ -268,21 +268,32 @@ Any correct pattern.
 
 See [Options](#options-3) section.
 
-#### `escapePath(pattern)`
+#### `escapePath(path)`
 
-Returns a path with escaped special characters (`*?|(){}[]`, `!` at the beginning of line, `@+!` before the opening parenthesis).
+Returns the path with escaped special characters depending on the platform.
+
+* Posix:
+  * `*?|(){}[]`;
+  * `!` at the beginning of line;
+  * `@+!` before the opening parenthesis;
+  * `\\` before non-special characters;
+* Windows:
+  * `(){}`
+  * `!` at the beginning of line;
+  * `@+!` before the opening parenthesis;
+  * Characters like `*?|[]` cannot be used in the path ([windows_naming_conventions][windows_naming_conventions]), so they will not be escaped;
 
 ```js
-fg.escapePath('!abc'); // \\!abc
-fg.escapePath('C:/Program Files (x86)'); // C:/Program Files \\(x86\\)
+fg.escapePath('!abc');
+// \\!abc
+fg.escapePath('[OpenSource] mrmlnc – fast-glob (Deluxe Edition) 2014') + '/*.flac'
+// \\[OpenSource\\] mrmlnc – fast-glob \\(Deluxe Edition\\) 2014/*.flac
+
+fg.posix.escapePath('C:\\Program Files (x86)\\**\\*');
+// C:\\\\Program Files \\(x86\\)\\*\\*\\*
+fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
+// Windows: C:\\Program Files \\(x86\\)\\**\\*
 ```
-
-##### pattern
-
-* Required: `true`
-* Type: `string`
-
-Any string, for example, a path to a file.
 
 ## Options
 
@@ -815,3 +826,4 @@ This software is released under the terms of the MIT license.
 [zotac_bi323]: https://www.zotac.com/ee/product/mini_pcs/zbox-bi323
 [nodejs_thread_pool]: https://nodejs.org/en/docs/guides/dont-block-the-event-loop
 [libuv_thread_pool]: http://docs.libuv.org/en/v1.x/threadpool.html
+[windows_naming_conventions]: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions

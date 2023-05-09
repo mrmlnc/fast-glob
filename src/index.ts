@@ -78,10 +78,26 @@ namespace FastGlob {
 		return utils.pattern.isDynamicPattern(source, settings);
 	}
 
-	export function escapePath(source: PatternInternal): PatternInternal {
+	export function escapePath(source: string): PatternInternal {
 		assertPatternsInput(source);
 
 		return utils.path.escape(source);
+	}
+
+	export namespace posix {
+		export function escapePath(source: string): PatternInternal {
+			assertPatternsInput(source);
+
+			return utils.path.escapePosixPath(source);
+		}
+	}
+
+	export namespace win32 {
+		export function escapePath(source: string): PatternInternal {
+			assertPatternsInput(source);
+
+			return utils.path.escapeWindowsPath(source);
+		}
 	}
 }
 

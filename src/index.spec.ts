@@ -238,4 +238,28 @@ describe('Package', () => {
 			assert.strictEqual(actual, expected);
 		});
 	});
+
+	describe('.posix', () => {
+		describe('.escapePath', () => {
+			it('should return escaped path', () => {
+				const expected = '/directory/\\*\\*/\\*';
+
+				const actual = fg.posix.escapePath('/directory/*\\*/*');
+
+				assert.strictEqual(actual, expected);
+			});
+		});
+	});
+
+	describe('.win32', () => {
+		describe('.escapePath', () => {
+			it('should return escaped path', () => {
+				const expected = 'C:\\Program Files \\(x86\\)\\**\\*';
+
+				const actual = fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
+
+				assert.strictEqual(actual, expected);
+			});
+		});
+	});
 });
