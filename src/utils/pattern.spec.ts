@@ -408,9 +408,17 @@ describe('Utils → Pattern', () => {
 
 	describe('.expandBraceExpansion', () => {
 		it('should return an array of expanded patterns with brace expansion without dupes', () => {
-			const expected = ['a/b', 'a/c/d', 'a/c'];
+			const expected = ['a/b', 'a/c', 'a/c/d'];
 
 			const actual = util.expandBraceExpansion('a/{b,c/d,{b,c}}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should sort expanded patterns by length', () => {
+			const expected = ['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*'];
+
+			const actual = util.expandBraceExpansion('a/{b,}/{c,}/*');
 
 			assert.deepStrictEqual(actual, expected);
 		});
@@ -477,6 +485,42 @@ describe('Utils → Pattern', () => {
 			const actual = util.matchAny('fixtures/directory', [/fixtures\/file/]);
 
 			assert.ok(!actual);
+		});
+	});
+
+	describe('.removeDuplicateSlashes', () => {
+		it('should do not change patterns', () => {
+			const action = util.removeDuplicateSlashes;
+
+			assert.strictEqual(action('directory/file.md'), 'directory/file.md');
+			assert.strictEqual(action('files{.txt,/file.md}'), 'files{.txt,/file.md}');
+		});
+
+		it('should do not change the device path in patterns with UNC parts', () => {
+			const action = util.removeDuplicateSlashes;
+
+			assert.strictEqual(action('//?//D://'), '//?/D:/');
+			assert.strictEqual(action('//.//D:///'), '//./D:/');
+			assert.strictEqual(action('//LOCALHOST//d$//'), '//LOCALHOST/d$/');
+			assert.strictEqual(action('//127.0.0.1///d$//'), '//127.0.0.1/d$/');
+			assert.strictEqual(action('//./UNC////LOCALHOST///d$//'), '//./UNC/LOCALHOST/d$/');
+		});
+
+		it('should remove duplicate slashes in the middle and the of the pattern', () => {
+			const action = util.removeDuplicateSlashes;
+
+			assert.strictEqual(action('a//b'), 'a/b');
+			assert.strictEqual(action('b///c'), 'b/c');
+			assert.strictEqual(action('c/d///'), 'c/d/');
+			assert.strictEqual(action('//?//D://'), '//?/D:/');
+		});
+
+		it('should form double slashes at the beginning of the pattern', () => {
+			const action = util.removeDuplicateSlashes;
+
+			assert.strictEqual(action('///*'), '//*');
+			assert.strictEqual(action('////?'), '//?');
+			assert.strictEqual(action('///?/D:/'), '//?/D:/');
 		});
 	});
 });

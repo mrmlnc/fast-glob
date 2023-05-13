@@ -10,9 +10,12 @@ export type Task = {
 	negative: Pattern[];
 };
 
-export function generate(patterns: Pattern[], settings: Settings): Task[] {
+export function generate(input: Pattern[], settings: Settings): Task[] {
+	const patterns = processPatterns(input, settings);
+	const ignore = processPatterns(settings.ignore, settings);
+
 	const positivePatterns = getPositivePatterns(patterns);
-	const negativePatterns = getNegativePatternsAsPositive(patterns, settings.ignore);
+	const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
 
 	const staticPatterns = positivePatterns.filter((pattern) => utils.pattern.isStaticPattern(pattern, settings));
 	const dynamicPatterns = positivePatterns.filter((pattern) => utils.pattern.isDynamicPattern(pattern, settings));
@@ -21,6 +24,26 @@ export function generate(patterns: Pattern[], settings: Settings): Task[] {
 	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);
 
 	return staticTasks.concat(dynamicTasks);
+}
+
+function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
+	let patterns: Pattern[] = input;
+
+	/**
+	 * The original pattern like `{,*,**,a/*}` can lead to problems checking the depth when matching entry
+	 * and some problems with the micromatch package (see fast-glob issues: #365, #394).
+	 *
+	 * To solve this problem, we expand all patterns containing brace expansion. This can lead to a slight slowdown
+	 * in matching in the case of a large set of patterns after expansion.
+	 */
+	if (settings.braceExpansion) {
+		patterns = utils.pattern.expandPatternsWithBraceExpansion(patterns);
+	}
+
+	/**
+	 * This method also removes duplicate slashes that may have been in the pattern or formed as a result of expansion.
+	 */
+	return patterns.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern));
 }
 
 /**

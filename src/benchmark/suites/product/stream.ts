@@ -54,8 +54,6 @@ class Glob {
 
 		const matches = await func();
 
-		console.dir(matches, { colors: true });
-
 		const count = matches.length;
 		const memory = utils.getMemory();
 		const time = utils.timeEnd(timeStart);

@@ -14,6 +14,12 @@ const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\([^(]*\|[^|]*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\([^(]*\)/;
 const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
 
+/**
+ * Matches a sequence of two or more consecutive slashes, excluding the first two slashes at the beginning of the string.
+ * The latter is due to the presence of the device path at the beginning of the UNC path.
+ */
+const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
+
 type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
@@ -150,10 +156,15 @@ export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[]
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
-	return micromatch.braces(pattern, {
-		expand: true,
-		nodupes: true
-	});
+	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true });
+
+	/**
+	 * Sort the patterns by length so that the same depth patterns are processed side by side.
+	 * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
+	 */
+	patterns.sort((a, b) => a.length - b.length);
+
+	return patterns;
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
@@ -192,4 +203,12 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
 
 export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
 	return patternsRe.some((patternRe) => patternRe.test(entry));
+}
+
+/**
+ * This package only works with forward slashes as a path separator.
+ * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
+ */
+export function removeDuplicateSlashes(pattern: string): string {
+	return pattern.replace(DOUBLE_SLASH_RE, '/');
 }

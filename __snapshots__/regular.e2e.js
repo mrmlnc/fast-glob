@@ -5464,11 +5464,20 @@ exports['Patterns Regular (negative group) {"pattern":"**/!(*.md)","options":{"c
   "nested/directory/file.json"
 ]
 
-exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (sync) 1'] = []
+exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (sync) 1'] = [
+  "library/a/book.md",
+  "library/b/book.md"
+]
 
-exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (async) 1'] = []
+exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (async) 1'] = [
+  "library/a/book.md",
+  "library/b/book.md"
+]
 
-exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (stream) 1'] = []
+exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,**/library/*/book.md}","options":{"cwd":"fixtures/third"}} (stream) 1'] = [
+  "library/a/book.md",
+  "library/b/book.md"
+]
 
 exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,library/**/a/book.md}","options":{"cwd":"fixtures/third"}} (sync) 1'] = [
   "library/a/book.md"

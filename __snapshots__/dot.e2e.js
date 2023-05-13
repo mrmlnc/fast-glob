@@ -176,7 +176,6 @@ exports['Options Dot {"pattern":"fixtures/**/{.,}*","options":{}} (stream) 1'] =
 ]
 
 exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (sync) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",
@@ -191,7 +190,6 @@ exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (sync) 1'] = [
 ]
 
 exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (async) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",
@@ -206,7 +204,6 @@ exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (async) 1'] = 
 ]
 
 exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (stream) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",
@@ -221,7 +218,6 @@ exports['Options Dot {"pattern":"fixtures/{.**,**}","options":{}} (stream) 1'] =
 ]
 
 exports['Options Dot {"pattern":"fixtures/{**/.*,**}","options":{}} (sync) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",
@@ -236,7 +232,6 @@ exports['Options Dot {"pattern":"fixtures/{**/.*,**}","options":{}} (sync) 1'] =
 ]
 
 exports['Options Dot {"pattern":"fixtures/{**/.*,**}","options":{}} (async) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",
@@ -251,7 +246,6 @@ exports['Options Dot {"pattern":"fixtures/{**/.*,**}","options":{}} (async) 1'] 
 ]
 
 exports['Options Dot {"pattern":"fixtures/{**/.*,**}","options":{}} (stream) 1'] = [
-  "fixtures/.directory/file.md",
   "fixtures/.file",
   "fixtures/file.md",
   "fixtures/first/file.md",

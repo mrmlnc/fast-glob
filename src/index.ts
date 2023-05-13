@@ -1,5 +1,4 @@
 import * as taskManager from './managers/tasks';
-import * as patternManager from './managers/patterns';
 import ProviderAsync from './providers/async';
 import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
@@ -59,7 +58,7 @@ namespace FastGlob {
 	export function generateTasks(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Task[] {
 		assertPatternsInput(source);
 
-		const patterns = patternManager.transform(([] as PatternInternal[]).concat(source));
+		const patterns = ([] as PatternInternal[]).concat(source);
 		const settings = new Settings(options);
 
 		return taskManager.generate(patterns, settings);
@@ -81,7 +80,7 @@ namespace FastGlob {
 }
 
 function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new (settings: Settings) => Provider<T>, options?: OptionsInternal): T[] {
-	const patterns = patternManager.transform(([] as PatternInternal[]).concat(source));
+	const patterns = ([] as PatternInternal[]).concat(source);
 	const settings = new Settings(options);
 
 	const tasks = taskManager.generate(patterns, settings);
