@@ -5595,3 +5595,66 @@ exports['Patterns Regular (relative) {"pattern":"./**/*","options":{"cwd":"fixtu
   "third/library/a/book.md",
   "third/library/b/book.md"
 ]
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["*"]}} (sync) 1'] = [
+  "fixtures/.file",
+  "fixtures/file.md"
+]
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["*"]}} (async) 1'] = [
+  "fixtures/.file",
+  "fixtures/file.md"
+]
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["*"]}} (stream) 1'] = [
+  "fixtures/.file",
+  "fixtures/file.md"
+]
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**"]}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**"]}} (async) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**"]}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**/*"]}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**/*"]}} (async) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["**/*"]}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/*"]}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/*"]}} (async) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/*"]}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**"]}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**"]}} (async) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**"]}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**/*"]}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**/*"]}} (async) 1'] = []
+
+exports['Patterns Regular (ignore) {"pattern":"fixtures/!(ignore)*","options":{"ignore":["fixtures/**/*"]}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["*"],"cwd":"fixtures"}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["*"],"cwd":"fixtures"}} (async) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["*"],"cwd":"fixtures"}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**"],"cwd":"fixtures"}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**"],"cwd":"fixtures"}} (async) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**"],"cwd":"fixtures"}} (stream) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**/*"],"cwd":"fixtures"}} (sync) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**/*"],"cwd":"fixtures"}} (async) 1'] = []
+
+exports['Patterns Regular (ignore & cwd) {"pattern":"!(ignore)*","options":{"ignore":["**/*"],"cwd":"fixtures"}} (stream) 1'] = []

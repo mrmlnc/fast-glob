@@ -240,6 +240,16 @@ describe('Providers → Filters → Entry', () => {
 					options: { onlyFiles: false }
 				});
 			});
+
+			it('should reject a hidden entry by negative pattern even when the dot options is disabled', () => {
+				const entry = tests.entry.builder().path('root/files/.hidden.txt').file().build();
+
+				reject(entry, {
+					positive: ['**/!(ignore)*.txt'],
+					negative: ['**/files/**/*'],
+					options: { dot: false }
+				});
+			});
 		});
 	});
 
