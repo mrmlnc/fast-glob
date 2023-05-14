@@ -5,6 +5,12 @@ import { EntryItem, ErrnoException } from './types';
 import * as fg from '.';
 
 describe('Package', () => {
+	describe('.globSync', () => {
+		it('must be an alias for the .sync method', () => {
+			assert.strictEqual(fg.globSync, fg.sync);
+		});
+	});
+
 	describe('.sync', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
@@ -52,6 +58,12 @@ describe('Package', () => {
 		});
 	});
 
+	describe('.glob', () => {
+		it('must be an alias for the .sync method', () => {
+			assert.strictEqual(fg.glob, fg.async);
+		});
+	});
+
 	describe('.async', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
@@ -96,6 +108,12 @@ describe('Package', () => {
 			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
+		});
+	});
+
+	describe('.globStream', () => {
+		it('must be an alias for the .sync method', () => {
+			assert.strictEqual(fg.globStream, fg.stream);
 		});
 	});
 

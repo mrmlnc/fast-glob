@@ -32,6 +32,10 @@ namespace FastGlob {
 	export type Pattern = PatternInternal;
 	export type FileSystemAdapter = FileSystemAdapterInternal;
 
+	export const glob = FastGlob;
+	export const globSync = sync;
+	export const globStream = stream;
+
 	export const async = FastGlob;
 
 	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
