@@ -44,6 +44,31 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should expand patterns with brace expansion', () => {
+			const settings = new Settings();
+
+			const expected = [
+				tests.task.builder().base('a').positive('a/*').build(),
+				tests.task.builder().base('a/b').positive('a/b/*').build()
+			];
+
+			const actual = manager.generate(['a/{b,}/*'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should do not expand patterns with brace expansion when the `braceExpansion` option is disabled', () => {
+			const settings = new Settings({ braceExpansion: false });
+
+			const expected = [
+				tests.task.builder().base('a').positive('a/{b,}/*').build()
+			];
+
+			const actual = manager.generate(['a/{b,}/*'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {
@@ -64,8 +89,6 @@ describe('Managers → Task', () => {
 			];
 
 			const actual = manager.convertPatternsToTasks(['*', 'a/*', '../*.md'], ['*.md'], /* dynamic */ true);
-
-			console.dir(actual, { colors: true });
 
 			assert.deepStrictEqual(actual, expected);
 		});

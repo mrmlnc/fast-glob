@@ -499,7 +499,7 @@ runner.suite('Patterns Regular (negative group)', {
 
 runner.suite('Patterns Regular (segmented lists)', {
 	tests: [
-		{ pattern: '{book.xml,**/library/*/book.md}', options: { cwd: 'fixtures/third' }, issue: 365 },
+		{ pattern: '{book.xml,**/library/*/book.md}', options: { cwd: 'fixtures/third' } },
 		{ pattern: '{book.xml,library/**/a/book.md}', options: { cwd: 'fixtures/third' } }
 	]
 });

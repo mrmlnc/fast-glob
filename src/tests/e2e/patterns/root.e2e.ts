@@ -48,7 +48,7 @@ runner.suite('Patterns Root', {
 		{
 			pattern: '/tmp/*',
 			condition: () => !utils.platform.isWindows(),
-			expected: () => getRootEntries('/tmp')
+			expected: () => getRootEntries('/tmp', /** withBase */ true)
 		},
 		{
 			pattern: '/*',
