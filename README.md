@@ -142,6 +142,8 @@ npm install fast-glob
 
 ```js
 fg(patterns, [options])
+fg.async(patterns, [options])
+fg.glob(patterns, [options])
 ```
 
 Returns a `Promise` with an array of matching entries.
@@ -158,6 +160,7 @@ const entries = await fg(['.editorconfig', '**/index.js'], { dot: true });
 
 ```js
 fg.sync(patterns, [options])
+fg.globSync(patterns, [options])
 ```
 
 Returns an array of matching entries.
@@ -174,6 +177,7 @@ const entries = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
 
 ```js
 fg.stream(patterns, [options])
+fg.globStream(patterns, [options])
 ```
 
 Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` event will be emitted with matching entry.
