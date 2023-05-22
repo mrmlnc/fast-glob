@@ -180,14 +180,15 @@ describe('Providers → Filters → Entry', () => {
 		describe('options.baseNameMatch', () => {
 			it('should reject an entry', () => {
 				reject(FILE_ENTRY, {
-					positive: ['*'],
+					positive: ['file.txt'],
 					options: { baseNameMatch: false }
 				});
 			});
 
 			it('should accept an entry', () => {
 				accept(FILE_ENTRY, {
-					positive: ['*'],
+					// The task manager adds globstar for patterns without slash.
+					positive: ['**/file.txt'],
 					options: { baseNameMatch: true }
 				});
 			});

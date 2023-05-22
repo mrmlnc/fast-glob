@@ -30,10 +30,9 @@ export default class EntryFilter {
 			return false;
 		}
 
-		const filepath = this._settings.baseNameMatch ? entry.name : entry.path;
 		const isDirectory = entry.dirent.isDirectory();
 
-		const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(entry.path, negativeRe, isDirectory);
+		const isMatched = this._isMatchToPatterns(entry.path, positiveRe, isDirectory) && !this._isMatchToPatterns(entry.path, negativeRe, isDirectory);
 
 		if (this._settings.unique && isMatched) {
 			this._createIndexRecord(entry);
