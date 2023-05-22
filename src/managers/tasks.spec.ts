@@ -69,6 +69,30 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should do not process patterns when the `baseNameMatch` option is enabled and the pattern has a slash', () => {
+			const settings = new Settings({ baseNameMatch: true });
+
+			const expected = [
+				tests.task.builder().base('root').positive('root/*/file.txt').build()
+			];
+
+			const actual = manager.generate(['root/*/file.txt'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should add glob star to patterns when the `baseNameMatch` option is enabled and the pattern does not have a slash', () => {
+			const settings = new Settings({ baseNameMatch: true });
+
+			const expected = [
+				tests.task.builder().base('.').positive('**/file.txt').build()
+			];
+
+			const actual = manager.generate(['file.txt'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {

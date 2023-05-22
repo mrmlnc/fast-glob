@@ -41,6 +41,18 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
 	}
 
 	/**
+	 * If the `baseNameMatch` option is enabled, we must add globstar to patterns, so that they can be used
+	 * at any nesting level.
+	 *
+	 * We do this here, because otherwise we have to complicate the filtering logic. For example, we need to change
+	 * the pattern in the filter before creating a regular expression. There is no need to change the patterns
+	 * in the application. Only on the input.
+	 */
+	if (settings.baseNameMatch) {
+		patterns = patterns.map((pattern) => pattern.includes('/') ? pattern : `**/${pattern}`);
+	}
+
+	/**
 	 * This method also removes duplicate slashes that may have been in the pattern or formed as a result of expansion.
 	 */
 	return patterns.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern));
