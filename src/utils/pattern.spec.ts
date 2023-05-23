@@ -422,6 +422,14 @@ describe('Utils → Pattern', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should filter an empty patterns after expansion', () => {
+			const expected = ['a', 'b'];
+
+			const actual = util.expandBraceExpansion('{a,{b,},}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.getPatternParts', () => {

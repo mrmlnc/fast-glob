@@ -164,7 +164,10 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 	 */
 	patterns.sort((a, b) => a.length - b.length);
 
-	return patterns;
+	/**
+	 * Micromatch can return an empty string in the case of patterns like `{a,}`.
+	 */
+	return patterns.filter((pattern) => pattern !== '');
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
