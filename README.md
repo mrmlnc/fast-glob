@@ -850,7 +850,7 @@ This software is released under the terms of the MIT license.
 [picomatch_posix_brackets]: https://github.com/micromatch/picomatch#posix-brackets
 [regular_expressions_brackets]: https://www.regular-expressions.info/brackets.html
 [silicon_power_ssd]: https://www.silicon-power.com/web/product-1
-[unc_path]: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
+[unc_path]: https://learn.microsoft.com/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
 [vultr_pricing_baremetal]: https://www.vultr.com/pricing/baremetal
 [wikipedia_case_sensitivity]: https://en.wikipedia.org/wiki/Case_sensitivity
 [zotac_bi323]: https://www.zotac.com/ee/product/mini_pcs/zbox-bi323
