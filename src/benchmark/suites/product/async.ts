@@ -25,7 +25,8 @@ class Glob {
 		await this._measure(() => glob(this._pattern, {
 			cwd: this._cwd,
 			unique: false,
-			followSymbolicLinks: false
+			followSymbolicLinks: false,
+			concurrency: Number.POSITIVE_INFINITY
 		}));
 	}
 

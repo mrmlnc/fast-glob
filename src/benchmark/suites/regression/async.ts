@@ -16,6 +16,7 @@ class Glob {
 		this._options = {
 			unique: false,
 			followSymbolicLinks: false,
+			concurrency: Number.POSITIVE_INFINITY,
 			...options
 		};
 	}
