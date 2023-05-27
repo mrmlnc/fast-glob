@@ -18,7 +18,9 @@ export default class EntryFilter {
 	}
 
 	private _filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
-		if (this._settings.unique && this._isDuplicateEntry(entry)) {
+		const filepath = utils.path.removeLeadingDotSegment(entry.path);
+
+		if (this._settings.unique && this._isDuplicateEntry(filepath)) {
 			return false;
 		}
 
@@ -26,27 +28,27 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this._isSkippedByAbsoluteNegativePatterns(entry.path, negativeRe)) {
+		if (this._isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
 			return false;
 		}
 
 		const isDirectory = entry.dirent.isDirectory();
 
-		const isMatched = this._isMatchToPatterns(entry.path, positiveRe, isDirectory) && !this._isMatchToPatterns(entry.path, negativeRe, isDirectory);
+		const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(filepath, negativeRe, isDirectory);
 
 		if (this._settings.unique && isMatched) {
-			this._createIndexRecord(entry);
+			this._createIndexRecord(filepath);
 		}
 
 		return isMatched;
 	}
 
-	private _isDuplicateEntry(entry: Entry): boolean {
-		return this.index.has(entry.path);
+	private _isDuplicateEntry(filepath: string): boolean {
+		return this.index.has(filepath);
 	}
 
-	private _createIndexRecord(entry: Entry): void {
-		this.index.set(entry.path, undefined);
+	private _createIndexRecord(filepath: string): void {
+		this.index.set(filepath, undefined);
 	}
 
 	private _onlyFileFilter(entry: Entry): boolean {
@@ -67,9 +69,7 @@ export default class EntryFilter {
 		return utils.pattern.matchAny(fullpath, patternsRe);
 	}
 
-	private _isMatchToPatterns(entryPath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
-		const filepath = utils.path.removeLeadingDotSegment(entryPath);
-
+	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
 		// Trying to match files and directories by patterns.
 		const isMatched = utils.pattern.matchAny(filepath, patternsRe);
 

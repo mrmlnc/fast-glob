@@ -22,7 +22,7 @@ type Suite = {
 };
 
 type Test = {
-	pattern: Pattern;
+	pattern: Pattern | Pattern[];
 	options?: fg.Options;
 	/**
 	 * Allow to run only one test case with debug information.
@@ -48,10 +48,11 @@ export function suite(name: string, suite: Suite): void {
 			const title = getTestTitle(test);
 			const definition = getTestMochaDefinition(suite, test);
 			const transformers = getResultTransformers(suite, test);
+			const patterns = getTestPatterns(test);
 			const options = getFastGlobOptions(suite, test);
 
 			definition(`${title} (sync)`, () => {
-				let actual = getFastGlobEntriesSync(test.pattern, options);
+				let actual = getFastGlobEntriesSync(patterns, options);
 
 				actual = transform(actual, transformers);
 
@@ -60,7 +61,7 @@ export function suite(name: string, suite: Suite): void {
 			});
 
 			definition(`${title} (async)`, async () => {
-				let actual = await getFastGlobEntriesAsync(test.pattern, options);
+				let actual = await getFastGlobEntriesAsync(patterns, options);
 
 				actual = transform(actual, transformers);
 
@@ -69,7 +70,7 @@ export function suite(name: string, suite: Suite): void {
 			});
 
 			definition(`${title} (stream)`, async () => {
-				let actual = await getFastGlobEntriesStream(test.pattern, options);
+				let actual = await getFastGlobEntriesStream(patterns, options);
 
 				actual = transform(actual, transformers);
 
@@ -82,6 +83,10 @@ export function suite(name: string, suite: Suite): void {
 
 function getSuiteTests(tests: Test[] | Test[][]): Test[] {
 	return ([] as Test[]).concat(...tests);
+}
+
+function getTestPatterns(test: Test): Pattern[] {
+	return ([] as Pattern[]).concat(test.pattern);
 }
 
 function getTestTitle(test: Test): string {
@@ -143,18 +148,18 @@ function getResultTransformers(suite: Suite, test: Test): TransformFunction[] {
 	return transformers;
 }
 
-function getFastGlobEntriesSync(pattern: Pattern, options?: fg.Options): string[] {
-	return fg.sync(pattern, options);
+function getFastGlobEntriesSync(patterns: Pattern[], options?: fg.Options): string[] {
+	return fg.sync(patterns, options);
 }
 
-async function getFastGlobEntriesAsync(pattern: Pattern, options?: fg.Options): Promise<string[]> {
-	return fg(pattern, options);
+async function getFastGlobEntriesAsync(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
+	return fg(patterns, options);
 }
 
-async function getFastGlobEntriesStream(pattern: Pattern, options?: fg.Options): Promise<string[]> {
+async function getFastGlobEntriesStream(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
 	const entries: string[] = [];
 
-	const stream = fg.stream(pattern, options);
+	const stream = fg.stream(patterns, options);
 
 	await new Promise((resolve, reject) => {
 		stream.on('data', (entry: string) => entries.push(entry));

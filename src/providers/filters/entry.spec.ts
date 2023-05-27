@@ -86,6 +86,18 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!actual);
 			});
 
+			it('should reject a duplicate entry when the two entries differ only by the leading dot segment', () => {
+				const first = tests.entry.builder().path('file.txt').file().build();
+				const second = tests.entry.builder().path('./file.txt').file().build();
+
+				const filter = getFilter({
+					positive: ['*', './file.txt']
+				});
+
+				assert.ok(filter(first));
+				assert.ok(!filter(second));
+			});
+
 			it('should accept a duplicate entry when an option is disabled', () => {
 				const filter = getFilter({
 					positive: ['**/*'],
