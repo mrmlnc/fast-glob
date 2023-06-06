@@ -83,5 +83,58 @@ describe('Providers → ProviderAsync', () => {
 				assert.strictEqual((error as ErrnoException).code, 'ENOENT');
 			}
 		});
+
+		describe('includePatternBaseDirectory', () => {
+			it('should return base pattern directory', async () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+				const task = tests.task.builder().base('root').positive('*').build();
+				const baseEntry = tests.entry.builder().path('root').directory().build();
+				const fileEntry = tests.entry.builder().path('root/file.txt').file().build();
+
+				provider.reader.static.resolves([baseEntry]);
+				provider.reader.dynamic.resolves([fileEntry]);
+
+				const expected = ['root', 'root/file.txt'];
+
+				const actual = await provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 1);
+				assert.strictEqual(provider.reader.dynamic.callCount, 1);
+				assert.deepStrictEqual(actual, expected);
+			});
+
+			it('should do not read base directory for static task', async () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+
+				const task = tests.task.builder().base('root').positive('file.txt').static().build();
+
+				provider.reader.static.resolves([]);
+
+				await provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 1);
+			});
+
+			it('should do not read base directory when it is a dot', async () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+				const task = tests.task.builder().base('.').positive('*').build();
+
+				provider.reader.static.resolves([]);
+				provider.reader.dynamic.resolves([]);
+
+				await provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 0);
+			});
+		});
 	});
 });

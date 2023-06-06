@@ -10,12 +10,28 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 		const root = this._getRootDirectory(task);
 		const options = this._getReaderOptions(task);
 
-		const entries = this.api(root, task, options);
-
-		return entries.map(options.transform);
+		return ([] as Entry[])
+			.concat(this._readBasePatternDirectory(task, options))
+			.concat(this._readTask(root, task, options))
+			.map(options.transform);
 	}
 
-	public api(root: string, task: Task, options: ReaderOptions): Entry[] {
+	private _readBasePatternDirectory(task: Task, options: ReaderOptions): Entry[] {
+		/**
+		 * Currently, the micromatch package cannot match the input string `.` when the '**' pattern is used.
+		 */
+		if (task.base === '.') {
+			return [];
+		}
+
+		if (task.dynamic && this._settings.includePatternBaseDirectory) {
+			return this._reader.static([task.base], options);
+		}
+
+		return [];
+	}
+
+	private _readTask(root: string, task: Task, options: ReaderOptions): Entry[] {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}
