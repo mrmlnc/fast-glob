@@ -796,25 +796,10 @@ fg.sync(fg.convertPathToPattern('\\\\?\\c:\\Python27') + '/*');
 
 ## Benchmarks
 
-### Server
+You can see results [here](https://github.com/mrmlnc/fast-glob/actions/workflows/benchmark.yml?query=branch%3Amaster) for every commit into the `main` branch.
 
-Link: [Vultr Bare Metal][vultr_pricing_baremetal]
-
-* Processor: E3-1270v6 (8 CPU)
-* RAM: 32GB
-* Disk: SSD ([Intel DC S3520 SSDSC2BB240G7][intel_ssd])
-
-You can see results [here][github_gist_benchmark_server] for latest release.
-
-### Nettop
-
-Link: [Zotac bi323][zotac_bi323]
-
-* Processor: Intel N3150 (4 CPU)
-* RAM: 8GB
-* Disk: SSD ([Silicon Power SP060GBSS3S55S25][silicon_power_ssd])
-
-You can see results [here][github_gist_benchmark_nettop] for latest release.
+* **Product benchmark** – comparison with the main competitors.
+* **Regress benchmark** – regression between the current version and the version from the npm registry.
 
 ## Changelog
 
@@ -825,12 +810,9 @@ See the [Releases section of our GitHub project][github_releases] for changelog 
 This software is released under the terms of the MIT license.
 
 [bash_hackers_syntax_expansion_brace]: https://wiki.bash-hackers.org/syntax/expansion/brace
-[github_gist_benchmark_nettop]: https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c#file-fg-benchmark-nettop-product-txt
-[github_gist_benchmark_server]: https://gist.github.com/mrmlnc/f06246b197f53c356895fa35355a367c#file-fg-benchmark-server-product-txt
 [github_releases]: https://github.com/mrmlnc/fast-glob/releases
 [glob_definition]: https://en.wikipedia.org/wiki/Glob_(programming)
 [glob_linux_man]: http://man7.org/linux/man-pages/man3/glob.3.html
-[intel_ssd]: https://ark.intel.com/content/www/us/en/ark/products/93012/intel-ssd-dc-s3520-series-240gb-2-5in-sata-6gb-s-3d1-mlc.html
 [micromatch_backslashes]: https://github.com/micromatch/micromatch#backslashes
 [micromatch_braces]: https://github.com/micromatch/braces
 [micromatch_extended_globbing]: https://github.com/micromatch/micromatch#extended-globbing
@@ -849,11 +831,8 @@ This software is released under the terms of the MIT license.
 [picomatch_matching_special_characters_as_literals]: https://github.com/micromatch/picomatch#matching-special-characters-as-literals
 [picomatch_posix_brackets]: https://github.com/micromatch/picomatch#posix-brackets
 [regular_expressions_brackets]: https://www.regular-expressions.info/brackets.html
-[silicon_power_ssd]: https://www.silicon-power.com/web/product-1
 [unc_path]: https://learn.microsoft.com/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
-[vultr_pricing_baremetal]: https://www.vultr.com/pricing/baremetal
 [wikipedia_case_sensitivity]: https://en.wikipedia.org/wiki/Case_sensitivity
-[zotac_bi323]: https://www.zotac.com/ee/product/mini_pcs/zbox-bi323
 [nodejs_thread_pool]: https://nodejs.org/en/docs/guides/dont-block-the-event-loop
 [libuv_thread_pool]: http://docs.libuv.org/en/v1.x/threadpool.html
 [windows_naming_conventions]: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
