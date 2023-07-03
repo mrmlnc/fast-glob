@@ -10,7 +10,6 @@ This package provides methods for traversing the file system and returning pathn
 <summary><strong>Details</strong></summary>
 
 * [Highlights](#highlights)
-* [Donation](#donation)
 * [Old and modern mode](#old-and-modern-mode)
 * [Pattern syntax](#pattern-syntax)
   * [Basic syntax](#basic-syntax)
@@ -74,12 +73,6 @@ This package provides methods for traversing the file system and returning pathn
 * Synchronous, Promise and Stream API.
 * Object mode. Can return more than just strings.
 * Error-tolerant.
-
-## Donation
-
-Do you like this project? Support it by donating, creating an issue or pull request.
-
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)][paypal_mrmlnc]
 
 ## Old and modern mode
 
@@ -826,7 +819,6 @@ This software is released under the terms of the MIT license.
 [nodelib_fs_scandir_old_and_modern_modern]: https://github.com/nodelib/nodelib/blob/master/packages/fs/fs.scandir/README.md#old-and-modern-mode
 [npm_normalize_path]: https://www.npmjs.com/package/normalize-path
 [npm_unixify]: https://www.npmjs.com/package/unixify
-[paypal_mrmlnc]:https://paypal.me/mrmlnc
 [picomatch_matching_behavior]: https://github.com/micromatch/picomatch#matching-behavior-vs-bash
 [picomatch_matching_special_characters_as_literals]: https://github.com/micromatch/picomatch#matching-special-characters-as-literals
 [picomatch_posix_brackets]: https://github.com/micromatch/picomatch#posix-brackets
