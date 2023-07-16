@@ -21,9 +21,9 @@ class Glob {
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {
-			stream.once('error', (error) => reject(error));
+			stream.on('error', (error) => reject(error));
 			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => resolve(entries));
+			stream.on('end', () => resolve(entries));
 		});
 
 		await this._measure(() => action);

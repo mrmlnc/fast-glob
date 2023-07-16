@@ -31,7 +31,7 @@
     "@types/merge2": "^1.1.4",
     "@types/micromatch": "^4.0.0",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.8",
+    "@types/node": "^14.18.53",
     "@types/picomatch": "^2.3.0",
     "@types/sinon": "^7.5.0",
     "bencho": "^0.1.1",
