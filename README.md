@@ -89,7 +89,7 @@ The modern mode is faster. Learn more about the [internal mechanism][nodelib_fs_
 
 There is more than one form of syntax: basic and advanced. Below is a brief overview of the supported features. Also pay attention to our [FAQ](#faq).
 
-> :book: This package uses a [`micromatch`][micromatch] as a library for pattern matching.
+> :book: This package uses [`micromatch`][micromatch] as a library for pattern matching.
 
 ### Basic syntax
 
