@@ -10,7 +10,7 @@ const invalidInputData = null as unknown as string;
 
 describe('Package', () => {
 	describe('.globSync', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.globSync, fg.sync);
 		});
 	});
@@ -63,7 +63,7 @@ describe('Package', () => {
 	});
 
 	describe('.glob', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.glob, fg.async);
 		});
 	});
@@ -116,7 +116,7 @@ describe('Package', () => {
 	});
 
 	describe('.globStream', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.globStream, fg.stream);
 		});
 	});
