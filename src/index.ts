@@ -11,9 +11,11 @@ type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMo
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
-function FastGlob(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
-function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
-async function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
+type InputPattern = PatternInternal | readonly PatternInternal[];
+
+function FastGlob(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
+function FastGlob(source: InputPattern, options?: OptionsInternal): Promise<string[]>;
+async function FastGlob(source: InputPattern, options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
 
 	const settings = new Settings(options);
@@ -41,9 +43,9 @@ namespace FastGlob {
 
 	export const async = FastGlob;
 
-	export function sync(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
-	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
-	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
+	export function sync(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
+	export function sync(source: InputPattern, options?: OptionsInternal): string[];
+	export function sync(source: InputPattern, options?: OptionsInternal): EntryItem[] {
 		assertPatternsInput(source);
 
 		const settings = new Settings(options);
@@ -56,7 +58,7 @@ namespace FastGlob {
 		return utils.array.flatFirstLevel(entries);
 	}
 
-	export function stream(source: PatternInternal | PatternInternal[], options?: OptionsInternal): NodeJS.ReadableStream {
+	export function stream(source: InputPattern, options?: OptionsInternal): NodeJS.ReadableStream {
 		assertPatternsInput(source);
 
 		const settings = new Settings(options);
@@ -74,7 +76,7 @@ namespace FastGlob {
 		return utils.stream.merge(streams);
 	}
 
-	export function generateTasks(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Task[] {
+	export function generateTasks(source: InputPattern, options?: OptionsInternal): Task[] {
 		assertPatternsInput(source);
 
 		const patterns = ([] as PatternInternal[]).concat(source);
@@ -132,7 +134,7 @@ namespace FastGlob {
 	}
 }
 
-function getTasks(source: PatternInternal | PatternInternal[], settings: Settings): taskManager.Task[] {
+function getTasks(source: InputPattern, settings: Settings): taskManager.Task[] {
 	const patterns = ([] as PatternInternal[]).concat(source);
 
 	return taskManager.generate(patterns, settings);

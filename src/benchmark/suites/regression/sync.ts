@@ -28,7 +28,7 @@ class Glob {
 		const glob = await utils.importAndMeasure(utils.importPreviousFastGlob);
 
 		// @ts-expect-error remove this line after the next major release.
-		this._measure(() => glob.sync(this._pattern, this.#options));
+		this.#measure(() => glob.sync(this.#pattern, this.#options));
 	}
 
 	public async measureCurrentVersion(): Promise<void> {

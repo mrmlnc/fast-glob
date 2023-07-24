@@ -13,7 +13,7 @@ export interface Task {
 
 export function generate(input: Pattern[], settings: Settings): Task[] {
 	const patterns = processPatterns(input, settings);
-	const ignore = processPatterns(settings.ignore, settings);
+	const ignore = processPatterns([...settings.ignore], settings);
 
 	const positivePatterns = getPositivePatterns(patterns);
 	const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
