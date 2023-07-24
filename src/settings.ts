@@ -206,9 +206,6 @@ export default class Settings {
 		if (this.stats) {
 			this.objectMode = true;
 		}
-
-		// Remove the cast to the array in the next major (#404).
-		this.ignore = ([] as Pattern[]).concat(this.ignore);
 	}
 
 	#getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {
