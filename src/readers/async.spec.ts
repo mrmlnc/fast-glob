@@ -67,10 +67,7 @@ describe('Readers → ReaderAsync', () => {
 
 			const reader = getReader();
 			const readerOptions = getReaderOptions();
-			const readerStream = new PassThrough({ objectMode: true });
-
-			readerStream.push(entry);
-			readerStream.push(null);
+			const readerStream = PassThrough.from([entry]);
 
 			reader.readerStream.static.returns(readerStream);
 

@@ -159,15 +159,13 @@ async function getFastGlobEntriesAsync(patterns: Pattern[], options?: fg.Options
 }
 
 async function getFastGlobEntriesStream(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
-	const entries: string[] = [];
-
 	const stream = fg.stream(patterns, options);
 
-	await new Promise((resolve, reject) => {
-		stream.on('data', (entry: string) => entries.push(entry));
-		stream.once('error', reject);
-		stream.once('end', resolve);
-	});
+	const entries: string[] = [];
+
+	for await (const entry of stream) {
+		entries.push(entry as string);
+	}
 
 	return entries;
 }

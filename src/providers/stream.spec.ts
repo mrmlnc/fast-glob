@@ -33,23 +33,20 @@ function getProvider(options?: Options): TestProvider {
 }
 
 function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
-	const reader = new PassThrough({ objectMode: true });
+	const reader = PassThrough.from([entry]);
 
 	provider.reader.dynamic.returns(reader);
 	provider.reader.static.returns(reader);
 
-	reader.push(entry);
-	reader.push(null);
-
 	return new Promise((resolve, reject) => {
-		const items: EntryItem[] = [];
+		const entries: EntryItem[] = [];
 
 		const api = provider.read(task);
 
-		api.on('data', (item: EntryItem) => items.push(item));
+		api.on('data', (item: EntryItem) => entries.push(item));
 		api.once('error', reject);
 		api.once('end', () => {
-			resolve(items);
+			resolve(entries);
 		});
 	});
 }

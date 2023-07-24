@@ -39,21 +39,13 @@ class Glob {
 	}
 
 	async #measure(function_: GlobImplFunction): Promise<void> {
-		const entries: string[] = [];
-
 		const timeStart = utils.timeStart();
 
-		await new Promise<void>((resolve, reject) => {
-			const stream = function_();
+		const entries: string[] = [];
 
-			stream.once('error', (error) => {
-				reject(error);
-			});
-			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => {
-				resolve();
-			});
-		});
+		for await (const entry of function_()) {
+			entries.push(entry as string);
+		}
 
 		const count = entries.length;
 		const memory = utils.getMemory();

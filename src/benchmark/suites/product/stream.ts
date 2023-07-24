@@ -20,30 +20,24 @@ class Glob {
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
-		const entries: string[] = [];
-
 		const stream = glob.globStream(this.#pattern, {
 			cwd: this.#cwd,
 			nodir: true,
 		});
 
-		const action = new Promise<string[]>((resolve, reject) => {
-			stream.once('error', (error) => {
-				reject(error);
-			});
-			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => {
-				resolve(entries);
-			});
-		});
+		await this.#measure(async () => {
+			const entries: string[] = [];
 
-		await this.#measure(() => action);
+			for await (const entry of stream) {
+				entries.push(entry);
+			}
+
+			return entries;
+		});
 	}
 
 	public async measureFastGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
-
-		const entries: string[] = [];
 
 		const stream = glob.stream(this.#pattern, {
 			cwd: this.#cwd,
@@ -52,17 +46,15 @@ class Glob {
 			concurrency: Number.POSITIVE_INFINITY,
 		});
 
-		const action = new Promise<string[]>((resolve, reject) => {
-			stream.once('error', (error) => {
-				reject(error);
-			});
-			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => {
-				resolve(entries);
-			});
-		});
+		await this.#measure(async () => {
+			const entries: string[] = [];
 
-		await this.#measure(() => action);
+			for await (const entry of stream) {
+				entries.push(entry as string);
+			}
+
+			return entries;
+		});
 	}
 
 	async #measure(function_: GlobImplFunction): Promise<void> {
