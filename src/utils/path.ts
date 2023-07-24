@@ -24,13 +24,6 @@ const DOS_DEVICE_PATH_RE = /^\\\\(?<path>[.?])/;
  */
 const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@{}])/g;
 
-/**
- * Designed to work only with simple paths: `dir\\file`.
- */
-export function unixify(filepath: string): string {
-	return filepath.replace(/\\/g, '/');
-}
-
 export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);
 }
