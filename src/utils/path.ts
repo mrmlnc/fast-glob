@@ -1,5 +1,5 @@
-import * as os from 'os';
-import * as path from 'path';
+import * as os from 'node:os';
+import * as path from 'node:path';
 
 import type { Pattern } from '../types';
 
@@ -45,11 +45,11 @@ export function removeLeadingDotSegment(entry: string): string {
 export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
 
 export function escapeWindowsPath(pattern: Pattern): Pattern {
-	return pattern.replace(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }
 
 export function escapePosixPath(pattern: Pattern): Pattern {
-	return pattern.replace(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }
 
 export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPattern : convertPosixPathToPattern;
@@ -57,7 +57,7 @@ export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPa
 export function convertWindowsPathToPattern(filepath: string): Pattern {
 	return escapeWindowsPath(filepath)
 		.replace(DOS_DEVICE_PATH_RE, '//$1')
-		.replace(WINDOWS_BACKSLASHES_RE, '/');
+		.replaceAll(WINDOWS_BACKSLASHES_RE, '/');
 }
 
 export function convertPosixPathToPattern(filepath: string): Pattern {

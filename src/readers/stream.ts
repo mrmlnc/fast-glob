@@ -1,4 +1,4 @@
-import { PassThrough } from 'stream';
+import { PassThrough } from 'node:stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
@@ -6,7 +6,7 @@ import * as fsWalk from '@nodelib/fs.walk';
 import { Reader } from './reader';
 
 import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
-import type { Readable } from 'stream';
+import type { Readable } from 'node:stream';
 
 export interface IReaderStream {
 	dynamic: (root: string, options: ReaderOptions) => Readable;

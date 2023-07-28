@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 import * as snapshotIt from 'snap-shot-it';
 
@@ -6,7 +6,7 @@ import * as fg from '../..';
 
 import type { Pattern } from '../../types';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+const CWD = process.cwd().replaceAll('\\', '/');
 
 type TransformFunction = (entry: string) => string;
 

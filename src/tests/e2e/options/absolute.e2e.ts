@@ -1,16 +1,16 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import * as runner from '../runner';
 
 const CWD = process.cwd();
-const CWD_POSIX = CWD.replace(/\\/g, '/');
+const CWD_POSIX = CWD.replaceAll('\\', '/');
 
 function resultTransform(item: string): string {
 	return item
 		.replace(CWD, '<root>')
 		// Backslashes are used on Windows.
 		// The `fixtures` directory is under our control, so we are confident that the conversions are correct.
-		.replace(/[/\\]/g, '/');
+		.replaceAll(/[/\\]/g, '/');
 }
 
 runner.suite('Options Absolute', {

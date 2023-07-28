@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import { PassThrough } from 'stream';
+import * as assert from 'node:assert';
+import { PassThrough } from 'node:stream';
 
 import * as sinon from 'sinon';
 

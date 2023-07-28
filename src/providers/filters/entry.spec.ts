@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import * as path from 'path';
+import * as assert from 'node:assert';
+import * as path from 'node:path';
 
 import Settings from '../../settings';
 import * as tests from '../../tests';
@@ -163,7 +163,7 @@ describe('Providers → Filters → Entry', () => {
 			});
 
 			it('should reject when an entry match to the negative pattern with absolute path', () => {
-				const negative = path.posix.join(process.cwd().replace(/\\/g, '/'), '**', '*');
+				const negative = path.posix.join(process.cwd().replaceAll('\\', '/'), '**', '*');
 
 				reject(FILE_ENTRY, {
 					positive: ['**/*'],
@@ -181,7 +181,7 @@ describe('Providers → Filters → Entry', () => {
 			});
 
 			it('should accept when an entry does not match to the negative pattern with absolute path', () => {
-				const negative = path.posix.join(process.cwd().replace(/\\/g, '/'), 'non-root', '**', '*');
+				const negative = path.posix.join(process.cwd().replaceAll('\\', '/'), 'non-root', '**', '*');
 
 				accept(FILE_ENTRY, {
 					positive: ['**/*'],

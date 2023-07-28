@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 import Settings from '../../settings';
 import * as tests from '../../tests';

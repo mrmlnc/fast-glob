@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2022",
-		"lib": ["ES2020"],
+		"lib": ["ES2022"],
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
@@ -22,8 +22,6 @@
 		"forceConsistentCasingInFileNames": true,
 		"verbatimModuleSyntax": false,
 
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
 		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",
