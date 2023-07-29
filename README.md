@@ -10,7 +10,6 @@ This package provides methods for traversing the file system and returning pathn
 <summary><strong>Details</strong></summary>
 
 * [Highlights](#highlights)
-* [Old and modern mode](#old-and-modern-mode)
 * [Pattern syntax](#pattern-syntax)
   * [Basic syntax](#basic-syntax)
   * [Advanced syntax](#advanced-syntax)
@@ -73,15 +72,6 @@ This package provides methods for traversing the file system and returning pathn
 * Synchronous, Promise and Stream API.
 * Object mode. Can return more than just strings.
 * Error-tolerant.
-
-## Old and modern mode
-
-This package works in two modes, depending on the environment in which it is used.
-
-* **Old mode**. Node.js below 10.10 or when the [`stats`](#stats) option is *enabled*.
-* **Modern mode**. Node.js 10.10+ and the [`stats`](#stats) option is *disabled*.
-
-The modern mode is faster. Learn more about the [internal mechanism][nodelib_fs_scandir_old_and_modern_modern].
 
 ## Pattern syntax
 
@@ -532,8 +522,6 @@ fg.sync('*', { stats: true });  // [{ name: 'index.js', path: 'src/index.js', di
 ```
 
 > :book: Returns `fs.stat` instead of `fs.lstat` for symbolic links when the [`followSymbolicLinks`](#followsymboliclinks) option is specified.
->
-> :warning: Unlike [object mode](#objectmode) this mode requires additional calls to the file system. On average, this mode is slower at least twice. See [old and modern mode](#old-and-modern-mode) for more details.
 
 #### unique
 
@@ -816,7 +804,6 @@ This software is released under the terms of the MIT license.
 [node_js_fs_class_fs_stats]: https://nodejs.org/api/fs.html#fs_class_fs_stats
 [node_js_stream_readable_streams]: https://nodejs.org/api/stream.html#stream_readable_streams
 [node_js]: https://nodejs.org/en
-[nodelib_fs_scandir_old_and_modern_modern]: https://github.com/nodelib/nodelib/blob/master/packages/fs/fs.scandir/README.md#old-and-modern-mode
 [npm_normalize_path]: https://www.npmjs.com/package/normalize-path
 [npm_unixify]: https://www.npmjs.com/package/unixify
 [picomatch_matching_behavior]: https://github.com/micromatch/picomatch#matching-behavior-vs-bash

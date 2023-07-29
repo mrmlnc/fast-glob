@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Stats } from '@nodelib/fs.macchiato';
+import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings, { Options } from '../settings';
 import { Entry, Pattern } from '../types';
@@ -59,8 +59,9 @@ describe('Readers → Reader', () => {
 		it('should return created entry', () => {
 			const reader = getReader();
 			const pattern = 'config.json';
+			const stats = new Stats({ mode: StatsMode.File });
 
-			const actual = reader.makeEntry(new Stats(), pattern);
+			const actual = reader.makeEntry(stats, pattern);
 
 			assert.strictEqual(actual.name, pattern);
 			assert.strictEqual(actual.path, pattern);

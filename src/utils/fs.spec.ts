@@ -1,12 +1,14 @@
 import * as assert from 'assert';
 
-import { Stats } from '@nodelib/fs.macchiato';
+import { Stats, StatsMode } from '@nodelib/fs.macchiato';
+
 import * as util from './fs';
 
 describe('Utils → FS', () => {
 	describe('.createDirentFromStats', () => {
 		it('should convert fs.Stats to fs.Dirent', () => {
-			const actual = util.createDirentFromStats('name', new Stats());
+			const stats = new Stats({ mode: StatsMode.File });
+			const actual = util.createDirentFromStats('name', stats);
 
 			assert.strictEqual(actual.name, 'name');
 			assert.ok(!actual.isBlockDevice());
