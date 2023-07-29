@@ -1,13 +1,11 @@
 import * as path from 'path';
 
-import { Dirent, Stats } from '@nodelib/fs.macchiato';
+import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
 
 import { Entry } from '../../types';
 
 class EntryBuilder {
-	private _isFile: boolean = true;
-	private _isDirectory: boolean = false;
-	private _isSymbolicLink: boolean = false;
+	private _entryType: DirentType = DirentType.Unknown;
 
 	private readonly _entry: Entry = {
 		name: '',
@@ -23,21 +21,19 @@ class EntryBuilder {
 	}
 
 	public file(): this {
-		this._isFile = true;
-		this._isDirectory = false;
+		this._entryType = DirentType.File;
 
 		return this;
 	}
 
 	public directory(): this {
-		this._isDirectory = true;
-		this._isFile = false;
+		this._entryType = DirentType.Directory;
 
 		return this;
 	}
 
 	public symlink(): this {
-		this._isSymbolicLink = true;
+		this._entryType = DirentType.Link;
 
 		return this;
 	}
@@ -49,12 +45,7 @@ class EntryBuilder {
 	}
 
 	public build(): Entry {
-		this._entry.dirent = new Dirent({
-			name: this._entry.name,
-			isFile: this._isFile,
-			isDirectory: this._isDirectory,
-			isSymbolicLink: this._isSymbolicLink
-		});
+		this._entry.dirent = new Dirent(this._entry.name, this._entryType);
 
 		return this._entry;
 	}
