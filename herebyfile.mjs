@@ -36,25 +36,25 @@ async function benchTask(suite, label, pattern, implementations = []) {
 function makeBenchSuiteTask(type, label, suite, implementations = []) {
 	const asyncFlattenTask = task({
 		name: `bench:${type}:${label}:flatten`,
-		run: () => benchTask(suite, 'async', FLATTEN_PATTERN, implementations)
+		run: () => benchTask(suite, label, FLATTEN_PATTERN, implementations)
 	});
 
 	const asyncDeepTask = task({
 		name: `bench:${type}:${label}:deep`,
 		dependencies: CONCURRENCY ? [] : [asyncFlattenTask],
-		run: () => benchTask(suite, 'async', DEEP_PATTERN, implementations)
+		run: () => benchTask(suite, label, DEEP_PATTERN, implementations)
 	});
 
 	const asyncPartialFlattenTask = task({
 		name: `bench:${type}:${label}:partial_flatten`,
 		dependencies: CONCURRENCY ? [] : [asyncDeepTask],
-		run: () => benchTask(suite, 'async', PARTIAL_FLATTEN_PATTERN, implementations)
+		run: () => benchTask(suite, label, PARTIAL_FLATTEN_PATTERN, implementations)
 	});
 
 	const asyncPartialDeepTask = task({
 		name: `bench:${type}:${label}:partial_deep`,
 		dependencies: CONCURRENCY ? [] : [asyncPartialFlattenTask],
-		run: () => benchTask(suite, 'async', PARTIAL_DEEP_PATTERN, implementations)
+		run: () => benchTask(suite, label, PARTIAL_DEEP_PATTERN, implementations)
 	});
 
 	return task({
