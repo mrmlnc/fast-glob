@@ -24,6 +24,7 @@ export default class EntryTransformer {
 
 		if (this.#settings.absolute) {
 			filepath = utils.path.makeAbsolute(this.#settings.cwd, filepath);
+			filepath = utils.string.flattenHeavilyConcatenatedString(filepath);
 		}
 
 		if (this.#settings.markDirectories && entry.dirent.isDirectory()) {
