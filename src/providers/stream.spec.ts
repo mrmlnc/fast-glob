@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { PassThrough } from 'stream';
+import { PassThrough, Readable } from 'stream';
 
 import * as sinon from 'sinon';
 
@@ -27,6 +27,7 @@ function getProvider(options?: Options): TestProvider {
 }
 
 function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
+	// Replace by PassThrough.from after when targeting Node.js 12+.
 	const reader = new PassThrough({ objectMode: true });
 
 	provider.reader.dynamic.returns(reader);
@@ -35,14 +36,18 @@ function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<E
 	reader.push(entry);
 	reader.push(null);
 
+	const stream = provider.read(task);
+
+	return waitStreamEnd(stream);
+}
+
+function waitStreamEnd(stream: Readable): Promise<EntryItem[]> {
 	return new Promise((resolve, reject) => {
 		const items: EntryItem[] = [];
 
-		const api = provider.read(task);
-
-		api.on('data', (item: EntryItem) => items.push(item));
-		api.once('error', reject);
-		api.once('end', () => resolve(items));
+		stream.on('data', (item: EntryItem) => items.push(item));
+		stream.once('error', reject);
+		stream.once('end', () => resolve(items));
 	});
 }
 
@@ -117,6 +122,86 @@ describe('Providers → ProviderStream', () => {
 			});
 
 			actual.emit('close');
+		});
+	});
+
+	describe('includePatternBaseDirectory', () => {
+		it('should return base pattern directory', async () => {
+			const provider = getProvider({
+				onlyFiles: false,
+				includePatternBaseDirectory: true
+			});
+			const task = tests.task.builder().base('root').positive('*').build();
+			const baseEntry = tests.entry.builder().path('root').directory().build();
+			const fileEntry = tests.entry.builder().path('root/file.txt').file().build();
+
+			// Replace by PassThrough.from after when targeting Node.js 12+.
+			const staticReaderStream = new PassThrough({ objectMode: true });
+			const dynamicReaderStream = new PassThrough({ objectMode: true });
+
+			provider.reader.static.returns(staticReaderStream);
+			provider.reader.dynamic.returns(dynamicReaderStream);
+
+			staticReaderStream.push(baseEntry);
+			staticReaderStream.push(null);
+			dynamicReaderStream.push(fileEntry);
+			dynamicReaderStream.push(null);
+
+			const expected = ['root', 'root/file.txt'];
+
+			const actual = await waitStreamEnd(provider.read(task));
+
+			assert.strictEqual(provider.reader.static.callCount, 1);
+			assert.strictEqual(provider.reader.dynamic.callCount, 1);
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should do not read base directory for static task', async () => {
+			const provider = getProvider({
+				onlyFiles: false,
+				includePatternBaseDirectory: true
+			});
+			const task = tests.task.builder().base('root').positive('file.txt').static().build();
+			const baseEntry = tests.entry.builder().path('root/file.txt').directory().build();
+
+			// Replace by PassThrough.from after when targeting Node.js 12+.
+			const staticReaderStream = new PassThrough({ objectMode: true });
+			const dynamicReaderStream = new PassThrough({ objectMode: true });
+
+			provider.reader.static.returns(staticReaderStream);
+			provider.reader.dynamic.returns(dynamicReaderStream);
+
+			staticReaderStream.push(baseEntry);
+			staticReaderStream.push(null);
+			dynamicReaderStream.push(null);
+
+			await waitStreamEnd(provider.read(task));
+
+			assert.strictEqual(provider.reader.static.callCount, 1);
+		});
+
+		it('should do not read base directory when it is a dot', async () => {
+			const provider = getProvider({
+				onlyFiles: false,
+				includePatternBaseDirectory: true
+			});
+			const task = tests.task.builder().base('.').positive('*').build();
+			const baseEntry = tests.entry.builder().path('.').directory().build();
+
+			// Replace by PassThrough.from after when targeting Node.js 12+.
+			const staticReaderStream = new PassThrough({ objectMode: true });
+			const dynamicReaderStream = new PassThrough({ objectMode: true });
+
+			provider.reader.static.returns(staticReaderStream);
+			provider.reader.dynamic.returns(dynamicReaderStream);
+
+			staticReaderStream.push(baseEntry);
+			staticReaderStream.push(null);
+			dynamicReaderStream.push(null);
+
+			await waitStreamEnd(provider.read(task));
+
+			assert.strictEqual(provider.reader.static.callCount, 0);
 		});
 	});
 });

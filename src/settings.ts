@@ -152,6 +152,12 @@ export type Options = {
 	 * @default true
 	 */
 	unique?: boolean;
+	/**
+	 * Include the base directory of the pattern in the results.
+	 *
+	 * @default false
+	 */
+	includePatternBaseDirectory?: boolean;
 };
 
 export default class Settings {
@@ -176,10 +182,15 @@ export default class Settings {
 	public readonly suppressErrors: boolean = this._getValue(this._options.suppressErrors, false);
 	public readonly throwErrorOnBrokenSymbolicLink: boolean = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, false);
 	public readonly unique: boolean = this._getValue(this._options.unique, true);
+	public readonly includePatternBaseDirectory: boolean = this._getValue(this._options.includePatternBaseDirectory, false);
 
 	constructor(private readonly _options: Options = {}) {
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;
+		}
+
+		if (this.onlyFiles) {
+			this.includePatternBaseDirectory = false;
 		}
 
 		if (this.stats) {

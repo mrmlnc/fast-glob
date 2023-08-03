@@ -12,21 +12,49 @@ export default class ProviderStream extends Provider<Readable> {
 		const root = this._getRootDirectory(task);
 		const options = this._getReaderOptions(task);
 
-		const source = this.api(root, task, options);
+		const baseDirectoryStream = this._getBasePatternDirectoryStream(task, options);
+		const taskStream = this._getTaskStream(root, task, options);
 		const destination = new Readable({ objectMode: true, read: () => { /* noop */ } });
 
-		source
+		if (baseDirectoryStream !== null) {
+			// Do not terminate the destination stream because stream with tasks will emit entries.
+			baseDirectoryStream
+				.once('error', (error: ErrnoException) => destination.emit('error', error))
+				.on('data', (entry: Entry) => destination.emit('data', options.transform(entry)));
+		}
+
+		taskStream
 			.once('error', (error: ErrnoException) => destination.emit('error', error))
 			.on('data', (entry: Entry) => destination.emit('data', options.transform(entry)))
 			.once('end', () => destination.emit('end'));
 
-		destination
-			.once('close', () => source.destroy());
+		destination.once('close', () => {
+			if (baseDirectoryStream !== null) {
+				baseDirectoryStream.destroy();
+			}
+
+			taskStream.destroy();
+		});
 
 		return destination;
 	}
 
-	public api(root: string, task: Task, options: ReaderOptions): Readable {
+	private _getBasePatternDirectoryStream(task: Task, options: ReaderOptions): Readable | null {
+		/**
+		 * Currently, the micromatch package cannot match the input string `.` when the '**' pattern is used.
+		 */
+		if (task.base === '.') {
+			return null;
+		}
+
+		if (task.dynamic && this._settings.includePatternBaseDirectory) {
+			return this._reader.static([task.base], options);
+		}
+
+		return null;
+	}
+
+	private _getTaskStream(root: string, task: Task, options: ReaderOptions): Readable {
 		if (task.dynamic) {
 			return this._reader.dynamic(root, options);
 		}

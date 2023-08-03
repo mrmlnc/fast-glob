@@ -43,6 +43,7 @@ This package provides methods for traversing the file system and returning pathn
     * [onlyFiles](#onlyfiles)
     * [stats](#stats)
     * [unique](#unique)
+	* [includePatternBaseDirectory](#includepatternbasedirectory)
   * [Matching control](#matching-control)
     * [braceExpansion](#braceexpansion)
     * [caseSensitiveMatch](#casesensitivematch)
@@ -536,6 +537,22 @@ fg.sync(['*.json', 'package.json'], { unique: true });  // ['package.json']
 ```
 
 If `true` and similar entries are found, the result is the first found.
+
+#### includePatternBaseDirectory
+
+* Type: `boolean`
+* Default: `false`
+
+Include the base directory of the pattern in the results.
+
+> :book: If the base directory of the pattern is `.`, it will not be included in the results.
+>
+> :book: If the [`onlyFiles`](#onlyfiles) is enabled, then this option is automatically `false`.
+
+```js
+fg.sync(['fixtures/**'], { includePatternBaseDirectory: false }); // Entries from directory
+fg.sync(['fixtures/**'], { includePatternBaseDirectory: true }); // `fixtures` + entries from directory
+```
 
 ### Matching control
 

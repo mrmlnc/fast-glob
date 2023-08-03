@@ -62,5 +62,58 @@ describe('Providers → ProviderSync', () => {
 			assert.strictEqual(provider.reader.static.callCount, 1);
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		describe('includePatternBaseDirectory', () => {
+			it('should return base pattern directory', () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+				const task = tests.task.builder().base('root').positive('*').build();
+				const baseEntry = tests.entry.builder().path('root').directory().build();
+				const fileEntry = tests.entry.builder().path('root/file.txt').file().build();
+
+				provider.reader.static.returns([baseEntry]);
+				provider.reader.dynamic.returns([fileEntry]);
+
+				const expected = ['root', 'root/file.txt'];
+
+				const actual = provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 1);
+				assert.strictEqual(provider.reader.dynamic.callCount, 1);
+				assert.deepStrictEqual(actual, expected);
+			});
+
+			it('should do not read base directory for static task', () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+
+				const task = tests.task.builder().base('root').positive('file.txt').static().build();
+
+				provider.reader.static.returns([]);
+
+				provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 1);
+			});
+
+			it('should do not read base directory when it is a dot', () => {
+				const provider = getProvider({
+					onlyFiles: false,
+					includePatternBaseDirectory: true
+				});
+				const task = tests.task.builder().base('.').positive('*').build();
+
+				provider.reader.static.returns([]);
+				provider.reader.dynamic.returns([]);
+
+				provider.read(task);
+
+				assert.strictEqual(provider.reader.static.callCount, 0);
+			});
+		});
 	});
 });

@@ -26,6 +26,7 @@ describe('Settings', () => {
 		assert.ok(settings.globstar);
 		assert.ok(settings.onlyFiles);
 		assert.ok(settings.unique);
+		assert.ok(!settings.includePatternBaseDirectory);
 		assert.strictEqual(settings.concurrency, os.cpus().length);
 		assert.strictEqual(settings.cwd, process.cwd());
 	});
@@ -38,16 +39,27 @@ describe('Settings', () => {
 		assert.ok(!settings.onlyFiles);
 	});
 
-	it('should set the "onlyFiles" option when the "onlyDirectories" is enabled', () => {
+	it('should set the "onlyFiles" option when the "onlyDirectories" option is enabled', () => {
 		const settings = new Settings({
-			onlyDirectories: true
+			onlyDirectories: true,
+			onlyFiles: true
 		});
 
 		assert.ok(!settings.onlyFiles);
 		assert.ok(settings.onlyDirectories);
 	});
 
-	it('should set the "objectMode" option when the "stats" is enabled', () => {
+	it('should disable the "includePatternBaseDirectory" option when the "onlyFiles" option is enabled', () => {
+		const settings = new Settings({
+			onlyFiles: true,
+			includePatternBaseDirectory: true
+		});
+
+		assert.ok(settings.onlyFiles);
+		assert.ok(!settings.includePatternBaseDirectory);
+	});
+
+	it('should set the "objectMode" option when the "stats" option is enabled', () => {
 		const settings = new Settings({
 			stats: true
 		});
