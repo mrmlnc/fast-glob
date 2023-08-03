@@ -1,10 +1,9 @@
-import * as fs from 'fs';
 import * as path from 'path';
 
 import * as fsStat from '@nodelib/fs.stat';
 
 import Settings from '../settings';
-import { Entry, ErrnoException, Pattern, ReaderOptions } from '../types';
+import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import * as utils from '../utils';
 
 export default abstract class Reader<T> {
@@ -23,7 +22,7 @@ export default abstract class Reader<T> {
 		return path.resolve(this._settings.cwd, filepath);
 	}
 
-	protected _makeEntry(stats: fs.Stats, pattern: Pattern): Entry {
+	protected _makeEntry(stats: FsStats, pattern: Pattern): Entry {
 		const entry: Entry = {
 			name: pattern,
 			path: pattern,

@@ -1,11 +1,10 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings, { Options } from '../settings';
-import { Entry, Pattern } from '../types';
+import { Entry, FsStats, Pattern } from '../types';
 import Reader from './reader';
 
 class TestReader extends Reader<never[]> {
@@ -25,7 +24,7 @@ class TestReader extends Reader<never[]> {
 		return this._getFullEntryPath(filepath);
 	}
 
-	public makeEntry(stats: fs.Stats, pattern: Pattern): Entry {
+	public makeEntry(stats: FsStats, pattern: Pattern): Entry {
 		return this._makeEntry(stats, pattern);
 	}
 }

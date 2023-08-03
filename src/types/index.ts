@@ -1,7 +1,10 @@
+import * as fs from 'fs';
 import * as fsWalk from '@nodelib/fs.walk';
 
 export type ErrnoException = NodeJS.ErrnoException;
 
+export type FsDirent = fs.Dirent;
+export type FsStats = fs.Stats;
 export type Entry = fsWalk.Entry;
 export type EntryItem = string | Entry;
 
