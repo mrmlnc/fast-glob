@@ -34,10 +34,10 @@ export function importFdir(): Promise<typeof import('fdir')> {
 	return import('fdir');
 }
 
-export async function importAndMeasure<T>(func: () => Promise<T>): Promise<T> {
+export async function importAndMeasure<T>(function_: () => Promise<T>): Promise<T> {
 	const start = timeStart();
 
-	const result = await func();
+	const result = await function_();
 
 	const time = timeEnd(start);
 

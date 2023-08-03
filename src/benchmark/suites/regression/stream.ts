@@ -34,13 +34,13 @@ class Glob {
 		await this._measure(() => glob.stream(this._pattern, this._options));
 	}
 
-	private async _measure(func: GlobImplFunction): Promise<void> {
+	private async _measure(function_: GlobImplFunction): Promise<void> {
 		const entries: string[] = [];
 
 		const timeStart = utils.timeStart();
 
 		await new Promise<void>((resolve, reject) => {
-			const stream = func();
+			const stream = function_();
 
 			stream.once('error', (error) => {
 				reject(error);
