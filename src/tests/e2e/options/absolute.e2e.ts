@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import * as runner from '../runner';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+const CWD = process.cwd().replaceAll('\\', '/');
 
 function resultTransform(item: string): string {
 	return item.replace(CWD, '<root>');

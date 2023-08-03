@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as runner from '../runner';
 import * as utils from '../..';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+const CWD = process.cwd().replaceAll('\\', '/');
 const ROOT = path.parse(CWD).root;
 
 function getRootEntries(root: string, withBase: boolean = false): string[] {

@@ -213,5 +213,5 @@ export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
  * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
  */
 export function removeDuplicateSlashes(pattern: string): string {
-	return pattern.replace(DOUBLE_SLASH_RE, '/');
+	return pattern.replaceAll(DOUBLE_SLASH_RE, '/');
 }

@@ -6,7 +6,7 @@ import * as fg from '../..';
 
 import type { Pattern } from '../../types';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+const CWD = process.cwd().replaceAll('\\', '/');
 
 type TransformFunction = (entry: string) => string;
 
