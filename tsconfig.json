@@ -1,38 +1,30 @@
 {
 	"compilerOptions": {
-		"target": "es2017",
-		"lib": ["es2017", "ES2021.String"],
+		"target": "ES2022",
+		"lib": ["ES2022"],
 		"module": "commonjs",
 		"moduleResolution": "node",
+		"resolveJsonModule": true,
 
 		"rootDir": "src",
 		"outDir": "out",
 
 		"strict": true,
 		"noImplicitOverride": true,
-		"alwaysStrict": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": true,
-		"noPropertyAccessFromIndexSignature": true,
-
-		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": true,
 		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"noFallthroughCasesInSwitch": true,
 
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": false,
+
 		"downlevelIteration": true,
 		"declaration": true,
-
-		"pretty": true
-	},
-	"include": [
-		"typings",
-		"src/**/*"
-	]
+		"newLine": "lf",
+		"stripInternal": true
+	}
 }

@@ -3,10 +3,11 @@ import * as assert from 'node:assert';
 import { Stats } from '@nodelib/fs.macchiato';
 import * as sinon from 'sinon';
 
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ReaderStream from './stream';
 
+import type { Options } from '../settings';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';

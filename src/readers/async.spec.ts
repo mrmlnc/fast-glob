@@ -3,11 +3,12 @@ import { PassThrough } from 'node:stream';
 
 import * as sinon from 'sinon';
 
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ReaderAsync from './async';
 import ReaderStream from './stream';
 
+import type { Options } from '../settings';
 import type { ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 

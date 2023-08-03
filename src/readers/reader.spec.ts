@@ -3,9 +3,10 @@ import * as path from 'node:path';
 
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import Reader from './reader';
 
+import type { Options } from '../settings';
 import type { Entry, FsStats, Pattern } from '../types';
 
 class TestReader extends Reader<never[]> {

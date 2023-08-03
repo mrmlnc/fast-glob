@@ -9,15 +9,21 @@ type GlobImplementation = 'fast-glob' | 'node-glob';
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
 class Glob {
-	constructor(private readonly _cwd: string, private readonly _pattern: string) {}
+	readonly #cwd: string;
+	readonly #pattern: string;
+
+	constructor(cwd: string, pattern: string) {
+		this.#cwd = cwd;
+		this.#pattern = pattern;
+	}
 
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
 		const entries: string[] = [];
 
-		const stream = glob.globStream(this._pattern, {
-			cwd: this._cwd,
+		const stream = glob.globStream(this.#pattern, {
+			cwd: this.#cwd,
 			nodir: true,
 		});
 
@@ -31,7 +37,7 @@ class Glob {
 			});
 		});
 
-		await this._measure(() => action);
+		await this.#measure(() => action);
 	}
 
 	public async measureFastGlob(): Promise<void> {
@@ -39,8 +45,8 @@ class Glob {
 
 		const entries: string[] = [];
 
-		const stream = glob.stream(this._pattern, {
-			cwd: this._cwd,
+		const stream = glob.stream(this.#pattern, {
+			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,
 			concurrency: Number.POSITIVE_INFINITY,
@@ -56,10 +62,10 @@ class Glob {
 			});
 		});
 
-		await this._measure(() => action);
+		await this.#measure(() => action);
 	}
 
-	private async _measure(function_: GlobImplFunction): Promise<void> {
+	async #measure(function_: GlobImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
 		const matches = await function_();

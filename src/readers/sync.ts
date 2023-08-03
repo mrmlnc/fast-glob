@@ -18,7 +18,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 
 		for (const pattern of patterns) {
 			const filepath = this._getFullEntryPath(pattern);
-			const entry = this._getEntry(filepath, pattern, options);
+			const entry = this.#getEntry(filepath, pattern, options);
 
 			if (entry === null || !options.entryFilter(entry)) {
 				continue;
@@ -30,9 +30,9 @@ export default class ReaderSync extends Reader<Entry[]> {
 		return entries;
 	}
 
-	private _getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Entry | null {
+	#getEntry(filepath: string, pattern: Pattern, options: ReaderOptions): Entry | null {
 		try {
-			const stats = this._getStat(filepath);
+			const stats = this.#getStat(filepath);
 
 			return this._makeEntry(stats, pattern);
 		} catch (error) {
@@ -44,7 +44,7 @@ export default class ReaderSync extends Reader<Entry[]> {
 		}
 	}
 
-	private _getStat(filepath: string): FsStats {
+	#getStat(filepath: string): FsStats {
 		return this._statSync(filepath, this._fsStatSettings);
 	}
 }

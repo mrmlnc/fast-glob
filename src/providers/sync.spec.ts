@@ -3,9 +3,11 @@ import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 
 import ReaderSync from '../readers/sync';
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ProviderSync from './sync';
+
+import type { Options } from '../settings';
 
 class TestProvider extends ProviderSync {
 	protected override _reader: ReaderSync = sinon.createStubInstance(ReaderSync) as unknown as ReaderSync;
