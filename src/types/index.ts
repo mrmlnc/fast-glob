@@ -13,7 +13,7 @@ export type PatternRe = RegExp;
 export type PatternsGroup = Record<string, Pattern[]>;
 
 export type ReaderOptions = fsWalk.Options & {
-	transform(entry: Entry): EntryItem;
+	transform: (entry: Entry) => EntryItem;
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	errorFilter: ErrorFilterFunction;
