@@ -1,9 +1,10 @@
-import * as path from 'path';
+import * as path from 'node:path';
+
 import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'node-glob' | 'fast-glob' | 'fdir';
+type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
@@ -15,7 +16,7 @@ class Glob {
 
 		await this._measure(() => glob.glob(this._pattern, {
 			cwd: this._cwd,
-			nodir: true
+			nodir: true,
 		}));
 	}
 
@@ -26,7 +27,7 @@ class Glob {
 			cwd: this._cwd,
 			unique: false,
 			followSymbolicLinks: false,
-			concurrency: Number.POSITIVE_INFINITY
+			concurrency: Number.POSITIVE_INFINITY,
 		}));
 	}
 
@@ -43,10 +44,10 @@ class Glob {
 		await this._measure(() => fdir.withPromise());
 	}
 
-	private async _measure(func: GlobImplFunction): Promise<void> {
+	private async _measure(function_: GlobImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
-		const matches = await func();
+		const matches = await function_();
 
 		const count = matches.length;
 		const memory = utils.getMemory();
@@ -69,19 +70,23 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
-		case 'node-glob':
+		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
+		}
 
-		case 'fast-glob':
+		case 'fast-glob': {
 			await glob.measureFastGlob();
 			break;
+		}
 
-		case 'fdir':
+		case 'fdir': {
 			await glob.measureFdir();
 			break;
+		}
 
-		default:
-			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		default: {
+			throw new TypeError('Unknown glob implementation.');
+		}
 	}
 })();

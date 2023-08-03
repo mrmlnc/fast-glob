@@ -1,23 +1,24 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
-import { Pattern, MicromatchOptions } from '../../types';
 import Settings from '../../settings';
 import Matcher from './partial';
+
+import type { Pattern, MicromatchOptions } from '../../types';
 
 function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Matcher {
 	return new Matcher(patterns, new Settings(), options);
 }
 
-function assertMatch(patterns: Pattern[], filepath: string): void | never {
+function assertMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns}`);
+	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns.join(', ')}`);
 }
 
-function assertNotMatch(patterns: Pattern[], filepath: string): void | never {
+function assertNotMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns}`);
+	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns.join(', ')}`);
 }
 
 describe('Providers → Matchers → Partial', () => {

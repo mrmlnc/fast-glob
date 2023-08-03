@@ -1,33 +1,35 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
+
 import * as snapshotIt from 'snap-shot-it';
 
-import { Pattern } from '../../types';
 import * as fg from '../..';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+import type { Pattern } from '../../types';
+
+const CWD = process.cwd().replaceAll('\\', '/');
 
 type TransformFunction = (entry: string) => string;
 
-type Suite = {
+interface Suite {
 	tests: Test[] | Test[][];
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: fg.Options | boolean;
 	/**
 	 * The ability to conditionally run the test.
 	 */
 	condition?: () => boolean;
 	resultTransform?: TransformFunction;
-};
+}
 
-type Test = {
+interface Test {
 	pattern: Pattern | Pattern[];
 	options?: fg.Options;
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: fg.Options | boolean;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -36,11 +38,11 @@ type Test = {
 	/**
 	 * The issue related to this test.
 	 */
-	issue?: number | number[];
+	issue?: number[] | number;
 	expected?: () => string[];
-};
+}
 
-type MochaDefinition = Mocha.TestFunction | Mocha.ExclusiveTestFunction;
+type MochaDefinition = Mocha.ExclusiveTestFunction | Mocha.TestFunction;
 
 export function suite(name: string, suite: Suite): void {
 	describe(name, () => {
@@ -93,15 +95,15 @@ function getTestTitle(test: Test): string {
 	// Replacing placeholders to hide absolute paths from snapshots.
 	const replacements = {
 		cwd: test.options?.cwd?.replace(CWD, '<root>'),
-		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>'))
+		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>')),
 	};
 
 	return JSON.stringify({
 		pattern: test.pattern,
 		options: {
 			...test.options,
-			...replacements
-		}
+			...replacements,
+		},
 	});
 }
 
@@ -201,7 +203,7 @@ function debug(current: string[], suite: Suite, test: Test): void {
 		console.dir({
 			current,
 			suite: { debug: suite.debug },
-			test: { debug: test.debug, options: test.options }
+			test: { debug: test.debug, options: test.options },
 		}, { colors: true });
 	}
 }

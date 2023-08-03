@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import * as stream from 'stream';
+import * as assert from 'node:assert';
+import * as stream from 'node:stream';
 
 import * as util from './stream';
 

@@ -1,6 +1,6 @@
-import { Readable } from 'stream';
-
 import * as merge2 from 'merge2';
+
+import type { Readable } from 'node:stream';
 
 export function merge(streams: Readable[]): NodeJS.ReadableStream {
 	const mergedStream = merge2(streams);
@@ -9,8 +9,12 @@ export function merge(streams: Readable[]): NodeJS.ReadableStream {
 		stream.once('error', (error) => mergedStream.emit('error', error));
 	});
 
-	mergedStream.once('close', () => propagateCloseEventToSources(streams));
-	mergedStream.once('end', () => propagateCloseEventToSources(streams));
+	mergedStream.once('close', () => {
+		propagateCloseEventToSources(streams);
+	});
+	mergedStream.once('end', () => {
+		propagateCloseEventToSources(streams);
+	});
 
 	return mergedStream;
 }

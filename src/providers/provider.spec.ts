@@ -1,14 +1,16 @@
-import * as assert from 'assert';
-import * as path from 'path';
+import * as assert from 'node:assert';
+import * as path from 'node:path';
 
-import { Task } from '../managers/tasks';
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
-import { MicromatchOptions, ReaderOptions } from '../types';
 import Provider from './provider';
 
-export class TestProvider extends Provider<Array<{}>> {
-	public read(): Array<{}> {
+import type { Task } from '../managers/tasks';
+import type { Options } from '../settings';
+import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types';
+
+class TestProvider extends Provider<Dictionary[]> {
+	public read(): Dictionary[] {
 		return [];
 	}
 
@@ -25,7 +27,7 @@ export class TestProvider extends Provider<Array<{}>> {
 	}
 }
 
-export function getProvider(options?: Options): TestProvider {
+function getProvider(options?: Options): TestProvider {
 	const settings = new Settings(options);
 
 	return new TestProvider(settings);
@@ -106,7 +108,7 @@ describe('Providers → Provider', () => {
 				noext: false,
 				noglobstar: false,
 				posix: true,
-				strictSlashes: false
+				strictSlashes: false,
 			};
 
 			const actual = provider.getMicromatchOptions();

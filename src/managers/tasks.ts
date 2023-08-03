@@ -1,14 +1,15 @@
-import Settings from '../settings';
-import { Pattern, PatternsGroup } from '../types';
 import * as utils from '../utils';
 
-export type Task = {
+import type Settings from '../settings';
+import type { Pattern, PatternsGroup } from '../types';
+
+export interface Task {
 	base: string;
 	dynamic: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
-};
+}
 
 export function generate(input: Pattern[], settings: Settings): Task[] {
 	const patterns = processPatterns(input, settings);
@@ -94,7 +95,7 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
 	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
-	const positive = negative.map(utils.pattern.convertToPositivePattern);
+	const positive = negative.map((pattern) => utils.pattern.convertToPositivePattern(pattern));
 
 	return positive;
 }
@@ -127,6 +128,6 @@ export function convertPatternGroupToTask(base: string, positive: Pattern[], neg
 		positive,
 		negative,
 		base,
-		patterns: ([] as Pattern[]).concat(positive, negative.map(utils.pattern.convertToNegativePattern))
+		patterns: ([] as Pattern[]).concat(positive, negative.map((pattern) => utils.pattern.convertToNegativePattern(pattern))),
 	};
 }

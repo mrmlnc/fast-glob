@@ -1,11 +1,12 @@
-import { Pattern, MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
-import { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
+
+import type { Pattern, MicromatchOptions } from '../../types';
+import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
 
 class PatternSegmentBuilder {
 	private readonly _segment: PatternSegment = {
 		dynamic: false,
-		pattern: ''
+		pattern: '',
 	};
 
 	public dynamic(): this {
@@ -27,7 +28,7 @@ class PatternSegmentBuilder {
 
 		return {
 			...this._segment,
-			patternRe: utils.pattern.makeRe(this._segment.pattern, options)
+			patternRe: utils.pattern.makeRe(this._segment.pattern, options),
 		};
 	}
 }
@@ -37,7 +38,7 @@ class PatternInfoBuilder {
 		complete: true,
 		pattern: '',
 		segments: [],
-		sections: []
+		sections: [],
 	};
 
 	public section(...segments: PatternSegment[]): this {
@@ -59,7 +60,7 @@ class PatternInfoBuilder {
 	public build(): PatternInfo {
 		return {
 			...this._section,
-			pattern: this._buildPattern()
+			pattern: this._buildPattern(),
 		};
 	}
 

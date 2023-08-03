@@ -1,9 +1,9 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';
 
-import { MicromatchOptions, Pattern, PatternRe } from '../types';
+import type { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -20,11 +20,11 @@ const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
  */
 const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
 
-type PatternTypeOptions = {
+interface PatternTypeOptions {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
-};
+}
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
@@ -86,7 +86,7 @@ export function convertToPositivePattern(pattern: Pattern): Pattern {
 }
 
 export function convertToNegativePattern(pattern: Pattern): Pattern {
-	return '!' + pattern;
+	return `!${pattern}`;
 }
 
 export function isNegativePattern(pattern: Pattern): boolean {
@@ -98,11 +98,11 @@ export function isPositivePattern(pattern: Pattern): boolean {
 }
 
 export function getNegativePatterns(patterns: Pattern[]): Pattern[] {
-	return patterns.filter(isNegativePattern);
+	return patterns.filter((pattern) => isNegativePattern(pattern));
 }
 
 export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
-	return patterns.filter(isPositivePattern);
+	return patterns.filter((pattern) => isPositivePattern(pattern));
 }
 
 /**
@@ -124,7 +124,7 @@ export function getPatternsInsideCurrentDirectory(patterns: Pattern[]): Pattern[
  * getPatternsInsideCurrentDirectory(['./*', '*', 'a/*', '../*', './../*'])
  */
 export function getPatternsOutsideCurrentDirectory(patterns: Pattern[]): Pattern[] {
-	return patterns.filter(isPatternRelatedToParentDirectory);
+	return patterns.filter((pattern) => isPatternRelatedToParentDirectory(pattern));
 }
 
 export function isPatternRelatedToParentDirectory(pattern: Pattern): boolean {
@@ -140,7 +140,7 @@ export function hasGlobStar(pattern: Pattern): boolean {
 }
 
 export function endsWithSlashGlobStar(pattern: Pattern): boolean {
-	return pattern.endsWith('/' + GLOBSTAR);
+	return pattern.endsWith(`/${GLOBSTAR}`);
 }
 
 export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
@@ -150,9 +150,9 @@ export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 }
 
 export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
-	return patterns.reduce((collection, pattern) => {
+	return patterns.reduce<Pattern[]>((collection, pattern) => {
 		return collection.concat(expandBraceExpansion(pattern));
-	}, [] as Pattern[]);
+	}, []);
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
@@ -173,7 +173,7 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
 	let { parts } = micromatch.scan(pattern, {
 		...options,
-		parts: true
+		parts: true,
 	});
 
 	/**
@@ -213,5 +213,5 @@ export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
  * Because of this, we cannot use the standard `path.normalize` method, because on Windows platform it will use of backslashes.
  */
 export function removeDuplicateSlashes(pattern: string): string {
-	return pattern.replace(DOUBLE_SLASH_RE, '/');
+	return pattern.replaceAll(DOUBLE_SLASH_RE, '/');
 }

@@ -1,10 +1,12 @@
-import { PassThrough, Readable } from 'stream';
+import { PassThrough } from 'node:stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
+
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import type { Readable } from 'node:stream';
 
 export default class ReaderStream extends Reader<Readable> {
 	protected _walkStream: typeof fsWalk.walkStream = fsWalk.walkStream;
@@ -15,12 +17,12 @@ export default class ReaderStream extends Reader<Readable> {
 	}
 
 	public static(patterns: Pattern[], options: ReaderOptions): Readable {
-		const filepaths = patterns.map(this._getFullEntryPath, this);
+		const filepaths = patterns.map((pattern) => this._getFullEntryPath(pattern));
 
 		const stream = new PassThrough({ objectMode: true });
 
 		stream._write = (index: number, _enc, done) => {
-			return this._getEntry(filepaths[index], patterns[index], options)
+			this._getEntry(filepaths[index], patterns[index], options)
 				.then((entry) => {
 					if (entry !== null && options.entryFilter(entry)) {
 						stream.push(entry);
@@ -35,8 +37,8 @@ export default class ReaderStream extends Reader<Readable> {
 				.catch(done);
 		};
 
-		for (let i = 0; i < filepaths.length; i++) {
-			stream.write(i);
+		for (let index = 0; index < filepaths.length; index++) {
+			stream.write(index);
 		}
 
 		return stream;
@@ -57,7 +59,11 @@ export default class ReaderStream extends Reader<Readable> {
 	private _getStat(filepath: string): Promise<FsStats> {
 		return new Promise((resolve, reject) => {
 			this._stat(filepath, this._fsStatSettings, (error: NodeJS.ErrnoException | null, stats) => {
-				return error === null ? resolve(stats) : reject(error);
+				if (error === null) {
+					resolve(stats);
+				} else {
+					reject(error);
+				}
 			});
 		});
 	}

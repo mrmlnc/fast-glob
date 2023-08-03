@@ -1,10 +1,12 @@
-import { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+import { MicromatchOptions } from '../../types';
 import Settings from '../../settings';
 import * as utils from '../../utils';
 import PartialMatcher from '../matchers/partial';
 
+import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+
 export default class DeepFilter {
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
+	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const matcher = this._getMatcher(positive);
@@ -18,7 +20,7 @@ export default class DeepFilter {
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
-		const affectDepthOfReadingPatterns = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
+		const affectDepthOfReadingPatterns = patterns.filter((pattern) => utils.pattern.isAffectDepthOfReadingPattern(pattern));
 
 		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
 	}
@@ -45,7 +47,7 @@ export default class DeepFilter {
 		/**
 		 * Avoid unnecessary depth calculations when it doesn't matter.
 		 */
-		if (this._settings.deep === Infinity) {
+		if (this._settings.deep === Number.POSITIVE_INFINITY) {
 			return false;
 		}
 

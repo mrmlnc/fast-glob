@@ -1,12 +1,16 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 import * as tests from './tests';
-import { EntryItem, ErrnoException } from './types';
 import * as fg from '.';
+
+import type { EntryItem, ErrnoException } from './types';
+
+// Only for validating the input data.
+const invalidInputData = null as unknown as string;
 
 describe('Package', () => {
 	describe('.globSync', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.globSync, fg.sync);
 		});
 	});
@@ -15,8 +19,7 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.sync(null as any), { message });
+			assert.throws(() => fg.sync(invalidInputData), { message });
 			assert.throws(() => fg.sync(''), { message });
 		});
 
@@ -30,7 +33,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual = fg.sync(['fixtures/**/*.md']);
@@ -47,7 +50,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual = fg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
@@ -59,7 +62,7 @@ describe('Package', () => {
 	});
 
 	describe('.glob', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.glob, fg.async);
 		});
 	});
@@ -68,8 +71,7 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			await assert.rejects(() => fg(null as any), { message });
+			await assert.rejects(() => fg(invalidInputData), { message });
 			await assert.rejects(() => fg(''), { message });
 		});
 
@@ -83,7 +85,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual = await fg(['fixtures/**/*.md']);
@@ -100,7 +102,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual = await fg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
@@ -112,7 +114,7 @@ describe('Package', () => {
 	});
 
 	describe('.globStream', () => {
-		it('must be an alias for the .sync method', () => {
+		it('should be an alias for the .sync method', () => {
 			assert.strictEqual(fg.globStream, fg.stream);
 		});
 	});
@@ -121,8 +123,7 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.stream(null as any), { message });
+			assert.throws(() => fg.stream(invalidInputData), { message });
 			assert.throws(() => fg.stream(''), { message });
 		});
 
@@ -136,7 +137,7 @@ describe('Package', () => {
 				'fixtures/second/nested/directory/file.md',
 				'fixtures/second/nested/file.md',
 				'fixtures/third/library/a/book.md',
-				'fixtures/third/library/b/book.md'
+				'fixtures/third/library/b/book.md',
 			];
 
 			const actual: string[] = [];
@@ -160,7 +161,7 @@ describe('Package', () => {
 				'fixtures/first/nested/file.md',
 				'fixtures/second/file.md',
 				'fixtures/second/nested/directory/file.md',
-				'fixtures/second/nested/file.md'
+				'fixtures/second/nested/file.md',
 			];
 
 			const actual: string[] = [];
@@ -182,14 +183,13 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			assert.throws(() => fg.generateTasks(null as any), { message });
+			assert.throws(() => fg.generateTasks(invalidInputData), { message });
 			assert.throws(() => fg.generateTasks(''), { message });
 		});
 
 		it('should return tasks', () => {
 			const expected = [
-				tests.task.builder().base('.').positive('*').build()
+				tests.task.builder().base('.').positive('*').build(),
 			];
 
 			const actual = fg.generateTasks(['*']);
@@ -199,7 +199,7 @@ describe('Package', () => {
 
 		it('should return tasks with negative patterns', () => {
 			const expected = [
-				tests.task.builder().base('.').positive('*').negative('*.txt').negative('*.md').build()
+				tests.task.builder().base('.').positive('*').negative('*.txt').negative('*.md').build(),
 			];
 
 			const actual = fg.generateTasks(['*', '!*.txt'], { ignore: ['*.md'] });
@@ -210,7 +210,7 @@ describe('Package', () => {
 		it('should clean up patterns', () => {
 			const expected = [
 				// Clean up duplicate slashes
-				tests.task.builder().base('fixtures').positive('fixtures/*').build()
+				tests.task.builder().base('fixtures').positive('fixtures/*').build(),
 			];
 
 			const actual = fg.generateTasks(['fixtures//*']);

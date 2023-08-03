@@ -1,10 +1,10 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 
 import * as runner from '../runner';
 import * as utils from '../..';
 
-const CWD = process.cwd().replace(/\\/g, '/');
+const CWD = process.cwd().replaceAll('\\', '/');
 const ROOT = path.parse(CWD).root;
 
 function getRootEntries(root: string, withBase: boolean = false): string[] {
@@ -31,25 +31,25 @@ runner.suite('Patterns Root', {
 		{
 			pattern: '/*',
 			condition: () => !utils.platform.isWindows(),
-			expected: () => getRootEntries(ROOT, /** withBase */ true)
+			expected: () => getRootEntries(ROOT, /** withBase */ true),
 		},
 		{
 			pattern: '/tmp/*',
 			condition: () => !utils.platform.isWindows(),
-			expected: () => getRootEntries('/tmp', /** withBase */ true)
+			expected: () => getRootEntries('/tmp', /** withBase */ true),
 		},
 		{
 			pattern: '/*',
 			condition: () => utils.platform.isWindows(),
-			expected: () => getRootEntries('/', /** withBase */ true)
+			expected: () => getRootEntries('/', /** withBase */ true),
 		},
 		// UNC pattern without dynamic sections in the base section
 		{
 			pattern: `//?/${ROOT}*`,
 			condition: () => utils.platform.isWindows(),
-			expected: () => getRootEntries(`//?/${ROOT}`, /** withBase */ true)
-		}
-	]
+			expected: () => getRootEntries(`//?/${ROOT}`, /** withBase */ true),
+		},
+	],
 });
 
 runner.suite('Patterns Root (cwd)', {
@@ -57,19 +57,19 @@ runner.suite('Patterns Root (cwd)', {
 		{
 			pattern: '*',
 			options: {
-				cwd: ROOT
+				cwd: ROOT,
 			},
 			condition: () => !utils.platform.isWindows(),
-			expected: () => getRootEntries(ROOT)
+			expected: () => getRootEntries(ROOT),
 		},
 		// UNC on Windows
 		{
 			pattern: '*',
 			options: {
-				cwd: `//?/${ROOT}`
+				cwd: `//?/${ROOT}`,
 			},
 			condition: () => utils.platform.isWindows(),
-			expected: () => getRootEntries(`//?/${ROOT}`)
-		}
-	]
+			expected: () => getRootEntries(`//?/${ROOT}`),
+		},
+	],
 });

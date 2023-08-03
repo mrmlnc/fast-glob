@@ -1,17 +1,19 @@
 import * as taskManager from './managers/tasks';
 import ProviderAsync from './providers/async';
-import Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
-import Settings, { Options as OptionsInternal } from './settings';
-import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import Settings from './settings';
 import * as utils from './utils';
+
+import type { Options as OptionsInternal } from './settings';
+import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import type Provider from './providers/provider';
 
 type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 
-function FastGlob(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): Promise<EntryInternal[]>;
+function FastGlob(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
 function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<string[]>;
 async function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
@@ -23,8 +25,6 @@ async function FastGlob(source: PatternInternal | PatternInternal[], options?: O
 	return utils.array.flatten(result);
 }
 
-// https://github.com/typescript-eslint/typescript-eslint/issues/60
-// eslint-disable-next-line no-redeclare
 namespace FastGlob {
 	export type Options = OptionsInternal;
 	export type Entry = EntryInternal;
@@ -38,7 +38,7 @@ namespace FastGlob {
 
 	export const async = FastGlob;
 
-	export function sync(source: PatternInternal | PatternInternal[], options: OptionsInternal & EntryObjectPredicate): EntryInternal[];
+	export function sync(source: PatternInternal | PatternInternal[], options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): string[];
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
 		assertPatternsInput(source);
@@ -126,10 +126,10 @@ function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new
 	const tasks = taskManager.generate(patterns, settings);
 	const provider = new _Provider(settings);
 
-	return tasks.map(provider.read, provider);
+	return tasks.map((task) => provider.read(task));
 }
 
-function assertPatternsInput(input: unknown): void | never {
+function assertPatternsInput(input: unknown): never | void {
 	const source = ([] as unknown[]).concat(input);
 	const isValidSource = source.every((item) => utils.string.isString(item) && !utils.string.isEmpty(item));
 

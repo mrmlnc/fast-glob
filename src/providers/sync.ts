@@ -1,7 +1,8 @@
-import { Task } from '../managers/tasks';
 import ReaderSync from '../readers/sync';
-import { Entry, EntryItem, ReaderOptions } from '../types';
 import Provider from './provider';
+
+import type { Task } from '../managers/tasks';
+import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
 	protected _reader: ReaderSync = new ReaderSync(this._settings);
@@ -12,7 +13,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 
 		const entries = this.api(root, task, options);
 
-		return entries.map(options.transform);
+		return entries.map((entry) => options.transform(entry));
 	}
 
 	public api(root: string, task: Task, options: ReaderOptions): Entry[] {

@@ -1,7 +1,7 @@
-import * as os from 'os';
-import * as path from 'path';
+import * as os from 'node:os';
+import * as path from 'node:path';
 
-import { Pattern } from '../types';
+import type { Pattern } from '../types';
 
 const IS_WINDOWS_PLATFORM = os.platform() === 'win32';
 const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
@@ -10,13 +10,13 @@ const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
  * Posix: ()*?[\]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
  * Windows: (){}, !+@ before (, ! at the beginning.
  */
-const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
-const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([(){}]|^!|[!+@](?=\())/g;
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[(){}]|^!|[!+@](?=\())/g;
 /**
  * The device path (\\.\ or \\?\).
  * https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths
  */
-const DOS_DEVICE_PATH_RE = /^\\\\([.?])/;
+const DOS_DEVICE_PATH_RE = /^\\\\(?<path>[.?])/;
 /**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
@@ -28,7 +28,7 @@ const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@{}])/g;
  * Designed to work only with simple paths: `dir\\file`.
  */
 export function unixify(filepath: string): string {
-	return filepath.replace(/\\/g, '/');
+	return filepath.replaceAll('\\', '/');
 }
 
 export function makeAbsolute(cwd: string, filepath: string): string {
@@ -52,11 +52,11 @@ export function removeLeadingDotSegment(entry: string): string {
 export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
 
 export function escapeWindowsPath(pattern: Pattern): Pattern {
-	return pattern.replace(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }
 
 export function escapePosixPath(pattern: Pattern): Pattern {
-	return pattern.replace(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
 }
 
 export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPattern : convertPosixPathToPattern;
@@ -64,7 +64,7 @@ export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPa
 export function convertWindowsPathToPattern(filepath: string): Pattern {
 	return escapeWindowsPath(filepath)
 		.replace(DOS_DEVICE_PATH_RE, '//$1')
-		.replace(WINDOWS_BACKSLASHES_RE, '/');
+		.replaceAll(WINDOWS_BACKSLASHES_RE, '/');
 }
 
 export function convertPosixPathToPattern(filepath: string): Pattern {

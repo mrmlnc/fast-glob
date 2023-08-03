@@ -1,19 +1,20 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import * as fsStat from '@nodelib/fs.stat';
 
 import Settings from '../settings';
-import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import * as utils from '../utils';
+
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 
 export default abstract class Reader<T> {
 	protected readonly _fsStatSettings: fsStat.Settings = new fsStat.Settings({
 		followSymbolicLink: this._settings.followSymbolicLinks,
 		fs: this._settings.fs,
-		throwErrorOnBrokenSymbolicLink: this._settings.followSymbolicLinks
+		throwErrorOnBrokenSymbolicLink: this._settings.followSymbolicLinks,
 	});
 
-	constructor(protected readonly _settings: Settings) { }
+	constructor(protected readonly _settings: Settings) {}
 
 	public abstract dynamic(root: string, options: ReaderOptions): T;
 	public abstract static(patterns: Pattern[], options: ReaderOptions): T;
@@ -26,7 +27,7 @@ export default abstract class Reader<T> {
 		const entry: Entry = {
 			name: pattern,
 			path: pattern,
-			dirent: utils.fs.createDirentFromStats(pattern, stats)
+			dirent: utils.fs.createDirentFromStats(pattern, stats),
 		};
 
 		if (this._settings.stats) {

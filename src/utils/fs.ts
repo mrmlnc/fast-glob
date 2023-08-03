@@ -1,6 +1,8 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
-import type { FsDirent, FsStats } from '../types';
+import { FsStats } from '../types';
+
+import type { FsDirent } from '../types';
 
 const _kStats = Symbol('stats');
 

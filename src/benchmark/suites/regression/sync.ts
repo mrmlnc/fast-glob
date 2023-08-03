@@ -1,13 +1,14 @@
-import * as path from 'path';
+import * as path from 'node:path';
+
 import * as bencho from 'bencho';
 
 import * as fastGlobCurrent from '../../..';
-
 import * as utils from '../../utils';
 
-type GlobImplementation = 'previous' | 'current';
+type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];
+type GlobOptions = fastGlobCurrent.Options;
 
 class Glob {
 	private readonly _options: fastGlobCurrent.Options;
@@ -16,7 +17,7 @@ class Glob {
 		this._options = {
 			unique: false,
 			followSymbolicLinks: false,
-			...options
+			...options,
 		};
 	}
 
@@ -33,10 +34,10 @@ class Glob {
 		this._measure(() => glob.sync(this._pattern, this._options));
 	}
 
-	private _measure(func: GlobImplFunction): void {
+	private _measure(function_: GlobImplFunction): void {
 		const timeStart = utils.timeStart();
 
-		const matches = func();
+		const matches = function_();
 
 		const count = matches.length;
 		const memory = utils.getMemory();
@@ -55,23 +56,26 @@ class Glob {
 	const cwd = path.join(process.cwd(), args[0]);
 	const pattern = args[1];
 	const impl = args[2] as GlobImplementation;
-	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}');
+	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}') as GlobOptions;
 
 	const glob = new Glob(pattern, {
 		cwd,
-		...options
+		...options,
 	});
 
 	switch (impl) {
-		case 'current':
+		case 'current': {
 			await glob.measureCurrentVersion();
 			break;
+		}
 
-		case 'previous':
+		case 'previous': {
 			await glob.measurePreviousVersion();
 			break;
+		}
 
-		default:
-			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		default: {
+			throw new TypeError('Unknown glob implementation.');
+		}
 	}
 })();

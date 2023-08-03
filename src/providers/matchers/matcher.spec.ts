@@ -1,9 +1,11 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 import * as tests from '../../tests';
-import { Pattern, MicromatchOptions } from '../../types';
 import Settings from '../../settings';
-import Matcher, { PatternInfo } from './matcher';
+import Matcher from './matcher';
+
+import type { Pattern, MicromatchOptions } from '../../types';
+import type { PatternInfo } from './matcher';
 
 class TestMatcher extends Matcher {
 	public get storage(): PatternInfo[] {
@@ -27,7 +29,7 @@ describe('Providers → Matchers → Matcher', () => {
 				tests.pattern.info()
 					.section(tests.pattern.segment().pattern('a').build())
 					.section(tests.pattern.segment().pattern('b').build())
-					.build()
+					.build(),
 			];
 
 			const actual = matcher.storage;

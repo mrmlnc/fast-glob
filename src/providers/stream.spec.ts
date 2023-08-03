@@ -1,14 +1,15 @@
-import * as assert from 'assert';
-import { PassThrough } from 'stream';
+import * as assert from 'node:assert';
+import { PassThrough } from 'node:stream';
 
 import * as sinon from 'sinon';
 
-import { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import { Entry, EntryItem, ErrnoException } from '../types';
 import ProviderStream from './stream';
+
+import type { Entry, EntryItem, ErrnoException } from '../types';
+import type { Task } from '../managers/tasks';
 
 class TestProvider extends ProviderStream {
 	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
@@ -42,7 +43,9 @@ function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<E
 
 		api.on('data', (item: EntryItem) => items.push(item));
 		api.once('error', reject);
-		api.once('end', () => resolve(items));
+		api.once('end', () => {
+			resolve(items);
+		});
 	});
 }
 
@@ -88,7 +91,7 @@ describe('Providers → ProviderStream', () => {
 			const stream = new PassThrough({
 				read(): void {
 					stream.emit('error', tests.errno.getEnoent());
-				}
+				},
 			});
 
 			provider.reader.dynamic.returns(stream);

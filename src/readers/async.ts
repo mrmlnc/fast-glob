@@ -1,7 +1,9 @@
 import * as fsWalk from '@nodelib/fs.walk';
-import { Entry, ReaderOptions, Pattern } from '../types';
+
 import Reader from './reader';
 import ReaderStream from './stream';
+
+import type { Entry, ReaderOptions, Pattern } from '../types';
 
 export default class ReaderAsync extends Reader<Promise<Entry[]>> {
 	protected _walkAsync: typeof fsWalk.walk = fsWalk.walk;
@@ -28,7 +30,9 @@ export default class ReaderAsync extends Reader<Promise<Entry[]>> {
 		return new Promise((resolve, reject) => {
 			stream.once('error', reject);
 			stream.on('data', (entry: Entry) => entries.push(entry));
-			stream.once('end', () => resolve(entries));
+			stream.once('end', () => {
+				resolve(entries);
+			});
 		});
 	}
 }

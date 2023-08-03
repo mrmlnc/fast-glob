@@ -1,9 +1,11 @@
 import Settings from '../../settings';
-import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
+import { MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
 
+import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+
 export default class EntryFilter {
-	public readonly index: Map<string, undefined> = new Map();
+	public readonly index = new Map<string, undefined>();
 
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
@@ -11,7 +13,7 @@ export default class EntryFilter {
 		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
 		const negativeRe = utils.pattern.convertPatternsToRe(negative, {
 			...this._micromatchOptions,
-			dot: true
+			dot: true,
 		});
 
 		return (entry) => this._filter(entry, positiveRe, negativeRe);
@@ -76,7 +78,7 @@ export default class EntryFilter {
 		// A pattern with a trailling slash can be used for directory matching.
 		// To apply such pattern, we need to add a tralling slash to the path.
 		if (!isMatched && isDirectory) {
-			return utils.pattern.matchAny(filepath + '/', patternsRe);
+			return utils.pattern.matchAny(`${filepath}/`, patternsRe);
 		}
 
 		return isMatched;

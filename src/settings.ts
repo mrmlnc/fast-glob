@@ -1,7 +1,7 @@
-import * as fs from 'fs';
-import * as os from 'os';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
 
-import { FileSystemAdapter, Pattern } from './types';
+import type { FileSystemAdapter, Pattern } from './types';
 
 /**
  * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
@@ -15,10 +15,10 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	stat: fs.stat,
 	statSync: fs.statSync,
 	readdir: fs.readdir,
-	readdirSync: fs.readdirSync
+	readdirSync: fs.readdirSync,
 };
 
-export type Options = {
+export interface Options {
 	/**
 	 * Return the absolute path for entries.
 	 *
@@ -152,7 +152,7 @@ export type Options = {
 	 * @default true
 	 */
 	unique?: boolean;
-};
+}
 
 export default class Settings {
 	public readonly absolute: boolean = this._getValue(this._options.absolute, false);
@@ -161,7 +161,7 @@ export default class Settings {
 	public readonly caseSensitiveMatch: boolean = this._getValue(this._options.caseSensitiveMatch, true);
 	public readonly concurrency: number = this._getValue(this._options.concurrency, CPU_COUNT);
 	public readonly cwd: string = this._getValue(this._options.cwd, process.cwd());
-	public readonly deep: number = this._getValue(this._options.deep, Infinity);
+	public readonly deep: number = this._getValue(this._options.deep, Number.POSITIVE_INFINITY);
 	public readonly dot: boolean = this._getValue(this._options.dot, false);
 	public readonly extglob: boolean = this._getValue(this._options.extglob, true);
 	public readonly followSymbolicLinks: boolean = this._getValue(this._options.followSymbolicLinks, true);
@@ -191,13 +191,13 @@ export default class Settings {
 	}
 
 	private _getValue<T>(option: T | undefined, value: T): T {
-		return option === undefined ? value : option;
+		return option ?? value;
 	}
 
 	private _getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {
 		return {
 			...DEFAULT_FILE_SYSTEM_ADAPTER,
-			...methods
+			...methods,
 		};
 	}
 }

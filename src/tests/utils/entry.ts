@@ -1,8 +1,8 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
 
-import { Entry } from '../../types';
+import type { Entry } from '../../types';
 
 class EntryBuilder {
 	private _entryType: DirentType = DirentType.Unknown;
@@ -10,7 +10,7 @@ class EntryBuilder {
 	private readonly _entry: Entry = {
 		name: '',
 		path: '',
-		dirent: new Dirent()
+		dirent: new Dirent(),
 	};
 
 	public path(filepath: string): this {

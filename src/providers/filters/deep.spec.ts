@@ -1,16 +1,18 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
-import Settings, { Options } from '../../settings';
+import Settings from '../../settings';
 import * as tests from '../../tests';
-import { EntryFilterFunction, Pattern, Entry } from '../../types';
 import DeepFilter from './deep';
 
-type FilterOptions = {
+import type { EntryFilterFunction, Pattern, Entry } from '../../types';
+import type { Options } from '../../settings';
+
+interface FilterOptions {
 	base?: string;
 	positive: Pattern[];
 	negative?: Pattern[];
 	options?: Options;
-};
+}
 
 const DIRECTORY_ENTRY_LEVEL_1 = tests.entry.builder().path('root').directory().build();
 const DIRECTORY_ENTRY_LEVEL_2 = tests.entry.builder().path('root/directory').directory().build();
@@ -20,7 +22,7 @@ function getDeepFilterInstance(options?: Options): DeepFilter {
 	const settings = new Settings(options);
 
 	return new DeepFilter(settings, {
-		dot: settings.dot
+		dot: settings.dot,
 	});
 }
 
@@ -59,21 +61,21 @@ describe('Providers → Filters → Deep', () => {
 			it('should reject when an option has "0" as value', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_1, {
 					positive: ['**/*'],
-					options: { deep: 0 }
+					options: { deep: 0 },
 				});
 			});
 
 			it('should reject when the depth of entry is greater than an allowable value (without base)', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_3, {
 					positive: ['**/*'],
-					options: { deep: 1 }
+					options: { deep: 1 },
 				});
 			});
 
 			it('should reject when the depth of entry is greater than an allowable value (with base as current level)', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_3, {
 					positive: ['**/*'],
-					options: { deep: 1 }
+					options: { deep: 1 },
 				});
 			});
 
@@ -81,14 +83,14 @@ describe('Providers → Filters → Deep', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_3, {
 					base: 'root/a',
 					positive: ['root/a/*'],
-					options: { deep: 1 }
+					options: { deep: 1 },
 				});
 			});
 
 			it('should accept when an option has "Infinity" as value', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_1, {
 					positive: ['**/*'],
-					options: { deep: Infinity }
+					options: { deep: Number.POSITIVE_INFINITY },
 				});
 			});
 		});
@@ -99,7 +101,7 @@ describe('Providers → Filters → Deep', () => {
 
 				reject(entry, {
 					positive: ['**/*'],
-					options: { followSymbolicLinks: false }
+					options: { followSymbolicLinks: false },
 				});
 			});
 
@@ -108,7 +110,7 @@ describe('Providers → Filters → Deep', () => {
 
 				accept(entry, {
 					positive: ['**/*'],
-					options: { followSymbolicLinks: true }
+					options: { followSymbolicLinks: true },
 				});
 			});
 		});
@@ -116,7 +118,7 @@ describe('Providers → Filters → Deep', () => {
 		describe('Positive pattern', () => {
 			it('should reject when an entry does not match to the positive pattern', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_1, {
-					positive: ['non-root/*']
+					positive: ['non-root/*'],
 				});
 			});
 
@@ -124,7 +126,7 @@ describe('Providers → Filters → Deep', () => {
 				const entry = tests.entry.builder().path('./root').directory().build();
 
 				reject(entry, {
-					positive: ['non-root/*']
+					positive: ['non-root/*'],
 				});
 			});
 
@@ -132,20 +134,20 @@ describe('Providers → Filters → Deep', () => {
 				const entry = tests.entry.builder().path('./root').directory().build();
 
 				accept(entry, {
-					positive: ['./root/*']
+					positive: ['./root/*'],
 				});
 			});
 
 			it('should accept when the positive pattern does not match by level, but the "baseNameMatch" is enabled', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_2, {
 					positive: ['*'],
-					options: { baseNameMatch: true }
+					options: { baseNameMatch: true },
 				});
 			});
 
 			it('should accept when the positive pattern has a globstar', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_3, {
-					positive: ['**/*']
+					positive: ['**/*'],
 				});
 			});
 		});
@@ -154,21 +156,21 @@ describe('Providers → Filters → Deep', () => {
 			it('should reject when an entry match to the negative pattern', () => {
 				reject(DIRECTORY_ENTRY_LEVEL_2, {
 					positive: ['**/*'],
-					negative: ['root/**']
+					negative: ['root/**'],
 				});
 			});
 
 			it('should accept when the negative pattern has no effect to depth reading', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_3, {
 					positive: ['**/*'],
-					negative: ['**/*']
+					negative: ['**/*'],
 				});
 			});
 
 			it('should accept when an entry does not match to the negative pattern', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_3, {
 					positive: ['**/*'],
-					negative: ['non-root/**/*']
+					negative: ['non-root/**/*'],
 				});
 			});
 		});
@@ -177,7 +179,7 @@ describe('Providers → Filters → Deep', () => {
 	describe('Immutability', () => {
 		it('should return the data without changes', () => {
 			const filter = getFilter({
-				positive: ['**/*']
+				positive: ['**/*'],
 			});
 
 			const reference = tests.entry.builder().path('root/directory').directory().build();

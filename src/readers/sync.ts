@@ -1,8 +1,9 @@
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
+
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 
 export default class ReaderSync extends Reader<Entry[]> {
 	protected _walkSync: typeof fsWalk.walkSync = fsWalk.walkSync;

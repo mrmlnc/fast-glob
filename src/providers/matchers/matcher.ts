@@ -1,23 +1,25 @@
-import { Pattern, MicromatchOptions, PatternRe } from '../../types';
+import { MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
 import Settings from '../../settings';
 
-export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;
+import type { Pattern, PatternRe } from '../../types';
 
-type StaticPatternSegment = {
+export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
+
+interface StaticPatternSegment {
 	dynamic: false;
 	pattern: Pattern;
-};
+}
 
-type DynamicPatternSegment = {
+interface DynamicPatternSegment {
 	dynamic: true;
 	pattern: Pattern;
 	patternRe: PatternRe;
-};
+}
 
 export type PatternSection = PatternSegment[];
 
-export type PatternInfo = {
+export interface PatternInfo {
 	/**
 	 * Indicates that the pattern has a globstar (more than a single section).
 	 */
@@ -25,7 +27,7 @@ export type PatternInfo = {
 	pattern: Pattern;
 	segments: PatternSegment[];
 	sections: PatternSection[];
-};
+}
 
 export default abstract class Matcher {
 	protected readonly _storage: PatternInfo[] = [];
@@ -43,7 +45,7 @@ export default abstract class Matcher {
 				complete: sections.length <= 1,
 				pattern,
 				segments,
-				sections
+				sections,
 			});
 		}
 	}
@@ -57,14 +59,14 @@ export default abstract class Matcher {
 			if (!dynamic) {
 				return {
 					dynamic: false,
-					pattern: part
+					pattern: part,
 				};
 			}
 
 			return {
 				dynamic: true,
 				pattern: part,
-				patternRe: utils.pattern.makeRe(part, this._micromatchOptions)
+				patternRe: utils.pattern.makeRe(part, this._micromatchOptions),
 			};
 		});
 	}

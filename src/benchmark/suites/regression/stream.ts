@@ -1,13 +1,14 @@
-import * as path from 'path';
+import * as path from 'node:path';
+
 import * as bencho from 'bencho';
 
 import * as fastGlobCurrent from '../../..';
-
 import * as utils from '../../utils';
 
-type GlobImplementation = 'previous' | 'current';
+type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => ReturnType<typeof fastGlobCurrent.stream>;
+type GlobOptions = fastGlobCurrent.Options;
 
 class Glob {
 	private readonly _options: fastGlobCurrent.Options;
@@ -17,7 +18,7 @@ class Glob {
 			unique: false,
 			followSymbolicLinks: false,
 			concurrency: Number.POSITIVE_INFINITY,
-			...options
+			...options,
 		};
 	}
 
@@ -34,17 +35,21 @@ class Glob {
 		await this._measure(() => glob.stream(this._pattern, this._options));
 	}
 
-	private async _measure(func: GlobImplFunction): Promise<void> {
+	private async _measure(function_: GlobImplFunction): Promise<void> {
 		const entries: string[] = [];
 
 		const timeStart = utils.timeStart();
 
 		await new Promise<void>((resolve, reject) => {
-			const stream = func();
+			const stream = function_();
 
-			stream.once('error', (error) => reject(error));
+			stream.once('error', (error) => {
+				reject(error);
+			});
 			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => resolve());
+			stream.once('end', () => {
+				resolve();
+			});
 		});
 
 		const count = entries.length;
@@ -64,23 +69,26 @@ class Glob {
 	const cwd = path.join(process.cwd(), args[0]);
 	const pattern = args[1];
 	const impl = args[2] as GlobImplementation;
-	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}');
+	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}') as GlobOptions;
 
 	const glob = new Glob(pattern, {
 		cwd,
-		...options
+		...options,
 	});
 
 	switch (impl) {
-		case 'current':
+		case 'current': {
 			await glob.measureCurrentVersion();
 			break;
+		}
 
-		case 'previous':
+		case 'previous': {
 			await glob.measurePreviousVersion();
 			break;
+		}
 
-		default:
-			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		default: {
+			throw new TypeError('Unknown glob implementation.');
+		}
 	}
 })();

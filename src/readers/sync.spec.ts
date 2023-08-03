@@ -1,14 +1,15 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 
 import { Stats } from '@nodelib/fs.macchiato';
-import * as fsStat from '@nodelib/fs.stat';
-import * as fsWalk from '@nodelib/fs.walk';
 import * as sinon from 'sinon';
 
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import { ReaderOptions } from '../types';
 import ReaderSync from './sync';
+
+import type { ReaderOptions } from '../types';
+import type * as fsWalk from '@nodelib/fs.walk';
+import type * as fsStat from '@nodelib/fs.stat';
 
 type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;
@@ -76,7 +77,7 @@ describe('Readers → ReaderSync', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({
 				errorFilter: () => false,
-				entryFilter: () => true
+				entryFilter: () => true,
 			});
 
 			reader.statSync.onFirstCall().throws(tests.errno.getEperm());
@@ -91,7 +92,7 @@ describe('Readers → ReaderSync', () => {
 			const reader = getReader();
 			const readerOptions = getReaderOptions({
 				errorFilter: () => true,
-				entryFilter: () => true
+				entryFilter: () => true,
 			});
 
 			reader.statSync.onFirstCall().throws(tests.errno.getEnoent());

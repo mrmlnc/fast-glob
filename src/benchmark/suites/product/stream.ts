@@ -1,9 +1,10 @@
-import * as path from 'path';
+import * as path from 'node:path';
+
 import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'node-glob' | 'fast-glob';
+type GlobImplementation = 'fast-glob' | 'node-glob';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
@@ -17,13 +18,17 @@ class Glob {
 
 		const stream = glob.globStream(this._pattern, {
 			cwd: this._cwd,
-			nodir: true
+			nodir: true,
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {
-			stream.on('error', (error) => reject(error));
+			stream.on('error', (error) => {
+				reject(error);
+			});
 			stream.on('data', (entry: string) => entries.push(entry));
-			stream.on('end', () => resolve(entries));
+			stream.on('end', () => {
+				resolve(entries);
+			});
 		});
 
 		await this._measure(() => action);
@@ -38,22 +43,26 @@ class Glob {
 			cwd: this._cwd,
 			unique: false,
 			followSymbolicLinks: false,
-			concurrency: Number.POSITIVE_INFINITY
+			concurrency: Number.POSITIVE_INFINITY,
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {
-			stream.once('error', (error) => reject(error));
+			stream.once('error', (error) => {
+				reject(error);
+			});
 			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => resolve(entries));
+			stream.once('end', () => {
+				resolve(entries);
+			});
 		});
 
 		await this._measure(() => action);
 	}
 
-	private async _measure(func: GlobImplFunction): Promise<void> {
+	private async _measure(function_: GlobImplFunction): Promise<void> {
 		const timeStart = utils.timeStart();
 
-		const matches = await func();
+		const matches = await function_();
 
 		const count = matches.length;
 		const memory = utils.getMemory();
@@ -76,15 +85,18 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
-		case 'node-glob':
+		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
+		}
 
-		case 'fast-glob':
+		case 'fast-glob': {
 			await glob.measureFastGlob();
 			break;
+		}
 
-		default:
-			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		default: {
+			throw new TypeError('Unknown glob implementation.');
+		}
 	}
 })();

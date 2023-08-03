@@ -6,22 +6,22 @@ runner.suite('Options MatchBase', {
 			pattern: 'file.md',
 			options: {
 				cwd: 'fixtures',
-				baseNameMatch: true
-			}
+				baseNameMatch: true,
+			},
 		},
 		{
 			pattern: 'first/*/file.md',
 			options: {
 				cwd: 'fixtures',
-				baseNameMatch: true
-			}
+				baseNameMatch: true,
+			},
 		},
 		{
 			pattern: 'first/**/file.md',
 			options: {
 				cwd: 'fixtures',
-				baseNameMatch: true
-			}
-		}
-	]
+				baseNameMatch: true,
+			},
+		},
+	],
 });
