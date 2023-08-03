@@ -4,7 +4,7 @@ import * as utils from '../../utils';
 import type { Entry, EntryItem, EntryTransformerFunction } from '../../types';
 
 export default class EntryTransformer {
-	constructor(private readonly _settings: Settings) { }
+	constructor(private readonly _settings: Settings) {}
 
 	public getTransformer(): EntryTransformerFunction {
 		return (entry) => this._transform(entry);

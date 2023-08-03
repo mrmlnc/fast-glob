@@ -4,7 +4,7 @@ import * as utils from '../../utils';
 import type { ErrnoException, ErrorFilterFunction } from '../../types';
 
 export default class ErrorFilter {
-	constructor(private readonly _settings: Settings) { }
+	constructor(private readonly _settings: Settings) {}
 
 	public getFilter(): ErrorFilterFunction {
 		return (error) => this._isNonFatalError(error);
