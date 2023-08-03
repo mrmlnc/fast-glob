@@ -1,27 +1,37 @@
 import * as fs from 'fs';
 
-import { Dirent } from '@nodelib/fs.walk';
+import type { FsDirent, FsStats } from '../types';
 
-class DirentFromStats implements fs.Dirent {
-	public isBlockDevice: fs.Stats['isBlockDevice'];
-	public isCharacterDevice: fs.Stats['isCharacterDevice'];
-	public isDirectory: fs.Stats['isDirectory'];
-	public isFIFO: fs.Stats['isFIFO'];
-	public isFile: fs.Stats['isFile'];
-	public isSocket: fs.Stats['isSocket'];
-	public isSymbolicLink: fs.Stats['isSymbolicLink'];
+const _kStats = Symbol('stats');
 
-	constructor(public name: string, stats: fs.Stats) {
-		this.isBlockDevice = stats.isBlockDevice.bind(stats);
-		this.isCharacterDevice = stats.isCharacterDevice.bind(stats);
-		this.isDirectory = stats.isDirectory.bind(stats);
-		this.isFIFO = stats.isFIFO.bind(stats);
-		this.isFile = stats.isFile.bind(stats);
-		this.isSocket = stats.isSocket.bind(stats);
-		this.isSymbolicLink = stats.isSymbolicLink.bind(stats);
+type DirentStatsKeysIntersection = 'constructor' | keyof FsDirent & keyof FsStats;
+
+// Adapting an internal class in Node.js to mimic the behavior of `fs.Dirent` when creating it manually from `fs.Stats`.
+// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L199C1-L213
+export class DirentFromStats extends fs.Dirent {
+	private readonly [_kStats]: FsStats;
+
+	constructor(name: string, stats: FsStats) {
+		// @ts-expect-error The constructor has parameters, but they are not represented in types.
+		// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L164
+		super(name, null);
+
+		this[_kStats] = stats;
 	}
 }
 
-export function createDirentFromStats(name: string, stats: fs.Stats): Dirent {
+for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
+	const name = key as DirentStatsKeysIntersection | 'constructor';
+
+	if (name === 'constructor') {
+		continue;
+	}
+
+	DirentFromStats.prototype[name] = function () {
+		return this[_kStats][name]();
+	};
+}
+
+export function createDirentFromStats(name: string, stats: FsStats): FsDirent {
 	return new DirentFromStats(name, stats);
 }
