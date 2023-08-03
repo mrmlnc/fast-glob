@@ -150,9 +150,9 @@ export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 }
 
 export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
-	return patterns.reduce((collection, pattern) => {
+	return patterns.reduce<Pattern[]>((collection, pattern) => {
 		return collection.concat(expandBraceExpansion(pattern));
-	}, [] as Pattern[]);
+	}, []);
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
