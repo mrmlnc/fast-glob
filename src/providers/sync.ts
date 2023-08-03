@@ -13,7 +13,7 @@ export default class ProviderSync extends Provider<EntryItem[]> {
 
 		const entries = this.api(root, task, options);
 
-		return entries.map(options.transform);
+		return entries.map((entry) => options.transform(entry));
 	}
 
 	public api(root: string, task: Task, options: ReaderOptions): Entry[] {

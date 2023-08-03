@@ -128,7 +128,7 @@ function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new
 	const tasks = taskManager.generate(patterns, settings);
 	const provider = new _Provider(settings);
 
-	return tasks.map(provider.read, provider);
+	return tasks.map((task) => provider.read(task));
 }
 
 function assertPatternsInput(input: unknown): never | void {
