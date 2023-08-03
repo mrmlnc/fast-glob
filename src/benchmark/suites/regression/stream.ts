@@ -42,9 +42,13 @@ class Glob {
 		await new Promise<void>((resolve, reject) => {
 			const stream = func();
 
-			stream.once('error', (error) => reject(error));
+			stream.once('error', (error) => {
+				reject(error);
+			});
 			stream.on('data', (entry: string) => entries.push(entry));
-			stream.once('end', () => resolve());
+			stream.once('end', () => {
+				resolve();
+			});
 		});
 
 		const count = entries.length;
