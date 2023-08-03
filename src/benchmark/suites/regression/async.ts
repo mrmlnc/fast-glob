@@ -64,15 +64,18 @@ class Glob {
 	});
 
 	switch (impl) {
-		case 'current':
+		case 'current': {
 			await glob.measureCurrentVersion();
 			break;
+		}
 
-		case 'previous':
+		case 'previous': {
 			await glob.measurePreviousVersion();
 			break;
+		}
 
-		default:
+		default: {
 			throw new TypeError(`Unknown glob implementation: ${impl}`);
+		}
 	}
 })();
