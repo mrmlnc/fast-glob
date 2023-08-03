@@ -9,7 +9,6 @@ import type { Task } from '../managers/tasks';
 import type { Options } from '../settings';
 import type { MicromatchOptions, ReaderOptions } from '../types';
 
-
 export class TestProvider extends Provider<Array<{}>> {
 	public read(): Array<{}> {
 		return [];

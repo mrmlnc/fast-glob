@@ -4,7 +4,6 @@ import Provider from './provider';
 import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
-
 export default class ProviderSync extends Provider<EntryItem[]> {
 	protected _reader: ReaderSync = new ReaderSync(this._settings);
 
