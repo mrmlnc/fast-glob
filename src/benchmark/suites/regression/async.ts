@@ -5,7 +5,7 @@ import * as bencho from 'bencho';
 import * as fastGlobCurrent from '../../..';
 import * as utils from '../../utils';
 
-type GlobImplementation = 'previous' | 'current';
+type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 

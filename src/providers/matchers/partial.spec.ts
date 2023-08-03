@@ -9,13 +9,13 @@ function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Match
 	return new Matcher(patterns, new Settings(), options);
 }
 
-function assertMatch(patterns: Pattern[], filepath: string): void | never {
+function assertMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
 	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns}`);
 }
 
-function assertNotMatch(patterns: Pattern[], filepath: string): void | never {
+function assertNotMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
 	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns}`);

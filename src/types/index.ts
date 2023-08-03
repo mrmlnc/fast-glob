@@ -6,7 +6,7 @@ export type ErrnoException = NodeJS.ErrnoException;
 export type FsDirent = fs.Dirent;
 export type FsStats = fs.Stats;
 export type Entry = fsWalk.Entry;
-export type EntryItem = string | Entry;
+export type EntryItem = Entry | string;
 
 export type Pattern = string;
 export type PatternRe = RegExp;

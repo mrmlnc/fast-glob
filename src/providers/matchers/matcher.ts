@@ -4,7 +4,7 @@ import Settings from '../../settings';
 
 import type { Pattern, PatternRe } from '../../types';
 
-export type PatternSegment = StaticPatternSegment | DynamicPatternSegment;
+export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
 
 type StaticPatternSegment = {
 	dynamic: false;

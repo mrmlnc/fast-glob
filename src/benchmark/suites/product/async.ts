@@ -4,7 +4,7 @@ import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'node-glob' | 'fast-glob' | 'fdir';
+type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
