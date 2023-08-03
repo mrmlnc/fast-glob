@@ -2,7 +2,7 @@ import type { Task } from '../../managers/tasks';
 import type { Pattern } from '../../types';
 
 class TaskBuilder {
-	private readonly _task: Task = {
+	readonly #task: Task = {
 		base: '',
 		dynamic: true,
 		patterns: [],
@@ -11,33 +11,33 @@ class TaskBuilder {
 	};
 
 	public base(base: string): this {
-		this._task.base = base;
+		this.#task.base = base;
 
 		return this;
 	}
 
 	public static(): this {
-		this._task.dynamic = false;
+		this.#task.dynamic = false;
 
 		return this;
 	}
 
 	public positive(pattern: Pattern): this {
-		this._task.patterns.push(pattern);
-		this._task.positive.push(pattern);
+		this.#task.patterns.push(pattern);
+		this.#task.positive.push(pattern);
 
 		return this;
 	}
 
 	public negative(pattern: Pattern): this {
-		this._task.patterns.push(`!${pattern}`);
-		this._task.negative.push(pattern);
+		this.#task.patterns.push(`!${pattern}`);
+		this.#task.negative.push(pattern);
 
 		return this;
 	}
 
 	public build(): Task {
-		return this._task;
+		return this.#task;
 	}
 }
 

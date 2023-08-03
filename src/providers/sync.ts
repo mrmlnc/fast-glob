@@ -1,11 +1,18 @@
 import ReaderSync from '../readers/sync';
 import Provider from './provider';
 
+import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export default class ProviderSync extends Provider<EntryItem[]> {
-	protected _reader: ReaderSync = new ReaderSync(this._settings);
+	protected _reader: ReaderSync;
+
+	constructor(settings: Settings) {
+		super(settings);
+
+		this._reader = new ReaderSync(settings);
+	}
 
 	public read(task: Task): EntryItem[] {
 		const root = this._getRootDirectory(task);

@@ -3,10 +3,11 @@ import * as assert from 'node:assert';
 import { Stats } from '@nodelib/fs.macchiato';
 import * as sinon from 'sinon';
 
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ReaderStream from './stream';
 
+import type { Options } from '../settings';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';
@@ -15,8 +16,8 @@ type WalkSignature = typeof fsWalk.walkStream;
 type StatSignature = typeof fsStat.stat;
 
 class TestReader extends ReaderStream {
-	protected _walkStream: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected _stat: StatSignature = sinon.stub() as unknown as StatSignature;
+	protected override _walkStream: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _stat: StatSignature = sinon.stub() as unknown as StatSignature;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

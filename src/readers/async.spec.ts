@@ -3,19 +3,20 @@ import { PassThrough } from 'node:stream';
 
 import * as sinon from 'sinon';
 
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ReaderAsync from './async';
 import ReaderStream from './stream';
 
+import type { Options } from '../settings';
 import type { ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 
 type WalkSignature = typeof fsWalk.walk;
 
 class TestReader extends ReaderAsync {
-	protected _walkAsync: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected override _walkAsync: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

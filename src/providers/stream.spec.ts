@@ -4,15 +4,16 @@ import { PassThrough } from 'node:stream';
 import * as sinon from 'sinon';
 
 import ReaderStream from '../readers/stream';
-import Settings, { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
 import ProviderStream from './stream';
 
+import type { Options } from '../settings';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 import type { Task } from '../managers/tasks';
 
 class TestProvider extends ProviderStream {
-	protected _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected override _reader: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
 
 	constructor(options?: Options) {
 		super(new Settings(options));

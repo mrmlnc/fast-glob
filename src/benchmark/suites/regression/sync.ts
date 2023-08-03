@@ -2,8 +2,9 @@ import * as path from 'node:path';
 
 import * as bencho from 'bencho';
 
-import * as fastGlobCurrent from '../../..';
 import * as utils from '../../utils';
+
+import type * as fastGlobCurrent from '../../..';
 
 type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,10 +12,12 @@ type GlobImplFunction = (...args: any[]) => unknown[];
 type GlobOptions = fastGlobCurrent.Options;
 
 class Glob {
-	private readonly _options: fastGlobCurrent.Options;
+	readonly #pattern: string;
+	readonly #options: GlobOptions;
 
-	constructor(private readonly _pattern: string, options: fastGlobCurrent.Options) {
-		this._options = {
+	constructor(pattern: string, options: GlobOptions) {
+		this.#pattern = pattern;
+		this.#options = {
 			unique: false,
 			followSymbolicLinks: false,
 			...options,
@@ -25,16 +28,16 @@ class Glob {
 		const glob = await utils.importAndMeasure(utils.importPreviousFastGlob);
 
 		// @ts-expect-error remove this line after the next major release.
-		this._measure(() => glob.sync(this._pattern, this._options));
+		this.#measure(() => glob.sync(this.#pattern, this.#options));
 	}
 
 	public async measureCurrentVersion(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
 
-		this._measure(() => glob.sync(this._pattern, this._options));
+		this.#measure(() => glob.sync(this.#pattern, this.#options));
 	}
 
-	private _measure(function_: GlobImplFunction): void {
+	#measure(function_: GlobImplFunction): void {
 		const timeStart = utils.timeStart();
 
 		const matches = function_();
@@ -56,7 +59,7 @@ class Glob {
 	const cwd = path.join(process.cwd(), args[0]);
 	const pattern = args[1];
 	const impl = args[2] as GlobImplementation;
-	const options = JSON.parse(process.env.BENCHMARK_OPTIONS ?? '{}') as GlobOptions;
+	const options = JSON.parse(process.env['BENCHMARK_OPTIONS'] ?? '{}') as GlobOptions;
 
 	const glob = new Glob(pattern, {
 		cwd,
