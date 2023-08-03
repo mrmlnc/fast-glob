@@ -6,16 +6,16 @@ runner.suite('Options Deep', {
 		{
 			pattern: 'fixtures/**',
 			options: {
-				deep: 0
-			}
+				deep: 0,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				deep: 2
-			}
-		}
-	]
+				deep: 2,
+			},
+		},
+	],
 });
 
 runner.suite('Options Deep (cwd)', {
@@ -24,15 +24,15 @@ runner.suite('Options Deep (cwd)', {
 			pattern: '**',
 			options: {
 				cwd: 'fixtures',
-				deep: 0
-			}
+				deep: 0,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				cwd: 'fixtures',
-				deep: 2
-			}
-		}
-	]
+				deep: 2,
+			},
+		},
+	],
 });

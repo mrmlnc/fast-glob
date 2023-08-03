@@ -15,7 +15,7 @@ class Glob {
 
 		this._measure(() => glob.globSync(this._pattern, {
 			cwd: this._cwd,
-			nodir: true
+			nodir: true,
 		}));
 	}
 
@@ -25,7 +25,7 @@ class Glob {
 		this._measure(() => glob.sync(this._pattern, {
 			cwd: this._cwd,
 			unique: false,
-			followSymbolicLinks: false
+			followSymbolicLinks: false,
 		}));
 	}
 

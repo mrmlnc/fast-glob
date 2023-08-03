@@ -17,7 +17,7 @@ class Glob {
 			unique: false,
 			followSymbolicLinks: false,
 			concurrency: Number.POSITIVE_INFINITY,
-			...options
+			...options,
 		};
 	}
 
@@ -60,7 +60,7 @@ class Glob {
 
 	const glob = new Glob(pattern, {
 		cwd,
-		...options
+		...options,
 	});
 
 	switch (impl) {

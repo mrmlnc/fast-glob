@@ -5,40 +5,40 @@ runner.suite('Options OnlyDirectories', {
 		{
 			pattern: 'fixtures/*',
 			options: {
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: 'fixtures/*/',
 			options: {
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**/',
 			options: {
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**/*/',
 			options: {
-				onlyDirectories: true
-			}
-		}
-	]
+				onlyDirectories: true,
+			},
+		},
+	],
 });
 
 runner.suite('Options OnlyDirectories (cwd)', {
@@ -47,43 +47,43 @@ runner.suite('Options OnlyDirectories (cwd)', {
 			pattern: '*',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: '**/*',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: '*/',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: '**/',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
+				onlyDirectories: true,
+			},
 		},
 		{
 			pattern: '**/*/',
 			options: {
 				cwd: 'fixtures',
-				onlyDirectories: true
-			}
-		}
-	]
+				onlyDirectories: true,
+			},
+		},
+	],
 });

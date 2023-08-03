@@ -5,8 +5,8 @@ runner.suite('Options MarkDirectories', {
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				markDirectories: true
-			}
-		}
-	]
+				markDirectories: true,
+			},
+		},
+	],
 });

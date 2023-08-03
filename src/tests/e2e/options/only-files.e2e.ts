@@ -5,22 +5,22 @@ runner.suite('Options OnlyFiles', {
 		{
 			pattern: 'fixtures/*',
 			options: {
-				onlyFiles: true
-			}
+				onlyFiles: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				onlyFiles: true
-			}
+				onlyFiles: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				onlyFiles: true
-			}
-		}
-	]
+				onlyFiles: true,
+			},
+		},
+	],
 });
 
 runner.suite('Options Files (cwd)', {
@@ -29,22 +29,22 @@ runner.suite('Options Files (cwd)', {
 			pattern: '*',
 			options: {
 				cwd: 'fixtures',
-				onlyFiles: true
-			}
+				onlyFiles: true,
+			},
 		},
 		{
 			pattern: '**',
 			options: {
 				cwd: 'fixtures',
-				onlyFiles: true
-			}
+				onlyFiles: true,
+			},
 		},
 		{
 			pattern: '**/*',
 			options: {
 				cwd: 'fixtures',
-				onlyFiles: true
-			}
-		}
-	]
+				onlyFiles: true,
+			},
+		},
+	],
 });

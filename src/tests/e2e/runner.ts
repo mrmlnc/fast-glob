@@ -93,15 +93,15 @@ function getTestTitle(test: Test): string {
 	// Replacing placeholders to hide absolute paths from snapshots.
 	const replacements = {
 		cwd: test.options?.cwd?.replace(CWD, '<root>'),
-		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>'))
+		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>')),
 	};
 
 	return JSON.stringify({
 		pattern: test.pattern,
 		options: {
 			...test.options,
-			...replacements
-		}
+			...replacements,
+		},
 	});
 }
 
@@ -201,7 +201,7 @@ function debug(current: string[], suite: Suite, test: Test): void {
 		console.dir({
 			current,
 			suite: { debug: suite.debug },
-			test: { debug: test.debug, options: test.options }
+			test: { debug: test.debug, options: test.options },
 		}, { colors: true });
 	}
 }

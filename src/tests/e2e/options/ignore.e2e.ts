@@ -5,14 +5,14 @@ runner.suite('Options Ignore', {
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				ignore: ['**/*.md']
-			}
+				ignore: ['**/*.md'],
+			},
 		},
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				ignore: ['!**/*.md']
-			}
-		}
-	]
+				ignore: ['!**/*.md'],
+			},
+		},
+	],
 });

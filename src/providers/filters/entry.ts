@@ -11,7 +11,7 @@ export default class EntryFilter {
 		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
 		const negativeRe = utils.pattern.convertPatternsToRe(negative, {
 			...this._micromatchOptions,
-			dot: true
+			dot: true,
 		});
 
 		return (entry) => this._filter(entry, positiveRe, negativeRe);

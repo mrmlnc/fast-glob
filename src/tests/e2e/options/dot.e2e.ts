@@ -5,39 +5,39 @@ runner.suite('Options Dot', {
 		{
 			pattern: 'fixtures/*',
 			options: {
-				dot: true
-			}
+				dot: true,
+			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				dot: true
+				dot: true,
 			},
-			issue: 47
+			issue: 47,
 		},
 		{
 			pattern: 'fixtures/**/*',
 			options: {
-				dot: true
-			}
+				dot: true,
+			},
 		},
 
 		{
-			pattern: 'fixtures/{.,}*'
+			pattern: 'fixtures/{.,}*',
 		},
 		{
-			pattern: 'fixtures/{.*,*}'
+			pattern: 'fixtures/{.*,*}',
 		},
 		{
-			pattern: 'fixtures/**/{.,}*'
+			pattern: 'fixtures/**/{.,}*',
 		},
 		{
 			pattern: 'fixtures/{.**,**}',
-			issue: 47
+			issue: 47,
 		},
 		{
 			pattern: 'fixtures/{**/.*,**}',
-			issue: 47
-		}
-	]
+			issue: 47,
+		},
+	],
 });
