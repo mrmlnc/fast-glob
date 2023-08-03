@@ -191,7 +191,7 @@ export default class Settings {
 	}
 
 	private _getValue<T>(option: T | undefined, value: T): T {
-		return option === undefined ? value : option;
+		return option ?? value;
 	}
 
 	private _getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {
