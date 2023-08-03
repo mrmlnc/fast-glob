@@ -1,10 +1,11 @@
 import * as assert from 'assert';
 
-import type { Options } from '../../settings';
 import Settings from '../../settings';
 import * as tests from '../../tests';
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
 import DeepFilter from './deep';
+
+import type { EntryFilterFunction, Pattern, Entry } from '../../types';
+import type { Options } from '../../settings';
 
 type FilterOptions = {
 	base?: string;

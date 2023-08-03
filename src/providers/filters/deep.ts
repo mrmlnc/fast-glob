@@ -1,8 +1,9 @@
-import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 import { MicromatchOptions } from '../../types';
 import Settings from '../../settings';
 import * as utils from '../../utils';
 import PartialMatcher from '../matchers/partial';
+
+import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 
 export default class DeepFilter {
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }

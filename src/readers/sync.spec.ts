@@ -1,14 +1,15 @@
 import * as assert from 'assert';
 
 import { Stats } from '@nodelib/fs.macchiato';
-import type * as fsStat from '@nodelib/fs.stat';
-import type * as fsWalk from '@nodelib/fs.walk';
 import * as sinon from 'sinon';
 
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import type { ReaderOptions } from '../types';
 import ReaderSync from './sync';
+
+import type { ReaderOptions } from '../types';
+import type * as fsWalk from '@nodelib/fs.walk';
+import type * as fsStat from '@nodelib/fs.stat';
 
 type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;

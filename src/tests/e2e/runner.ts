@@ -1,8 +1,10 @@
 import * as assert from 'assert';
+
 import * as snapshotIt from 'snap-shot-it';
 
-import type { Pattern } from '../../types';
 import * as fg from '../..';
+
+import type { Pattern } from '../../types';
 
 const CWD = process.cwd().replace(/\\/g, '/');
 

@@ -1,7 +1,8 @@
 import Settings from '../../settings';
-import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 import { MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
+
+import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();

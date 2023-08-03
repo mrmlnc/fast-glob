@@ -1,6 +1,7 @@
+import * as utils from '../utils';
+
 import type Settings from '../settings';
 import type { Pattern, PatternsGroup } from '../types';
-import * as utils from '../utils';
 
 export type Task = {
 	base: string;

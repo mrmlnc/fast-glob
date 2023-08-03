@@ -1,10 +1,11 @@
 import * as assert from 'assert';
 
-import type { Options } from '../../settings';
 import Settings from '../../settings';
 import * as tests from '../../tests';
-import type { ErrorFilterFunction } from '../../types';
 import ErrorFilter from './error';
+
+import type { ErrorFilterFunction } from '../../types';
+import type { Options } from '../../settings';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
 	const settings = new Settings(options);

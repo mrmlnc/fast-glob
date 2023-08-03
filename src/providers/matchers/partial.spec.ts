@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 
-import type { Pattern, MicromatchOptions } from '../../types';
 import Settings from '../../settings';
 import Matcher from './partial';
+
+import type { Pattern, MicromatchOptions } from '../../types';
 
 function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Matcher {
 	return new Matcher(patterns, new Settings(), options);

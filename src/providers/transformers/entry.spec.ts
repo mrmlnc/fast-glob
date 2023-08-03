@@ -1,12 +1,13 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import type { Options } from '../../settings';
 import Settings from '../../settings';
 import * as tests from '../../tests';
-import type { EntryTransformerFunction } from '../../types';
 import * as utils from '../../utils';
 import EntryTransformer from './entry';
+
+import type { EntryTransformerFunction } from '../../types';
+import type { Options } from '../../settings';
 
 function getEntryTransformer(options?: Options): EntryTransformer {
 	return new EntryTransformer(new Settings(options));

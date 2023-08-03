@@ -2,8 +2,9 @@ import * as assert from 'assert';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import type { PatternsGroup } from '../types';
 import * as manager from './tasks';
+
+import type { PatternsGroup } from '../types';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
