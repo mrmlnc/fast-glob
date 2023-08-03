@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as tests from './tests';
-import { EntryItem, ErrnoException } from './types';
+import type { EntryItem, ErrnoException } from './types';
 import * as fg from '.';
 
 describe('Package', () => {

@@ -2,9 +2,9 @@ import * as assert from 'assert';
 
 import { PassThrough } from 'stream';
 import * as sinon from 'sinon';
-import * as fsWalk from '@nodelib/fs.walk';
+import type * as fsWalk from '@nodelib/fs.walk';
 import Settings, { Options } from '../settings';
-import { ReaderOptions } from '../types';
+import type { ReaderOptions } from '../types';
 import * as tests from '../tests';
 import ReaderAsync from './async';
 import ReaderStream from './stream';

@@ -1,5 +1,5 @@
-import { Task } from '../managers/tasks';
-import { Entry, EntryItem, ReaderOptions } from '../types';
+import type { Task } from '../managers/tasks';
+import type { Entry, EntryItem, ReaderOptions } from '../types';
 import ReaderAsync from '../readers/async';
 import Provider from './provider';
 

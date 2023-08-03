@@ -3,11 +3,11 @@ import { PassThrough } from 'stream';
 
 import * as sinon from 'sinon';
 
-import { Task } from '../managers/tasks';
+import type { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import { Entry, EntryItem, ErrnoException } from '../types';
+import type { Entry, EntryItem, ErrnoException } from '../types';
 import ProviderStream from './stream';
 
 class TestProvider extends ProviderStream {

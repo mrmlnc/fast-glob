@@ -1,9 +1,10 @@
 import * as assert from 'assert';
 
 import * as tests from '../../tests';
-import { Pattern, MicromatchOptions } from '../../types';
+import type { Pattern, MicromatchOptions } from '../../types';
 import Settings from '../../settings';
-import Matcher, { PatternInfo } from './matcher';
+import type { PatternInfo } from './matcher';
+import Matcher from './matcher';
 
 class TestMatcher extends Matcher {
 	public get storage(): PatternInfo[] {

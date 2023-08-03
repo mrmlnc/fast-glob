@@ -4,7 +4,7 @@ import * as path from 'path';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 
 import Settings, { Options } from '../settings';
-import { Entry, FsStats, Pattern } from '../types';
+import type { Entry, FsStats, Pattern } from '../types';
 import Reader from './reader';
 
 class TestReader extends Reader<never[]> {

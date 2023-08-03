@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as fsWalk from '@nodelib/fs.walk';
+import type * as fs from 'fs';
+import type * as fsWalk from '@nodelib/fs.walk';
 
 export type ErrnoException = NodeJS.ErrnoException;
 

@@ -2,11 +2,11 @@ import * as assert from 'assert';
 
 import * as sinon from 'sinon';
 
-import { Task } from '../managers/tasks';
-import ReaderStream from '../readers/stream';
+import type { Task } from '../managers/tasks';
+import type ReaderStream from '../readers/stream';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import { Entry, EntryItem, ErrnoException } from '../types';
+import type { Entry, EntryItem, ErrnoException } from '../types';
 import ReaderAsync from '../readers/async';
 import ProviderAsync from './async';
 

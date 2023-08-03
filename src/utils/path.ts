@@ -1,7 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
 
-import { Pattern } from '../types';
+import type { Pattern } from '../types';
 
 const IS_WINDOWS_PLATFORM = os.platform() === 'win32';
 const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\

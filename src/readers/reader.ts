@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fsStat from '@nodelib/fs.stat';
 
 import Settings from '../settings';
-import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import * as utils from '../utils';
 
 export default abstract class Reader<T> {

@@ -1,5 +1,6 @@
 import Settings from '../../settings';
-import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
+import type { Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+import { MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
 
 export default class EntryFilter {

@@ -1,10 +1,11 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import { Task } from '../managers/tasks';
-import Settings, { Options } from '../settings';
+import type { Task } from '../managers/tasks';
+import type { Options } from '../settings';
+import Settings from '../settings';
 import * as tests from '../tests';
-import { MicromatchOptions, ReaderOptions } from '../types';
+import type { MicromatchOptions, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export class TestProvider extends Provider<Array<{}>> {

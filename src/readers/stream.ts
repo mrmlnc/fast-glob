@@ -1,9 +1,10 @@
-import { PassThrough, Readable } from 'stream';
+import type { Readable } from 'stream';
+import { PassThrough } from 'stream';
 
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
 import Reader from './reader';
 
 export default class ReaderStream extends Reader<Readable> {

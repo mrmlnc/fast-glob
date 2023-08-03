@@ -1,10 +1,11 @@
 import * as taskManager from './managers/tasks';
 import ProviderAsync from './providers/async';
-import Provider from './providers/provider';
+import type Provider from './providers/provider';
 import ProviderStream from './providers/stream';
 import ProviderSync from './providers/sync';
-import Settings, { Options as OptionsInternal } from './settings';
-import { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import type { Options as OptionsInternal } from './settings';
+import Settings from './settings';
+import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
 import * as utils from './utils';
 
 type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };

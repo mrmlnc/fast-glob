@@ -1,8 +1,8 @@
 import { Readable } from 'stream';
 
-import { Task } from '../managers/tasks';
+import type { Task } from '../managers/tasks';
 import ReaderStream from '../readers/stream';
-import { Entry, ErrnoException, ReaderOptions } from '../types';
+import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export default class ProviderStream extends Provider<Readable> {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 
-import { FileSystemAdapter, Pattern } from './types';
+import type { FileSystemAdapter, Pattern } from './types';
 
 /**
  * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.

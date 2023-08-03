@@ -1,6 +1,6 @@
-import { Pattern, MicromatchOptions } from '../../types';
+import type { Pattern, MicromatchOptions } from '../../types';
 import * as utils from '../../utils';
-import { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
+import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
 
 class PatternSegmentBuilder {
 	private readonly _segment: PatternSegment = {

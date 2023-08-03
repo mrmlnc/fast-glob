@@ -1,9 +1,10 @@
 import * as assert from 'assert';
 import * as path from 'path';
 
-import Settings, { Options } from '../../settings';
+import type { Options } from '../../settings';
+import Settings from '../../settings';
 import * as tests from '../../tests';
-import { EntryTransformerFunction } from '../../types';
+import type { EntryTransformerFunction } from '../../types';
 import * as utils from '../../utils';
 import EntryTransformer from './entry';
 
