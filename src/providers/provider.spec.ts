@@ -9,7 +9,7 @@ import type { Task } from '../managers/tasks';
 import type { Options } from '../settings';
 import type { MicromatchOptions, ReaderOptions } from '../types';
 
-export class TestProvider extends Provider<Array<{}>> {
+class TestProvider extends Provider<Array<{}>> {
 	public read(): Array<{}> {
 		return [];
 	}
@@ -27,7 +27,7 @@ export class TestProvider extends Provider<Array<{}>> {
 	}
 }
 
-export function getProvider(options?: Options): TestProvider {
+function getProvider(options?: Options): TestProvider {
 	const settings = new Settings(options);
 
 	return new TestProvider(settings);
