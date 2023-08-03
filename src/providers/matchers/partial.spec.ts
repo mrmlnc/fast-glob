@@ -12,13 +12,13 @@ function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Match
 function assertMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns}`);
+	assert.ok(matcher.match(filepath), `Path "${filepath}" should match: ${patterns.join(', ')}`);
 }
 
 function assertNotMatch(patterns: Pattern[], filepath: string): never | void {
 	const matcher = getMatcher(patterns);
 
-	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns}`);
+	assert.ok(!matcher.match(filepath), `Path "${filepath}" should do not match: ${patterns.join(', ')}`);
 }
 
 describe('Providers → Matchers → Partial', () => {
