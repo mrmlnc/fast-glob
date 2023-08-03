@@ -25,8 +25,6 @@ async function FastGlob(source: PatternInternal | PatternInternal[], options?: O
 	return utils.array.flatten(result);
 }
 
-// https://github.com/typescript-eslint/typescript-eslint/issues/60
-// eslint-disable-next-line no-redeclare
 namespace FastGlob {
 	export type Options = OptionsInternal;
 	export type Entry = EntryInternal;
