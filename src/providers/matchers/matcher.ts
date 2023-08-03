@@ -6,20 +6,20 @@ import type { Pattern, PatternRe } from '../../types';
 
 export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
 
-type StaticPatternSegment = {
+interface StaticPatternSegment {
 	dynamic: false;
 	pattern: Pattern;
-};
+}
 
-type DynamicPatternSegment = {
+interface DynamicPatternSegment {
 	dynamic: true;
 	pattern: Pattern;
 	patternRe: PatternRe;
-};
+}
 
 export type PatternSection = PatternSegment[];
 
-export type PatternInfo = {
+export interface PatternInfo {
 	/**
 	 * Indicates that the pattern has a globstar (more than a single section).
 	 */
@@ -27,7 +27,7 @@ export type PatternInfo = {
 	pattern: Pattern;
 	segments: PatternSegment[];
 	sections: PatternSection[];
-};
+}
 
 export default abstract class Matcher {
 	protected readonly _storage: PatternInfo[] = [];

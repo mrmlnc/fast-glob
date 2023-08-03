@@ -7,12 +7,12 @@ import DeepFilter from './deep';
 import type { EntryFilterFunction, Pattern, Entry } from '../../types';
 import type { Options } from '../../settings';
 
-type FilterOptions = {
+interface FilterOptions {
 	base?: string;
 	positive: Pattern[];
 	negative?: Pattern[];
 	options?: Options;
-};
+}
 
 const DIRECTORY_ENTRY_LEVEL_1 = tests.entry.builder().path('root').directory().build();
 const DIRECTORY_ENTRY_LEVEL_2 = tests.entry.builder().path('root/directory').directory().build();

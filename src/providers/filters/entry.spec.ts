@@ -8,11 +8,11 @@ import EntryFilter from './entry';
 import type { EntryFilterFunction, Pattern, Entry } from '../../types';
 import type { Options } from '../../settings';
 
-type FilterOptions = {
+interface FilterOptions {
 	positive: Pattern[];
 	negative?: Pattern[];
 	options?: Options;
-};
+}
 
 const FILE_ENTRY = tests.entry.builder().path('root/file.txt').file().build();
 const DIRECTORY_ENTRY = tests.entry.builder().path('root/directory').directory().build();

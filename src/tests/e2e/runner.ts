@@ -10,7 +10,7 @@ const CWD = process.cwd().replace(/\\/g, '/');
 
 type TransformFunction = (entry: string) => string;
 
-type Suite = {
+interface Suite {
 	tests: Test[] | Test[][];
 	/**
 	 * Allow to run only one test case with debug information.
@@ -21,9 +21,9 @@ type Suite = {
 	 */
 	condition?: () => boolean;
 	resultTransform?: TransformFunction;
-};
+}
 
-type Test = {
+interface Test {
 	pattern: Pattern | Pattern[];
 	options?: fg.Options;
 	/**
@@ -40,7 +40,7 @@ type Test = {
 	 */
 	issue?: number[] | number;
 	expected?: () => string[];
-};
+}
 
 type MochaDefinition = Mocha.ExclusiveTestFunction | Mocha.TestFunction;
 

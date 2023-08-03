@@ -20,11 +20,11 @@ const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
  */
 const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
 
-type PatternTypeOptions = {
+interface PatternTypeOptions {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
-};
+}
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
