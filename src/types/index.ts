@@ -1,4 +1,4 @@
-import type * as fs from 'fs';
+import type * as fs from 'node:fs';
 import type * as fsWalk from '@nodelib/fs.walk';
 
 export type Dictionary<T = unknown> = Record<string, T>;

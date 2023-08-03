@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
 import * as globParent from 'glob-parent';
 import * as micromatch from 'micromatch';

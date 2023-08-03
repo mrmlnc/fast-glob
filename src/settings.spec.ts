@@ -1,5 +1,5 @@
-import * as assert from 'assert';
-import * as os from 'os';
+import * as assert from 'node:assert';
+import * as os from 'node:os';
 
 import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
 
