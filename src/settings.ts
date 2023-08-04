@@ -95,7 +95,7 @@ export interface Options {
 	 *
 	 * @default []
 	 */
-	ignore?: Pattern[];
+	ignore?: readonly Pattern[];
 	/**
 	 * Mark the directory path with the final slash.
 	 *
@@ -161,7 +161,7 @@ export default class Settings {
 	public readonly followSymbolicLinks: boolean;
 	public readonly fs: FileSystemAdapter;
 	public readonly globstar: boolean;
-	public readonly ignore: Pattern[];
+	public readonly ignore: readonly Pattern[];
 	public readonly markDirectories: boolean;
 	public readonly objectMode: boolean;
 	public readonly onlyDirectories: boolean;
