@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import ReaderStream from './stream';
+import { ReaderStream } from './stream';
 
 import type { Options } from '../settings';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';

@@ -3,7 +3,7 @@ import * as path from 'node:path';
 
 import Settings from '../settings';
 import * as tests from '../tests';
-import Provider from './provider';
+import { Provider } from './provider';
 
 import type { Task } from '../managers/tasks';
 import type { Options } from '../settings';

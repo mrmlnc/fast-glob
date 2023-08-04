@@ -3,12 +3,6 @@ import * as os from 'node:os';
 
 import type { FileSystemAdapter, Pattern } from './types';
 
-/**
- * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
- * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
- */
-const CPU_COUNT = Math.max(os.cpus().length, 1);
-
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
 	lstatSync: fs.lstatSync,
@@ -183,7 +177,11 @@ export default class Settings {
 		this.baseNameMatch = options.baseNameMatch ?? false;
 		this.braceExpansion = options.braceExpansion ?? true;
 		this.caseSensitiveMatch = options.caseSensitiveMatch ?? true;
-		this.concurrency = options.concurrency ?? CPU_COUNT;
+		/**
+		 * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
+		 * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
+		 */
+		this.concurrency = options.concurrency ?? Math.max(os.cpus().length, 1);
 		this.cwd = options.cwd ?? process.cwd();
 		this.deep = options.deep ?? Number.POSITIVE_INFINITY;
 		this.dot = options.dot ?? false;
@@ -208,9 +206,6 @@ export default class Settings {
 		if (this.stats) {
 			this.objectMode = true;
 		}
-
-		// Remove the cast to the array in the next major (#404).
-		this.ignore = ([] as Pattern[]).concat(this.ignore);
 	}
 
 	#getFileSystemMethods(methods: Partial<FileSystemAdapter> = {}): FileSystemAdapter {

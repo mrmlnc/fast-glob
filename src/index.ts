@@ -1,13 +1,11 @@
 import * as taskManager from './managers/tasks';
-import ProviderAsync from './providers/async';
-import ProviderStream from './providers/stream';
-import ProviderSync from './providers/sync';
 import Settings from './settings';
 import * as utils from './utils';
+import { ProviderAsync, ProviderStream, ProviderSync } from './providers';
+import { ReaderAsync, ReaderStream, ReaderSync } from './readers';
 
 import type { Options as OptionsInternal } from './settings';
 import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
-import type Provider from './providers/provider';
 
 type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
@@ -18,11 +16,16 @@ function FastGlob(source: PatternInternal | PatternInternal[], options?: Options
 async function FastGlob(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
 
-	const works = getWorks(source, ProviderAsync, options);
+	const settings = new Settings(options);
+	const reader = new ReaderAsync(settings);
+	const provider = new ProviderAsync(reader, settings);
 
-	const result = await Promise.all(works);
+	const tasks = getTasks(source, settings);
+	const promises = tasks.map((task) => provider.read(task));
 
-	return utils.array.flatten(result);
+	const result = await Promise.all(promises);
+
+	return utils.array.flatFirstLevel(result);
 }
 
 namespace FastGlob {
@@ -43,22 +46,32 @@ namespace FastGlob {
 	export function sync(source: PatternInternal | PatternInternal[], options?: OptionsInternal): EntryItem[] {
 		assertPatternsInput(source);
 
-		const works = getWorks(source, ProviderSync, options);
+		const settings = new Settings(options);
+		const reader = new ReaderSync(settings);
+		const provider = new ProviderSync(reader, settings);
 
-		return utils.array.flatten(works);
+		const tasks = getTasks(source, settings);
+		const entries = tasks.map((task) => provider.read(task));
+
+		return utils.array.flatFirstLevel(entries);
 	}
 
 	export function stream(source: PatternInternal | PatternInternal[], options?: OptionsInternal): NodeJS.ReadableStream {
 		assertPatternsInput(source);
 
-		const works = getWorks(source, ProviderStream, options);
+		const settings = new Settings(options);
+		const reader = new ReaderStream(settings);
+		const provider = new ProviderStream(reader, settings);
+
+		const tasks = getTasks(source, settings);
+		const streams = tasks.map((task) => provider.read(task));
 
 		/**
 		 * The stream returned by the provider cannot work with an asynchronous iterator.
 		 * To support asynchronous iterators, regardless of the number of tasks, we always multiplex streams.
 		 * This affects performance (+25%). I don't see best solution right now.
 		 */
-		return utils.stream.merge(works);
+		return utils.stream.merge(streams);
 	}
 
 	export function generateTasks(source: PatternInternal | PatternInternal[], options?: OptionsInternal): Task[] {
@@ -119,14 +132,10 @@ namespace FastGlob {
 	}
 }
 
-function getWorks<T>(source: PatternInternal | PatternInternal[], _Provider: new (settings: Settings) => Provider<T>, options?: OptionsInternal): T[] {
+function getTasks(source: PatternInternal | PatternInternal[], settings: Settings): taskManager.Task[] {
 	const patterns = ([] as PatternInternal[]).concat(source);
-	const settings = new Settings(options);
 
-	const tasks = taskManager.generate(patterns, settings);
-	const provider = new _Provider(settings);
-
-	return tasks.map((task) => provider.read(task));
+	return taskManager.generate(patterns, settings);
 }
 
 function assertPatternsInput(input: unknown): never | void {
