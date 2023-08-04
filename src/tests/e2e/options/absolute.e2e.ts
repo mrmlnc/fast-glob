@@ -2,10 +2,15 @@ import * as path from 'node:path';
 
 import * as runner from '../runner';
 
-const CWD = process.cwd().replaceAll('\\', '/');
+const CWD = process.cwd();
+const CWD_POSIX = CWD.replaceAll('\\', '/');
 
 function resultTransform(item: string): string {
-	return item.replace(CWD, '<root>');
+	return item
+		.replace(CWD, '<root>')
+		// Backslashes are used on Windows.
+		// The `fixtures` directory is under our control, so we are confident that the conversions are correct.
+		.replaceAll(/[/\\]/g, '/');
 }
 
 runner.suite('Options Absolute', {
@@ -60,14 +65,14 @@ runner.suite('Options Absolute (ignore)', {
 		{
 			pattern: 'fixtures/*',
 			options: {
-				ignore: [path.posix.join(CWD, 'fixtures', '*')],
+				ignore: [path.posix.join(CWD_POSIX, 'fixtures', '*')],
 				absolute: true,
 			},
 		},
 		{
 			pattern: 'fixtures/**',
 			options: {
-				ignore: [path.posix.join(CWD, 'fixtures', '*')],
+				ignore: [path.posix.join(CWD_POSIX, 'fixtures', '*')],
 				absolute: true,
 			},
 			issue: 47,
@@ -125,7 +130,7 @@ runner.suite('Options Absolute (cwd & ignore)', {
 		{
 			pattern: '*',
 			options: {
-				ignore: [path.posix.join(CWD, 'fixtures', '*')],
+				ignore: [path.posix.join(CWD_POSIX, 'fixtures', '*')],
 				cwd: 'fixtures',
 				absolute: true,
 			},
@@ -133,7 +138,7 @@ runner.suite('Options Absolute (cwd & ignore)', {
 		{
 			pattern: '**',
 			options: {
-				ignore: [path.posix.join(CWD, 'fixtures', '*')],
+				ignore: [path.posix.join(CWD_POSIX, 'fixtures', '*')],
 				cwd: 'fixtures',
 				absolute: true,
 			},
@@ -141,7 +146,7 @@ runner.suite('Options Absolute (cwd & ignore)', {
 		{
 			pattern: '**',
 			options: {
-				ignore: [path.posix.join(CWD, 'fixtures', '**')],
+				ignore: [path.posix.join(CWD_POSIX, 'fixtures', '**')],
 				cwd: 'fixtures',
 				absolute: true,
 			},

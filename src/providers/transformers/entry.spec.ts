@@ -3,7 +3,6 @@ import * as path from 'node:path';
 
 import Settings from '../../settings';
 import * as tests from '../../tests';
-import * as utils from '../../utils';
 import EntryTransformer from './entry';
 
 import type { EntryTransformerFunction } from '../../types';
@@ -64,8 +63,7 @@ describe('Providers → Transformers → Entry', () => {
 			const transformer = getTransformer({ absolute: true });
 			const entry = tests.entry.builder().path('root/file.txt').file().build();
 
-			const fullpath = path.join(process.cwd(), 'root', 'file.txt');
-			const expected = utils.path.unixify(fullpath);
+			const expected = path.join(process.cwd(), 'root', 'file.txt');
 
 			const actual = transformer(entry);
 
@@ -87,8 +85,7 @@ describe('Providers → Transformers → Entry', () => {
 			const transformer = getTransformer({ absolute: true, markDirectories: true });
 			const entry = tests.entry.builder().path('root/directory').directory().build();
 
-			const fullpath = path.join(process.cwd(), 'root', 'directory', '/');
-			const expected = utils.path.unixify(fullpath);
+			const expected = path.join(process.cwd(), 'root', 'directory', '/');
 
 			const actual = transformer(entry);
 
