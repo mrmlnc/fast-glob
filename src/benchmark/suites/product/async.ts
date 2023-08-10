@@ -29,7 +29,7 @@ class Glob {
 	public async measureFastGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
 
-		await this.#measure(() => glob(this.#pattern, {
+		await this.#measure(() => glob.glob(this.#pattern, {
 			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,

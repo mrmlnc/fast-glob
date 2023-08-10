@@ -151,17 +151,17 @@ function getResultTransformers(suite: Suite, test: Test): TransformFunction[] {
 }
 
 function getFastGlobEntriesSync(patterns: Pattern[], options?: fg.Options): string[] {
-	return fg.sync(patterns, options);
+	return fg.globSync(patterns, options);
 }
 
 async function getFastGlobEntriesAsync(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
-	return fg(patterns, options);
+	return fg.glob(patterns, options);
 }
 
 async function getFastGlobEntriesStream(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
 	const entries: string[] = [];
 
-	const stream = fg.stream(patterns, options);
+	const stream = fg.globStream(patterns, options);
 
 	await new Promise((resolve, reject) => {
 		stream.on('data', (entry: string) => entries.push(entry));

@@ -10,17 +10,11 @@ const invalidInputData = null as unknown as string;
 
 describe('Package', () => {
 	describe('.globSync', () => {
-		it('should be an alias for the .sync method', () => {
-			assert.strictEqual(fg.globSync, fg.sync);
-		});
-	});
-
-	describe('.sync', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			assert.throws(() => fg.sync(invalidInputData), { message });
-			assert.throws(() => fg.sync(''), { message });
+			assert.throws(() => fg.globSync(invalidInputData), { message });
+			assert.throws(() => fg.globSync(''), { message });
 		});
 
 		it('should returns entries', () => {
@@ -36,7 +30,7 @@ describe('Package', () => {
 				'fixtures/third/library/b/book.md',
 			];
 
-			const actual = fg.sync(['fixtures/**/*.md']);
+			const actual = fg.globSync(['fixtures/**/*.md']);
 
 			actual.sort((a, b) => a.localeCompare(b));
 
@@ -53,7 +47,7 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md',
 			];
 
-			const actual = fg.sync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
+			const actual = fg.globSync(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			actual.sort((a, b) => a.localeCompare(b));
 
@@ -61,18 +55,19 @@ describe('Package', () => {
 		});
 	});
 
-	describe('.glob', () => {
-		it('should be an alias for the .sync method', () => {
-			assert.strictEqual(fg.glob, fg.async);
+	describe('.sync', () => {
+		it('should be an alias for the .globSync method', () => {
+			// eslint-disable-next-line import/no-deprecated
+			assert.strictEqual(fg.sync, fg.globSync);
 		});
 	});
 
-	describe('.async', () => {
+	describe('.glob', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			await assert.rejects(() => fg(invalidInputData), { message });
-			await assert.rejects(() => fg(''), { message });
+			await assert.rejects(() => fg.glob(invalidInputData), { message });
+			await assert.rejects(() => fg.glob(''), { message });
 		});
 
 		it('should returns entries', async () => {
@@ -88,7 +83,7 @@ describe('Package', () => {
 				'fixtures/third/library/b/book.md',
 			];
 
-			const actual = await fg(['fixtures/**/*.md']);
+			const actual = await fg.glob(['fixtures/**/*.md']);
 
 			actual.sort((a, b) => a.localeCompare(b));
 
@@ -105,7 +100,7 @@ describe('Package', () => {
 				'fixtures/second/nested/file.md',
 			];
 
-			const actual = await fg(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
+			const actual = await fg.glob(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			actual.sort((a, b) => a.localeCompare(b));
 
@@ -113,18 +108,19 @@ describe('Package', () => {
 		});
 	});
 
-	describe('.globStream', () => {
-		it('should be an alias for the .sync method', () => {
-			assert.strictEqual(fg.globStream, fg.stream);
+	describe('.async', () => {
+		it('should be an alias for the .glob method', () => {
+			// eslint-disable-next-line import/no-deprecated
+			assert.strictEqual(fg.async, fg.glob);
 		});
 	});
 
-	describe('.stream', () => {
+	describe('.globStream', () => {
 		it('should throw an error when input values can not pass validation', () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			assert.throws(() => fg.stream(invalidInputData), { message });
-			assert.throws(() => fg.stream(''), { message });
+			assert.throws(() => fg.globStream(invalidInputData), { message });
+			assert.throws(() => fg.globStream(''), { message });
 		});
 
 		it('should returns entries', (done) => {
@@ -142,7 +138,7 @@ describe('Package', () => {
 
 			const actual: string[] = [];
 
-			const stream = fg.stream(['fixtures/**/*.md']);
+			const stream = fg.globStream(['fixtures/**/*.md']);
 
 			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
@@ -166,7 +162,7 @@ describe('Package', () => {
 
 			const actual: string[] = [];
 
-			const stream = fg.stream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
+			const stream = fg.globStream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
 			stream.on('data', (entry: string) => actual.push(entry));
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
@@ -176,6 +172,13 @@ describe('Package', () => {
 				assert.deepStrictEqual(actual, expected);
 				done();
 			});
+		});
+	});
+
+	describe('.stream', () => {
+		it('should be an alias for the .globStream method', () => {
+			// eslint-disable-next-line import/no-deprecated
+			assert.strictEqual(fg.stream, fg.globStream);
 		});
 	});
 

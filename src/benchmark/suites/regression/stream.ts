@@ -29,13 +29,13 @@ class Glob {
 		const glob = await utils.importAndMeasure(utils.importPreviousFastGlob);
 
 		// @ts-expect-error remove this line after the next major release.
-		await this.#measure(() => glob.stream(this.#pattern, this.#options));
+		await this.#measure(() => glob.globStream(this.#pattern, this.#options));
 	}
 
 	public async measureCurrentVersion(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
 
-		await this.#measure(() => glob.stream(this.#pattern, this.#options));
+		await this.#measure(() => glob.globStream(this.#pattern, this.#options));
 	}
 
 	async #measure(function_: GlobImplFunction): Promise<void> {

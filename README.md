@@ -125,9 +125,8 @@ npm install fast-glob
 ### Asynchronous
 
 ```js
-fg(patterns, [options])
-fg.async(patterns, [options])
 fg.glob(patterns, [options])
+fg.async(patterns, [options])
 ```
 
 Returns a `Promise` with an array of matching entries.
@@ -135,7 +134,7 @@ Returns a `Promise` with an array of matching entries.
 ```js
 const fg = require('fast-glob');
 
-const entries = await fg(['.editorconfig', '**/index.js'], { dot: true });
+const entries = await fg.glob(['.editorconfig', '**/index.js'], { dot: true });
 
 // ['.editorconfig', 'services/index.js']
 ```
@@ -143,7 +142,7 @@ const entries = await fg(['.editorconfig', '**/index.js'], { dot: true });
 ### Synchronous
 
 ```js
-fg.sync(patterns, [options])
+fg.globSync(patterns, [options])
 fg.globSync(patterns, [options])
 ```
 
@@ -152,7 +151,7 @@ Returns an array of matching entries.
 ```js
 const fg = require('fast-glob');
 
-const entries = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
+const entries = fg.globSync(['.editorconfig', '**/index.js'], { dot: true });
 
 // ['.editorconfig', 'services/index.js']
 ```
@@ -160,8 +159,8 @@ const entries = fg.sync(['.editorconfig', '**/index.js'], { dot: true });
 ### Stream
 
 ```js
-fg.stream(patterns, [options])
 fg.globStream(patterns, [options])
+fg.stream(patterns, [options])
 ```
 
 Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` event will be emitted with matching entry.
@@ -169,7 +168,7 @@ Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` ev
 ```js
 const fg = require('fast-glob');
 
-const stream = fg.stream(['.editorconfig', '**/index.js'], { dot: true });
+const stream = fg.globStream(['.editorconfig', '**/index.js'], { dot: true });
 
 for await (const entry of stream) {
 	// .editorconfig
@@ -358,12 +357,12 @@ dir/
 
 ```js
 // With base directory
-fg.sync('dir/**', { onlyFiles: false, deep: 1 }); // ['dir/one']
-fg.sync('dir/**', { onlyFiles: false, deep: 2 }); // ['dir/one', 'dir/one/two']
+fg.globSync('dir/**', { onlyFiles: false, deep: 1 }); // ['dir/one']
+fg.globSync('dir/**', { onlyFiles: false, deep: 2 }); // ['dir/one', 'dir/one/two']
 
 // With cwd option
-fg.sync('**', { onlyFiles: false, cwd: 'dir', deep: 1 }); // ['one']
-fg.sync('**', { onlyFiles: false, cwd: 'dir', deep: 2 }); // ['one', 'one/two']
+fg.globSync('**', { onlyFiles: false, cwd: 'dir', deep: 1 }); // ['one']
+fg.globSync('**', { onlyFiles: false, cwd: 'dir', deep: 2 }); // ['one', 'one/two']
 ```
 
 > :book: If you specify a pattern with some base directory, this directory will not participate in the calculation of the depth of the found directories. Think of it as a [`cwd`](#cwd) option.
@@ -411,8 +410,8 @@ dir/
 ```
 
 ```js
-fg.sync(['*.json', '!package-lock.json']);            // ['package.json']
-fg.sync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
+fg.globSync(['*.json', '!package-lock.json']);            // ['package.json']
+fg.globSync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
 ```
 
 #### suppressErrors
@@ -443,8 +442,8 @@ Throw an error when symbolic link is broken if `true` or safely return `lstat` c
 Return the absolute path for entries.
 
 ```js
-fg.sync('*.js', { absolute: false }); // ['index.js']
-fg.sync('*.js', { absolute: true });  // ['/home/user/index.js']
+fg.globSync('*.js', { absolute: false }); // ['index.js']
+fg.globSync('*.js', { absolute: true });  // ['/home/user/index.js']
 ```
 
 > :book: This option is required if you want to use negative patterns with absolute path, for example, `!${__dirname}/*.js`.
@@ -457,8 +456,8 @@ fg.sync('*.js', { absolute: true });  // ['/home/user/index.js']
 Mark the directory path with the final slash.
 
 ```js
-fg.sync('*', { onlyFiles: false, markDirectories: false }); // ['index.js', 'controllers']
-fg.sync('*', { onlyFiles: false, markDirectories: true });  // ['index.js', 'controllers/']
+fg.globSync('*', { onlyFiles: false, markDirectories: false }); // ['index.js', 'controllers']
+fg.globSync('*', { onlyFiles: false, markDirectories: true });  // ['index.js', 'controllers/']
 ```
 
 #### objectMode
@@ -469,8 +468,8 @@ fg.sync('*', { onlyFiles: false, markDirectories: true });  // ['index.js', 'con
 Returns objects (instead of strings) describing entries.
 
 ```js
-fg.sync('*', { objectMode: false }); // ['src/index.js']
-fg.sync('*', { objectMode: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent> }]
+fg.globSync('*', { objectMode: false }); // ['src/index.js']
+fg.globSync('*', { objectMode: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent> }]
 ```
 
 The object has the following fields:
@@ -489,8 +488,8 @@ The object has the following fields:
 Return only directories.
 
 ```js
-fg.sync('*', { onlyDirectories: false }); // ['index.js', 'src']
-fg.sync('*', { onlyDirectories: true });  // ['src']
+fg.globSync('*', { onlyDirectories: false }); // ['index.js', 'src']
+fg.globSync('*', { onlyDirectories: true });  // ['src']
 ```
 
 > :book: If `true`, the [`onlyFiles`](#onlyfiles) option is automatically `false`.
@@ -503,8 +502,8 @@ fg.sync('*', { onlyDirectories: true });  // ['src']
 Return only files.
 
 ```js
-fg.sync('*', { onlyFiles: false }); // ['index.js', 'src']
-fg.sync('*', { onlyFiles: true });  // ['index.js']
+fg.globSync('*', { onlyFiles: false }); // ['index.js', 'src']
+fg.globSync('*', { onlyFiles: true });  // ['index.js']
 ```
 
 #### stats
@@ -517,8 +516,8 @@ Enables an [object mode](#objectmode) with an additional field:
 * stats ([`fs.Stats`][node_js_fs_class_fs_stats]) — instance of `fs.Stats`
 
 ```js
-fg.sync('*', { stats: false }); // ['src/index.js']
-fg.sync('*', { stats: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent>, stats: <fs.Stats> }]
+fg.globSync('*', { stats: false }); // ['src/index.js']
+fg.globSync('*', { stats: true });  // [{ name: 'index.js', path: 'src/index.js', dirent: <fs.Dirent>, stats: <fs.Stats> }]
 ```
 
 > :book: Returns `fs.stat` instead of `fs.lstat` for symbolic links when the [`followSymbolicLinks`](#followsymboliclinks) option is specified.
@@ -531,8 +530,8 @@ fg.sync('*', { stats: true });  // [{ name: 'index.js', path: 'src/index.js', di
 Ensures that the returned entries are unique.
 
 ```js
-fg.sync(['*.json', 'package.json'], { unique: false }); // ['package.json', 'package.json']
-fg.sync(['*.json', 'package.json'], { unique: true });  // ['package.json']
+fg.globSync(['*.json', 'package.json'], { unique: false }); // ['package.json', 'package.json']
+fg.globSync(['*.json', 'package.json'], { unique: true });  // ['package.json']
 ```
 
 If `true` and similar entries are found, the result is the first found.
@@ -556,8 +555,8 @@ dir/
 ```
 
 ```js
-fg.sync('a{b,c}d', { braceExpansion: false }); // ['a{b,c}d']
-fg.sync('a{b,c}d', { braceExpansion: true });  // ['abd', 'acd']
+fg.globSync('a{b,c}d', { braceExpansion: false }); // ['a{b,c}d']
+fg.globSync('a{b,c}d', { braceExpansion: true });  // ['abd', 'acd']
 ```
 
 #### caseSensitiveMatch
@@ -574,8 +573,8 @@ dir/
 ```
 
 ```js
-fg.sync('file.txt', { caseSensitiveMatch: false }); // ['file.txt', 'File.txt']
-fg.sync('file.txt', { caseSensitiveMatch: true });  // ['file.txt']
+fg.globSync('file.txt', { caseSensitiveMatch: false }); // ['file.txt', 'File.txt']
+fg.globSync('file.txt', { caseSensitiveMatch: true });  // ['file.txt']
 ```
 
 #### dot
@@ -594,8 +593,8 @@ dir/
 ```
 
 ```js
-fg.sync('*', { dot: false }); // ['package.json']
-fg.sync('*', { dot: true });  // ['.editorconfig', 'package.json']
+fg.globSync('*', { dot: false }); // ['package.json']
+fg.globSync('*', { dot: true });  // ['.editorconfig', 'package.json']
 ```
 
 #### extglob
@@ -614,8 +613,8 @@ dir/
 ```
 
 ```js
-fg.sync('*.+(json|md)', { extglob: false }); // []
-fg.sync('*.+(json|md)', { extglob: true });  // ['README.md', 'package.json']
+fg.globSync('*.+(json|md)', { extglob: false }); // []
+fg.globSync('*.+(json|md)', { extglob: true });  // ['README.md', 'package.json']
 ```
 
 #### globstar
@@ -632,8 +631,8 @@ dir/
 ```
 
 ```js
-fg.sync('**', { onlyFiles: false, globstar: false }); // ['a']
-fg.sync('**', { onlyFiles: false, globstar: true });  // ['a', 'a/b']
+fg.globSync('**', { onlyFiles: false, globstar: false }); // ['a']
+fg.globSync('**', { onlyFiles: false, globstar: true });  // ['a', 'a/b']
 ```
 
 #### baseNameMatch
@@ -650,8 +649,8 @@ dir/
 ```
 
 ```js
-fg.sync('*.md', { baseNameMatch: false }); // []
-fg.sync('*.md', { baseNameMatch: true });  // ['one/file.md']
+fg.globSync('*.md', { baseNameMatch: false }); // []
+fg.globSync('*.md', { baseNameMatch: true });  // ['one/file.md']
 ```
 
 ## FAQ
@@ -707,13 +706,13 @@ dir/
 ```
 
 ```js
-fg.sync(['(special-*file).txt']) // []
+fg.globSync(['(special-*file).txt']) // []
 ```
 
 Refers to Bash. You need to escape special characters:
 
 ```js
-fg.sync(['\\(special-*file\\).txt']) // ['(special-*file).txt']
+fg.globSync(['\\(special-*file\\).txt']) // ['(special-*file).txt']
 ```
 
 Read more about [matching special characters as literals][picomatch_matching_special_characters_as_literals]. Or use the [`.escapePath`](#escapepathpath).
@@ -732,8 +731,8 @@ first/
 If you don't want to read the `second` directory, you must write the following pattern: `!**/second` or `!**/second/**`.
 
 ```js
-fg.sync(['**/*.md', '!**/second']);                 // ['first/file.md']
-fg.sync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.md']
+fg.globSync(['**/*.md', '!**/second']);                 // ['first/file.md']
+fg.globSync(['**/*.md'], { ignore: ['**/second/**'] }); // ['first/file.md']
 ```
 
 > :warning: When you write `!**/second/**/*` it means that the directory will be **read**, but all the entries will not be included in the results.
@@ -746,11 +745,11 @@ You cannot use [Uniform Naming Convention (UNC)][unc_path] paths as patterns (du
 
 ```ts
 // cwd
-fg.sync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
-fg.sync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
+fg.globSync('*', { cwd: '\\\\?\\C:\\Python27' /* or //?/C:/Python27 */ });
+fg.globSync('Python27/*', { cwd: '\\\\?\\C:\\' /* or //?/C:/ */ });
 
 // .convertPathToPattern
-fg.sync(fg.convertPathToPattern('\\\\?\\c:\\Python27') + '/*');
+fg.globSync(fg.convertPathToPattern('\\\\?\\c:\\Python27') + '/*');
 ```
 
 ## Compatible with `node-glob`?

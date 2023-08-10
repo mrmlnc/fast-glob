@@ -45,7 +45,7 @@ class Glob {
 
 		const entries: string[] = [];
 
-		const stream = glob.stream(this.#pattern, {
+		const stream = glob.globStream(this.#pattern, {
 			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,
