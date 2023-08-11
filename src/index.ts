@@ -104,45 +104,18 @@ export function isDynamicPattern(source: PatternInternal, options?: OptionsInter
 	return utils.pattern.isDynamicPattern(source, settings);
 }
 
-export function escapePath(source: string): PatternInternal {
-	assertPatternsInput(source);
+export const escapePath = withPatternsInputAssert(utils.path.escape);
+export const convertPathToPattern = withPatternsInputAssert(utils.path.convertPathToPattern);
 
-	return utils.path.escape(source);
-}
+export const posix = {
+	escapePath: withPatternsInputAssert(utils.path.escapePosixPath),
+	convertPathToPattern: withPatternsInputAssert(utils.path.convertPosixPathToPattern),
+};
 
-export function convertPathToPattern(source: string): PatternInternal {
-	assertPatternsInput(source);
-
-	return utils.path.convertPathToPattern(source);
-}
-
-export namespace posix {
-	export function escapePath(source: string): PatternInternal {
-		assertPatternsInput(source);
-
-		return utils.path.escapePosixPath(source);
-	}
-
-	export function convertPathToPattern(source: string): PatternInternal {
-		assertPatternsInput(source);
-
-		return utils.path.convertPosixPathToPattern(source);
-	}
-}
-
-export namespace win32 {
-	export function escapePath(source: string): PatternInternal {
-		assertPatternsInput(source);
-
-		return utils.path.escapeWindowsPath(source);
-	}
-
-	export function convertPathToPattern(source: string): PatternInternal {
-		assertPatternsInput(source);
-
-		return utils.path.convertWindowsPathToPattern(source);
-	}
-}
+export const win32 = {
+	escapePath: withPatternsInputAssert(utils.path.escapeWindowsPath),
+	convertPathToPattern: withPatternsInputAssert(utils.path.convertWindowsPathToPattern),
+};
 
 function getTasks(source: InputPattern, settings: Settings): taskManager.Task[] {
 	const patterns = ([] as PatternInternal[]).concat(source);
@@ -157,4 +130,12 @@ function assertPatternsInput(input: unknown): never | void {
 	if (!isValidSource) {
 		throw new TypeError('Patterns must be a string (non empty) or an array of strings');
 	}
+}
+
+function withPatternsInputAssert(method: (source: string) => string) {
+	return (source: string): string => {
+		assertPatternsInput(source);
+
+		return method(source);
+	};
 }
