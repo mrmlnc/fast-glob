@@ -156,7 +156,7 @@ export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[]
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
-	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true });
+	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
 
 	/**
 	 * Sort the patterns by length so that the same depth patterns are processed side by side.

@@ -431,6 +431,14 @@ describe('Utils → Pattern', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should keep escaping after expansion', () => {
+			const expected = ['foo@(\\\\)/**/*.a', 'foo@(\\\\)/**/*.b'];
+
+			const actual = util.expandBraceExpansion('foo@(\\\\)/**/{*.a,*.b}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.getPatternParts', () => {
