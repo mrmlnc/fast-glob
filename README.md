@@ -272,10 +272,10 @@ Returns the path with escaped special characters depending on the platform.
   * `@+!` before the opening parenthesis;
   * `\\` before non-special characters;
 * Windows:
-  * `(){}`
+  * `(){}[]`
   * `!` at the beginning of line;
   * `@+!` before the opening parenthesis;
-  * Characters like `*?|[]` cannot be used in the path ([windows_naming_conventions][windows_naming_conventions]), so they will not be escaped;
+  * Characters like `*?|` cannot be used in the path ([windows_naming_conventions][windows_naming_conventions]), so they will not be escaped;
 
 ```js
 fg.escapePath('!abc');
@@ -294,7 +294,7 @@ fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
 Converts a path to a pattern depending on the platform, including special character escaping.
 
 * Posix. Works similarly to the `fg.posix.escapePath` method.
-* Windows. Works similarly to the `fg.win32.escapePath` method, additionally converting backslashes to forward slashes in cases where they are not escape characters (`!()+@{}`).
+* Windows. Works similarly to the `fg.win32.escapePath` method, additionally converting backslashes to forward slashes in cases where they are not escape characters (`!()+@{}[]`).
 
 ```js
 fg.convertPathToPattern('[OpenSource] mrmlnc – fast-glob (Deluxe Edition) 2014') + '/*.flac';
