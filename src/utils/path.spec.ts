@@ -53,6 +53,7 @@ describe('Utils → Path', () => {
 			assert.strictEqual(util.escapeWindowsPath('!abc'), '\\!abc');
 			assert.strictEqual(util.escapeWindowsPath('()'), '\\(\\)');
 			assert.strictEqual(util.escapeWindowsPath('{}'), '\\{\\}');
+			assert.strictEqual(util.escapeWindowsPath('[]'), '\\[\\]');
 			assert.strictEqual(util.escapeWindowsPath('@('), '\\@\\(');
 			assert.strictEqual(util.escapeWindowsPath('!('), '\\!\\(');
 			assert.strictEqual(util.escapeWindowsPath('+('), '\\+\\(');
@@ -103,6 +104,8 @@ describe('Utils → Path', () => {
 			assert.strictEqual(util.convertWindowsPathToPattern('\\)\\'), '\\)/');
 			assert.strictEqual(util.convertWindowsPathToPattern('\\{\\'), '\\{/');
 			assert.strictEqual(util.convertWindowsPathToPattern('\\}\\'), '\\}/');
+			assert.strictEqual(util.convertWindowsPathToPattern('\\[\\'), '\\[/');
+			assert.strictEqual(util.convertWindowsPathToPattern('\\]\\'), '\\]/');
 
 			assert.strictEqual(util.convertWindowsPathToPattern('.\\*'), './*');
 			assert.strictEqual(util.convertWindowsPathToPattern('.\\**'), './**');
