@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
-      - releases/*
+    branches: ['master', 'releases/*']
   pull_request:
-    branches:
-      - '*'
+    branches: ['*']
 
 env:
   SNAPSHOT_SKIP_PRUNING: 1
@@ -29,9 +26,9 @@ jobs:
           - windows-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
       - name: Install dependencies
