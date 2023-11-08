@@ -8,7 +8,7 @@ import type { Task } from '../managers/tasks';
 import type { Entry, ErrnoException, ReaderOptions } from '../types';
 
 export class ProviderStream extends Provider<Readable> {
-	#reader: IReaderStream;
+	readonly #reader: IReaderStream;
 
 	constructor(reader: IReaderStream, settings: Settings) {
 		super(settings);

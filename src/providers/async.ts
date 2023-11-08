@@ -6,7 +6,7 @@ import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	#reader: IReaderAsync;
+	readonly #reader: IReaderAsync;
 
 	constructor(reader: IReaderAsync, settings: Settings) {
 		super(settings);
