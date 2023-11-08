@@ -36,10 +36,10 @@ jobs:
           node-version: ${{ matrix.node_version }}
       - name: Install dependencies
         run: npm install
-      - name: Compile sources
-        run: npm run compile
       - name: Run Hygiene Checks
         run: npm run lint
+      - name: Prepare bundle
+        run: npm run bundle
       - name: Run unit tests
         run: npm run test
       - name: Run e2e tests (sync)
