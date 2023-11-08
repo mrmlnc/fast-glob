@@ -1,6 +1,8 @@
 import * as path from 'node:path';
 
-import * as globParent from 'glob-parent';
+// https://stackoverflow.com/a/39415662
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import globParent = require('glob-parent');
 import * as micromatch from 'micromatch';
 
 import type { MicromatchOptions, Pattern, PatternRe } from '../types';

@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - master
-      - releases/*
+    branches: ['master', 'releases/*']
   pull_request:
-    branches:
-      - '*'
+    branches: ['*']
 
 env:
   SNAPSHOT_SKIP_PRUNING: 1
@@ -29,17 +26,17 @@ jobs:
           - windows-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
       - name: Install dependencies
         run: npm install
-      - name: Compile sources
-        run: npm run compile
       - name: Run Hygiene Checks
         run: npm run lint
+      - name: Prepare bundle
+        run: npm run bundle
       - name: Run unit tests
         run: npm run test
       - name: Run e2e tests (sync)

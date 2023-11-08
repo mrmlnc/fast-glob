@@ -1,6 +1,6 @@
 {
   "name": "fast-glob",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "description": "It's a very fast and efficient glob library for Node.js",
   "license": "MIT",
   "repository": "mrmlnc/fast-glob",
@@ -11,13 +11,13 @@
   "engines": {
     "node": ">=16.14.0"
   },
-  "main": "out/index.js",
-  "typings": "out/index.d.ts",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "files": [
-    "out",
-    "!out/{benchmark,tests}",
-    "!out/**/*.map",
-    "!out/**/*.spec.*"
+    "build",
+    "!build/{benchmark,tests}",
+    "!build/**/*.map",
+    "!build/**/*.spec.*"
   ],
   "keywords": [
     "glob",
@@ -35,6 +35,7 @@
     "@types/picomatch": "^2.3.0",
     "@types/sinon": "^10.0.15",
     "bencho": "^0.1.1",
+    "esbuild": "^0.19.5",
     "eslint": "^8.46.0",
     "eslint-config-mrmlnc": "^4.0.1",
     "execa": "^7.2.0",
@@ -56,7 +57,7 @@
     "micromatch": "^4.0.5"
   },
   "scripts": {
-    "clean": "rimraf out",
+    "clean": "rimraf out build",
     "lint": "eslint \"src/**/*.ts\" --cache",
     "compile": "tsc",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
@@ -64,8 +65,15 @@
     "test:e2e:sync": "mocha \"out/**/*.e2e.js\" -s 0 --grep \"\\(sync\\)\"",
     "test:e2e:async": "mocha \"out/**/*.e2e.js\" -s 0 --grep \"\\(async\\)\"",
     "test:e2e:stream": "mocha \"out/**/*.e2e.js\" -s 0 --grep \"\\(stream\\)\"",
-    "build": "npm run clean && npm run compile && npm run lint && npm test",
-    "watch": "npm run clean && npm run compile -- --sourceMap --watch",
+    "_build:compile": "npm run clean && npm run compile",
+    "build": "npm run _build:compile && npm run lint && npm test",
+    "watch": "npm run _build:compile -- --sourceMap --watch",
+    "_bundle:dts": "tsc --emitDeclarationOnly --outDir ./build",
+    "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node16.14 --format=cjs",
+    "_bundle:build": "npm run _bundle:dts && npm run _bundle:ts",
+    "_bundle:test:replace": "cp ./build/index.js ./out",
+    "_bundle:test": "npm run _bundle:test:replace",
+    "bundle": "npm run _build:compile && npm run _bundle:build && npm run _bundle:test",
     "bench:async": "npm run bench:product:async && npm run bench:regression:async",
     "bench:stream": "npm run bench:product:stream && npm run bench:regression:stream",
     "bench:sync": "npm run bench:product:sync && npm run bench:regression:sync",
@@ -76,6 +84,7 @@
     "bench:regression": "npm run bench:regression:async && npm run bench:regression:sync && npm run bench:regression:stream",
     "bench:regression:async": "hereby bench:regression:async",
     "bench:regression:sync": "hereby bench:regression:sync",
-    "bench:regression:stream": "hereby bench:regression:stream"
+    "bench:regression:stream": "hereby bench:regression:stream",
+    "prepublishOnly": "npm run bundle"
   }
 }
