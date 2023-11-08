@@ -15,6 +15,7 @@ node_modules/
 .tmp/
 .benchmark/
 out/
+build/
 
 # Other files
 package-lock.json
