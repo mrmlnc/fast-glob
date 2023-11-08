@@ -6,7 +6,7 @@ import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
 
 export class ProviderSync extends Provider<EntryItem[]> {
-	#reader: IReaderSync;
+	readonly #reader: IReaderSync;
 
 	constructor(reader: IReaderSync, settings: Settings) {
 		super(settings);
