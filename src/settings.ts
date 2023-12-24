@@ -1,5 +1,4 @@
 import * as fs from 'node:fs';
-import * as os from 'node:os';
 
 import type { FileSystemAdapter, Pattern } from './types';
 
@@ -38,13 +37,6 @@ export interface Options {
 	 * @default true
 	 */
 	caseSensitiveMatch?: boolean;
-	/**
-	 * Specifies the maximum number of concurrent requests from a reader to read
-	 * directories.
-	 *
-	 * @default os.cpus().length
-	 */
-	concurrency?: number;
 	/**
 	 * The current working directory in which to search.
 	 *
@@ -153,7 +145,6 @@ export default class Settings {
 	public readonly baseNameMatch: boolean;
 	public readonly braceExpansion: boolean;
 	public readonly caseSensitiveMatch: boolean;
-	public readonly concurrency: number;
 	public readonly cwd: string;
 	public readonly deep: number;
 	public readonly dot: boolean;
@@ -177,11 +168,6 @@ export default class Settings {
 		this.baseNameMatch = options.baseNameMatch ?? false;
 		this.braceExpansion = options.braceExpansion ?? true;
 		this.caseSensitiveMatch = options.caseSensitiveMatch ?? true;
-		/**
-		 * The `os.cpus` method can return zero. We expect the number of cores to be greater than zero.
-		 * https://github.com/nodejs/node/blob/7faeddf23a98c53896f8b574a6e66589e8fb1eb8/lib/os.js#L106-L107
-		 */
-		this.concurrency = options.concurrency ?? Math.max(os.cpus().length, 1);
 		this.cwd = options.cwd ?? process.cwd();
 		this.deep = options.deep ?? Number.POSITIVE_INFINITY;
 		this.dot = options.dot ?? false;

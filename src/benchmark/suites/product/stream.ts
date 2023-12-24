@@ -49,7 +49,6 @@ class Glob {
 			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,
-			concurrency: Number.POSITIVE_INFINITY,
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {

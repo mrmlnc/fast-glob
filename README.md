@@ -27,7 +27,6 @@ This package provides methods for traversing the file system and returning pathn
 	* [convertPathToPattern](#convertpathtopatternpath)
 * [Options](#options-3)
   * [Common](#common)
-    * [concurrency](#concurrency)
     * [cwd](#cwd)
     * [deep](#deep)
     * [followSymbolicLinks](#followsymboliclinks)
@@ -306,31 +305,6 @@ fg.win32.convertPathToPattern('\\\\?\\c:\\Program Files (x86)') + '/**/*';
 ## Options
 
 ### Common options
-
-#### concurrency
-
-* Type: `number`
-* Default: `os.cpus().length`
-
-Specifies the maximum number of concurrent requests from a reader to read directories.
-
-> :book: The higher the number, the higher the performance and load on the file system. If you want to read in quiet mode, set the value to a comfortable number or `1`.
-
-<details>
-
-<summary>More details</summary>
-
-In Node, there are [two types of threads][nodejs_thread_pool]: Event Loop (code) and a Thread Pool (fs, dns, …). The thread pool size controlled by the `UV_THREADPOOL_SIZE` environment variable. Its default size is 4 ([documentation][libuv_thread_pool]). The pool is one for all tasks within a single Node process.
-
-Any code can make 4 real concurrent accesses to the file system. The rest of the FS requests will wait in the queue.
-
-> :book: Each new instance of FG in the same Node process will use the same Thread pool.
-
-But this package also has the `concurrency` option. This option allows you to control the number of concurrent accesses to the FS at the package level. By default, this package has a value equal to the number of cores available for the current Node process. This allows you to set a value smaller than the pool size (`concurrency: 1`) or, conversely, to prepare tasks for the pool queue more quickly (`concurrency: Number.POSITIVE_INFINITY`).
-
-So, in fact, this package can **only make 4 concurrent requests to the FS**. You can increase this value by using an environment variable (`UV_THREADPOOL_SIZE`), but in practice this does not give a multiple advantage.
-
-</details>
 
 #### cwd
 
