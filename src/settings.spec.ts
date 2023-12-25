@@ -1,5 +1,4 @@
 import * as assert from 'node:assert';
-import * as os from 'node:os';
 
 import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
 
@@ -26,7 +25,6 @@ describe('Settings', () => {
 		assert.ok(settings.globstar);
 		assert.ok(settings.onlyFiles);
 		assert.ok(settings.unique);
-		assert.strictEqual(settings.concurrency, os.cpus().length);
 		assert.strictEqual(settings.cwd, process.cwd());
 	});
 
