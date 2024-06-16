@@ -22,15 +22,11 @@ export default class EntryFilter {
 			...this.#micromatchOptions,
 			dot: true,
 		});
-		const absNegativeRe = utils.pattern.convertPatternsToRe(negative.filter((pattern) => isAbsolute(pattern)), {
-			...this.#micromatchOptions,
-			dot: true,
-		});
 
-		return (entry) => this.#filter(entry, positiveRe, negativeRe, absNegativeRe);
+		return (entry) => this.#filter(entry, positiveRe, negativeRe, negative);
 	}
 
-	#filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[], absNegativeRe: PatternRe[]): boolean {
+	#filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[], absNegative: Pattern[]): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
 		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
@@ -41,7 +37,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this.#isSkippedByAbsoluteNegativePatterns(filepath, absNegativeRe)) {
+		if (this.#isSkippedByAbsoluteNegativePatterns(filepath, absNegative)) {
 			return false;
 		}
 
@@ -72,14 +68,19 @@ export default class EntryFilter {
 		return this.#settings.onlyDirectories && !entry.dirent.isDirectory();
 	}
 
-	#isSkippedByAbsoluteNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
+	#isSkippedByAbsoluteNegativePatterns(entryPath: string, negative: Pattern[]): boolean {
 		if (!this.#settings.absolute) {
 			return false;
 		}
 
+		const absNegativeRe = utils.pattern.convertPatternsToRe(negative.filter((pattern) => isAbsolute(pattern)), {
+			...this.#micromatchOptions,
+			dot: true,
+		});
+
 		const fullpath = utils.path.makeAbsolute(this.#settings.cwd, entryPath);
 
-		return utils.pattern.matchAny(fullpath, patternsRe);
+		return utils.pattern.matchAny(fullpath, absNegativeRe);
 	}
 
 	#isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
