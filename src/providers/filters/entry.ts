@@ -1,3 +1,5 @@
+import { isAbsolute } from 'node:path';
+
 import * as utils from '../../utils';
 
 import type Settings from '../../settings';
@@ -20,11 +22,15 @@ export default class EntryFilter {
 			...this.#micromatchOptions,
 			dot: true,
 		});
+		const absNegativeRe = utils.pattern.convertPatternsToRe(negative.filter((pattern) => isAbsolute(pattern)), {
+			...this.#micromatchOptions,
+			dot: true,
+		});
 
-		return (entry) => this.#filter(entry, positiveRe, negativeRe);
+		return (entry) => this.#filter(entry, positiveRe, negativeRe, absNegativeRe);
 	}
 
-	#filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	#filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[], absNegativeRe: PatternRe[]): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
 		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
@@ -35,7 +41,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this.#isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
+		if (this.#isSkippedByAbsoluteNegativePatterns(filepath, absNegativeRe)) {
 			return false;
 		}
 
