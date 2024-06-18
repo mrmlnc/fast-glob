@@ -142,7 +142,6 @@ const entries = await fg.glob(['.editorconfig', '**/index.js'], { dot: true });
 
 ```js
 fg.globSync(patterns, [options])
-fg.globSync(patterns, [options])
 ```
 
 Returns an array of matching entries.
