@@ -92,7 +92,7 @@ export function convertToNegativePattern(pattern: Pattern): Pattern {
 }
 
 export function isNegativePattern(pattern: Pattern): boolean {
-	return pattern.startsWith('!') && pattern[1] !== '(';
+	return pattern.charAt(0) === '!' && pattern[1] !== '(';
 }
 
 export function isPositivePattern(pattern: Pattern): boolean {
@@ -190,7 +190,7 @@ export function getPatternParts(pattern: Pattern, options: MicromatchOptions): P
 	 * The scan method does not return an empty part for the pattern with a forward slash.
 	 * This is another part of micromatch/picomatch#58.
 	 */
-	if (parts[0].startsWith('/')) {
+	if (parts[0].charAt(0) === '/') {
 		parts[0] = parts[0].slice(1);
 		parts.unshift('');
 	}

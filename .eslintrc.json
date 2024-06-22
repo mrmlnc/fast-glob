@@ -2,7 +2,8 @@
 	"extends": "mrmlnc",
 	"rules": {
 		"no-magic-numbers": "off",
-		"@typescript-eslint/no-magic-numbers": "off"
+		"@typescript-eslint/no-magic-numbers": "off",
+		"@typescript-eslint/prefer-string-starts-ends-with": "off"
 	},
 	"overrides": [
 		{
