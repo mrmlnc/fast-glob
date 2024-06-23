@@ -54,7 +54,7 @@
     "@nodelib/fs.walk": "^2.0.0",
     "glob-parent": "^6.0.2",
     "merge2": "^1.4.1",
-    "micromatch": "^4.0.5"
+    "micromatch": "^4.0.7"
   },
   "scripts": {
     "clean": "rimraf out build",
