@@ -217,3 +217,7 @@ export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
 export function removeDuplicateSlashes(pattern: string): string {
 	return pattern.replaceAll(DOUBLE_SLASH_RE, '/');
 }
+
+export function isAbsolute(pattern: string): boolean {
+	return path.isAbsolute(pattern);
+}
