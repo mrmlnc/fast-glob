@@ -126,6 +126,14 @@ runner.suite('Options Absolute (cwd & ignore)', {
 				absolute: true,
 			},
 		},
+		{
+			pattern: 'file.md',
+			options: {
+				ignore: [path.posix.join('**', 'fixtures', '**')],
+				cwd: 'fixtures',
+				absolute: true,
+			},
+		},
 
 		{
 			pattern: '*',
