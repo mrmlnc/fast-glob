@@ -2,22 +2,38 @@ import Settings from '../../settings';
 import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
 import * as utils from '../../utils';
 
+type PatternsRegexSet = {
+	positive: {
+		all: PatternRe[];
+	};
+	negative: {
+		absolute: PatternRe[];
+		relative: PatternRe[];
+	};
+};
+
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
 	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
 
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const positiveRe = utils.pattern.convertPatternsToRe(positive, this._micromatchOptions);
-		const negativeRe = utils.pattern.convertPatternsToRe(negative, {
-			...this._micromatchOptions,
-			dot: true
-		});
+		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
 
-		return (entry) => this._filter(entry, positiveRe, negativeRe);
+		const patterns: PatternsRegexSet = {
+			positive: {
+				all: utils.pattern.convertPatternsToRe(positive, this._micromatchOptions)
+			},
+			negative: {
+				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this._micromatchOptions, dot: true }),
+				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this._micromatchOptions, dot: true })
+			}
+		};
+
+		return (entry) => this._filter(entry, patterns);
 	}
 
-	private _filter(entry: Entry, positiveRe: PatternRe[], negativeRe: PatternRe[]): boolean {
+	private _filter(entry: Entry, patterns: PatternsRegexSet): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
 		if (this._settings.unique && this._isDuplicateEntry(filepath)) {
@@ -28,13 +44,7 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this._isSkippedByAbsoluteNegativePatterns(filepath, negativeRe)) {
-			return false;
-		}
-
-		const isDirectory = entry.dirent.isDirectory();
-
-		const isMatched = this._isMatchToPatterns(filepath, positiveRe, isDirectory) && !this._isMatchToPatterns(filepath, negativeRe, isDirectory);
+		const isMatched = this._isMatchToPatternsSet(filepath, patterns, entry.dirent.isDirectory());
 
 		if (this._settings.unique && isMatched) {
 			this._createIndexRecord(filepath);
@@ -59,14 +69,19 @@ export default class EntryFilter {
 		return this._settings.onlyDirectories && !entry.dirent.isDirectory();
 	}
 
-	private _isSkippedByAbsoluteNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
-		if (!this._settings.absolute) {
-			return false;
+	private _isMatchToPatternsSet(filepath: string, patterns: PatternsRegexSet, isDirectory: boolean): boolean {
+		let fullpath = filepath;
+
+		if (patterns.negative.absolute.length > 0) {
+			fullpath = utils.path.makeAbsolute(this._settings.cwd, filepath);
 		}
 
-		const fullpath = utils.path.makeAbsolute(this._settings.cwd, entryPath);
+		const isMatched = this._isMatchToPatterns(filepath, patterns.positive.all, isDirectory);
 
-		return utils.pattern.matchAny(fullpath, patternsRe);
+		return isMatched && !(
+			this._isMatchToPatterns(filepath, patterns.negative.relative, isDirectory) ||
+			this._isMatchToPatterns(fullpath, patterns.negative.absolute, isDirectory)
+		);
 	}
 
 	private _isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {

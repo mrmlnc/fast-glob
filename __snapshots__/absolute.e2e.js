@@ -351,3 +351,15 @@ exports['Options Absolute (cwd & ignore) {"pattern":"**","options":{"ignore":["<
 exports['Options Absolute (cwd & ignore) {"pattern":"**","options":{"ignore":["<root>/fixtures/**"],"cwd":"fixtures","absolute":true}} (async) 1'] = []
 
 exports['Options Absolute (cwd & ignore) {"pattern":"**","options":{"ignore":["<root>/fixtures/**"],"cwd":"fixtures","absolute":true}} (stream) 1'] = []
+
+exports['Options Absolute (cwd & ignore) {"pattern":"file.md","options":{"ignore":["**/fixtures/**"],"cwd":"fixtures","absolute":true}} (sync) 1'] = [
+  "<root>/fixtures/file.md"
+]
+
+exports['Options Absolute (cwd & ignore) {"pattern":"file.md","options":{"ignore":["**/fixtures/**"],"cwd":"fixtures","absolute":true}} (async) 1'] = [
+  "<root>/fixtures/file.md"
+]
+
+exports['Options Absolute (cwd & ignore) {"pattern":"file.md","options":{"ignore":["**/fixtures/**"],"cwd":"fixtures","absolute":true}} (stream) 1'] = [
+  "<root>/fixtures/file.md"
+]
