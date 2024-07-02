@@ -47,11 +47,13 @@ export default class EntryFilter {
 			return false;
 		}
 
-		if (this.#onlyFileFilter(entry) || this.#onlyDirectoryFilter(entry)) {
+		const isDirectory = entry.dirent.isDirectory();
+
+		if (this.#onlyFileFilter(isDirectory) || this.#onlyDirectoryFilter(isDirectory)) {
 			return false;
 		}
 
-		const isMatched = this.#isMatchToPatternsSet(filepath, pattens, entry.dirent.isDirectory());
+		const isMatched = this.#isMatchToPatternsSet(filepath, pattens, isDirectory);
 
 		if (this.#settings.unique && isMatched) {
 			this.#createIndexRecord(filepath);
@@ -68,12 +70,12 @@ export default class EntryFilter {
 		this.index.set(filepath, undefined);
 	}
 
-	#onlyFileFilter(entry: Entry): boolean {
-		return this.#settings.onlyFiles && !entry.dirent.isFile();
+	#onlyFileFilter(isDirectory: boolean): boolean {
+		return this.#settings.onlyFiles && isDirectory;
 	}
 
-	#onlyDirectoryFilter(entry: Entry): boolean {
-		return this.#settings.onlyDirectories && !entry.dirent.isDirectory();
+	#onlyDirectoryFilter(isDirectory: boolean): boolean {
+		return this.#settings.onlyDirectories && !isDirectory;
 	}
 
 	#isMatchToPatternsSet(filepath: string, patterns: PatternsRegexSet, isDirectory: boolean): boolean {

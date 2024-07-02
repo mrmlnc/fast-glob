@@ -38,6 +38,12 @@ class EntryBuilder {
 		return this;
 	}
 
+	public socket(): this {
+		this.#entryType = DirentType.Socket;
+
+		return this;
+	}
+
 	public stats(): this {
 		this.#entry.stats = new Stats();
 
