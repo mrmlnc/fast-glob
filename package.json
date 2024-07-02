@@ -67,7 +67,7 @@
     "test:e2e:stream": "mocha \"out/**/*.e2e.js\" -s 0 --grep \"\\(stream\\)\"",
     "_build:compile": "npm run clean && npm run compile",
     "build": "npm run _build:compile && npm run lint && npm test",
-    "watch": "npm run _build:compile -- --sourceMap --watch",
+    "watch": "npm run _build:compile -- -- --sourceMap --watch",
     "_bundle:dts": "tsc --emitDeclarationOnly --outDir ./build",
     "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node16.14 --format=cjs",
     "_bundle:build": "npm run _bundle:dts && npm run _bundle:ts",

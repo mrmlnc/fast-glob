@@ -540,4 +540,18 @@ describe('Utils → Pattern', () => {
 			assert.strictEqual(action('///?/D:/'), '//?/D:/');
 		});
 	});
+
+	describe('.isAbsolute', () => {
+		it('should return true', () => {
+			const actual = util.isAbsolute('/directory/file.txt');
+
+			assert.ok(actual);
+		});
+
+		it('should return false', () => {
+			const actual = util.isAbsolute('directory/file.txt');
+
+			assert.ok(!actual);
+		});
+	});
 });
