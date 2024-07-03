@@ -472,7 +472,7 @@ fg.globSync('*', { onlyDirectories: true });  // ['src']
 * Type: `boolean`
 * Default: `true`
 
-Return only files.
+Return everything (file, socket, …) except directories.
 
 ```js
 fg.globSync('*', { onlyFiles: false }); // ['index.js', 'src']
