@@ -85,6 +85,10 @@
     "bench:regression:async": "hereby bench:regression:async",
     "bench:regression:sync": "hereby bench:regression:sync",
     "bench:regression:stream": "hereby bench:regression:stream",
+    "bench:overhead": "npm run bench:overhead:async && npm run bench:overhead:sync && npm run bench:overhead:stream",
+    "bench:overhead:async": "hereby bench:overhead:async",
+    "bench:overhead:sync": "hereby bench:overhead:sync",
+    "bench:overhead:stream": "hereby bench:overhead:stream",
     "prepublishOnly": "npm run bundle"
   }
 }
