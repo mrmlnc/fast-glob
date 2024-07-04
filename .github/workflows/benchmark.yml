@@ -63,3 +63,27 @@ jobs:
         run: npm run bench:regression:stream
       - name: Benchmark (sync)
         run: npm run bench:regression:sync
+
+  overhead:
+    name: Overhead benchmark
+    concurrency:
+      group: ${{ github.workflow }}-benchmark-overhead-${{ github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repository
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Prepare bundle
+        run: npm run bundle
+      - name: Benchmark (async)
+        run: npm run bench:overhead:async
+      - name: Benchmark (stream)
+        run: npm run bench:overhead:stream
+      - name: Benchmark (sync)
+        run: npm run bench:overhead:sync
