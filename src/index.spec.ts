@@ -258,9 +258,9 @@ describe('Package', () => {
 	describe('posix', () => {
 		describe('.escapePath', () => {
 			it('should return escaped path', () => {
-				const expected = '/directory/\\*\\*/\\*';
+				const expected = '/directory\\, /\\*\\*/\\*';
 
-				const actual = fg.posix.escapePath('/directory/*\\*/*');
+				const actual = fg.posix.escapePath('/directory, /*\\*/*');
 
 				assert.strictEqual(actual, expected);
 			});
