@@ -1,6 +1,8 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 
+import { describe, it } from 'mocha';
+
 import Settings from '../settings';
 import * as tests from '../tests';
 import { Provider } from './provider';
@@ -78,7 +80,7 @@ describe('Providers → Provider', () => {
 			assert.strictEqual(typeof actual.deepFilter, 'function');
 			assert.strictEqual(typeof actual.entryFilter, 'function');
 			assert.strictEqual(typeof actual.errorFilter, 'function');
-			assert.ok(actual.followSymbolicLinks);
+			assert.strictEqual(actual.followSymbolicLinks, true);
 			assert.strictEqual(typeof actual.fs, 'object');
 			assert.ok(!actual.stats);
 			assert.ok(actual.throwErrorOnBrokenSymbolicLink === false);

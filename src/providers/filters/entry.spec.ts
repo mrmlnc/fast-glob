@@ -1,6 +1,8 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 
+import { describe, it } from 'mocha';
+
 import Settings from '../../settings';
 import * as tests from '../../tests';
 import EntryFilter from './entry';

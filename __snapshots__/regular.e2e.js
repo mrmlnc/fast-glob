@@ -5492,6 +5492,7 @@ exports['Patterns Regular (segmented lists) {"pattern":"{book.xml,library/**/a/b
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (sync) 1'] = [
+  "eslint.config.mjs",
   "herebyfile.mjs",
   "LICENSE",
   "package.json",
@@ -5500,6 +5501,7 @@ exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (sync) 1'] =
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (async) 1'] = [
+  "eslint.config.mjs",
   "herebyfile.mjs",
   "LICENSE",
   "package.json",
@@ -5508,6 +5510,7 @@ exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (async) 1'] 
 ]
 
 exports['Patterns Regular (relative) {"pattern":"./*","options":{}} (stream) 1'] = [
+  "eslint.config.mjs",
   "herebyfile.mjs",
   "LICENSE",
   "package.json",

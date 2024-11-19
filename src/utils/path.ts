@@ -45,11 +45,11 @@ export function removeLeadingDotSegment(entry: string): string {
 export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
 
 export function escapeWindowsPath(pattern: Pattern): Pattern {
-	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$2`);
 }
 
 export function escapePosixPath(pattern: Pattern): Pattern {
-	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, '\\$2');
+	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$2`);
 }
 
 export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPattern : convertPosixPathToPattern;

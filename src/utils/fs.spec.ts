@@ -1,6 +1,7 @@
 import * as assert from 'node:assert';
 
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
+import { describe, it } from 'mocha';
 
 import * as util from './fs';
 

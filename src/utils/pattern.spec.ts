@@ -1,5 +1,7 @@
 import * as assert from 'node:assert';
 
+import { describe, it } from 'mocha';
+
 import * as util from './pattern';
 
 import type { Pattern } from '../types';
@@ -337,7 +339,7 @@ describe('Utils → Pattern', () => {
 		it('should returns base directory without slash transformation', () => {
 			const expected = '.';
 
-			const actual = util.getBaseDirectory('file-\\(suffix\\).md');
+			const actual = util.getBaseDirectory(String.raw`file-\(suffix\).md`);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -433,9 +435,9 @@ describe('Utils → Pattern', () => {
 		});
 
 		it('should keep escaping after expansion', () => {
-			const expected = ['foo@(\\\\)/**/*.a', 'foo@(\\\\)/**/*.b'];
+			const expected = [String.raw`foo@(\\)/**/*.a`, String.raw`foo@(\\)/**/*.b`];
 
-			const actual = util.expandBraceExpansion('foo@(\\\\)/**/{*.a,*.b}');
+			const actual = util.expandBraceExpansion(String.raw`foo@(\\)/**/{*.a,*.b}`);
 
 			assert.deepStrictEqual(actual, expected);
 		});

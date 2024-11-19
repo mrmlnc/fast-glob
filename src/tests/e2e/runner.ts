@@ -1,6 +1,8 @@
+/* eslint-disable mocha/no-setup-in-describe */
 import * as assert from 'node:assert';
 
 import snapshotIt from 'snap-shot-it';
+import { describe, it } from 'mocha';
 
 import * as fg from '../..';
 
@@ -15,7 +17,7 @@ interface Suite {
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: fg.Options | boolean;
+	debug?: boolean | fg.Options;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -29,7 +31,7 @@ interface Test {
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: fg.Options | boolean;
+	debug?: boolean | fg.Options;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -38,7 +40,7 @@ interface Test {
 	/**
 	 * The issue related to this test.
 	 */
-	issue?: number[] | number;
+	issue?: number | number[];
 	expected?: () => string[];
 }
 

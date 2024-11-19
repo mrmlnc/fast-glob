@@ -14,14 +14,14 @@ export type Pattern = string;
 export type PatternRe = RegExp;
 export type PatternsGroup = Dictionary<Pattern[]>;
 
-export type ReaderOptions = fsWalk.Options & {
+export type ReaderOptions = {
 	transform: (entry: Entry) => EntryItem;
 	deepFilter: DeepFilterFunction;
 	entryFilter: EntryFilterFunction;
 	errorFilter: ErrorFilterFunction;
 	fs: FileSystemAdapter;
 	stats: boolean;
-};
+} & fsWalk.Options;
 
 export type ErrorFilterFunction = fsWalk.ErrorFilterFunction;
 export type EntryFilterFunction = fsWalk.EntryFilterFunction;
