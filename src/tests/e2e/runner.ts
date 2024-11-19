@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 
-import * as snapshotIt from 'snap-shot-it';
+import snapshotIt from 'snap-shot-it';
 
 import * as fg from '../..';
 
