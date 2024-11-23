@@ -39,7 +39,7 @@
     "eslint-config-mrmlnc": "^1.1.0",
     "execa": "^7.1.1",
     "fast-glob": "^3.0.4",
-    "fdir": "^6.0.1",
+    "fdir": "6.0.1",
     "glob": "^10.0.0",
     "hereby": "^1.8.1",
     "mocha": "^6.2.1",
