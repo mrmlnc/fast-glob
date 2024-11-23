@@ -2,7 +2,9 @@
 	"extends": "mrmlnc",
 	"rules": {
 		"no-magic-numbers": "off",
-		"@typescript-eslint/no-magic-numbers": "off"
+		"@typescript-eslint/no-magic-numbers": "off",
+		"import/namespace": "off",
+		"import/no-deprecated": "off"
 	},
 	"overrides": [
 		{

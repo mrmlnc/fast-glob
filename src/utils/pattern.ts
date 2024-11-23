@@ -215,3 +215,22 @@ export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
 export function removeDuplicateSlashes(pattern: string): string {
 	return pattern.replace(DOUBLE_SLASH_RE, '/');
 }
+
+export function partitionAbsoluteAndRelative(patterns: Pattern[]): Pattern[][] {
+	const absolute: Pattern[] = [];
+	const relative: Pattern[] = [];
+
+	for (const pattern of patterns) {
+		if (isAbsolute(pattern)) {
+			absolute.push(pattern);
+		} else {
+			relative.push(pattern);
+		}
+	}
+
+	return [absolute, relative];
+}
+
+export function isAbsolute(pattern: string): boolean {
+	return path.isAbsolute(pattern);
+}
