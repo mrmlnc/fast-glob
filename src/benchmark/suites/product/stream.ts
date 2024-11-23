@@ -29,7 +29,7 @@ class Glob {
 
 		const action = new Promise<string[]>((resolve, reject) => {
 			stream.on('error', (error) => {
-				reject(error);
+				reject(error as Error);
 			});
 			stream.on('data', (entry: string) => entries.push(entry));
 			stream.on('end', () => {
@@ -52,7 +52,7 @@ class Glob {
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {
-			stream.once('error', (error) => {
+			stream.once('error', (error: Error) => {
 				reject(error);
 			});
 			stream.on('data', (entry: string) => entries.push(entry));

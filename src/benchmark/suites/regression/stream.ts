@@ -8,7 +8,7 @@ import type * as fastGlobCurrent from '../../..';
 
 type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GlobImplFunction = (...args: any[]) => ReturnType<typeof fastGlobCurrent.stream>;
+type GlobImplFunction = (...args: any[]) => ReturnType<typeof fastGlobCurrent.globStream>;
 type GlobOptions = fastGlobCurrent.Options;
 
 class Glob {
@@ -45,7 +45,7 @@ class Glob {
 		await new Promise<void>((resolve, reject) => {
 			const stream = function_();
 
-			stream.once('error', (error) => {
+			stream.once('error', (error: Error) => {
 				reject(error);
 			});
 			stream.on('data', (entry: string) => entries.push(entry));

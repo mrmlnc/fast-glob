@@ -1,5 +1,7 @@
 import * as assert from 'node:assert';
 
+import { describe, it } from 'mocha';
+
 import * as tests from './tests';
 import * as fg from '.';
 
@@ -57,7 +59,7 @@ describe('Package', () => {
 
 	describe('.sync', () => {
 		it('should be an alias for the .globSync method', () => {
-			// eslint-disable-next-line import/no-deprecated
+			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.sync, fg.globSync);
 		});
 	});
@@ -110,7 +112,7 @@ describe('Package', () => {
 
 	describe('.async', () => {
 		it('should be an alias for the .glob method', () => {
-			// eslint-disable-next-line import/no-deprecated
+			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.async, fg.glob);
 		});
 	});
@@ -177,7 +179,7 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should be an alias for the .globStream method', () => {
-			// eslint-disable-next-line import/no-deprecated
+			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.stream, fg.globStream);
 		});
 	});
@@ -234,7 +236,7 @@ describe('Package', () => {
 
 	describe('.escapePath', () => {
 		it('should return escaped path', () => {
-			const expected = 'C:/Program Files \\(x86\\)';
+			const expected = String.raw`C:/Program Files \(x86\)`;
 
 			const actual = fg.escapePath('C:/Program Files (x86)');
 
@@ -245,11 +247,11 @@ describe('Package', () => {
 	describe('.convertPathToPattern', () => {
 		it('should return a pattern', () => {
 			// In posix system \\ is a escaping character and it will be escaped before non-special characters.
-			const posix = 'C:\\\\Program Files \\(x86\\)\\*\\*\\*';
-			const windows = 'C:/Program Files \\(x86\\)/**/*';
+			const posix = String.raw`C:\\Program Files \(x86\)\*\*\*`;
+			const windows = String.raw`C:/Program Files \(x86\)/**/*`;
 			const expected = tests.platform.isWindows() ? windows : posix;
 
-			const actual = fg.convertPathToPattern('C:\\Program Files (x86)\\**\\*');
+			const actual = fg.convertPathToPattern(String.raw`C:\Program Files (x86)\**\*`);
 
 			assert.strictEqual(actual, expected);
 		});
@@ -258,9 +260,9 @@ describe('Package', () => {
 	describe('posix', () => {
 		describe('.escapePath', () => {
 			it('should return escaped path', () => {
-				const expected = '/directory/\\*\\*/\\*';
+				const expected = String.raw`/directory/\*\*/\*`;
 
-				const actual = fg.posix.escapePath('/directory/*\\*/*');
+				const actual = fg.posix.escapePath(String.raw`/directory/*\*/*`);
 
 				assert.strictEqual(actual, expected);
 			});
@@ -268,9 +270,9 @@ describe('Package', () => {
 
 		describe('.convertPathToPattern', () => {
 			it('should return a pattern', () => {
-				const expected = 'a\\*.txt';
+				const expected = String.raw`a\*.txt`;
 
-				const actual = fg.posix.convertPathToPattern('a\\*.txt');
+				const actual = fg.posix.convertPathToPattern(String.raw`a\*.txt`);
 
 				assert.strictEqual(actual, expected);
 			});
@@ -280,9 +282,9 @@ describe('Package', () => {
 	describe('win32', () => {
 		describe('.escapePath', () => {
 			it('should return escaped path', () => {
-				const expected = 'C:\\Program Files \\(x86\\)\\**\\*';
+				const expected = String.raw`C:\Program Files \(x86\)\**\*`;
 
-				const actual = fg.win32.escapePath('C:\\Program Files (x86)\\**\\*');
+				const actual = fg.win32.escapePath(String.raw`C:\Program Files (x86)\**\*`);
 
 				assert.strictEqual(actual, expected);
 			});
@@ -290,9 +292,9 @@ describe('Package', () => {
 
 		describe('.convertPathToPattern', () => {
 			it('should return a pattern', () => {
-				const expected = 'C:/Program Files \\(x86\\)/**/*';
+				const expected = String.raw`C:/Program Files \(x86\)/**/*`;
 
-				const actual = fg.win32.convertPathToPattern('C:\\Program Files (x86)\\**\\*');
+				const actual = fg.win32.convertPathToPattern(String.raw`C:\Program Files (x86)\**\*`);
 
 				assert.strictEqual(actual, expected);
 			});

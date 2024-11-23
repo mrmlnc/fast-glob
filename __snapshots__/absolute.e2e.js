@@ -89,6 +89,7 @@ exports['Options Absolute {"pattern":"fixtures/**/*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (sync) 1'] = [
+  "<root>/eslint.config.mjs",
   "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
@@ -97,6 +98,7 @@ exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (async) 1'] = [
+  "<root>/eslint.config.mjs",
   "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
@@ -105,6 +107,7 @@ exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}
 ]
 
 exports['Options Absolute {"pattern":"fixtures/../*","options":{"absolute":true}} (stream) 1'] = [
+  "<root>/eslint.config.mjs",
   "<root>/herebyfile.mjs",
   "<root>/LICENSE",
   "<root>/package.json",
