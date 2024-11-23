@@ -22,7 +22,7 @@ function getRootEntries(root: string, withBase: boolean = false): string[] {
 function getRootEntriesWithFileTypes(root: string): string[] {
 	return fs.readdirSync(root, { withFileTypes: true })
 		.filter((item) => !item.name.startsWith('.'))
-		.filter((item) => item.isFile())
+		.filter((item) => !item.isDirectory())
 		.map((item) => item.name);
 }
 
@@ -30,13 +30,14 @@ runner.suite('Patterns Root', {
 	tests: [
 		{
 			pattern: '/*',
+			options: { followSymbolicLinks: false },
 			condition: () => !utils.platform.isWindows(),
 			expected: () => getRootEntries(ROOT, /** withBase */ true),
 		},
 		{
-			pattern: '/tmp/*',
+			pattern: '/usr/*',
 			condition: () => !utils.platform.isWindows(),
-			expected: () => getRootEntries('/tmp', /** withBase */ true),
+			expected: () => getRootEntries('/usr', /** withBase */ true),
 		},
 		{
 			pattern: '/*',
@@ -58,6 +59,7 @@ runner.suite('Patterns Root (cwd)', {
 			pattern: '*',
 			options: {
 				cwd: ROOT,
+				followSymbolicLinks: false,
 			},
 			condition: () => !utils.platform.isWindows(),
 			expected: () => getRootEntries(ROOT),

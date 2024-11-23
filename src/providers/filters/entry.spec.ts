@@ -17,6 +17,7 @@ interface FilterOptions {
 }
 
 const FILE_ENTRY = tests.entry.builder().path('root/file.txt').file().build();
+const SOCKET_ENTRY = tests.entry.builder().path('/tmp/test.sock').socket().build();
 const DIRECTORY_ENTRY = tests.entry.builder().path('root/directory').directory().build();
 
 function getEntryFilterInstance(options?: Options): EntryFilter {
@@ -137,11 +138,25 @@ describe('Providers → Filters → Entry', () => {
 					options: { onlyFiles: true },
 				});
 			});
+
+			it('should accept a socket entry', () => {
+				accept(SOCKET_ENTRY, {
+					positive: ['**/*'],
+					options: { onlyFiles: true },
+				});
+			});
 		});
 
 		describe('options.onlyDirectories', () => {
 			it('should reject a file entry', () => {
 				reject(FILE_ENTRY, {
+					positive: ['**/*'],
+					options: { onlyDirectories: true },
+				});
+			});
+
+			it('should reject a socket entry', () => {
+				reject(SOCKET_ENTRY, {
 					positive: ['**/*'],
 					options: { onlyDirectories: true },
 				});
