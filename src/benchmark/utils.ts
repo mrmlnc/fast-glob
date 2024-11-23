@@ -2,6 +2,11 @@ import { performance } from 'node:perf_hooks';
 
 import * as bencho from 'bencho';
 
+import type * as currentVersion from '..';
+import type * as previousVersion from 'fast-glob';
+import type * as glob from 'glob';
+import type * as fdir from 'fdir';
+
 export function timeStart(): number {
 	return performance.now();
 }
@@ -14,23 +19,19 @@ export function getMemory(): number {
 	return process.memoryUsage().heapUsed;
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importCurrentFastGlob(): Promise<typeof import('..')> {
+export function importCurrentFastGlob(): Promise<typeof currentVersion> {
 	return import('..');
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importPreviousFastGlob(): Promise<typeof import('fast-glob')> {
+export function importPreviousFastGlob(): Promise<typeof previousVersion> {
 	return import('fast-glob');
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importNodeGlob(): Promise<typeof import('glob')> {
+export function importNodeGlob(): Promise<typeof glob> {
 	return import('glob');
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export function importFdir(): Promise<typeof import('fdir')> {
+export function importFdir(): Promise<typeof fdir> {
 	return import('fdir');
 }
 
