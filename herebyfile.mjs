@@ -4,7 +4,7 @@ import { task } from 'hereby';
 const CONCURRENCY = process.env.CONCURRENCY === '1';
 const REPORTER = process.env.REPORTER ?? 'compact';
 const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 50;
-const RUNS_COUNT = process.env.RUNS_COUNT ?? 100;
+const RUNS_COUNT = process.env.RUNS_COUNT ?? 150;
 
 const PRODUCT_ASYNC_SUITE = './out/benchmark/suites/product/async.js';
 const PRODUCT_SYNC_SUITE = './out/benchmark/suites/product/sync.js';
