@@ -5,7 +5,7 @@ import * as bencho from 'bencho';
 import type * as currentVersion from '..';
 import type * as previousVersion from 'fast-glob';
 import type * as glob from 'glob';
-import type * as fdir from 'fdir';
+import type * as tg from 'tinyglobby';
 
 export function timeStart(): number {
 	return performance.now();
@@ -31,8 +31,8 @@ export function importNodeGlob(): Promise<typeof glob> {
 	return import('glob');
 }
 
-export function importFdir(): Promise<typeof fdir> {
-	return import('fdir');
+export function importTinyGlobby(): Promise<typeof tg> {
+	return import('tinyglobby');
 }
 
 export async function importAndMeasure<T>(function_: () => Promise<T>): Promise<T> {

@@ -21,7 +21,6 @@
 
 		"forceConsistentCasingInFileNames": true,
 		"verbatimModuleSyntax": false,
-		"esModuleInterop": true,
 
 		"downlevelIteration": true,
 		"declaration": true,

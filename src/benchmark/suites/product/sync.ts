@@ -4,7 +4,7 @@ import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob';
+type GlobImplementation = 'fast-glob' | 'node-glob' | 'tinyglobby';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];
 
@@ -36,17 +36,13 @@ class Glob {
 		}));
 	}
 
-	public async measureFdir(): Promise<void> {
-		const { fdir: FdirBuilder } = await utils.importAndMeasure(utils.importFdir);
+	public async measureTinyGlobby(): Promise<void> {
+		const tinyglobby = await utils.importAndMeasure(utils.importTinyGlobby);
 
-		const fdir = new FdirBuilder()
-			.withBasePath()
-			.withRelativePaths()
-			// Other solutions do not include hidden files by default
-			.globWithOptions([this.#pattern], { dot: false })
-			.crawl(this.#cwd);
-
-		this.#measure(() => fdir.sync());
+		this.#measure(() => tinyglobby.globSync(this.#pattern, {
+			cwd: this.#cwd,
+			followSymbolicLinks: false,
+		}));
 	}
 
 	#measure(function_: GlobImplFunction): void {
@@ -85,8 +81,8 @@ class Glob {
 			break;
 		}
 
-		case 'fdir': {
-			await glob.measureFdir();
+		case 'tinyglobby': {
+			await glob.measureTinyGlobby();
 			break;
 		}
 

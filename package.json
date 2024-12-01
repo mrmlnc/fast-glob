@@ -40,13 +40,13 @@
     "eslint-config-mrmlnc": "^5.0.0",
     "execa": "^7.2.0",
     "fast-glob": "^3.3.2",
-    "fdir": "^6.4.2",
     "glob": "^11.0.0",
     "hereby": "^1.10.0",
     "mocha": "^10.8.2",
     "rimraf": "^6.0.1",
     "sinon": "^19.0.2",
     "snap-shot-it": "^7.9.10",
+    "tinyglobby": "^0.2.10",
     "typescript": "^5.7.2"
   },
   "dependencies": {
