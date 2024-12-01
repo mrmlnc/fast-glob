@@ -9,7 +9,7 @@
     "url": "https://mrmlnc.com"
   },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18.18.0"
   },
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -31,7 +31,7 @@
     "@types/merge2": "^1.4.4",
     "@types/micromatch": "^4.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^16.18.61",
+    "@types/node": "^18.19.67",
     "@types/picomatch": "^3.0.1",
     "@types/sinon": "^17.0.3",
     "bencho": "^0.1.1",
@@ -69,7 +69,7 @@
     "build": "npm run _build:compile && npm run lint && npm test",
     "watch": "npm run _build:compile -- -- --sourceMap --watch",
     "_bundle:dts": "tsc --emitDeclarationOnly --outDir ./build",
-    "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node16.14 --format=cjs",
+    "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node18.18 --format=cjs",
     "_bundle:build": "npm run _bundle:dts && npm run _bundle:ts",
     "_bundle:test:replace": "cp ./build/index.js ./out",
     "_bundle:test": "npm run _bundle:test:replace",

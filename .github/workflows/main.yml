@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node_version: [16.14.0, 16, 18, 20, 22]
+        node_version: [18.18.0, 18, 20, 22]
         os:
           - ubuntu-latest
           - macos-latest
@@ -35,7 +35,6 @@ jobs:
         run: npm install
       - name: Run Hygiene Checks
         run: npm run lint
-        if: ${{ matrix.node_version >= 18 }}
       - name: Prepare bundle
         run: npm run bundle
       - name: Run unit tests
