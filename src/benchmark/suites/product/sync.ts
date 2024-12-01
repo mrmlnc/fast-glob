@@ -4,7 +4,7 @@ import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob';
+type GlobImplementation = 'fast-glob' | 'fdir' | 'node-glob' | 'tinyglobby';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];
 
@@ -49,6 +49,15 @@ class Glob {
 		this.#measure(() => fdir.sync());
 	}
 
+	public async measureTinyGlobby(): Promise<void> {
+		const tinyglobby = await utils.importAndMeasure(utils.importTinyGlobby);
+
+		this.#measure(() => tinyglobby.globSync(this.#pattern, {
+			cwd: this.#cwd,
+			followSymbolicLinks: false,
+		}));
+	}
+
 	#measure(function_: GlobImplFunction): void {
 		const timeStart = utils.timeStart();
 
@@ -87,6 +96,11 @@ class Glob {
 
 		case 'fdir': {
 			await glob.measureFdir();
+			break;
+		}
+
+		case 'tinyglobby': {
+			await glob.measureTinyGlobby();
 			break;
 		}
 
