@@ -5,7 +5,6 @@ import * as bencho from 'bencho';
 import type * as currentVersion from '..';
 import type * as previousVersion from 'fast-glob';
 import type * as glob from 'glob';
-import type * as fdir from 'fdir';
 import type * as tg from 'tinyglobby';
 
 export function timeStart(): number {
@@ -30,10 +29,6 @@ export function importPreviousFastGlob(): Promise<typeof previousVersion> {
 
 export function importNodeGlob(): Promise<typeof glob> {
 	return import('glob');
-}
-
-export function importFdir(): Promise<typeof fdir> {
-	return import('fdir');
 }
 
 export function importTinyGlobby(): Promise<typeof tg> {

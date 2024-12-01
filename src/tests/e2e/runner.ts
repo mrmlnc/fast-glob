@@ -1,7 +1,7 @@
 /* eslint-disable mocha/no-setup-in-describe */
 import * as assert from 'node:assert';
 
-import snapshotIt from 'snap-shot-it';
+import * as snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
 
 import * as fg from '../..';
