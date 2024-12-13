@@ -14,10 +14,8 @@
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build",
-    "!build/{benchmark,tests}",
-    "!build/**/*.map",
-    "!build/**/*.spec.*"
+    "build/index.js",
+    "build/index.d.ts"
   ],
   "keywords": [
     "glob",
