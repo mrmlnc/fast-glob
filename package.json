@@ -25,6 +25,8 @@
   ],
   "devDependencies": {
     "@nodelib/fs.macchiato": "^3.0.0",
+    "@nodelib/fs.stat": "^4.0.0",
+    "@nodelib/fs.walk": "^3.0.1",
     "@types/glob-parent": "^5.1.3",
     "@types/merge2": "^1.4.4",
     "@types/micromatch": "^4.0.9",
@@ -40,20 +42,16 @@
     "execa": "^7.2.0",
     "fast-glob": "^3.3.2",
     "glob": "^11.0.0",
+    "glob-parent": "^6.0.2",
     "hereby": "^1.10.0",
+    "merge2": "^1.4.1",
+    "micromatch": "^4.0.8",
     "mocha": "^10.8.2",
     "rimraf": "^6.0.1",
     "sinon": "^19.0.2",
     "snap-shot-it": "^7.9.10",
     "tinyglobby": "^0.2.10",
     "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "@nodelib/fs.stat": "^4.0.0",
-    "@nodelib/fs.walk": "^3.0.0",
-    "glob-parent": "^6.0.2",
-    "merge2": "^1.4.1",
-    "micromatch": "^4.0.8"
   },
   "scripts": {
     "clean": "rimraf out build",
