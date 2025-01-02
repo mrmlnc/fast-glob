@@ -8,11 +8,18 @@ on:
 
 jobs:
   product:
-    name: Product benchmark
+    name: Product benchmark on ${{ matrix.os }}
     concurrency:
-      group: ${{ github.workflow }}-benchmark-product-${{ github.ref }}
+      group: ${{ github.workflow }}-benchmark-product-${{ matrix.os }}-${{ github.ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
     steps:
       - name: Setup repository
         uses: actions/checkout@v4
