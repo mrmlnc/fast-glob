@@ -2,7 +2,7 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
+import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {

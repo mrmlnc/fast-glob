@@ -2,9 +2,9 @@ import * as path from 'node:path';
 
 import * as bencho from 'bencho';
 
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
-import type * as fastGlobCurrent from '../../..';
+import type * as fastGlobCurrent from '../../../index.js';
 
 type GlobImplementation = 'current' | 'previous';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

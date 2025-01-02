@@ -3,7 +3,7 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import * as util from './path';
+import * as util from './path.js';
 
 describe('Utils → Path', () => {
 	describe('.makeAbsolute', () => {

@@ -1,4 +1,4 @@
-import Matcher from './matcher';
+import Matcher from './matcher.js';
 
 export default class PartialMatcher extends Matcher {
 	public match(filepath: string): boolean {

@@ -1,11 +1,9 @@
 import * as path from 'node:path';
 
-// https://stackoverflow.com/a/39415662
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import globParent = require('glob-parent');
-import * as micromatch from 'micromatch';
+import globParent from 'glob-parent';
+import micromatch from 'micromatch';
 
-import type { MicromatchOptions, Pattern, PatternRe } from '../types';
+import type { MicromatchOptions, Pattern, PatternRe } from '../types/index.js';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';

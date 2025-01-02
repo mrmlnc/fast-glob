@@ -4,11 +4,11 @@ import * as path from 'node:path';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import { Reader } from './reader';
+import Settings from '../settings.js';
+import { Reader } from './reader.js';
 
-import type { Options } from '../settings';
-import type { Entry, FsStats, Pattern } from '../types';
+import type { Options } from '../settings.js';
+import type { Entry, FsStats, Pattern } from '../types/index.js';
 
 class TestReader extends Reader<never[]> {
 	constructor(options?: Options) {

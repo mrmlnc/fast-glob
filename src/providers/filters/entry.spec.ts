@@ -3,12 +3,12 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import EntryFilter from './entry';
+import Settings from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import EntryFilter from './entry.js';
 
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
-import type { Options } from '../../settings';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types/index.js';
+import type { Options } from '../../settings.js';
 
 interface FilterOptions {
 	positive: Pattern[];

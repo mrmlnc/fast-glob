@@ -1,7 +1,7 @@
-import * as utils from '../../utils';
+import * as utils from '../../utils/index.js';
 
-import type { MicromatchOptions, Pattern, PatternRe } from '../../types';
-import type Settings from '../../settings';
+import type { MicromatchOptions, Pattern, PatternRe } from '../../types/index.js';
+import type Settings from '../../settings.js';
 
 export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
 

@@ -1,6 +1,4 @@
-// https://stackoverflow.com/a/39415662
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import merge2 = require('merge2');
+import merge2 from 'merge2';
 
 import type { Readable } from 'node:stream';
 

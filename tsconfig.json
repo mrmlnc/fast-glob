@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"target": "ES2022",
 		"lib": ["ES2022"],
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"resolveJsonModule": true,
 
 		"rootDir": "src",
@@ -20,7 +20,7 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": false,
+		"verbatimModuleSyntax": true,
 
 		"downlevelIteration": true,
 		"declaration": true,

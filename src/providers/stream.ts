@@ -1,11 +1,11 @@
 import { Readable } from 'node:stream';
 
-import { Provider } from './provider';
+import { Provider } from './provider.js';
 
-import type { IReaderStream } from '../readers';
-import type Settings from '../settings';
-import type { Task } from '../managers/tasks';
-import type { Entry, ErrnoException, ReaderOptions } from '../types';
+import type { IReaderStream } from '../readers/index.js';
+import type Settings from '../settings.js';
+import type { Task } from '../managers/tasks.js';
+import type { Entry, ErrnoException, ReaderOptions } from '../types/index.js';
 
 export class ProviderStream extends Provider<Readable> {
 	readonly #reader: IReaderStream;

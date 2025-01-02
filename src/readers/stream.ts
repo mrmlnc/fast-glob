@@ -3,9 +3,9 @@ import { PassThrough } from 'node:stream';
 import * as fsStat from '@nodelib/fs.stat';
 import * as fsWalk from '@nodelib/fs.walk';
 
-import { Reader } from './reader';
+import { Reader } from './reader.js';
 
-import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types/index.js';
 import type { Readable } from 'node:stream';
 
 export interface IReaderStream {

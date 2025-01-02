@@ -4,13 +4,13 @@ import { PassThrough } from 'node:stream';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ReaderAsync } from './async';
-import { ReaderStream } from './stream';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ReaderAsync } from './async.js';
+import { ReaderStream } from './stream.js';
 
-import type { Options } from '../settings';
-import type { ReaderOptions } from '../types';
+import type { Options } from '../settings.js';
+import type { ReaderOptions } from '../types/index.js';
 import type * as fsWalk from '@nodelib/fs.walk';
 
 type WalkSignature = typeof fsWalk.walk;

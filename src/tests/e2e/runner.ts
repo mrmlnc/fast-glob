@@ -1,12 +1,12 @@
 /* eslint-disable mocha/no-setup-in-describe */
 import * as assert from 'node:assert';
 
-import * as snapshotIt from 'snap-shot-it';
+import snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
 
-import * as fg from '../..';
+import * as fg from '../../index.js';
 
-import type { Pattern } from '../../types';
+import type { Pattern } from '../../types/index.js';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 

@@ -4,15 +4,15 @@ import { PassThrough } from 'node:stream';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ProviderStream } from './stream';
-import { ReaderStream } from '../readers';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ProviderStream } from './stream.js';
+import { ReaderStream } from '../readers/index.js';
 
-import type { IReaderStream } from '../readers';
-import type { Options } from '../settings';
-import type { Entry, EntryItem, ErrnoException } from '../types';
-import type { Task } from '../managers/tasks';
+import type { IReaderStream } from '../readers/index.js';
+import type { Options } from '../settings.js';
+import type { Entry, EntryItem, ErrnoException } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
 
 type StubbedReaderStream = sinon.SinonStubbedInstance<IReaderStream>;
 

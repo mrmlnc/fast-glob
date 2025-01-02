@@ -1,8 +1,8 @@
-import * as utils from '../../utils';
-import PartialMatcher from '../matchers/partial';
+import * as utils from '../../utils/index.js';
+import PartialMatcher from '../matchers/partial.js';
 
-import type { MicromatchOptions, Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
-import type Settings from '../../settings';
+import type { MicromatchOptions, Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types/index.js';
+import type Settings from '../../settings.js';
 
 export default class DeepFilter {
 	readonly #settings: Settings;

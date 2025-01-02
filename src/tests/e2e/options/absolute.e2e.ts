@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 
-import * as runner from '../runner';
+import * as runner from '../runner.js';
 
 const CWD = process.cwd();
 const CWD_POSIX = CWD.replaceAll('\\', '/');

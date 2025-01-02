@@ -3,13 +3,13 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import * as tests from '../tests';
-import { Provider } from './provider';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { Provider } from './provider.js';
 
-import type { Task } from '../managers/tasks';
-import type { Options } from '../settings';
-import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types';
+import type { Task } from '../managers/tasks.js';
+import type { Options } from '../settings.js';
+import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types/index.js';
 
 class TestProvider extends Provider<Dictionary[]> {
 	public read(): Dictionary[] {

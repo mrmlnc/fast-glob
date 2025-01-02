@@ -2,8 +2,8 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import * as tests from '../tests';
-import * as util from './errno';
+import * as tests from '../tests/index.js';
+import * as util from './errno.js';
 
 describe('Utils → Errno', () => {
 	describe('.isEnoentCodeError', () => {

@@ -3,12 +3,12 @@ import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import EntryTransformer from './entry';
+import Settings from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import EntryTransformer from './entry.js';
 
-import type { EntryTransformerFunction } from '../../types';
-import type { Options } from '../../settings';
+import type { EntryTransformerFunction } from '../../types/index.js';
+import type { Options } from '../../settings.js';
 
 function getEntryTransformer(options?: Options): EntryTransformer {
 	return new EntryTransformer(new Settings(options));

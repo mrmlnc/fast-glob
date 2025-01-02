@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
 
-import type { Entry } from '../../types';
+import type { Entry } from '../../types/index.js';
 
 class EntryBuilder {
 	#entryType: DirentType = DirentType.Unknown;

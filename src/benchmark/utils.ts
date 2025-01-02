@@ -2,7 +2,7 @@ import { performance } from 'node:perf_hooks';
 
 import * as bencho from 'bencho';
 
-import type * as currentVersion from '..';
+import type * as currentVersion from '../index.js';
 import type * as previousVersion from 'fast-glob';
 import type * as glob from 'glob';
 import type * as tg from 'tinyglobby';
@@ -20,7 +20,7 @@ export function getMemory(): number {
 }
 
 export function importCurrentFastGlob(): Promise<typeof currentVersion> {
-	return import('..');
+	return import('../index.js');
 }
 
 export function importPreviousFastGlob(): Promise<typeof previousVersion> {

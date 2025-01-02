@@ -1,9 +1,9 @@
-import { Provider } from './provider';
+import { Provider } from './provider.js';
 
-import type { IReaderAsync } from '../readers';
-import type Settings from '../settings';
-import type { Task } from '../managers/tasks';
-import type { Entry, EntryItem, ReaderOptions } from '../types';
+import type { IReaderAsync } from '../readers/index.js';
+import type Settings from '../settings.js';
+import type { Task } from '../managers/tasks.js';
+import type { Entry, EntryItem, ReaderOptions } from '../types/index.js';
 
 export class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 	readonly #reader: IReaderAsync;

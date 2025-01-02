@@ -3,7 +3,7 @@ import * as stream from 'node:stream';
 
 import { describe, it } from 'mocha';
 
-import * as util from './stream';
+import * as util from './stream.js';
 
 describe('Utils → Stream', () => {
 	describe('.merge', () => {

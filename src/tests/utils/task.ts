@@ -1,5 +1,5 @@
-import type { Task } from '../../managers/tasks';
-import type { Pattern } from '../../types';
+import type { Task } from '../../managers/tasks.js';
+import type { Pattern } from '../../types/index.js';
 
 class TaskBuilder {
 	readonly #task: Task = {

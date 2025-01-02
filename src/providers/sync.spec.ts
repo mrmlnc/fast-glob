@@ -3,13 +3,13 @@ import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import { ReaderSync } from '../readers';
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ProviderSync } from './sync';
+import { ReaderSync } from '../readers/index.js';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ProviderSync } from './sync.js';
 
-import type { IReaderSync } from '../readers';
-import type { Options } from '../settings';
+import type { IReaderSync } from '../readers/index.js';
+import type { Options } from '../settings.js';
 
 type StubbedReaderSync = sinon.SinonStubbedInstance<IReaderSync>;
 

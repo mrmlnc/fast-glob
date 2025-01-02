@@ -2,10 +2,10 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../../settings';
-import Matcher from './partial';
+import Settings from '../../settings.js';
+import Matcher from './partial.js';
 
-import type { Pattern, MicromatchOptions } from '../../types';
+import type { Pattern, MicromatchOptions } from '../../types/index.js';
 
 function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Matcher {
 	return new Matcher(patterns, new Settings(), options);

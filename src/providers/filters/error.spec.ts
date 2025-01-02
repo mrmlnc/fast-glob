@@ -2,12 +2,12 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import ErrorFilter from './error';
+import Settings from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import ErrorFilter from './error.js';
 
-import type { ErrorFilterFunction } from '../../types';
-import type { Options } from '../../settings';
+import type { ErrorFilterFunction } from '../../types/index.js';
+import type { Options } from '../../settings.js';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
 	const settings = new Settings(options);

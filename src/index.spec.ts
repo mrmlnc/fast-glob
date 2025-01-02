@@ -2,10 +2,10 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import * as tests from './tests';
-import * as fg from '.';
+import * as tests from './tests/index.js';
+import * as fg from './index.js';
 
-import type { EntryItem, ErrnoException } from './types';
+import type { EntryItem, ErrnoException } from './types/index.js';
 
 // Only for validating the input data.
 const invalidInputData = null as unknown as string;
@@ -59,7 +59,7 @@ describe('Package', () => {
 
 	describe('.sync', () => {
 		it('should be an alias for the .globSync method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.sync, fg.globSync);
 		});
 	});
@@ -112,7 +112,7 @@ describe('Package', () => {
 
 	describe('.async', () => {
 		it('should be an alias for the .glob method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.async, fg.glob);
 		});
 	});
@@ -179,7 +179,7 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should be an alias for the .globStream method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.stream, fg.globStream);
 		});
 	});

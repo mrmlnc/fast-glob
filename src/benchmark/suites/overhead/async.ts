@@ -3,7 +3,7 @@ import * as util from 'node:util';
 
 import * as bencho from 'bencho';
 
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
 type MeasurableImplementation = 'fast-glob' | 'fs-walk';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

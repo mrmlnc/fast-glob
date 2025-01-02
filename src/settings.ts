@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-import type { FileSystemAdapter, Pattern } from './types';
+import type { FileSystemAdapter, Pattern } from './types/index.js';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,

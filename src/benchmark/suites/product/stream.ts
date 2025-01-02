@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import * as bencho from 'bencho';
 
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
 type GlobImplementation = 'fast-glob' | 'node-glob';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

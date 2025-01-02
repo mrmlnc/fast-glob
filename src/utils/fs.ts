@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 
-import type { FsStats, FsDirent } from '../types';
+import type { FsStats, FsDirent } from '../types/index.js';
 
 const _kStats = Symbol('stats');
 

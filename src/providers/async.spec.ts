@@ -3,15 +3,15 @@ import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ReaderAsync } from '../readers';
-import { ProviderAsync } from './async';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ReaderAsync } from '../readers/index.js';
+import { ProviderAsync } from './async.js';
 
-import type { IReaderAsync } from '../readers';
-import type { Options } from '../settings';
-import type { Entry, EntryItem, ErrnoException } from '../types';
-import type { Task } from '../managers/tasks';
+import type { IReaderAsync } from '../readers/index.js';
+import type { Options } from '../settings.js';
+import type { Entry, EntryItem, ErrnoException } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
 
 type StubbedReaderAsync = sinon.SinonStubbedInstance<IReaderAsync>;
 

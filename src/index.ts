@@ -1,11 +1,11 @@
-import * as taskManager from './managers/tasks';
-import Settings from './settings';
-import * as utils from './utils';
-import { ProviderAsync, ProviderStream, ProviderSync } from './providers';
-import { ReaderAsync, ReaderStream, ReaderSync } from './readers';
+import * as taskManager from './managers/tasks.js';
+import Settings from './settings.js';
+import * as utils from './utils/index.js';
+import { ProviderAsync, ProviderStream, ProviderSync } from './providers/index.js';
+import { ReaderAsync, ReaderStream, ReaderSync } from './readers/index.js';
 
-import type { Options as OptionsInternal } from './settings';
-import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import type { Options as OptionsInternal } from './settings.js';
+import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types/index.js';
 
 type InputPattern = PatternInternal | readonly PatternInternal[];
 

@@ -1,5 +1,5 @@
 
-import * as runner from '../runner';
+import * as runner from '../runner.js';
 
 runner.suite('Options Deep', {
 	tests: [

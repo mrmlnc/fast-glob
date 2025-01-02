@@ -2,12 +2,12 @@ import * as assert from 'node:assert';
 
 import { describe, it } from 'mocha';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import DeepFilter from './deep';
+import Settings from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import DeepFilter from './deep.js';
 
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
-import type { Options } from '../../settings';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types/index.js';
+import type { Options } from '../../settings.js';
 
 interface FilterOptions {
 	base?: string;

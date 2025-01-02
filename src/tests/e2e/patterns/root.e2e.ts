@@ -1,8 +1,8 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 
-import * as runner from '../runner';
-import * as utils from '../..';
+import * as runner from '../runner.js';
+import * as utils from '../../index.js';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 const ROOT = path.parse(CWD).root;

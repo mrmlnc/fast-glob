@@ -11,12 +11,18 @@
   "engines": {
     "node": ">=18.18.0"
   },
+  "type": "module",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build/index.js",
-    "build/index.d.ts"
+    "build/index.cjs",
+    "build/index.d.cts"
   ],
+  "exports": {
+    ".": {
+      "default": "./build/index.cjs"
+    }
+  },
   "keywords": [
     "glob",
     "patterns",
@@ -65,10 +71,11 @@
     "_build:compile": "npm run clean && npm run compile",
     "build": "npm run _build:compile && npm run lint && npm test",
     "watch": "npm run _build:compile -- -- --sourceMap --watch",
-    "_bundle:dts": "dts-bundle-generator ./src/index.ts --out-file=./build/index.d.ts --export-referenced-types=false --external-inlines=@nodelib/fs.walk @nodelib/fs.scandir @nodelib/fs.stat",
-    "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node18.18 --format=cjs",
+    "_bundle:dts": "dts-bundle-generator ./src/index.ts --out-file=./build/index.d.cts --export-referenced-types=false --external-inlines=@nodelib/fs.walk @nodelib/fs.scandir @nodelib/fs.stat",
+    "_bundle:ts": "npm run _bundle:ts:cjs",
+    "_bundle:ts:cjs": "esbuild --bundle ./out/index.js --outfile=./build/index.cjs --platform=node --target=node18.18 --format=cjs",
     "_bundle:build": "npm run _bundle:dts && npm run _bundle:ts",
-    "_bundle:test:replace": "cp ./build/index.js ./out",
+    "_bundle:test:replace": "cp ./build/index.cjs ./out",
     "_bundle:test": "npm run _bundle:test:replace",
     "bundle": "npm run _build:compile && npm run _bundle:build && npm run _bundle:test",
     "bench:async": "npm run bench:product:async && npm run bench:regression:async",

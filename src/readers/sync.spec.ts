@@ -4,12 +4,12 @@ import { Stats } from '@nodelib/fs.macchiato';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ReaderSync } from './sync';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ReaderSync } from './sync.js';
 
-import type { Options } from '../settings';
-import type { ReaderOptions } from '../types';
+import type { Options } from '../settings.js';
+import type { ReaderOptions } from '../types/index.js';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';
 
