@@ -32,14 +32,18 @@ jobs:
         run: npm run bench:product:sync
 
   regress:
-    name: Regress benchmark with options (${{ matrix.benchmark_options }})
+    name: Regress benchmark with options (${{ matrix.benchmark_options }}) on ${{ matrix.os }}
     concurrency:
-      group: ${{ github.workflow }}-benchmark-regress-${{ matrix.benchmark_options }}-${{ github.ref }}
+      group: ${{ github.workflow }}-benchmark-regress-${{ matrix.os }}-${{ matrix.benchmark_options }}-${{ github.ref }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
         benchmark_options:
           - '{}'
           - '{ "objectMode": true }'
