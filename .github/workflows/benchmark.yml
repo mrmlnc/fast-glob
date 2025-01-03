@@ -23,13 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm run build
+        run: node --run build
       - name: Benchmark (async)
-        run: npm run bench:product:async
+        run: node --run bench:product:async
       - name: Benchmark (stream)
-        run: npm run bench:product:stream
+        run: node --run bench:product:stream
       - name: Benchmark (sync)
-        run: npm run bench:product:sync
+        run: node --run bench:product:sync
 
   regress:
     name: Regress benchmark with options (${{ matrix.benchmark_options }})
@@ -56,13 +56,13 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm run build
+        run: node --run build
       - name: Benchmark (async)
-        run: npm run bench:regression:async
+        run: node --run bench:regression:async
       - name: Benchmark (stream)
-        run: npm run bench:regression:stream
+        run: node --run bench:regression:stream
       - name: Benchmark (sync)
-        run: npm run bench:regression:sync
+        run: node --run bench:regression:sync
 
   overhead:
     name: Overhead benchmark
@@ -80,10 +80,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm run build
+        run: node --run build
       - name: Benchmark (async)
-        run: npm run bench:overhead:async
+        run: node --run bench:overhead:async
       - name: Benchmark (stream)
-        run: npm run bench:overhead:stream
+        run: node --run bench:overhead:stream
       - name: Benchmark (sync)
-        run: npm run bench:overhead:sync
+        run: node --run bench:overhead:sync
