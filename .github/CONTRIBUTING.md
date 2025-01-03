@@ -50,11 +50,6 @@ npm run test:e2e
 # Watch changes
 npm run watch
 
-# Build bundle
-npm run bundle
-npm t
-npm run test:e2e
-
 # Run benchmark
 npm run bench:async
 npm run bench:sync

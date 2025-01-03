@@ -11,13 +11,13 @@
   "engines": {
     "node": ">=18.18.0"
   },
-  "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "main": "out/index.js",
+  "typings": "out/index.d.ts",
   "files": [
-    "build",
-    "!build/{benchmark,tests}",
-    "!build/**/*.map",
-    "!build/**/*.spec.*"
+    "out",
+    "!out/{benchmark,tests}",
+    "!out/**/*.map",
+    "!out/**/*.spec.*"
   ],
   "keywords": [
     "glob",
@@ -35,7 +35,6 @@
     "@types/picomatch": "^3.0.1",
     "@types/sinon": "^17.0.3",
     "bencho": "^0.1.1",
-    "esbuild": "^0.24.0",
     "eslint": "9.14.0",
     "eslint-config-mrmlnc": "^5.0.0",
     "execa": "^7.2.0",
@@ -57,7 +56,7 @@
     "micromatch": "^4.0.8"
   },
   "scripts": {
-    "clean": "rimraf out build",
+    "clean": "rimraf out",
     "lint": "eslint \"src/**/*.ts\" --cache",
     "compile": "tsc",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
@@ -68,12 +67,6 @@
     "_build:compile": "npm run clean && npm run compile",
     "build": "npm run _build:compile && npm run lint && npm test",
     "watch": "npm run _build:compile -- -- --sourceMap --watch",
-    "_bundle:dts": "tsc --emitDeclarationOnly --outDir ./build",
-    "_bundle:ts": "esbuild --bundle ./src/index.ts --outfile=./build/index.js --platform=node --target=node18.18 --format=cjs",
-    "_bundle:build": "npm run _bundle:dts && npm run _bundle:ts",
-    "_bundle:test:replace": "cp ./build/index.js ./out",
-    "_bundle:test": "npm run _bundle:test:replace",
-    "bundle": "npm run _build:compile && npm run _bundle:build && npm run _bundle:test",
     "bench:async": "npm run bench:product:async && npm run bench:regression:async",
     "bench:stream": "npm run bench:product:stream && npm run bench:regression:stream",
     "bench:sync": "npm run bench:product:sync && npm run bench:regression:sync",
@@ -89,6 +82,6 @@
     "bench:overhead:async": "hereby bench:overhead:async",
     "bench:overhead:sync": "hereby bench:overhead:sync",
     "bench:overhead:stream": "hereby bench:overhead:stream",
-    "prepublishOnly": "npm run bundle"
+    "prepublishOnly": "npm run build"
   }
 }

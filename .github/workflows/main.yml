@@ -35,8 +35,8 @@ jobs:
         run: npm install
       - name: Run Hygiene Checks
         run: npm run lint
-      - name: Prepare bundle
-        run: npm run bundle
+      - name: Compile
+        run: npm run compile
       - name: Run unit tests
         run: npm run test
       - name: Run e2e tests (sync)
