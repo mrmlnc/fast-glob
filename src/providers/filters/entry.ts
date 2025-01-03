@@ -79,21 +79,39 @@ export default class EntryFilter {
 	}
 
 	#isMatchToPatternsSet(filepath: string, patterns: PatternsRegexSet, isDirectory: boolean): boolean {
-		let fullpath = filepath;
-
-		if (patterns.negative.absolute.length > 0) {
-			fullpath = utils.path.makeAbsolute(this.#settings.cwd, filepath);
+		const isMatched = this.#isMatchToPatterns(filepath, patterns.positive.all, isDirectory);
+		if (!isMatched) {
+			return false;
 		}
 
-		const isMatched = this.#isMatchToPatterns(filepath, patterns.positive.all, isDirectory);
+		const isMatchedByRelativeNegative = this.#isMatchToPatterns(filepath, patterns.negative.relative, isDirectory);
+		if (isMatchedByRelativeNegative) {
+			return false;
+		}
 
-		return isMatched && !(
-			this.#isMatchToPatterns(filepath, patterns.negative.relative, isDirectory) ||
-			this.#isMatchToPatterns(fullpath, patterns.negative.absolute, isDirectory)
-		);
+		const isMatchedByAbsoluteNegative = this.#isMatchToAbsoluteNegative(filepath, patterns.negative.absolute, isDirectory);
+		if (isMatchedByAbsoluteNegative) {
+			return false;
+		}
+
+		return true;
+	}
+
+	#isMatchToAbsoluteNegative(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
+		if (patternsRe.length === 0) {
+			return false;
+		}
+
+		const fullpath = utils.path.makeAbsolute(this.#settings.cwd, filepath);
+
+		return this.#isMatchToPatterns(fullpath, patternsRe, isDirectory);
 	}
 
 	#isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
+		if (patternsRe.length === 0) {
+			return false;
+		}
+
 		// Trying to match files and directories by patterns.
 		const isMatched = utils.pattern.matchAny(filepath, patternsRe);
 
