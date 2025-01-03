@@ -22,8 +22,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Prepare bundle
-        run: npm run bundle
+      - name: Build
+        run: npm run build
       - name: Benchmark (async)
         run: npm run bench:product:async
       - name: Benchmark (stream)
@@ -55,8 +55,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Prepare bundle
-        run: npm run bundle
+      - name: Build
+        run: npm run build
       - name: Benchmark (async)
         run: npm run bench:regression:async
       - name: Benchmark (stream)
@@ -79,8 +79,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Prepare bundle
-        run: npm run bundle
+      - name: Build
+        run: npm run build
       - name: Benchmark (async)
         run: npm run bench:overhead:async
       - name: Benchmark (stream)
