@@ -48,9 +48,11 @@
     "tinyglobby": "^0.2.10",
     "typescript": "^5.7.2"
   },
-  "dependencies": {
+  "optionalDependencies": {
     "@nodelib/fs.stat": "^4.0.0",
-    "@nodelib/fs.walk": "^3.0.0",
+    "@nodelib/fs.walk": "^3.0.1"
+  },
+  "dependencies": {
     "glob-parent": "^6.0.2",
     "merge2": "^1.4.1",
     "micromatch": "^4.0.8"
@@ -67,8 +69,8 @@
     "_build:compile": "npm run clean && npm run compile",
     "build": "npm run _build:compile && npm run lint && npm test",
     "watch": "npm run _build:compile -- -- --sourceMap --watch",
-    "_bundle:dts": "dts-bundle-generator ./src/index.ts --out-file=./build/index.d.ts --export-referenced-types=false --external-inlines=@nodelib/fs.walk @nodelib/fs.scandir @nodelib/fs.stat",
-    "_bundle:js": "esbuild --bundle ./out/index.js --outfile=./build/index.js --platform=node --target=node18.18 --format=cjs",
+    "_bundle:dts": "node ./scripts/bundle-dts.mjs",
+    "_bundle:js": "node ./scripts/bundle-js.mjs",
     "_bundle:build": "npm run _bundle:dts && npm run _bundle:js",
     "_bundle:test:replace": "cp ./build/index.js ./out",
     "_bundle:test": "npm run _bundle:test:replace",
