@@ -4,7 +4,7 @@ import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'fast-glob' | 'node-glob' | 'tinyglobby';
+type GlobImplementation = 'fast-glob' | 'native' | 'node-glob' | 'tinyglobby';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];
 
@@ -15,6 +15,32 @@ class Glob {
 	constructor(cwd: string, pattern: string) {
 		this.#cwd = cwd;
 		this.#pattern = pattern;
+	}
+
+	/**
+	 * Assumptions:
+	 *
+	 * 1. The implementation returns entries with an absolute path, while all other solutions return a relative path.
+	 */
+	public async measureNative(): Promise<void> {
+		const glob = await utils.importAndMeasure(utils.importNativeGlob);
+
+		this.#measure(() => {
+			const iterator = glob.globSync(this.#pattern, {
+				cwd: this.#cwd,
+				withFileTypes: true,
+			});
+
+			const entries: string[] = [];
+
+			for (const dirent of iterator) {
+				if (!dirent.isDirectory()) {
+					entries.push(`${dirent.parentPath}/${dirent.name}`);
+				}
+			}
+
+			return entries;
+		});
 	}
 
 	public async measureNodeGlob(): Promise<void> {
@@ -71,6 +97,11 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
+		case 'native': {
+			await glob.measureNative();
+			break;
+		}
+
 		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
