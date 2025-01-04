@@ -28,6 +28,7 @@ describe('Settings', () => {
 		assert.ok(settings.onlyFiles);
 		assert.ok(settings.unique);
 		assert.strictEqual(settings.cwd, process.cwd());
+		assert.strictEqual(settings.signal, undefined);
 	});
 
 	it('should return instance with custom values', () => {

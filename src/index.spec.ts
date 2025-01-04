@@ -108,6 +108,29 @@ describe('Package', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should abort processing dynamic pattern with abort signal', async () => {
+			const ac = new AbortController();
+
+			setTimeout(() => {
+				ac.abort();
+			}, 5);
+
+			// The globstar pattern is used here to make the call run longer than the settimeout.
+			const action = fg.glob(['**'], { signal: ac.signal });
+
+			await assert.rejects(() => action, { message: 'This operation was aborted' });
+		});
+
+		it('should abort processing static pattern with abort signal', async () => {
+			const ac = new AbortController();
+
+			ac.abort();
+
+			const action = fg.glob(['./package.json'], { signal: ac.signal });
+
+			await assert.rejects(() => action, { message: 'The operation was aborted' });
+		});
 	});
 
 	describe('.async', () => {
@@ -173,6 +196,44 @@ describe('Package', () => {
 
 				assert.deepStrictEqual(actual, expected);
 				done();
+			});
+		});
+
+		it('should abort processing dynamic pattern with abort signal', (done) => {
+			const ac = new AbortController();
+
+			setTimeout(() => {
+				ac.abort();
+			}, 5);
+
+			// The globstar pattern is used here to make the call run longer than the settimeout.
+			const steam = fg.globStream(['**'], { signal: ac.signal });
+
+			steam.once('error', (error: ErrnoException) => {
+				assert.strictEqual(error.message, 'This operation was aborted');
+				done();
+			});
+
+			steam.once('end', () => {
+				assert.fail('The stream should be aborted');
+			});
+		});
+
+		it('should abort processing static pattern with abort signal', (done) => {
+			const ac = new AbortController();
+
+			ac.abort();
+
+			// The globstar pattern is used here to make the call run longer than the settimeout.
+			const steam = fg.globStream(['./package.json'], { signal: ac.signal });
+
+			steam.once('error', (error: ErrnoException) => {
+				assert.strictEqual(error.message, 'The operation was aborted');
+				done();
+			});
+
+			steam.once('end', () => {
+				assert.fail('The stream should be aborted');
 			});
 		});
 	});
