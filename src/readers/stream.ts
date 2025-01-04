@@ -24,7 +24,7 @@ export class ReaderStream extends Reader<Readable> implements IReaderStream {
 	public static(patterns: Pattern[], options: ReaderOptions): Readable {
 		const filepaths = patterns.map((pattern) => this._getFullEntryPath(pattern));
 
-		const stream = new PassThrough({ objectMode: true });
+		const stream = new PassThrough({ objectMode: true, signal: options.signal });
 
 		stream._write = (index: number, _enc, done) => {
 			this.#getEntry(filepaths[index], patterns[index], options)

@@ -34,6 +34,7 @@ This package provides methods for traversing the file system and returning pathn
     * [ignore](#ignore)
     * [suppressErrors](#suppresserrors)
     * [throwErrorOnBrokenSymbolicLink](#throwerroronbrokensymboliclink)
+    * [signal](#signal)
   * [Output control](#output-control)
     * [absolute](#absolute)
     * [markDirectories](#markdirectories)
@@ -404,6 +405,15 @@ By default this package suppress only `ENOENT` errors. Set to `true` to suppress
 Throw an error when symbolic link is broken if `true` or safely return `lstat` call if `false`.
 
 > :book: This option has no effect on errors when reading the symbolic link directory.
+
+#### signal
+
+* Type: [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
+* Default: `undefined`
+
+A signal to abort searching for entries on the file system. Works only with asynchronous methods for dynamic and static patterns.
+
+> :book: The abort signal does not interrupt the operation instantly. After the abort signal, there will be a brief period during which the tail of unprocessed but already read directories will be processed. New directories will not be added to the queue for reading, entries found in processed directories will not be emitted. Think of it as a no-op loop because we do not know at what stage of processing the abort signal was triggered.
 
 ### Output control
 

@@ -48,6 +48,7 @@ export abstract class Provider<T> {
 			stats: this.#settings.stats,
 			throwErrorOnBrokenSymbolicLink: this.#settings.throwErrorOnBrokenSymbolicLink,
 			transform: this.entryTransformer.getTransformer(),
+			signal: this.#settings.signal,
 		};
 	}
 

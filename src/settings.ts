@@ -138,6 +138,13 @@ export interface Options {
 	 * @default true
 	 */
 	unique?: boolean;
+	/**
+	 * A signal to abort searching for entries on the file system.
+	 * Works only with asynchronous methods for dynamic and static patterns.
+	 *
+	 * @default undefined
+	 */
+	signal?: AbortSignal;
 }
 
 export default class Settings {
@@ -161,6 +168,7 @@ export default class Settings {
 	public readonly suppressErrors: boolean;
 	public readonly throwErrorOnBrokenSymbolicLink: boolean;
 	public readonly unique: boolean;
+	public readonly signal?: AbortSignal;
 
 	// eslint-disable-next-line complexity
 	constructor(options: Options = {}) {
@@ -184,6 +192,7 @@ export default class Settings {
 		this.suppressErrors = options.suppressErrors ?? false;
 		this.throwErrorOnBrokenSymbolicLink = options.throwErrorOnBrokenSymbolicLink ?? false;
 		this.unique = options.unique ?? true;
+		this.signal = options.signal;
 
 		if (this.onlyDirectories) {
 			this.onlyFiles = false;

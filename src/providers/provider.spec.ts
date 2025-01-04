@@ -85,6 +85,7 @@ describe('Providers → Provider', () => {
 			assert.ok(!actual.stats);
 			assert.ok(actual.throwErrorOnBrokenSymbolicLink === false);
 			assert.strictEqual(typeof actual.transform, 'function');
+			assert.strictEqual(actual.signal, undefined);
 		});
 
 		it('should return options for reader with non-global base', () => {
