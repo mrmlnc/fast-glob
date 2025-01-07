@@ -104,7 +104,13 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 	const group: PatternsGroup = {};
 
 	return patterns.reduce((collection, pattern) => {
-		const base = utils.pattern.getBaseDirectory(pattern);
+		let base = utils.pattern.getBaseDirectory(pattern);
+
+		/**
+		 * After extracting the basic static part of the pattern, it becomes a path,
+		 * so escaping leads to referencing non-existent paths.
+		 */
+		base = utils.path.removeBackslashes(base);
 
 		if (base in collection) {
 			collection[base].push(pattern);

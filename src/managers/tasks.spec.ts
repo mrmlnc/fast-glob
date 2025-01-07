@@ -179,6 +179,16 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should remove backslashes from the base directory', () => {
+			const expected: PatternsGroup = {
+				"a'b": [String.raw`a\'b/*`],
+			};
+
+			const actual = manager.groupPatternsByBaseDirectory([String.raw`a\'b/*`]);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternGroupsToTasks', () => {
