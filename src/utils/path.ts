@@ -42,6 +42,10 @@ export function removeLeadingDotSegment(entry: string): string {
 	return entry;
 }
 
+export function removeBackslashes(entry: string): string {
+	return entry.replaceAll('\\', '');
+}
+
 export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
 
 export function escapeWindowsPath(pattern: Pattern): Pattern {

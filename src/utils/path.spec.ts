@@ -81,6 +81,13 @@ describe('Utils → Path', () => {
 		});
 	});
 
+	describe('.removeBackslashes', () => {
+		it('should return path without backslashes', () => {
+			assert.strictEqual(util.removeBackslashes(String.raw`a\b`), 'ab');
+			assert.strictEqual(util.removeBackslashes(String.raw`a\\\b`), String.raw`ab`);
+		});
+	});
+
 	describe('.convertPathToPattern', () => {
 		it('should return a pattern', () => {
 			assert.strictEqual(util.convertPathToPattern('.{directory}'), String.raw`.\{directory\}`);
