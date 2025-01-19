@@ -96,6 +96,14 @@ describe('Utils → Pattern', () => {
 				assert.ok(util.isDynamicPattern('{2..10..2}'));
 			});
 
+			it('should return true for patterns that include single quotes and brace expansions symbols', () => {
+				assert.ok(util.isDynamicPattern(String.raw`chilis/menu's.{jpg,png,pdf}`));
+				assert.ok(util.isDynamicPattern(String.raw`chilis/menu\'s.{jpg,png,pdf}`));
+				assert.ok(util.isDynamicPattern(String.raw`chili's/menus.{jpg,png,pdf}`));
+				assert.ok(util.isDynamicPattern(String.raw`chili\'s/menus.{jpg,png,pdf}`));
+			});
+
+
 			it('should return false for brace extension when the `braceExpansion` option is disabled', () => {
 				assert.ok(!util.isDynamicPattern('{,}', { braceExpansion: false }));
 				assert.ok(!util.isDynamicPattern('{a,}', { braceExpansion: false }));

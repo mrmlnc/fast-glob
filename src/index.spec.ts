@@ -55,6 +55,111 @@ describe('Package', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should return entries with UN-escaped hanging single-quote in filename', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fourth/file'sA.md",
+				"fixtures2/fourth/file'sB.md",
+			];
+
+			const actual = fg.globSync(["fixtures2/fourth/file's*.md"]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with escaped hanging single-quote in filename', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fourth/file'sA.md",
+				"fixtures2/fourth/file'sB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/fourth/file\'s*.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+
+		it('should return entries with UN-escaped hanging single-quote in filename + brace expansion', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fourth/file'sA.md",
+				"fixtures2/fourth/file'sB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/fourth/file's{A,B}.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with escaped hanging single-quote in filename + brace expansion', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fourth/file'sA.md",
+				"fixtures2/fourth/file'sB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/fourth/file\'s{A,B}.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with UN-escaped hanging single-quote in PARENT directory', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fifth's/fileA.md",
+				"fixtures2/fifth's/fileB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/fifth's/file*.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with escaped hanging single-quote in PARENT directory', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fifth's/fileA.md",
+				"fixtures2/fifth's/fileB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/second\'s/file*.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with UN-escaped hanging single-quote in PARENT directory + brace expansion', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fifth's/fileA.md",
+				"fixtures2/fifth's/fileB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/second's/file{A, B}.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return entries with escaped hanging single-quote in PARENT directory + brace expansion', () => {
+			const expected: EntryItem[] = [
+				"fixtures2/fifth's/fileA.md",
+				"fixtures2/fifth's/fileB.md",
+			];
+
+			const actual = fg.globSync([String.raw`fixtures2/second\'s/file{A, B}.md`]);
+
+			actual.sort((a, b) => a.localeCompare(b));
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.sync', () => {
