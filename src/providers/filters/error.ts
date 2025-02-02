@@ -15,6 +15,18 @@ export default class ErrorFilter {
 	}
 
 	#isNonFatalError(error: ErrnoException): boolean {
-		return utils.errno.isEnoentCodeError(error) || this.#settings.suppressErrors;
+		if (this.#settings.suppressErrors) {
+			return true;
+		}
+
+		if (this.#settings.errorHandler !== undefined) {
+			return this.#settings.errorHandler(error);
+		}
+
+		if (utils.errno.isEnoentCodeError(error)) {
+			return true;
+		}
+
+		return false;
 	}
 }
