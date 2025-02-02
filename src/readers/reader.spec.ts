@@ -4,7 +4,13 @@ import * as process from 'node:process';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 import Settings, { type Options } from '../settings.js';
-import type { Entry, FsStats, Pattern } from '../types/index.js';
+import * as tests from '../tests/index.js';
+import type {
+	Entry,
+	ErrnoException,
+	FsStats,
+	Pattern,
+} from '../types/index.js';
 import { Reader } from './reader.js';
 
 class TestReader extends Reader<never[]> {
@@ -26,6 +32,10 @@ class TestReader extends Reader<never[]> {
 
 	public makeEntry(stats: FsStats, pattern: Pattern): Entry {
 		return this._makeEntry(stats, pattern);
+	}
+
+	public isFatalError(error: ErrnoException): boolean {
+		return this._isFatalError(error);
 	}
 }
 
@@ -74,6 +84,44 @@ describe('Readers → Reader', () => {
 			const actual = reader.makeEntry(new Stats(), pattern);
 
 			assert.ok(actual.stats);
+		});
+	});
+
+	describe('.isFatalError', () => {
+		it('should return false for ENOENT error', () => {
+			const reader = getReader();
+
+			assert.ok(!reader.isFatalError(tests.errno.getEnoent()));
+		});
+
+		it('should return true for EPERM error', () => {
+			const reader = getReader();
+
+			assert.ok(reader.isFatalError(tests.errno.getEperm()));
+		});
+
+		it('should return false for EPERM error when the `suppressErrors` option is enabled', () => {
+			const reader = getReader({ suppressErrors: true });
+
+			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
+		});
+
+		it('should return true for ENOENT error when the `errorFilter` option returns false', () => {
+			const reader = getReader({ errorFilter: () => false });
+
+			assert.ok(reader.isFatalError(tests.errno.getEnoent()));
+		});
+
+		it('should return false for EPERM error when the `errorFilter` option returns true', () => {
+			const reader = getReader({ errorFilter: () => true });
+
+			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
+		});
+
+		it('should return false for EPERM error when the `suppressErrors` option is enabled and the `errorFilter` option returns false', () => {
+			const reader = getReader({ suppressErrors: true, errorFilter: () => false });
+
+			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
 		});
 	});
 });

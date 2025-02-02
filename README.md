@@ -33,6 +33,7 @@ This package provides methods for traversing the file system and returning pathn
     * [fs](#fs)
     * [ignore](#ignore)
     * [suppressErrors](#suppresserrors)
+    * [errorFilter](#errorfilter)
     * [throwErrorOnBrokenSymbolicLink](#throwerroronbrokensymboliclink)
     * [signal](#signal)
   * [Output control](#output-control)
@@ -402,6 +403,23 @@ fg.globSync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
 By default this package suppress only `ENOENT` and `ENOTDIR` errors. Set to `true` to suppress any error.
 
 > :book: Can be useful when the directory has entries with a special level of access.
+
+#### errorFilter
+
+* Type: `(error: ErrnoException) => boolean`
+* Default: `undefined`
+
+A function that decides at runtime which errors to suppress and which to throw. Return `true` to suppress the error, `false` to throw it.
+
+The function receives **all** errors, including `ENOENT` and `ENOTDIR`, which are suppressed by default. So if you want to suppress only specific error codes, do not forget to also skip them:
+
+```js
+fg.globSync('**', {
+  errorFilter: (error) => error.code === 'EACCES' || error.code === 'ENOENT' || error.code === 'ENOTDIR',
+});
+```
+
+This option is ignored when the [`suppressErrors`](#suppresserrors) option is enabled.
 
 #### throwErrorOnBrokenSymbolicLink
 

@@ -18,6 +18,7 @@ describe('Settings', () => {
 		assert.ok(!settings.onlyDirectories);
 		assert.ok(!settings.stats);
 		assert.ok(!settings.suppressErrors);
+		assert.ok(!settings.errorFilter);
 		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
 		assert.ok(settings.braceExpansion);
 		assert.ok(settings.caseSensitiveMatch);

@@ -56,5 +56,29 @@ describe('Providers → Filters → Error', () => {
 
 			assert.ok(!isActual);
 		});
+
+		it('should return true for EPERM error when the `errorFilter` option returns true', () => {
+			const filter = getFilter({ errorFilter: () => true });
+
+			const isActual = filter(tests.errno.getEperm());
+
+			assert.ok(isActual);
+		});
+
+		it('should return false for ENOENT error when the `errorFilter` option returns false', () => {
+			const filter = getFilter({ errorFilter: () => false });
+
+			const isActual = filter(tests.errno.getEnoent());
+
+			assert.ok(!isActual);
+		});
+
+		it('should return true for EPERM error when the `suppressErrors` option is enabled and the `errorFilter` option returns false', () => {
+			const filter = getFilter({ suppressErrors: true, errorFilter: () => false });
+
+			const isActual = filter(tests.errno.getEperm());
+
+			assert.ok(isActual);
+		});
 	});
 });

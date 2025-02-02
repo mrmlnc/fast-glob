@@ -47,6 +47,14 @@ export abstract class Reader<T> {
 	}
 
 	protected _isFatalError(error: ErrnoException): boolean {
-		return !utils.errno.isEnoentCodeError(error) && !utils.errno.isEnotdirCodeError(error) && !this.#settings.suppressErrors;
+		if (this.#settings.suppressErrors) {
+			return false;
+		}
+
+		if (this.#settings.errorFilter !== undefined) {
+			return !this.#settings.errorFilter(error);
+		}
+
+		return !utils.errno.isEnoentCodeError(error) && !utils.errno.isEnotdirCodeError(error);
 	}
 }

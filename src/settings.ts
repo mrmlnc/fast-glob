@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import type { FileSystemAdapter, Pattern } from './types/index.js';
+import type { ErrnoException, FileSystemAdapter, Pattern } from './types/index.js';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -120,12 +120,21 @@ export type Options = {
 	 */
 	stats?: boolean;
 	/**
-	 * By default this package suppress only `ENOENT` errors.
+	 * By default this package suppress only `ENOENT` and `ENOTDIR` errors.
 	 * Set to `true` to suppress any error.
 	 *
 	 * @default false
 	 */
 	suppressErrors?: boolean;
+	/**
+	 * A function that decides whether an error is fatal. Receives all
+	 * errors, including `ENOENT` and `ENOTDIR`, which are suppressed
+	 * by default. Return `true` to suppress the error, `false` to throw
+	 * it. Ignored when the `suppressErrors` option is enabled.
+	 *
+	 * @default undefined
+	 */
+	errorFilter?: (error: ErrnoException) => boolean;
 	/**
 	 * Throw an error when symbolic link is broken if `true` or safely
 	 * return `lstat` call if `false`.
@@ -167,6 +176,7 @@ export default class Settings {
 	public readonly onlyFiles: boolean;
 	public readonly stats: boolean;
 	public readonly suppressErrors: boolean;
+	public readonly errorFilter: ((error: ErrnoException) => boolean) | undefined;
 	public readonly throwErrorOnBrokenSymbolicLink: boolean;
 	public readonly unique: boolean;
 	public readonly signal?: AbortSignal;
@@ -195,6 +205,7 @@ export default class Settings {
 		this.onlyFiles = options.onlyFiles ?? true;
 		this.stats = options.stats ?? false;
 		this.suppressErrors = options.suppressErrors ?? false;
+		this.errorFilter = options.errorFilter ?? undefined;
 		this.throwErrorOnBrokenSymbolicLink = options.throwErrorOnBrokenSymbolicLink ?? false;
 		this.unique = options.unique ?? true;
 		this.signal = options.signal;

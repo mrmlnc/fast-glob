@@ -10,7 +10,15 @@ export default class ErrorFilter {
 	}
 
 	#isNonFatalError(error: ErrnoException): boolean {
-		return utils.errno.isEnoentCodeError(error) || utils.errno.isEnotdirCodeError(error) || this.#settings.suppressErrors;
+		if (this.#settings.suppressErrors) {
+			return true;
+		}
+
+		if (this.#settings.errorFilter !== undefined) {
+			return this.#settings.errorFilter(error);
+		}
+
+		return utils.errno.isEnoentCodeError(error) || utils.errno.isEnotdirCodeError(error);
 	}
 
 	public getFilter(): ErrorFilterFunction {
