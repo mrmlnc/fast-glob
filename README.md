@@ -33,6 +33,7 @@ This package provides methods for traversing the file system and returning pathn
     * [fs](#fs)
     * [ignore](#ignore)
     * [suppressErrors](#suppresserrors)
+    * [errorHandler](#errorhandler)
     * [throwErrorOnBrokenSymbolicLink](#throwerroronbrokensymboliclink)
     * [signal](#signal)
   * [Output control](#output-control)
@@ -393,9 +394,31 @@ fg.globSync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
 * Type: `boolean`
 * Default: `false`
 
-By default this package suppress only `ENOENT` errors. Set to `true` to suppress any error.
+By default this package suppress `ENOENT` errors. Set to `true` to suppress any error.
 
 > :book: Can be useful when the directory has entries with a special level of access.
+
+#### errorHandler
+
+* Type: function (error: ErrnoException) => boolean
+
+Supply a custom error handler that takes the error as argument and allows you to 
+handle errors in a custom way. Return `true` to suppress the error, 
+`false` to throw the error.
+
+```js
+fg.globSync('**', {
+  errorHandler: (error) => {
+    if (error.code === 'ENOENT') {
+      console.error('Directory not found:', error.path);
+      return true;
+    } else {
+      console.error('Error:', error.message);
+      return false;
+    }
+  }
+});
+```
 
 #### throwErrorOnBrokenSymbolicLink
 
