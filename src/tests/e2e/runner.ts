@@ -1,5 +1,6 @@
 import * as assert from 'node:assert';
 import * as process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
 import * as fg from '../../index.js';
@@ -92,8 +93,9 @@ function getTestPatterns(test: Test): Pattern[] {
 
 function getTestTitle(test: Test): string {
 	// Replacing placeholders to hide absolute paths from snapshots.
+	const cwd = test.options?.cwd instanceof URL ? fileURLToPath(test.options.cwd) : test.options?.cwd;
 	const replacements = {
-		cwd: test.options?.cwd?.replace(CWD, '<root>'),
+		cwd: cwd?.replace(CWD, '<root>'),
 		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>')),
 	};
 
