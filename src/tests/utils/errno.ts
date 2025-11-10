@@ -11,6 +11,10 @@ export function getEnoent(): ErrnoException {
 	return new SystemError('ENOENT', 'no such file or directory');
 }
 
+export function getEnotdir(): ErrnoException {
+	return new SystemError('ENOTDIR', 'not a directory');
+}
+
 export function getEperm(): ErrnoException {
 	return new SystemError('EPERM', 'operation not permitted');
 }

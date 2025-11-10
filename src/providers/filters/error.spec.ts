@@ -33,6 +33,14 @@ describe('Providers → Filters → Error', () => {
 			assert.ok(isActual);
 		});
 
+		it('should return true for ENOTDIR error', () => {
+			const filter = getFilter();
+
+			const isActual = filter(tests.errno.getEnotdir());
+
+			assert.ok(isActual);
+		});
+
 		it('should return true for EPERM error when the `suppressErrors` options is enabled', () => {
 			const filter = getFilter({ suppressErrors: true });
 
