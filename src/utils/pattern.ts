@@ -28,6 +28,29 @@ interface PatternTypeOptions {
 	extglob?: boolean;
 }
 
+function stripQuotedSegments(pattern: string): string {
+  const parts = pattern.split('/');
+
+  const normalized = parts.map((part) => {
+    if (part.length >= 2) {
+      const first = part[0];
+      const last = part[part.length - 1];
+
+      if ((first === "'" || first === '"') && first === last) {
+        return part.slice(1, -1);
+      }
+    }
+
+    return part;
+  });
+
+  return normalized.join('/');
+}
+
+export function removeQuotesFromSegments(pattern: Pattern): Pattern {
+	return stripQuotedSegments(pattern);
+}
+
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
 }
@@ -84,10 +107,12 @@ function hasBraceExpansion(pattern: string): boolean {
 }
 
 export function convertToPositivePattern(pattern: Pattern): Pattern {
+	pattern = stripQuotedSegments(pattern);
 	return isNegativePattern(pattern) ? pattern.slice(1) : pattern;
 }
 
 export function convertToNegativePattern(pattern: Pattern): Pattern {
+	pattern = stripQuotedSegments(pattern);
 	return `!${pattern}`;
 }
 
@@ -134,6 +159,7 @@ export function isPatternRelatedToParentDirectory(pattern: Pattern): boolean {
 }
 
 export function getBaseDirectory(pattern: Pattern): string {
+	pattern = stripQuotedSegments(pattern);
 	return globParent(pattern, { flipBackslashes: false });
 }
 
@@ -173,6 +199,8 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
+	pattern = stripQuotedSegments(pattern);
+
 	let { parts } = micromatch.scan(pattern, {
 		...options,
 		parts: true,
@@ -199,6 +227,7 @@ export function getPatternParts(pattern: Pattern, options: MicromatchOptions): P
 }
 
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
+	pattern = stripQuotedSegments(pattern);
 	return micromatch.makeRe(pattern, options);
 }
 

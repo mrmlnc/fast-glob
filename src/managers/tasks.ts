@@ -104,6 +104,7 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 	const group: PatternsGroup = {};
 
 	return patterns.reduce((collection, pattern) => {
+		pattern = utils.pattern.removeQuotesFromSegments(pattern);
 		let base = utils.pattern.getBaseDirectory(pattern);
 
 		/**
