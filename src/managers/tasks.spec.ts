@@ -130,6 +130,30 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should keep absolute patterns in separate tasks when mixed with a relative root pattern', () => {
+			const absolutePattern = '/absolute/path/*.ts';
+			const expected = [
+				tests.task.builder().base('/absolute/path').positive(absolutePattern).build(),
+				tests.task.builder().base('.').positive('*.config.ts').build(),
+			];
+
+			const actual = manager.convertPatternsToTasks([absolutePattern, '*.config.ts'], [], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should keep absolute patterns in separate tasks when mixed with a relative root pattern that triggers global merge', () => {
+			const absolutePattern = '/absolute/path/*.ts';
+			const expected = [
+				tests.task.builder().base('/absolute/path').positive(absolutePattern).build(),
+				tests.task.builder().base('.').positive('*').positive('*.config.ts').build(),
+			];
+
+			const actual = manager.convertPatternsToTasks([absolutePattern, '*', '*.config.ts'], [], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.getPositivePatterns', () => {
