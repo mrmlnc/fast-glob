@@ -28,6 +28,6 @@ export class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 			return this.#reader.dynamic(root, options);
 		}
 
-		return this.#reader.static(task.patterns, options);
+		return this.#reader.static(task.positive, options);
 	}
 }
