@@ -3,8 +3,8 @@ import { task } from 'hereby';
 
 const CONCURRENCY = process.env.CONCURRENCY === '1';
 const REPORTER = process.env.REPORTER ?? 'compact';
-const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 50;
-const RUNS_COUNT = process.env.RUNS_COUNT ?? 150;
+const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 100;
+const RUNS_COUNT = process.env.RUNS_COUNT ?? 300;
 
 const PRODUCT_ASYNC_SUITE = './out/benchmark/suites/product/async.js';
 const PRODUCT_SYNC_SUITE = './out/benchmark/suites/product/sync.js';
@@ -22,10 +22,12 @@ const FLATTEN_PATTERN = '*';
 const DEEP_PATTERN = '**';
 const PARTIAL_FLATTEN_PATTERN = '{fixtures,out}/{first,second}/*';
 const PARTIAL_DEEP_PATTERN = '{fixtures,out}/**';
+const EXTENSION_FLATTEN_PATTERN = '*.json';
+const EXTENSION_DEEP_PATTERN = '**/*.js';
 
-async function benchTask(suite, label, pattern, implementations = []) {
+async function benchTask(suite, label, pattern, implementations = [], cwd = '.') {
 	await execa('bencho', [
-		`'node ${suite} . "${pattern}" {impl}'`,
+		`'node ${suite} "${cwd}" "${pattern}" {impl}'`,
 		`-n "${label} {impl} ${pattern}"`,
 		`-w ${WARMUP_COUNT}`,
 		`-r ${RUNS_COUNT}`,
@@ -43,15 +45,27 @@ function makeBenchSuiteTask(type, label, suite, implementations = [], includePar
 		run: () => benchTask(suite, label, FLATTEN_PATTERN, implementations),
 	});
 
+	const asyncExtensionFlattenTask = includePartialTasks && task({
+		name: `bench:${type}:${label}:extension_flatten`,
+		dependencies: CONCURRENCY ? [] : [asyncFlattenTask],
+		run: () => benchTask(suite, label, EXTENSION_FLATTEN_PATTERN, implementations),
+	});
+
 	const asyncDeepTask = task({
 		name: `bench:${type}:${label}:deep`,
-		dependencies: CONCURRENCY ? [] : [asyncFlattenTask],
+		dependencies: CONCURRENCY ? [] : [includePartialTasks ? asyncExtensionFlattenTask : asyncFlattenTask],
 		run: () => benchTask(suite, label, DEEP_PATTERN, implementations),
+	});
+
+	const asyncExtensionDeepTask = includePartialTasks && task({
+		name: `bench:${type}:${label}:extension_deep`,
+		dependencies: CONCURRENCY ? [] : [asyncDeepTask],
+		run: () => benchTask(suite, label, EXTENSION_DEEP_PATTERN, implementations),
 	});
 
 	const asyncPartialFlattenTask = includePartialTasks && task({
 		name: `bench:${type}:${label}:partial_flatten`,
-		dependencies: CONCURRENCY ? [] : [asyncDeepTask],
+		dependencies: CONCURRENCY ? [] : [asyncExtensionDeepTask],
 		run: () => benchTask(suite, label, PARTIAL_FLATTEN_PATTERN, implementations),
 	});
 
