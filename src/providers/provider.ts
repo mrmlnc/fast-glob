@@ -1,5 +1,4 @@
-import * as path from 'node:path';
-
+import * as utils from '../utils';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 import ErrorFilter from './filters/error';
@@ -31,7 +30,7 @@ export abstract class Provider<T> {
 	public abstract read(_task: Task): T;
 
 	protected _getRootDirectory(task: Task): string {
-		return path.resolve(this.#settings.cwd, task.base);
+		return utils.path.makeCurrentWorkingDirectory(this.#settings.cwd, task.base);
 	}
 
 	protected _getReaderOptions(task: Task): ReaderOptions {

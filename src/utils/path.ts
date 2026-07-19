@@ -17,6 +17,7 @@ const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[()[\]{}]|^!
  * https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths
  */
 const DOS_DEVICE_PATH_RE = /^\\\\(?<path>[.?])/;
+const WINDOWS_DEVICE_DRIVE_ROOT_RE = /^\\\\[.?]\\[a-z]:$/i;
 /**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
@@ -26,6 +27,12 @@ const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@[\]{}])/g;
 
 export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);
+}
+
+export function makeCurrentWorkingDirectory(cwd: string, directory: string): string {
+	const absolutePath = makeAbsolute(cwd, directory);
+
+	return WINDOWS_DEVICE_DRIVE_ROOT_RE.test(absolutePath) ? `${absolutePath}\\` : absolutePath;
 }
 
 export function removeLeadingDotSegment(entry: string): string {

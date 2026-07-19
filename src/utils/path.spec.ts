@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as os from 'node:os';
 import * as path from 'node:path';
 
 import { describe, it } from 'mocha';
@@ -11,6 +12,24 @@ describe('Utils → Path', () => {
 			const expected = path.join(process.cwd(), 'file.md');
 
 			const actual = util.makeAbsolute(process.cwd(), 'file.md');
+
+			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('.makeCurrentWorkingDirectory', () => {
+		it('should preserve the separator of a device drive root', () => {
+			if (os.platform() !== 'win32') {
+				return;
+			}
+
+			assert.strictEqual(util.makeCurrentWorkingDirectory(String.raw`\\?\D:/`, '.'), '\\\\?\\D:\\');
+		});
+
+		it('should return an absolute directory path', () => {
+			const expected = path.join(process.cwd(), 'directory');
+
+			const actual = util.makeCurrentWorkingDirectory(process.cwd(), 'directory');
 
 			assert.strictEqual(actual, expected);
 		});
