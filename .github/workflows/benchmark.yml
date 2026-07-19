@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26
       - name: Install dependencies
@@ -48,9 +48,9 @@ jobs:
       BENCHMARK_OPTIONS: ${{ matrix.benchmark_options }}
     steps:
       - name: Setup repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26
       - name: Install dependencies
@@ -72,9 +72,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26
       - name: Install dependencies
