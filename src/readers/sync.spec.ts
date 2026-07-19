@@ -4,10 +4,10 @@ import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import type { ReaderOptions } from '../types';
-import { ReaderSync } from './sync';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { ReaderOptions } from '../types/index.js';
+import { ReaderSync } from './sync.js';
 
 type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;

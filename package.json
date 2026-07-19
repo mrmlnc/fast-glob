@@ -11,6 +11,7 @@
   "engines": {
     "node": "^22.13.0 || >=24"
   },
+  "type": "module",
   "main": "out/index.js",
   "typings": "out/index.d.ts",
   "files": [

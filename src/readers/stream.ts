@@ -7,8 +7,8 @@ import type {
 	FsStats,
 	Pattern,
 	ReaderOptions,
-} from '../types';
-import { Reader } from './reader';
+} from '../types/index.js';
+import { Reader } from './reader.js';
 
 export type ReaderStreamInterface = {
 	dynamic: (root: string, options: ReaderOptions) => Readable;

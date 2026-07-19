@@ -2,8 +2,8 @@ import * as assert from 'node:assert';
 import * as process from 'node:process';
 import snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
-import * as fg from '../..';
-import type { Pattern } from '../../types';
+import * as fg from '../../index.js';
+import type { Pattern } from '../../types/index.js';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 

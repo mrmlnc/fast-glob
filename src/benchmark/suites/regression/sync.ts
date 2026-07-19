@@ -1,8 +1,8 @@
 import * as path from 'node:path';
 import * as process from 'node:process';
 import * as bencho from 'bencho';
-import * as utils from '../../utils';
-import type * as fastGlobCurrent from '../../..';
+import * as utils from '../../utils.js';
+import type * as fastGlobCurrent from '../../../index.js';
 
 type GlobImplementation = 'current' | 'previous';
 

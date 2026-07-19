@@ -1,12 +1,12 @@
 import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import { ReaderAsync, type ReaderAsyncInterface } from '../readers';
-import type { Entry, EntryItem } from '../types';
-import type { Task } from '../managers/tasks';
-import { ProviderAsync } from './async';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ReaderAsync, type ReaderAsyncInterface } from '../readers/index.js';
+import type { Entry, EntryItem } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
+import { ProviderAsync } from './async.js';
 
 type StubbedReaderAsync = sinon.SinonStubbedInstance<ReaderAsyncInterface>;
 

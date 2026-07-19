@@ -1,10 +1,10 @@
 import * as assert from 'node:assert';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-import { ReaderSync, type ReaderSyncInterface } from '../readers';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import { ProviderSync } from './sync';
+import { ReaderSync, type ReaderSyncInterface } from '../readers/index.js';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ProviderSync } from './sync.js';
 
 type StubbedReaderSync = sinon.SinonStubbedInstance<ReaderSyncInterface>;
 

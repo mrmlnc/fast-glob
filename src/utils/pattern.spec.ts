@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import type { Pattern } from '../types';
-import * as util from './pattern';
+import type { Pattern } from '../types/index.js';
+import * as util from './pattern.js';
 
 describe('Utils → Pattern', () => {
 	describe('.isStaticPattern', () => {

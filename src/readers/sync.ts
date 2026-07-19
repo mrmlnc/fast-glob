@@ -6,8 +6,8 @@ import type {
 	FsStats,
 	Pattern,
 	ReaderOptions,
-} from '../types';
-import { Reader } from './reader';
+} from '../types/index.js';
+import { Reader } from './reader.js';
 
 export type ReaderSyncInterface = {
 	dynamic: (root: string, options: ReaderOptions) => Entry[];

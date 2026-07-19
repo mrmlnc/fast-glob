@@ -1,9 +1,9 @@
 
-import type { ReaderSyncInterface } from '../readers';
-import type Settings from '../settings';
-import type { Task } from '../managers/tasks';
-import type { Entry, EntryItem, ReaderOptions } from '../types';
-import { Provider } from './provider';
+import type { ReaderSyncInterface } from '../readers/index.js';
+import type Settings from '../settings.js';
+import type { Task } from '../managers/tasks.js';
+import type { Entry, EntryItem, ReaderOptions } from '../types/index.js';
+import { Provider } from './provider.js';
 
 export class ProviderSync extends Provider<EntryItem[]> {
 	readonly #reader: ReaderSyncInterface;

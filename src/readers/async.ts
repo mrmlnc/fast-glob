@@ -1,8 +1,8 @@
 import * as fsWalk from '@nodelib/fs.walk';
-import type Settings from '../settings';
-import type { Entry, ReaderOptions, Pattern } from '../types';
-import { Reader } from './reader';
-import { ReaderStream } from './stream';
+import type Settings from '../settings.js';
+import type { Entry, ReaderOptions, Pattern } from '../types/index.js';
+import { Reader } from './reader.js';
+import { ReaderStream } from './stream.js';
 
 export type ReaderAsyncInterface = {
 	dynamic: (root: string, options: ReaderOptions) => Promise<Entry[]>;

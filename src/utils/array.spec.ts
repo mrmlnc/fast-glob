@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import * as util from './array';
+import * as util from './array.js';
 
 describe('Utils → Array', () => {
 	describe('.flatFirstLevel', () => {

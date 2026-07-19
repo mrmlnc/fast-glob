@@ -1,9 +1,9 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import Settings, { type Options } from '../../settings';
-import * as tests from '../../tests';
-import type { ErrorFilterFunction } from '../../types';
-import ErrorFilter from './error';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { ErrorFilterFunction } from '../../types/index.js';
+import ErrorFilter from './error.js';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
 	const settings = new Settings(options);

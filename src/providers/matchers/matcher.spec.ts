@@ -1,9 +1,9 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import * as tests from '../../tests';
-import Settings from '../../settings';
-import type { Pattern, MicromatchOptions } from '../../types';
-import Matcher, { type PatternInfo } from './matcher';
+import * as tests from '../../tests/index.js';
+import Settings from '../../settings.js';
+import type { Pattern, MicromatchOptions } from '../../types/index.js';
+import Matcher, { type PatternInfo } from './matcher.js';
 
 class TestMatcher extends Matcher {
 	public get storage(): PatternInfo[] {

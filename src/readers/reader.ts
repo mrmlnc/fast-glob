@@ -1,14 +1,14 @@
 import * as path from 'node:path';
 import * as fsStat from '@nodelib/fs.stat';
-import * as utils from '../utils';
-import type Settings from '../settings';
+import * as utils from '../utils/index.js';
+import type Settings from '../settings.js';
 import type {
 	Entry,
 	ErrnoException,
 	FsStats,
 	Pattern,
 	ReaderOptions,
-} from '../types';
+} from '../types/index.js';
 
 export abstract class Reader<T> {
 	readonly #settings: Settings;

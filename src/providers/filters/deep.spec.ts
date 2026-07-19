@@ -1,9 +1,9 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import Settings, { type Options } from '../../settings';
-import * as tests from '../../tests';
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
-import DeepFilter from './deep';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types/index.js';
+import DeepFilter from './deep.js';
 
 type FilterOptions = {
 	base?: string;

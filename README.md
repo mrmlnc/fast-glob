@@ -132,7 +132,7 @@ fg.async(patterns, [options])
 Returns a `Promise` with an array of matching entries.
 
 ```js
-const fg = require('fast-glob');
+import * as fg from 'fast-glob';
 
 const entries = await fg.glob(['.editorconfig', '**/index.js'], { dot: true });
 
@@ -148,7 +148,7 @@ fg.globSync(patterns, [options])
 Returns an array of matching entries.
 
 ```js
-const fg = require('fast-glob');
+import * as fg from 'fast-glob';
 
 const entries = fg.globSync(['.editorconfig', '**/index.js'], { dot: true });
 
@@ -165,7 +165,7 @@ fg.stream(patterns, [options])
 Returns a [`ReadableStream`][node_js_stream_readable_streams] when the `data` event will be emitted with matching entry.
 
 ```js
-const fg = require('fast-glob');
+import * as fg from 'fast-glob';
 
 const stream = fg.globStream(['.editorconfig', '**/index.js'], { dot: true });
 

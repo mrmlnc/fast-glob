@@ -1,7 +1,7 @@
 import * as path from 'node:path';
-import * as utils from '../../utils';
-import type Settings from '../../settings';
-import type { Entry, EntryItem, EntryTransformerFunction } from '../../types';
+import * as utils from '../../utils/index.js';
+import type Settings from '../../settings.js';
+import type { Entry, EntryItem, EntryTransformerFunction } from '../../types/index.js';
 
 export default class EntryTransformer {
 	readonly #settings: Settings;

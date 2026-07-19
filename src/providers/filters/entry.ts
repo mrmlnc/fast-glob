@@ -1,12 +1,12 @@
-import * as utils from '../../utils';
-import type Settings from '../../settings';
+import * as utils from '../../utils/index.js';
+import type Settings from '../../settings.js';
 import type {
 	MicromatchOptions,
 	Entry,
 	EntryFilterFunction,
 	Pattern,
 	PatternRe,
-} from '../../types';
+} from '../../types/index.js';
 
 type PatternsRegexSet = {
 	positive: {

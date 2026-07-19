@@ -1,11 +1,11 @@
 import * as path from 'node:path';
-import type Settings from '../settings';
-import type { MicromatchOptions, ReaderOptions } from '../types';
-import type { Task } from '../managers/tasks';
-import DeepFilter from './filters/deep';
-import EntryFilter from './filters/entry';
-import ErrorFilter from './filters/error';
-import EntryTransformer from './transformers/entry';
+import type Settings from '../settings.js';
+import type { MicromatchOptions, ReaderOptions } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
+import DeepFilter from './filters/deep.js';
+import EntryFilter from './filters/entry.js';
+import ErrorFilter from './filters/error.js';
+import EntryTransformer from './transformers/entry.js';
 
 export abstract class Provider<T> {
 	readonly #settings: Settings;

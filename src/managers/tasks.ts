@@ -1,6 +1,6 @@
-import * as utils from '../utils';
-import type Settings from '../settings';
-import type { Pattern, PatternsGroup } from '../types';
+import * as utils from '../utils/index.js';
+import type Settings from '../settings.js';
+import type { Pattern, PatternsGroup } from '../types/index.js';
 
 export type Task = {
 	base: string;

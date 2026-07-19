@@ -2,12 +2,12 @@ import * as assert from 'node:assert';
 import { PassThrough } from 'node:stream';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import { ReaderStream, type ReaderStreamInterface } from '../readers';
-import type { Entry, EntryItem, ErrnoException } from '../types';
-import type { Task } from '../managers/tasks';
-import { ProviderStream } from './stream';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import { ReaderStream, type ReaderStreamInterface } from '../readers/index.js';
+import type { Entry, EntryItem, ErrnoException } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
+import { ProviderStream } from './stream.js';
 
 type StubbedReaderStream = sinon.SinonStubbedInstance<ReaderStreamInterface>;
 

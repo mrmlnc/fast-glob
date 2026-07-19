@@ -1,8 +1,8 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import * as tests from './tests';
-import type { EntryItem, ErrnoException } from './types';
-import * as fg from '.';
+import * as tests from './tests/index.js';
+import type { EntryItem, ErrnoException } from './types/index.js';
+import * as fg from './index.js';
 
 // Only for validating the input data.
 const invalidInputData = null as unknown as string;

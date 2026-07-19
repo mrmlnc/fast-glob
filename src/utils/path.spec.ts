@@ -2,7 +2,7 @@ import * as assert from 'node:assert';
 import * as path from 'node:path';
 import * as process from 'node:process';
 import { describe, it } from 'mocha';
-import * as util from './path';
+import * as util from './path.js';
 
 describe('Utils → Path', () => {
 	describe('.makeAbsolute', () => {

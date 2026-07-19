@@ -2,9 +2,8 @@
 	"compilerOptions": {
 		"target": "es2024",
 		"lib": ["es2024"],
-		"module": "commonjs",
-		"moduleResolution": "bundler",
-		"esModuleInterop": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"resolveJsonModule": true,
 
 		"rootDir": "src",
@@ -21,7 +20,7 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": false,
+		"verbatimModuleSyntax": true,
 		"skipLibCheck": true,
 
 		"declaration": true,

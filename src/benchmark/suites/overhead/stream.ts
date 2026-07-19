@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import * as process from 'node:process';
 import * as bencho from 'bencho';
 import type { Entry } from '@nodelib/fs.walk';
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
 type MeasurableImplementation = 'fast-glob' | 'fs-walk';
 

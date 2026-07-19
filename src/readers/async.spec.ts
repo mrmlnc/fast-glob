@@ -3,11 +3,11 @@ import { PassThrough } from 'node:stream';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
 import type * as fsWalk from '@nodelib/fs.walk';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import type { ReaderOptions } from '../types';
-import { ReaderAsync } from './async';
-import { ReaderStream } from './stream';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { ReaderOptions } from '../types/index.js';
+import { ReaderAsync } from './async.js';
+import { ReaderStream } from './stream.js';
 
 type WalkSignature = typeof fsWalk.walk;
 

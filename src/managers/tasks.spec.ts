@@ -1,9 +1,9 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import Settings from '../settings';
-import * as tests from '../tests';
-import type { PatternsGroup } from '../types';
-import * as manager from './tasks';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { PatternsGroup } from '../types/index.js';
+import * as manager from './tasks.js';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {

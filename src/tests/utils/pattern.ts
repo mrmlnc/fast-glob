@@ -1,6 +1,6 @@
-import * as utils from '../../utils';
-import type { Pattern, MicromatchOptions } from '../../types';
-import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
+import * as utils from '../../utils/index.js';
+import type { Pattern, MicromatchOptions } from '../../types/index.js';
+import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher.js';
 
 class PatternSegmentBuilder {
 	readonly #segment: PatternSegment = {

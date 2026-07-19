@@ -1,6 +1,6 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
-import * as util from './string';
+import * as util from './string.js';
 
 describe('Utils → String', () => {
 	describe('.isString', () => {

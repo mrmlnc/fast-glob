@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 import * as process from 'node:process';
 import * as bencho from 'bencho';
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
 type GlobImplementation = 'fast-glob' | 'node-fs-glob' | 'node-glob';
 

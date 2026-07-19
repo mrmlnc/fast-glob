@@ -2,11 +2,11 @@ import * as assert from 'node:assert';
 import * as path from 'node:path';
 import * as process from 'node:process';
 import { describe, it } from 'mocha';
-import Settings, { type Options } from '../settings';
-import * as tests from '../tests';
-import type { Task } from '../managers/tasks';
-import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types';
-import { Provider } from './provider';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { Task } from '../managers/tasks.js';
+import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types/index.js';
+import { Provider } from './provider.js';
 
 class TestProvider extends Provider<Dictionary[]> {
 	public read(): Dictionary[] {
