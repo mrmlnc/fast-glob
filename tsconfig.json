@@ -21,6 +21,7 @@
 
 		"forceConsistentCasingInFileNames": true,
 		"verbatimModuleSyntax": false,
+		"skipLibCheck": true,
 
 		"downlevelIteration": true,
 		"declaration": true,
