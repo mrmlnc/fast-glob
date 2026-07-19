@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["ES2022"],
+		"target": "es2024",
+		"lib": ["es2024"],
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
@@ -24,7 +24,6 @@
 		"verbatimModuleSyntax": false,
 		"skipLibCheck": true,
 
-		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",
 		"stripInternal": true
