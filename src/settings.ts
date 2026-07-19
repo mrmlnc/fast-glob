@@ -172,6 +172,10 @@ export default class Settings {
 
 	// eslint-disable-next-line complexity
 	constructor(options: Options = {}) {
+		if (options.deep !== undefined && options.deep < 0) {
+			throw new TypeError(`options.deep must be a non-negative number, received: ${options.deep}`);
+		}
+
 		this.absolute = options.absolute ?? false;
 		this.baseNameMatch = options.baseNameMatch ?? false;
 		this.braceExpansion = options.braceExpansion ?? true;

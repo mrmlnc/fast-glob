@@ -66,4 +66,30 @@ describe('Settings', () => {
 
 		assert.strictEqual(settings.fs.readdirSync, customReaddirSync);
 	});
+
+	it('should throw an error when the "deep" option is negative', () => {
+		assert.throws(
+			() => new Settings({ deep: -1 }),
+			{
+				name: 'TypeError',
+				message: 'options.deep must be a non-negative number, received: -1',
+			},
+		);
+
+		assert.throws(
+			() => new Settings({ deep: -10 }),
+			{
+				name: 'TypeError',
+				message: 'options.deep must be a non-negative number, received: -10',
+			},
+		);
+	});
+
+	it('should accept zero and positive values for the "deep" option', () => {
+		const settingsZero = new Settings({ deep: 0 });
+		assert.strictEqual(settingsZero.deep, 0);
+
+		const settingsPositive = new Settings({ deep: 5 });
+		assert.strictEqual(settingsPositive.deep, 5);
+	});
 });
