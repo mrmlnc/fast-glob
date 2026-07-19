@@ -1,11 +1,8 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
 import * as tests from './tests';
-import * as fg from '.';
-
 import type { EntryItem, ErrnoException } from './types';
+import * as fg from '.';
 
 // Only for validating the input data.
 const invalidInputData = null as unknown as string;
@@ -59,7 +56,7 @@ describe('Package', () => {
 
 	describe('.sync', () => {
 		it('should be an alias for the .globSync method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.sync, fg.globSync);
 		});
 	});
@@ -68,8 +65,8 @@ describe('Package', () => {
 		it('should throw an error when input values can not pass validation', async () => {
 			const message = 'Patterns must be a string (non empty) or an array of strings';
 
-			await assert.rejects(() => fg.glob(invalidInputData), { message });
-			await assert.rejects(() => fg.glob(''), { message });
+			await assert.rejects(async () => fg.glob(invalidInputData), { message });
+			await assert.rejects(async () => fg.glob(''), { message });
 		});
 
 		it('should returns entries', async () => {
@@ -110,16 +107,12 @@ describe('Package', () => {
 		});
 
 		it('should abort processing dynamic pattern with abort signal', async () => {
-			const ac = new AbortController();
-
-			setTimeout(() => {
-				ac.abort();
-			}, 5);
+			const signal = AbortSignal.timeout(5);
 
 			// The globstar pattern is used here to make the call run longer than the settimeout.
-			const action = fg.glob(['**'], { signal: ac.signal });
+			const action = fg.glob(['**'], { signal });
 
-			await assert.rejects(() => action, { message: 'This operation was aborted' });
+			await assert.rejects(async () => action, { message: 'The operation was aborted due to timeout' });
 		});
 
 		it('should abort processing static pattern with abort signal', async () => {
@@ -129,13 +122,13 @@ describe('Package', () => {
 
 			const action = fg.glob(['./package.json'], { signal: ac.signal });
 
-			await assert.rejects(() => action, { message: 'The operation was aborted' });
+			await assert.rejects(async () => action, { message: 'The operation was aborted' });
 		});
 	});
 
 	describe('.async', () => {
 		it('should be an alias for the .glob method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.async, fg.glob);
 		});
 	});
@@ -165,10 +158,12 @@ describe('Package', () => {
 
 			const stream = fg.globStream(['fixtures/**/*.md']);
 
-			stream.on('data', (entry: string) => actual.push(entry));
+			stream.on('data', (entry: string) => {
+				actual.push(entry);
+			});
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort((a, b) => a.localeCompare(b));
+				actual.sort();
 
 				assert.deepStrictEqual(actual, expected);
 				done();
@@ -189,10 +184,12 @@ describe('Package', () => {
 
 			const stream = fg.globStream(['fixtures/first/**/*.md', 'fixtures/second/**/*.md']);
 
-			stream.on('data', (entry: string) => actual.push(entry));
+			stream.on('data', (entry: string) => {
+				actual.push(entry);
+			});
 			stream.once('error', (error: ErrnoException) => assert.fail(error));
 			stream.once('end', () => {
-				actual.sort((a, b) => a.localeCompare(b));
+				actual.sort();
 
 				assert.deepStrictEqual(actual, expected);
 				done();
@@ -200,17 +197,13 @@ describe('Package', () => {
 		});
 
 		it('should abort processing dynamic pattern with abort signal', (done) => {
-			const ac = new AbortController();
-
-			setTimeout(() => {
-				ac.abort();
-			}, 5);
+			const signal = AbortSignal.timeout(5);
 
 			// The globstar pattern is used here to make the call run longer than the settimeout.
-			const steam = fg.globStream(['**'], { signal: ac.signal });
+			const steam = fg.globStream(['**'], { signal });
 
 			steam.once('error', (error: ErrnoException) => {
-				assert.strictEqual(error.message, 'This operation was aborted');
+				assert.strictEqual(error.message, 'The operation was aborted due to timeout');
 				done();
 			});
 
@@ -240,7 +233,7 @@ describe('Package', () => {
 
 	describe('.stream', () => {
 		it('should be an alias for the .globStream method', () => {
-			// eslint-disable-next-line import/no-deprecated, @typescript-eslint/no-deprecated
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			assert.strictEqual(fg.stream, fg.globStream);
 		});
 	});

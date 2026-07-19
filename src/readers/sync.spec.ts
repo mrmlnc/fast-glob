@@ -1,24 +1,20 @@
 import * as assert from 'node:assert';
-
 import { Stats } from '@nodelib/fs.macchiato';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ReaderSync } from './sync';
-
-import type { Options } from '../settings';
-import type { ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';
+import Settings, { type Options } from '../settings';
+import * as tests from '../tests';
+import type { ReaderOptions } from '../types';
+import { ReaderSync } from './sync';
 
 type WalkSignature = typeof fsWalk.walkSync;
 type StatSignature = typeof fsStat.statSync;
 
 class TestReader extends ReaderSync {
-	protected override _walkSync: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected override _statSync: StatSignature = sinon.stub() as unknown as StatSignature;
+	protected override _walkSync: WalkSignature = sinon.stub();
+	protected override _statSync: StatSignature = sinon.stub();
 
 	constructor(options?: Options) {
 		super(new Settings(options));

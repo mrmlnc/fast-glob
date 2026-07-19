@@ -1,12 +1,9 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
 import Settings from '../settings';
 import * as tests from '../tests';
-import * as manager from './tasks';
-
 import type { PatternsGroup } from '../types';
+import * as manager from './tasks';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
@@ -215,7 +212,7 @@ describe('Managers → Task', () => {
 
 		it('should remove backslashes from the base directory', () => {
 			const expected: PatternsGroup = {
-				"a'b": [String.raw`a\'b/*`],
+				'a\'b': [String.raw`a\'b/*`],
 			};
 
 			const actual = manager.groupPatternsByBaseDirectory([String.raw`a\'b/*`]);

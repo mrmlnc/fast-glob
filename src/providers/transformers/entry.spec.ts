@@ -1,14 +1,11 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
-import Settings from '../../settings';
+import Settings, { type Options } from '../../settings';
 import * as tests from '../../tests';
-import EntryTransformer from './entry';
-
 import type { EntryTransformerFunction } from '../../types';
-import type { Options } from '../../settings';
+import EntryTransformer from './entry';
 
 function getEntryTransformer(options?: Options): EntryTransformer {
 	return new EntryTransformer(new Settings(options));

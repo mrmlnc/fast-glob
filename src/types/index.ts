@@ -28,7 +28,7 @@ export type EntryFilterFunction = fsWalk.EntryFilterFunction;
 export type DeepFilterFunction = fsWalk.DeepFilterFunction;
 export type EntryTransformerFunction = (entry: Entry) => EntryItem;
 
-export interface MicromatchOptions {
+export type MicromatchOptions = {
 	dot?: boolean;
 	matchBase?: boolean;
 	nobrace?: boolean;
@@ -37,6 +37,6 @@ export interface MicromatchOptions {
 	noglobstar?: boolean;
 	posix?: boolean;
 	strictSlashes?: boolean;
-}
+};
 
 export type FileSystemAdapter = fsWalk.FileSystemAdapter;

@@ -3,7 +3,7 @@
 		"target": "es2024",
 		"lib": ["es2024"],
 		"module": "commonjs",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 

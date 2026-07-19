@@ -16,7 +16,7 @@ runner.suite('Options Unique', {
 				unique: true,
 			},
 			// There's a race going on here. On some OS the values may float.
-			resultTransform: (entry) => {
+			resultTransform(entry) {
 				return entry.replace('./', '');
 			},
 		},

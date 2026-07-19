@@ -1,16 +1,19 @@
 import * as path from 'node:path';
-
 import * as fsStat from '@nodelib/fs.stat';
-
 import * as utils from '../utils';
-
 import type Settings from '../settings';
-import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import type {
+	Entry,
+	ErrnoException,
+	FsStats,
+	Pattern,
+	ReaderOptions,
+} from '../types';
 
 export abstract class Reader<T> {
-	protected readonly _fsStatSettings: fsStat.Settings;
-
 	readonly #settings: Settings;
+
+	protected readonly _fsStatSettings: fsStat.Settings;
 
 	constructor(settings: Settings) {
 		this.#settings = settings;

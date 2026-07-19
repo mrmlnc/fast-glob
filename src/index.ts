@@ -1,11 +1,14 @@
 import * as taskManager from './managers/tasks';
-import Settings from './settings';
+import Settings, { type Options as OptionsInternal } from './settings';
 import * as utils from './utils';
 import { ProviderAsync, ProviderStream, ProviderSync } from './providers';
 import { ReaderAsync, ReaderStream, ReaderSync } from './readers';
-
-import type { Options as OptionsInternal } from './settings';
-import type { Entry as EntryInternal, EntryItem, FileSystemAdapter as FileSystemAdapterInternal, Pattern as PatternInternal } from './types';
+import type {
+	Entry as EntryInternal,
+	EntryItem,
+	FileSystemAdapter as FileSystemAdapterInternal,
+	Pattern as PatternInternal,
+} from './types';
 
 type InputPattern = PatternInternal | readonly PatternInternal[];
 
@@ -29,7 +32,7 @@ export async function glob(source: InputPattern, options?: OptionsInternal): Pro
 	const provider = new ProviderAsync(reader, settings);
 
 	const tasks = getTasks(source, settings);
-	const promises = tasks.map((task) => provider.read(task));
+	const promises = tasks.map(async (task) => provider.read(task));
 
 	const result = await Promise.all(promises);
 
@@ -90,7 +93,7 @@ export const stream = globStream;
 export function generateTasks(source: InputPattern, options?: OptionsInternal): Task[] {
 	assertPatternsInput(source);
 
-	const patterns = ([] as PatternInternal[]).concat(source);
+	const patterns = Array.isArray(source) ? source : [source];
 	const settings = new Settings(options);
 
 	return taskManager.generate(patterns, settings);
@@ -118,13 +121,13 @@ export const win32 = {
 };
 
 function getTasks(source: InputPattern, settings: Settings): taskManager.Task[] {
-	const patterns = ([] as PatternInternal[]).concat(source);
+	const patterns = Array.isArray(source) ? source : [source];
 
 	return taskManager.generate(patterns, settings);
 }
 
 function assertPatternsInput(input: unknown): never | void {
-	const source = ([] as unknown[]).concat(input);
+	const source = Array.isArray(input) ? input : [input];
 	const isValidSource = source.every((item) => utils.string.isString(item) && !utils.string.isEmpty(item));
 
 	if (!isValidSource) {

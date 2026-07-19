@@ -1,7 +1,12 @@
 import * as utils from '../../utils';
 import PartialMatcher from '../matchers/partial';
-
-import type { MicromatchOptions, Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+import type {
+	MicromatchOptions,
+	Entry,
+	EntryFilterFunction,
+	Pattern,
+	PatternRe,
+} from '../../types';
 import type Settings from '../../settings';
 
 export default class DeepFilter {
@@ -11,13 +16,6 @@ export default class DeepFilter {
 	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
 		this.#settings = settings;
 		this.#micromatchOptions = micromatchOptions;
-	}
-
-	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const matcher = this.#getMatcher(positive);
-		const negativeRe = this.#getNegativePatternsRe(negative);
-
-		return (entry) => this.#filter(basePath, entry, matcher, negativeRe);
 	}
 
 	#getMatcher(patterns: Pattern[]): PartialMatcher {
@@ -52,7 +50,7 @@ export default class DeepFilter {
 		/**
 		 * Avoid unnecessary depth calculations when it doesn't matter.
 		 */
-		if (this.#settings.deep === Number.POSITIVE_INFINITY) {
+		if (this.#settings.deep === Infinity) {
 			return false;
 		}
 
@@ -80,6 +78,13 @@ export default class DeepFilter {
 	}
 
 	#isSkippedByNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
-		return !utils.pattern.matchAny(entryPath, patternsRe);
+		return !utils.pattern.isMatchAny(entryPath, patternsRe);
+	}
+
+	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
+		const matcher = this.#getMatcher(positive);
+		const negativeRe = this.#getNegativePatternsRe(negative);
+
+		return (entry) => this.#filter(basePath, entry, matcher, negativeRe);
 	}
 }

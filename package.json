@@ -35,8 +35,8 @@
     "@types/picomatch": "^3.0.1",
     "@types/sinon": "^17.0.3",
     "bencho": "^0.1.1",
-    "eslint": "9.14.0",
-    "eslint-config-mrmlnc": "^5.0.0",
+    "eslint": "^10.7.0",
+    "eslint-config-mrmlnc": "^6.1.0",
     "execa": "^7.2.0",
     "fast-glob": "^3.3.2",
     "glob": "^11.0.0",
@@ -46,7 +46,7 @@
     "sinon": "^19.0.2",
     "snap-shot-it": "^7.9.10",
     "tinyglobby": "^0.2.10",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "@nodelib/fs.stat": "^4.0.0",
@@ -57,7 +57,7 @@
   },
   "scripts": {
     "clean": "rimraf out",
-    "lint": "eslint \"src/**/*.ts\" --cache",
+    "lint": "eslint \"src/**/*.ts\" \"*.mjs\" --cache",
     "compile": "tsc",
     "test": "mocha \"out/**/*.spec.js\" -s 0",
     "test:e2e": "mocha \"out/**/*.e2e.js\" -s 0",

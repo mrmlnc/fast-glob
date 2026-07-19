@@ -1,8 +1,7 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
 import * as util from './path';
 
 describe('Utils → Path', () => {
@@ -84,7 +83,7 @@ describe('Utils → Path', () => {
 	describe('.removeBackslashes', () => {
 		it('should return path without backslashes', () => {
 			assert.strictEqual(util.removeBackslashes(String.raw`a\b`), 'ab');
-			assert.strictEqual(util.removeBackslashes(String.raw`a\\\b`), String.raw`ab`);
+			assert.strictEqual(util.removeBackslashes(String.raw`a\\\b`), 'ab');
 		});
 	});
 

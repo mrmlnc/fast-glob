@@ -1,24 +1,23 @@
 import * as utils from '../../utils';
-
 import type { MicromatchOptions, Pattern, PatternRe } from '../../types';
 import type Settings from '../../settings';
 
 export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
 
-interface StaticPatternSegment {
+type StaticPatternSegment = {
 	dynamic: false;
 	pattern: Pattern;
-}
+};
 
-interface DynamicPatternSegment {
+type DynamicPatternSegment = {
 	dynamic: true;
 	pattern: Pattern;
 	patternRe: PatternRe;
-}
+};
 
 export type PatternSection = PatternSegment[];
 
-export interface PatternInfo {
+export type PatternInfo = {
 	/**
 	 * Indicates that the pattern has a globstar (more than a single section).
 	 */
@@ -26,14 +25,14 @@ export interface PatternInfo {
 	pattern: Pattern;
 	segments: PatternSegment[];
 	sections: PatternSection[];
-}
+};
 
 export default abstract class Matcher {
-	protected readonly _storage: PatternInfo[] = [];
-
 	readonly #patterns: string[];
 	readonly #settings: Settings;
 	readonly #micromatchOptions: MicromatchOptions;
+
+	protected readonly _storage: PatternInfo[] = [];
 
 	constructor(patterns: Pattern[], settings: Settings, micromatchOptions: MicromatchOptions) {
 		this.#patterns = patterns;
@@ -61,9 +60,9 @@ export default abstract class Matcher {
 		const parts = utils.pattern.getPatternParts(pattern, this.#micromatchOptions);
 
 		return parts.map((part) => {
-			const dynamic = utils.pattern.isDynamicPattern(part, this.#settings);
+			const isDynamic = utils.pattern.isDynamicPattern(part, this.#settings);
 
-			if (!dynamic) {
+			if (!isDynamic) {
 				return {
 					dynamic: false,
 					pattern: part,

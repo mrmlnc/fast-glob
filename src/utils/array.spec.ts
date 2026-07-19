@@ -1,7 +1,5 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
 import * as util from './array';
 
 describe('Utils → Array', () => {

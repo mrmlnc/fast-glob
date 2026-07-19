@@ -1,7 +1,5 @@
 import * as path from 'node:path';
-
 import * as utils from '../../utils';
-
 import type Settings from '../../settings';
 import type { Entry, EntryItem, EntryTransformerFunction } from '../../types';
 
@@ -13,10 +11,6 @@ export default class EntryTransformer {
 		this.#settings = settings;
 
 		this.#pathSeparatorSymbol = this.#getPathSeparatorSymbol();
-	}
-
-	public getTransformer(): EntryTransformerFunction {
-		return (entry) => this.#transform(entry);
 	}
 
 	#transform(entry: Entry): EntryItem {
@@ -43,5 +37,9 @@ export default class EntryTransformer {
 
 	#getPathSeparatorSymbol(): string {
 		return this.#settings.absolute ? path.sep : '/';
+	}
+
+	public getTransformer(): EntryTransformerFunction {
+		return (entry) => this.#transform(entry);
 	}
 }

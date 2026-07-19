@@ -1,20 +1,15 @@
 import * as assert from 'node:assert';
 import { PassThrough } from 'node:stream';
-
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
+import Settings, { type Options } from '../settings';
 import * as tests from '../tests';
-import { ProviderStream } from './stream';
-import { ReaderStream } from '../readers';
-
-import type { IReaderStream } from '../readers';
-import type { Options } from '../settings';
+import { ReaderStream, type ReaderStreamInterface } from '../readers';
 import type { Entry, EntryItem, ErrnoException } from '../types';
 import type { Task } from '../managers/tasks';
+import { ProviderStream } from './stream';
 
-type StubbedReaderStream = sinon.SinonStubbedInstance<IReaderStream>;
+type StubbedReaderStream = sinon.SinonStubbedInstance<ReaderStreamInterface>;
 
 class TestProvider extends ProviderStream {
 	public readonly reader: StubbedReaderStream;
@@ -33,13 +28,15 @@ function getProvider(options?: Options): TestProvider {
 	return new TestProvider(options);
 }
 
-function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
+async function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<EntryItem[]> {
 	const reader = new PassThrough({ objectMode: true });
 
 	provider.reader.dynamic.returns(reader);
 	provider.reader.static.returns(reader);
 
 	reader.push(entry);
+	// The `null` chunk is required to end the readable stream.
+	// eslint-disable-next-line unicorn/prefer-single-call
 	reader.push(null);
 
 	return new Promise((resolve, reject) => {
@@ -47,7 +44,9 @@ function getEntries(provider: TestProvider, task: Task, entry: Entry): Promise<E
 
 		const api = provider.read(task);
 
-		api.on('data', (item: EntryItem) => items.push(item));
+		api.on('data', (item: EntryItem) => {
+			items.push(item);
+		});
 		api.once('error', reject);
 		api.once('end', () => {
 			resolve(items);

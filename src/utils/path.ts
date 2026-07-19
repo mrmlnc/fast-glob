@@ -1,6 +1,5 @@
 import * as os from 'node:os';
 import * as path from 'node:path';
-
 import type { Pattern } from '../types';
 
 const IS_WINDOWS_PLATFORM = os.platform() === 'win32';
@@ -10,13 +9,13 @@ const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
  * Posix: ()*?[]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
  * Windows: (){}[], !+@ before (, ! at the beginning.
  */
-const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
-const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /(?<escape>\\?)(?<symbols>[()[\]{}]|^!|[!+@](?=\())/g;
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>[()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>[()[\]{}]|^!|[!+@](?=\())/g;
 /**
  * The device path (\\.\ or \\?\).
  * https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths
  */
-const DOS_DEVICE_PATH_RE = /^\\\\(?<path>[.?])/;
+const DOS_DEVICE_PATH_RE = /^\\\\(?=[.?])/;
 /**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
@@ -49,18 +48,18 @@ export function removeBackslashes(entry: string): string {
 export const escape = IS_WINDOWS_PLATFORM ? escapeWindowsPath : escapePosixPath;
 
 export function escapeWindowsPath(pattern: Pattern): Pattern {
-	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$2`);
+	return pattern.replaceAll(WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$1`);
 }
 
 export function escapePosixPath(pattern: Pattern): Pattern {
-	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$2`);
+	return pattern.replaceAll(POSIX_UNESCAPED_GLOB_SYMBOLS_RE, String.raw`\$1`);
 }
 
 export const convertPathToPattern = IS_WINDOWS_PLATFORM ? convertWindowsPathToPattern : convertPosixPathToPattern;
 
 export function convertWindowsPathToPattern(filepath: string): Pattern {
 	return escapeWindowsPath(filepath)
-		.replace(DOS_DEVICE_PATH_RE, '//$1')
+		.replace(DOS_DEVICE_PATH_RE, '//')
 		.replaceAll(WINDOWS_BACKSLASHES_RE, '/');
 }
 

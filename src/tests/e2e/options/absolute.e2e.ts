@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as runner from '../runner';
 
 const CWD = process.cwd();

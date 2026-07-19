@@ -1,12 +1,11 @@
 import { performance } from 'node:perf_hooks';
-
-import * as bencho from 'bencho';
-
-import type * as currentVersion from '..';
+import * as process from 'node:process';
 import type * as fs from 'node:fs';
+import * as bencho from 'bencho';
 import type * as previousVersion from 'fast-glob';
 import type * as glob from 'glob';
 import type * as tg from 'tinyglobby';
+import type * as currentVersion from '..';
 
 export function timeStart(): number {
 	return performance.now();
@@ -20,23 +19,23 @@ export function getMemory(): number {
 	return process.memoryUsage().heapUsed;
 }
 
-export function importCurrentFastGlob(): Promise<typeof currentVersion> {
+export async function importCurrentFastGlob(): Promise<typeof currentVersion> {
 	return import('..');
 }
 
-export function importPreviousFastGlob(): Promise<typeof previousVersion> {
+export async function importPreviousFastGlob(): Promise<typeof previousVersion> {
 	return import('fast-glob');
 }
 
-export function importNodeGlob(): Promise<typeof glob> {
+export async function importNodeGlob(): Promise<typeof glob> {
 	return import('glob');
 }
 
-export function importNodeFsGlob(): Promise<typeof fs> {
+export async function importNodeFsGlob(): Promise<typeof fs> {
 	return import('node:fs');
 }
 
-export function importTinyGlobby(): Promise<typeof tg> {
+export async function importTinyGlobby(): Promise<typeof tg> {
 	return import('tinyglobby');
 }
 

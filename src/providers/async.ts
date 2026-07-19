@@ -1,14 +1,14 @@
-import { Provider } from './provider';
 
-import type { IReaderAsync } from '../readers';
+import type { ReaderAsyncInterface } from '../readers';
 import type Settings from '../settings';
 import type { Task } from '../managers/tasks';
 import type { Entry, EntryItem, ReaderOptions } from '../types';
+import { Provider } from './provider';
 
 export class ProviderAsync extends Provider<Promise<EntryItem[]>> {
-	readonly #reader: IReaderAsync;
+	readonly #reader: ReaderAsyncInterface;
 
-	constructor(reader: IReaderAsync, settings: Settings) {
+	constructor(reader: ReaderAsyncInterface, settings: Settings) {
 		super(settings);
 
 		this.#reader = reader;
@@ -23,7 +23,7 @@ export class ProviderAsync extends Provider<Promise<EntryItem[]>> {
 		return entries.map((entry) => options.transform(entry));
 	}
 
-	public api(root: string, task: Task, options: ReaderOptions): Promise<Entry[]> {
+	public async api(root: string, task: Task, options: ReaderOptions): Promise<Entry[]> {
 		if (task.dynamic) {
 			return this.#reader.dynamic(root, options);
 		}

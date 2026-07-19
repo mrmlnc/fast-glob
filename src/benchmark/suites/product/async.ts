@@ -1,11 +1,10 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
-
 import * as utils from '../../utils';
 
 type GlobImplementation = 'fast-glob' | 'node-fs-glob' | 'node-glob' | 'tinyglobby';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
 class Glob {
@@ -17,10 +16,24 @@ class Glob {
 		this.#pattern = pattern;
 	}
 
+	async #measure(function_: GlobImplFunction): Promise<void> {
+		const timeStart = utils.timeStart();
+
+		const matches = await function_();
+
+		const count = matches.length;
+		const memory = utils.getMemory();
+		const time = utils.timeEnd(timeStart);
+
+		bencho.time('time', time);
+		bencho.memory('memory', memory);
+		bencho.value('entries', count);
+	}
+
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
-		await this.#measure(() => glob.glob(this.#pattern, {
+		await this.#measure(async () => glob.glob(this.#pattern, {
 			cwd: this.#cwd,
 			nodir: true,
 		}));
@@ -29,7 +42,7 @@ class Glob {
 	public async measureNodeFsGlob(): Promise<void> {
 		const fs = await utils.importAndMeasure(utils.importNodeFsGlob);
 
-		await this.#measure(() => new Promise((resolve, reject) => {
+		await this.#measure(async () => new Promise((resolve, reject) => {
 			fs.glob(this.#pattern, {
 				cwd: this.#cwd,
 				withFileTypes: true,
@@ -49,7 +62,7 @@ class Glob {
 	public async measureFastGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
 
-		await this.#measure(() => glob.glob(this.#pattern, {
+		await this.#measure(async () => glob.glob(this.#pattern, {
 			cwd: this.#cwd,
 			unique: false,
 			followSymbolicLinks: false,
@@ -59,28 +72,13 @@ class Glob {
 	public async measureTinyGlobby(): Promise<void> {
 		const tinyglobby = await utils.importAndMeasure(utils.importTinyGlobby);
 
-		await this.#measure(() => tinyglobby.glob(this.#pattern, {
+		await this.#measure(async () => tinyglobby.glob(this.#pattern, {
 			cwd: this.#cwd,
 			followSymbolicLinks: false,
 		}));
 	}
-
-	async #measure(function_: GlobImplFunction): Promise<void> {
-		const timeStart = utils.timeStart();
-
-		const matches = await function_();
-
-		const count = matches.length;
-		const memory = utils.getMemory();
-		const time = utils.timeEnd(timeStart);
-
-		bencho.time('time', time);
-		bencho.memory('memory', memory);
-		bencho.value('entries', count);
-	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
@@ -111,6 +109,7 @@ class Glob {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown glob implementation.');
 		}

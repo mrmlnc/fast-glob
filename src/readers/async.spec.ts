@@ -1,23 +1,19 @@
 import * as assert from 'node:assert';
 import { PassThrough } from 'node:stream';
-
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
+import type * as fsWalk from '@nodelib/fs.walk';
+import Settings, { type Options } from '../settings';
 import * as tests from '../tests';
+import type { ReaderOptions } from '../types';
 import { ReaderAsync } from './async';
 import { ReaderStream } from './stream';
-
-import type { Options } from '../settings';
-import type { ReaderOptions } from '../types';
-import type * as fsWalk from '@nodelib/fs.walk';
 
 type WalkSignature = typeof fsWalk.walk;
 
 class TestReader extends ReaderAsync {
 	protected override _walkAsync: WalkSignature = sinon.stub() as unknown as WalkSignature;
-	protected override _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream) as unknown as ReaderStream;
+	protected override _readerStream: ReaderStream = sinon.createStubInstance(ReaderStream);
 
 	constructor(options?: Options) {
 		super(new Settings(options));
@@ -71,6 +67,8 @@ describe('Readers → ReaderAsync', () => {
 			const readerStream = new PassThrough({ objectMode: true });
 
 			readerStream.push(entry);
+			// The `null` chunk is required to end the readable stream.
+			// eslint-disable-next-line unicorn/prefer-single-call
 			readerStream.push(null);
 
 			reader.readerStream.static.returns(readerStream);

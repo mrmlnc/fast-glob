@@ -1,7 +1,5 @@
 import * as path from 'node:path';
-
 import { Dirent, DirentType, Stats } from '@nodelib/fs.macchiato';
-
 import type { Entry } from '../../types';
 
 class EntryBuilder {

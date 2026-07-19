@@ -1,17 +1,15 @@
 import * as fsWalk from '@nodelib/fs.walk';
-
+import type Settings from '../settings';
+import type { Entry, ReaderOptions, Pattern } from '../types';
 import { Reader } from './reader';
 import { ReaderStream } from './stream';
 
-import type Settings from '../settings';
-import type { Entry, ReaderOptions, Pattern } from '../types';
-
-export interface IReaderAsync {
+export type ReaderAsyncInterface = {
 	dynamic: (root: string, options: ReaderOptions) => Promise<Entry[]>;
 	static: (patterns: Pattern[], options: ReaderOptions) => Promise<Entry[]>;
-}
+};
 
-export class ReaderAsync extends Reader<Promise<Entry[]>> implements IReaderAsync {
+export class ReaderAsync extends Reader<Promise<Entry[]>> implements ReaderAsyncInterface {
 	protected _walkAsync: typeof fsWalk.walk = fsWalk.walk;
 	protected _readerStream: ReaderStream;
 
@@ -21,7 +19,7 @@ export class ReaderAsync extends Reader<Promise<Entry[]>> implements IReaderAsyn
 		this._readerStream = new ReaderStream(settings);
 	}
 
-	public dynamic(root: string, options: ReaderOptions): Promise<Entry[]> {
+	public async dynamic(root: string, options: ReaderOptions): Promise<Entry[]> {
 		return new Promise((resolve, reject) => {
 			this._walkAsync(root, options, (error, entries) => {
 				if (error === null) {

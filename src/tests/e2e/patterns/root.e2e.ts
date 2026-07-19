@@ -1,16 +1,16 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-
+import * as process from 'node:process';
 import * as runner from '../runner';
 import * as utils from '../..';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 const ROOT = path.parse(CWD).root;
 
-function getRootEntries(root: string, withBase: boolean = false): string[] {
+function getRootEntries(root: string, shouldIncludeBase = false): string[] {
 	let result = getRootEntriesWithFileTypes(root);
 
-	if (withBase) {
+	if (shouldIncludeBase) {
 		const separator = root.endsWith('/') ? '' : '/';
 
 		result = result.map((item) => `${root}${separator}${item}`);

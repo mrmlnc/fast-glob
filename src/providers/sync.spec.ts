@@ -1,17 +1,12 @@
 import * as assert from 'node:assert';
-
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
-import { ReaderSync } from '../readers';
-import Settings from '../settings';
+import { ReaderSync, type ReaderSyncInterface } from '../readers';
+import Settings, { type Options } from '../settings';
 import * as tests from '../tests';
 import { ProviderSync } from './sync';
 
-import type { IReaderSync } from '../readers';
-import type { Options } from '../settings';
-
-type StubbedReaderSync = sinon.SinonStubbedInstance<IReaderSync>;
+type StubbedReaderSync = sinon.SinonStubbedInstance<ReaderSyncInterface>;
 
 class TestProvider extends ProviderSync {
 	public readonly reader: StubbedReaderSync;

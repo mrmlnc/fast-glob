@@ -1,18 +1,15 @@
-/* eslint-disable mocha/no-setup-in-describe */
 import * as assert from 'node:assert';
-
+import * as process from 'node:process';
 import snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
-
 import * as fg from '../..';
-
 import type { Pattern } from '../../types';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 
 type TransformFunction = (entry: string) => string;
 
-interface Suite {
+type Suite = {
 	tests: Test[] | Test[][];
 	/**
 	 * Allow to run only one test case with debug information.
@@ -23,9 +20,9 @@ interface Suite {
 	 */
 	condition?: () => boolean;
 	resultTransform?: TransformFunction;
-}
+};
 
-interface Test {
+type Test = {
 	pattern: Pattern | Pattern[];
 	options?: fg.Options;
 	/**
@@ -42,25 +39,25 @@ interface Test {
 	 */
 	issue?: number | number[];
 	expected?: () => string[];
-}
+};
 
 type MochaDefinition = Mocha.ExclusiveTestFunction | Mocha.TestFunction;
 
-export function suite(name: string, suite: Suite): void {
+export function suite(name: string, suiteOptions: Suite): void {
 	describe(name, () => {
-		for (const test of getSuiteTests(suite.tests)) {
+		for (const test of getSuiteTests(suiteOptions.tests)) {
 			const title = getTestTitle(test);
-			const definition = getTestMochaDefinition(suite, test);
-			const transformers = getResultTransformers(suite, test);
+			const definition = getTestMochaDefinition(suiteOptions, test);
+			const transformers = getResultTransformers(suiteOptions, test);
 			const patterns = getTestPatterns(test);
-			const options = getFastGlobOptions(suite, test);
+			const options = getFastGlobOptions(suiteOptions, test);
 
 			definition(`${title} (sync)`, () => {
 				let actual = getFastGlobEntriesSync(patterns, options);
 
 				actual = transform(actual, transformers);
 
-				debug(actual, suite, test);
+				debug(actual, suiteOptions, test);
 				assertResult(actual, test);
 			});
 
@@ -69,7 +66,7 @@ export function suite(name: string, suite: Suite): void {
 
 				actual = transform(actual, transformers);
 
-				debug(actual, suite, test);
+				debug(actual, suiteOptions, test);
 				assertResult(actual, test);
 			});
 
@@ -78,7 +75,7 @@ export function suite(name: string, suite: Suite): void {
 
 				actual = transform(actual, transformers);
 
-				debug(actual, suite, test);
+				debug(actual, suiteOptions, test);
 				assertResult(actual, test);
 			});
 		}
@@ -86,11 +83,11 @@ export function suite(name: string, suite: Suite): void {
 }
 
 function getSuiteTests(tests: Test[] | Test[][]): Test[] {
-	return ([] as Test[]).concat(...tests);
+	return tests.flat();
 }
 
 function getTestPatterns(test: Test): Pattern[] {
-	return ([] as Pattern[]).concat(test.pattern);
+	return Array.isArray(test.pattern) ? test.pattern : [test.pattern];
 }
 
 function getTestTitle(test: Test): string {
@@ -109,26 +106,26 @@ function getTestTitle(test: Test): string {
 	});
 }
 
-function getTestMochaDefinition(suite: Suite, test: Test): MochaDefinition {
-	const isDebugDefined = suite.debug !== undefined || test.debug !== undefined;
-	const isDebugEnabled = suite.debug !== false || test.debug !== false;
+function getTestMochaDefinition(suiteOptions: Suite, test: Test): MochaDefinition {
+	const isDebugDefined = suiteOptions.debug !== undefined || test.debug !== undefined;
+	const isDebugEnabled = suiteOptions.debug !== false || test.debug !== false;
 
 	if (isDebugDefined && isDebugEnabled) {
 		return it.only;
 	}
 
-	if (suite.condition?.() === false || test.condition?.() === false) {
+	if (suiteOptions.condition?.() === false || test.condition?.() === false) {
 		return it.skip;
 	}
 
 	return it;
 }
 
-function getFastGlobOptions(suite: Suite, test: Test): fg.Options | undefined {
-	let options = test.options;
+function getFastGlobOptions(suiteOptions: Suite, test: Test): fg.Options | undefined {
+	let { options } = test;
 
-	if (typeof suite.debug !== 'boolean') {
-		options = { ...options, ...suite.debug };
+	if (typeof suiteOptions.debug !== 'boolean') {
+		options = { ...options, ...suiteOptions.debug };
 	}
 
 	if (typeof test.debug !== 'boolean') {
@@ -138,11 +135,11 @@ function getFastGlobOptions(suite: Suite, test: Test): fg.Options | undefined {
 	return options;
 }
 
-function getResultTransformers(suite: Suite, test: Test): TransformFunction[] {
+function getResultTransformers(suiteOptions: Suite, test: Test): TransformFunction[] {
 	const transformers: TransformFunction[] = [];
 
-	if (suite.resultTransform !== undefined) {
-		transformers.push(suite.resultTransform);
+	if (suiteOptions.resultTransform !== undefined) {
+		transformers.push(suiteOptions.resultTransform);
 	}
 
 	if (test.resultTransform !== undefined) {
@@ -166,7 +163,9 @@ async function getFastGlobEntriesStream(patterns: Pattern[], options?: fg.Option
 	const stream = fg.globStream(patterns, options);
 
 	await new Promise((resolve, reject) => {
-		stream.on('data', (entry: string) => entries.push(entry));
+		stream.on('data', (entry: string) => {
+			entries.push(entry);
+		});
 		stream.once('error', reject);
 		stream.once('end', resolve);
 	});
@@ -198,13 +197,13 @@ function assertResult(entries: string[], test: Test): void {
 	}
 }
 
-function debug(current: string[], suite: Suite, test: Test): void {
-	const isDebug = suite.debug !== undefined || test.debug !== undefined;
+function debug(current: string[], suiteOptions: Suite, test: Test): void {
+	const isDebug = suiteOptions.debug !== undefined || test.debug !== undefined;
 
 	if (isDebug) {
 		console.dir({
 			current,
-			suite: { debug: suite.debug },
+			suite: { debug: suiteOptions.debug },
 			test: { debug: test.debug, options: test.options },
 		}, { colors: true });
 	}

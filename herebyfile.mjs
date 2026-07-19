@@ -1,7 +1,8 @@
+import process from 'node:process';
 import { execa } from 'execa';
 import { task } from 'hereby';
 
-const CONCURRENCY = process.env.CONCURRENCY === '1';
+const IS_CONCURRENCY = process.env.CONCURRENCY === '1';
 const REPORTER = process.env.REPORTER ?? 'compact';
 const WARMUP_COUNT = process.env.WARMUP_COUNT ?? 100;
 const RUNS_COUNT = process.env.RUNS_COUNT ?? 300;
@@ -24,11 +25,12 @@ const PARTIAL_FLATTEN_PATTERN = '{fixtures,out}/{first,second}/*';
 const PARTIAL_DEEP_PATTERN = '{fixtures,out}/**';
 const EXTENSION_FLATTEN_PATTERN = '*.json';
 const EXTENSION_DEEP_PATTERN = '**/*.js';
+const BENCHO_IMPLEMENTATION_PLACEHOLDER = '{impl}';
 
-async function benchTask(suite, label, pattern, implementations = [], cwd = '.') {
+async function benchTask({ suite, label, pattern, implementations = [], cwd = '.' }) {
 	await execa('bencho', [
-		`'node ${suite} "${cwd}" "${pattern}" {impl}'`,
-		`-n "${label} {impl} ${pattern}"`,
+		`'node ${suite} "${cwd}" "${pattern}" ${BENCHO_IMPLEMENTATION_PLACEHOLDER}'`,
+		`-n "${label} ${BENCHO_IMPLEMENTATION_PLACEHOLDER} ${pattern}"`,
 		`-w ${WARMUP_COUNT}`,
 		`-r ${RUNS_COUNT}`,
 		`-l impl=${implementations.join(',')}`,
@@ -39,46 +41,58 @@ async function benchTask(suite, label, pattern, implementations = [], cwd = '.')
 	});
 }
 
-function makeBenchSuiteTask(type, label, suite, implementations = [], includePartialTasks = true) {
+function makeBenchSuiteTask({ type, label, suite, implementations = [], shouldIncludePartialTasks = true }) {
 	const asyncFlattenTask = task({
 		name: `bench:${type}:${label}:flatten`,
-		run: () => benchTask(suite, label, FLATTEN_PATTERN, implementations),
+		run: () => benchTask({
+			suite, label, pattern: FLATTEN_PATTERN, implementations,
+		}),
 	});
 
-	const asyncExtensionFlattenTask = includePartialTasks && task({
+	const asyncExtensionFlattenTask = shouldIncludePartialTasks && task({
 		name: `bench:${type}:${label}:extension_flatten`,
-		dependencies: CONCURRENCY ? [] : [asyncFlattenTask],
-		run: () => benchTask(suite, label, EXTENSION_FLATTEN_PATTERN, implementations),
+		dependencies: IS_CONCURRENCY ? [] : [asyncFlattenTask],
+		run: () => benchTask({
+			suite, label, pattern: EXTENSION_FLATTEN_PATTERN, implementations,
+		}),
 	});
 
 	const asyncDeepTask = task({
 		name: `bench:${type}:${label}:deep`,
-		dependencies: CONCURRENCY ? [] : [includePartialTasks ? asyncExtensionFlattenTask : asyncFlattenTask],
-		run: () => benchTask(suite, label, DEEP_PATTERN, implementations),
+		dependencies: IS_CONCURRENCY ? [] : [shouldIncludePartialTasks ? asyncExtensionFlattenTask : asyncFlattenTask],
+		run: () => benchTask({
+			suite, label, pattern: DEEP_PATTERN, implementations,
+		}),
 	});
 
-	const asyncExtensionDeepTask = includePartialTasks && task({
+	const asyncExtensionDeepTask = shouldIncludePartialTasks && task({
 		name: `bench:${type}:${label}:extension_deep`,
-		dependencies: CONCURRENCY ? [] : [asyncDeepTask],
-		run: () => benchTask(suite, label, EXTENSION_DEEP_PATTERN, implementations),
+		dependencies: IS_CONCURRENCY ? [] : [asyncDeepTask],
+		run: () => benchTask({
+			suite, label, pattern: EXTENSION_DEEP_PATTERN, implementations,
+		}),
 	});
 
-	const asyncPartialFlattenTask = includePartialTasks && task({
+	const asyncPartialFlattenTask = shouldIncludePartialTasks && task({
 		name: `bench:${type}:${label}:partial_flatten`,
-		dependencies: CONCURRENCY ? [] : [asyncExtensionDeepTask],
-		run: () => benchTask(suite, label, PARTIAL_FLATTEN_PATTERN, implementations),
+		dependencies: IS_CONCURRENCY ? [] : [asyncExtensionDeepTask],
+		run: () => benchTask({
+			suite, label, pattern: PARTIAL_FLATTEN_PATTERN, implementations,
+		}),
 	});
 
-	const asyncPartialDeepTask = includePartialTasks && task({
+	const asyncPartialDeepTask = shouldIncludePartialTasks && task({
 		name: `bench:${type}:${label}:partial_deep`,
-		dependencies: CONCURRENCY ? [] : [asyncPartialFlattenTask],
-		run: () => benchTask(suite, label, PARTIAL_DEEP_PATTERN, implementations),
+		dependencies: IS_CONCURRENCY ? [] : [asyncPartialFlattenTask],
+		run: () => benchTask({
+			suite, label, pattern: PARTIAL_DEEP_PATTERN, implementations,
+		}),
 	});
 
 	return task({
 		name: `bench:${type}:${label}`,
-		dependencies: CONCURRENCY ? [] : [includePartialTasks ? asyncPartialDeepTask : asyncDeepTask],
-		run: () => {},
+		dependencies: IS_CONCURRENCY ? [] : [shouldIncludePartialTasks ? asyncPartialDeepTask : asyncDeepTask],
+		run() {},
 	});
 }
 
@@ -87,9 +101,15 @@ export const {
 	productStreamTask,
 	productSyncTask,
 } = {
-	productAsyncTask: makeBenchSuiteTask('product', 'async', PRODUCT_ASYNC_SUITE, ['fast-glob', 'tinyglobby', 'node-fs-glob', 'node-glob']),
-	productStreamTask: makeBenchSuiteTask('product', 'stream', PRODUCT_STREAM_SUITE, ['fast-glob', 'node-fs-glob', 'node-glob']),
-	productSyncTask: makeBenchSuiteTask('product', 'sync', PRODUCT_SYNC_SUITE, ['fast-glob', 'tinyglobby', 'node-fs-glob', 'node-glob']),
+	productAsyncTask: makeBenchSuiteTask({
+		type: 'product', label: 'async', suite: PRODUCT_ASYNC_SUITE, implementations: ['fast-glob', 'tinyglobby', 'node-fs-glob', 'node-glob'],
+	}),
+	productStreamTask: makeBenchSuiteTask({
+		type: 'product', label: 'stream', suite: PRODUCT_STREAM_SUITE, implementations: ['fast-glob', 'node-fs-glob', 'node-glob'],
+	}),
+	productSyncTask: makeBenchSuiteTask({
+		type: 'product', label: 'sync', suite: PRODUCT_SYNC_SUITE, implementations: ['fast-glob', 'tinyglobby', 'node-fs-glob', 'node-glob'],
+	}),
 };
 
 export const {
@@ -97,9 +117,15 @@ export const {
 	regressionStreamTask,
 	regressionSyncTask,
 } = {
-	regressionAsyncTask: makeBenchSuiteTask('regression', 'async', REGRESSION_ASYNC_SUITE, ['current', 'previous']),
-	regressionStreamTask: makeBenchSuiteTask('regression', 'stream', REGRESSION_STREAM_SUITE, ['current', 'previous']),
-	regressionSyncTask: makeBenchSuiteTask('regression', 'sync', REGRESSION_SYNC_SUITE, ['current', 'previous']),
+	regressionAsyncTask: makeBenchSuiteTask({
+		type: 'regression', label: 'async', suite: REGRESSION_ASYNC_SUITE, implementations: ['current', 'previous'],
+	}),
+	regressionStreamTask: makeBenchSuiteTask({
+		type: 'regression', label: 'stream', suite: REGRESSION_STREAM_SUITE, implementations: ['current', 'previous'],
+	}),
+	regressionSyncTask: makeBenchSuiteTask({
+		type: 'regression', label: 'sync', suite: REGRESSION_SYNC_SUITE, implementations: ['current', 'previous'],
+	}),
 };
 
 export const {
@@ -107,7 +133,13 @@ export const {
 	overheadSyncTask,
 	overStreamTask,
 } = {
-	overheadAsyncTask: makeBenchSuiteTask('overhead', 'async', OVERHEAD_ASYNC_SUITE, ['fast-glob', 'fs-walk'], false),
-	overheadSyncTask: makeBenchSuiteTask('overhead', 'sync', OVERHEAD_SYNC_SUITE, ['fast-glob', 'fs-walk'], false),
-	overStreamTask: makeBenchSuiteTask('overhead', 'stream', OVERHEAD_STREAM_SUITE, ['fast-glob', 'fs-walk'], false),
+	overheadAsyncTask: makeBenchSuiteTask({
+		type: 'overhead', label: 'async', suite: OVERHEAD_ASYNC_SUITE, implementations: ['fast-glob', 'fs-walk'], shouldIncludePartialTasks: false,
+	}),
+	overheadSyncTask: makeBenchSuiteTask({
+		type: 'overhead', label: 'sync', suite: OVERHEAD_SYNC_SUITE, implementations: ['fast-glob', 'fs-walk'], shouldIncludePartialTasks: false,
+	}),
+	overStreamTask: makeBenchSuiteTask({
+		type: 'overhead', label: 'stream', suite: OVERHEAD_STREAM_SUITE, implementations: ['fast-glob', 'fs-walk'], shouldIncludePartialTasks: false,
+	}),
 };

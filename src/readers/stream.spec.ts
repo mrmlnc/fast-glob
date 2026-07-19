@@ -1,23 +1,19 @@
 import * as assert from 'node:assert';
-
 import { Stats } from '@nodelib/fs.macchiato';
 import * as sinon from 'sinon';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
-import * as tests from '../tests';
-import { ReaderStream } from './stream';
-
-import type { Options } from '../settings';
-import type { Entry, ErrnoException, ReaderOptions } from '../types';
 import type * as fsWalk from '@nodelib/fs.walk';
 import type * as fsStat from '@nodelib/fs.stat';
+import Settings, { type Options } from '../settings';
+import * as tests from '../tests';
+import type { Entry, ErrnoException, ReaderOptions } from '../types';
+import { ReaderStream } from './stream';
 
 type WalkSignature = typeof fsWalk.walkStream;
 type StatSignature = typeof fsStat.stat;
 
 class TestReader extends ReaderStream {
-	protected override _walkStream: WalkSignature = sinon.stub() as unknown as WalkSignature;
+	protected override _walkStream: WalkSignature = sinon.stub();
 	protected override _stat: StatSignature = sinon.stub() as unknown as StatSignature;
 
 	constructor(options?: Options) {
@@ -73,7 +69,9 @@ describe('Readers → ReaderStream', () => {
 
 			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
 
-			stream.on('data', (entry: Entry) => entries.push(entry));
+			stream.on('data', (entry: Entry) => {
+				entries.push(entry);
+			});
 			stream.once('end', () => {
 				assert.strictEqual(entries[0].name, 'a.txt');
 				assert.strictEqual(entries[1].name, 'b.txt');
@@ -95,7 +93,9 @@ describe('Readers → ReaderStream', () => {
 
 			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
 
-			stream.on('data', (entry: Entry) => entries.push(entry));
+			stream.on('data', (entry: Entry) => {
+				entries.push(entry);
+			});
 			stream.once('error', (error: ErrnoException) => {
 				assert.strictEqual(error.code, 'EPERM');
 				done();
@@ -116,7 +116,9 @@ describe('Readers → ReaderStream', () => {
 
 			const stream = reader.static(['a.txt', 'b.txt'], readerOptions);
 
-			stream.on('data', (entry: Entry) => entries.push(entry));
+			stream.on('data', (entry: Entry) => {
+				entries.push(entry);
+			});
 			stream.once('end', () => {
 				assert.strictEqual(entries.length, 1);
 				assert.strictEqual(entries[0].name, 'b.txt');
@@ -134,7 +136,9 @@ describe('Readers → ReaderStream', () => {
 
 			const stream = reader.static(['a.txt'], readerOptions);
 
-			stream.on('data', (entry: Entry) => entries.push(entry));
+			stream.on('data', (entry: Entry) => {
+				entries.push(entry);
+			});
 			stream.once('end', () => {
 				assert.strictEqual(entries.length, 0);
 				done();

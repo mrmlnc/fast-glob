@@ -1,11 +1,10 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
-
 import * as utils from '../../utils';
 
 type GlobImplementation = 'fast-glob' | 'node-fs-glob' | 'node-glob';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
 class Glob {
@@ -15,6 +14,20 @@ class Glob {
 	constructor(cwd: string, pattern: string) {
 		this.#cwd = cwd;
 		this.#pattern = pattern;
+	}
+
+	async #measure(function_: GlobImplFunction): Promise<void> {
+		const timeStart = utils.timeStart();
+
+		const matches = await function_();
+
+		const count = matches.length;
+		const memory = utils.getMemory();
+		const time = utils.timeEnd(timeStart);
+
+		bencho.time('time', time);
+		bencho.memory('memory', memory);
+		bencho.value('entries', count);
 	}
 
 	public async measureNodeGlob(): Promise<void> {
@@ -28,16 +41,18 @@ class Glob {
 		});
 
 		const action = new Promise<string[]>((resolve, reject) => {
-			stream.on('error', (error) => {
-				reject(error as Error);
+			stream.once('error', (error: Error) => {
+				reject(error);
 			});
-			stream.on('data', (entry: string) => entries.push(entry));
+			stream.on('data', (entry: string) => {
+				entries.push(entry);
+			});
 			stream.on('end', () => {
 				resolve(entries);
 			});
 		});
 
-		await this.#measure(() => action);
+		await this.#measure(async () => action);
 	}
 
 	public async measureNodeFsGlob(): Promise<void> {
@@ -59,7 +74,7 @@ class Glob {
 			});
 		});
 
-		await this.#measure(() => action);
+		await this.#measure(async () => action);
 	}
 
 	public async measureFastGlob(): Promise<void> {
@@ -77,31 +92,18 @@ class Glob {
 			stream.once('error', (error: Error) => {
 				reject(error);
 			});
-			stream.on('data', (entry: string) => entries.push(entry));
+			stream.on('data', (entry: string) => {
+				entries.push(entry);
+			});
 			stream.once('end', () => {
 				resolve(entries);
 			});
 		});
 
-		await this.#measure(() => action);
-	}
-
-	async #measure(function_: GlobImplFunction): Promise<void> {
-		const timeStart = utils.timeStart();
-
-		const matches = await function_();
-
-		const count = matches.length;
-		const memory = utils.getMemory();
-		const time = utils.timeEnd(timeStart);
-
-		bencho.time('time', time);
-		bencho.memory('memory', memory);
-		bencho.value('entries', count);
+		await this.#measure(async () => action);
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
@@ -127,6 +129,7 @@ class Glob {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown glob implementation.');
 		}
