@@ -3,6 +3,7 @@ import { performance } from 'node:perf_hooks';
 import * as bencho from 'bencho';
 
 import type * as currentVersion from '..';
+import type * as fs from 'node:fs';
 import type * as previousVersion from 'fast-glob';
 import type * as glob from 'glob';
 import type * as tg from 'tinyglobby';
@@ -29,6 +30,10 @@ export function importPreviousFastGlob(): Promise<typeof previousVersion> {
 
 export function importNodeGlob(): Promise<typeof glob> {
 	return import('glob');
+}
+
+export function importNodeFsGlob(): Promise<typeof fs> {
+	return import('node:fs');
 }
 
 export function importTinyGlobby(): Promise<typeof tg> {

@@ -4,7 +4,7 @@ import * as bencho from 'bencho';
 
 import * as utils from '../../utils';
 
-type GlobImplementation = 'fast-glob' | 'node-glob' | 'tinyglobby';
+type GlobImplementation = 'fast-glob' | 'node-fs-glob' | 'node-glob' | 'tinyglobby';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => Promise<unknown[]>;
 
@@ -23,6 +23,26 @@ class Glob {
 		await this.#measure(() => glob.glob(this.#pattern, {
 			cwd: this.#cwd,
 			nodir: true,
+		}));
+	}
+
+	public async measureNodeFsGlob(): Promise<void> {
+		const fs = await utils.importAndMeasure(utils.importNodeFsGlob);
+
+		await this.#measure(() => new Promise((resolve, reject) => {
+			fs.glob(this.#pattern, {
+				cwd: this.#cwd,
+				withFileTypes: true,
+			}, (error, entries) => {
+				if (error !== null) {
+					reject(error);
+					return;
+				}
+
+				const result = entries.filter((entry) => !entry.isDirectory());
+
+				resolve(result);
+			});
 		}));
 	}
 
@@ -71,6 +91,11 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
+		case 'node-fs-glob': {
+			await glob.measureNodeFsGlob();
+			break;
+		}
+
 		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
