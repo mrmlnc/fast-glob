@@ -343,6 +343,30 @@ describe('Utils → Pattern', () => {
 
 			assert.strictEqual(actual, expected);
 		});
+
+		it('should returns the current directory for a leading question mark segment', () => {
+			const expected = '.';
+
+			const actual = util.getBaseDirectory('?/file.txt');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should not treat a question mark segment as a part of the base directory', () => {
+			const expected = 'root';
+
+			const actual = util.getBaseDirectory('root/a?b/file.txt');
+
+			assert.strictEqual(actual, expected);
+		});
+
+		it('should keep an escaped question mark segment as a part of the base directory', () => {
+			const expected = '?';
+
+			const actual = util.getBaseDirectory(String.raw`\?/file.txt`);
+
+			assert.strictEqual(actual, expected);
+		});
 	});
 
 	describe('.hasGlobStar', () => {

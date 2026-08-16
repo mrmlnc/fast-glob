@@ -9,6 +9,7 @@ import type { MicromatchOptions, Pattern, PatternRe } from '../types';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
+const QUESTION_MARK_SYMBOL = '?';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
 const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
@@ -134,7 +135,45 @@ export function isPatternRelatedToParentDirectory(pattern: Pattern): boolean {
 }
 
 export function getBaseDirectory(pattern: Pattern): string {
-	return globParent(pattern, { flipBackslashes: false });
+	const base = globParent(pattern, { flipBackslashes: false });
+
+	/**
+	 * `glob-parent` relies on `is-glob`, which does not treat a path segment whose only glob
+	 * metacharacter is an unescaped `?` as dynamic (see is-glob#21). As a result the base can still
+	 * contain a dynamic segment, which makes directory traversal start from a non-existent directory
+	 * (see #380). If the extracted base contains a `?`, cut it back to the segment preceding the
+	 * first unescaped `?`.
+	 */
+	if (!base.includes(QUESTION_MARK_SYMBOL)) {
+		return base;
+	}
+
+	const segmentIndex = getFirstUnescapedQuestionMarkSegmentIndex(pattern);
+
+	if (segmentIndex === -1) {
+		return base;
+	}
+
+	return segmentIndex === 0 ? '.' : pattern.split('/').slice(0, segmentIndex).join('/');
+}
+
+function getFirstUnescapedQuestionMarkSegmentIndex(pattern: Pattern): number {
+	return pattern.split('/').findIndex((segment) => hasUnescapedQuestionMark(segment));
+}
+
+function hasUnescapedQuestionMark(segment: string): boolean {
+	for (let index = 0; index < segment.length; index++) {
+		if (segment[index] === ESCAPE_SYMBOL) {
+			index++;
+			continue;
+		}
+
+		if (segment[index] === QUESTION_MARK_SYMBOL) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 export function hasGlobStar(pattern: Pattern): boolean {
