@@ -79,9 +79,19 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 	/*
 	 * For the sake of reducing future accesses to the file system, we merge all tasks within the current directory
 	 * into a global task, if at least one pattern refers to the root (`.`). In this case, the global task covers the rest.
+	 *
+	 * Absolute patterns must not participate in this merge, because their base directory is independent of the current
+	 * directory. Otherwise, entries found by traversing the current directory will be matched against the absolute
+	 * pattern without the path prefix and never match.
 	 */
 	if ('.' in insideCurrentDirectoryGroup) {
-		tasks.push(convertPatternGroupToTask('.', patternsInsideCurrentDirectory, negative, dynamic));
+		const [absolutePatterns, relativePatterns] = utils.pattern.partitionAbsoluteAndRelative(patternsInsideCurrentDirectory);
+
+		if (absolutePatterns.length > 0) {
+			tasks.push(...convertPatternGroupsToTasks(groupPatternsByBaseDirectory(absolutePatterns), negative, dynamic));
+		}
+
+		tasks.push(convertPatternGroupToTask('.', relativePatterns, negative, dynamic));
 	} else {
 		tasks.push(...convertPatternGroupsToTasks(insideCurrentDirectoryGroup, negative, dynamic));
 	}
