@@ -75,3 +75,16 @@ runner.suite('Patterns Root (cwd)', {
 		},
 	],
 });
+
+runner.suite('Patterns Root (mix of absolute and relative patterns)', {
+	tests: [
+		// The absolute pattern must not be merged into the global task rooted at the current
+		// directory, otherwise its entries will never match and will be silently dropped.
+		{
+			pattern: [`${CWD}/fixtures/first/*.md`, '*.md'],
+			options: { cwd: 'fixtures' },
+			issue: 497,
+			expected: () => [`${CWD}/fixtures/first/file.md`, 'file.md'],
+		},
+	],
+});

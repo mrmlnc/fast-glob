@@ -71,29 +71,26 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 	const patternsOutsideCurrentDirectory = utils.pattern.getPatternsOutsideCurrentDirectory(positive);
 	const patternsInsideCurrentDirectory = utils.pattern.getPatternsInsideCurrentDirectory(positive);
 
-	/*
-	 * Absolute patterns must be handled as separate tasks and must never be merged into the
-	 * root `.` task, because their base directory is independent of `cwd`. Without this
-	 * separation, mixing an absolute pattern (e.g. `/abs/path/*.ts`) with a relative root
-	 * pattern (e.g. `*.config.ts`) causes the absolute pattern to be pulled into the root
-	 * task. Entries found via the root traversal are then tested against the absolute pattern
-	 * without the path prefix, so they never match and are silently dropped. See #497.
-	 */
-	const absolutePatterns = patternsInsideCurrentDirectory.filter((pattern) => utils.pattern.isAbsolute(pattern));
-	const relativePatterns = patternsInsideCurrentDirectory.filter((pattern) => !utils.pattern.isAbsolute(pattern));
-
 	const outsideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsOutsideCurrentDirectory);
-	const absoluteGroup = groupPatternsByBaseDirectory(absolutePatterns);
-	const insideCurrentDirectoryGroup = groupPatternsByBaseDirectory(relativePatterns);
+	const insideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsInsideCurrentDirectory);
 
 	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, negative, dynamic));
-	tasks.push(...convertPatternGroupsToTasks(absoluteGroup, negative, dynamic));
 
 	/*
 	 * For the sake of reducing future accesses to the file system, we merge all tasks within the current directory
 	 * into a global task, if at least one pattern refers to the root (`.`). In this case, the global task covers the rest.
+	 *
+	 * Absolute patterns must not participate in this merge, because their base directory is independent of the current
+	 * directory. Otherwise, entries found by traversing the current directory will be matched against the absolute
+	 * pattern without the path prefix and never match.
 	 */
 	if ('.' in insideCurrentDirectoryGroup) {
+		const [absolutePatterns, relativePatterns] = utils.pattern.partitionAbsoluteAndRelative(patternsInsideCurrentDirectory);
+
+		if (absolutePatterns.length > 0) {
+			tasks.push(...convertPatternGroupsToTasks(groupPatternsByBaseDirectory(absolutePatterns), negative, dynamic));
+		}
+
 		tasks.push(convertPatternGroupToTask('.', relativePatterns, negative, dynamic));
 	} else {
 		tasks.push(...convertPatternGroupsToTasks(insideCurrentDirectoryGroup, negative, dynamic));
