@@ -28,6 +28,6 @@ export class ProviderSync extends Provider<EntryItem[]> {
 			return this.#reader.dynamic(root, options);
 		}
 
-		return this.#reader.static(task.patterns, options);
+		return this.#reader.static(task.positive, options);
 	}
 }

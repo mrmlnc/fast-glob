@@ -39,6 +39,6 @@ export class ProviderStream extends Provider<Readable> {
 			return this.#reader.dynamic(root, options);
 		}
 
-		return this.#reader.static(task.patterns, options);
+		return this.#reader.static(task.positive, options);
 	}
 }

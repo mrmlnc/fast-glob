@@ -91,6 +91,18 @@ describe('Providers → ProviderStream', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
+		it('should pass only positive patterns to the static reader (#499)', async () => {
+			const provider = getProvider();
+			const task = tests.task.builder().base('.').static().positive('root/file.txt').negative('*.bup.txt').build();
+			const entry = tests.entry.builder().path('root/file.txt').file().build();
+
+			await getEntries(provider, task, entry);
+
+			// Negative patterns are exclusion filters, not paths to stat. Passing
+			// them to the static reader makes it lstat bogus paths like `!*.bup.txt`.
+			assert.deepStrictEqual(provider.reader.static.firstCall.args[0], task.positive);
+		});
+
 		it('should emit error to the transform stream', (done) => {
 			const provider = getProvider();
 			const task = tests.task.builder().base('.').positive('*').build();
