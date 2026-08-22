@@ -1,5 +1,6 @@
 import * as path from 'node:path';
 import type Settings from '../settings.js';
+import * as utils from '../utils/index.js';
 import type { MicromatchOptions, ReaderOptions } from '../types/index.js';
 import type { Task } from '../managers/tasks.js';
 import DeepFilter from './filters/deep.js';
@@ -29,7 +30,9 @@ export abstract class Provider<T> {
 	public abstract read(_task: Task): T;
 
 	protected _getRootDirectory(task: Task): string {
-		return path.resolve(this.#settings.cwd, task.base);
+		const root = path.resolve(this.#settings.cwd, task.base);
+
+		return utils.path.appendTrailingSeparatorToDeviceRoot(root);
 	}
 
 	protected _getReaderOptions(task: Task): ReaderOptions {

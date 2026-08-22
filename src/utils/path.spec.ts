@@ -15,6 +15,23 @@ describe('Utils → Path', () => {
 		});
 	});
 
+	describe('.appendTrailingSeparatorToDeviceRoot', () => {
+		it('should return path without changes', () => {
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('a/b'), 'a/b');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('/a/b'), '/a/b');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('C:\\'), 'C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`C:\a`), String.raw`C:\a`);
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\server\share`), String.raw`\\server\share`);
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('\\\\?\\C:\\'), '\\\\?\\C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\?\C:\a`), String.raw`\\?\C:\a`);
+		});
+
+		it('should append trailing separator to a device path to the root of a drive', () => {
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\?\C:`), '\\\\?\\C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\.\D:`), '\\\\.\\D:\\');
+		});
+	});
+
 	describe('.escape', () => {
 		it('should return pattern without additional escape characters', () => {
 			assert.strictEqual(util.escape(String.raw`\!abc`), String.raw`\!abc`);

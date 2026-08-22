@@ -17,6 +17,13 @@ const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>[()[\]{}]|^!|[!+@](?=\(
  */
 const DOS_DEVICE_PATH_RE = /^\\\\(?=[.?])/;
 /**
+ * The device path to the root of a drive without the trailing separator, for example `\\?\C:`.
+ *
+ * Starting with Node.js 22.20.0, `path.resolve` returns such paths without the trailing separator,
+ * but the Windows API requires the separator to read the root directory of a drive.
+ */
+const DOS_DEVICE_DRIVE_ROOT_RE = /^\\\\[.?]\\[a-z]:$/i;
+/**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
  * https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
@@ -25,6 +32,14 @@ const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@[\]{}])/g;
 
 export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);
+}
+
+export function appendTrailingSeparatorToDeviceRoot(filepath: string): string {
+	if (DOS_DEVICE_DRIVE_ROOT_RE.test(filepath)) {
+		return `${filepath}\\`;
+	}
+
+	return filepath;
 }
 
 export function removeLeadingDotSegment(entry: string): string {
