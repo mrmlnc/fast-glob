@@ -1,14 +1,11 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
-import { Reader } from './reader';
-
-import type { Options } from '../settings';
-import type { Entry, FsStats, Pattern } from '../types';
+import Settings, { type Options } from '../settings.js';
+import type { Entry, FsStats, Pattern } from '../types/index.js';
+import { Reader } from './reader.js';
 
 class TestReader extends Reader<never[]> {
 	constructor(options?: Options) {

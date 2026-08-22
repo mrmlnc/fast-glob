@@ -1,16 +1,14 @@
 import { Readable } from 'node:stream';
-
-import { Provider } from './provider';
-
-import type { IReaderStream } from '../readers';
-import type Settings from '../settings';
-import type { Task } from '../managers/tasks';
-import type { Entry, ErrnoException, ReaderOptions } from '../types';
+import type { ReaderStreamInterface } from '../readers/index.js';
+import type Settings from '../settings.js';
+import type { Task } from '../managers/tasks.js';
+import type { Entry, ErrnoException, ReaderOptions } from '../types/index.js';
+import { Provider } from './provider.js';
 
 export class ProviderStream extends Provider<Readable> {
-	readonly #reader: IReaderStream;
+	readonly #reader: ReaderStreamInterface;
 
-	constructor(reader: IReaderStream, settings: Settings) {
+	constructor(reader: ReaderStreamInterface, settings: Settings) {
 		super(settings);
 
 		this.#reader = reader;
@@ -21,15 +19,23 @@ export class ProviderStream extends Provider<Readable> {
 		const options = this._getReaderOptions(task);
 
 		const source = this.api(root, task, options);
-		const destination = new Readable({ objectMode: true, read: () => { /* noop */ } });
+		const destination = new Readable({ objectMode: true, read() {/* noop */} });
 
 		source
-			.once('error', (error: ErrnoException) => destination.emit('error', error))
-			.on('data', (entry: Entry) => destination.emit('data', options.transform(entry)))
-			.once('end', () => destination.emit('end'));
+			.once('error', (error: ErrnoException) => {
+				destination.emit('error', error);
+			})
+			.on('data', (entry: Entry) => {
+				destination.emit('data', options.transform(entry));
+			})
+			.once('end', () => {
+				destination.emit('end');
+			});
 
 		destination
-			.once('close', () => source.destroy());
+			.once('close', () => {
+				source.destroy();
+			});
 
 		return destination;
 	}

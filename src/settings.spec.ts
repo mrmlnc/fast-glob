@@ -1,8 +1,7 @@
 import * as assert from 'node:assert';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
-import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
+import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {
@@ -21,7 +20,7 @@ describe('Settings', () => {
 		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
 		assert.ok(settings.braceExpansion);
 		assert.ok(settings.caseSensitiveMatch);
-		assert.ok(settings.deep);
+		assert.strictEqual(settings.deep, Infinity);
 		assert.ok(settings.extglob);
 		assert.ok(settings.followSymbolicLinks);
 		assert.ok(settings.globstar);

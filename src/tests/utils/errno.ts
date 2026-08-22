@@ -1,4 +1,4 @@
-import type { ErrnoException } from '../../types';
+import type { ErrnoException } from '../../types/index.js';
 
 class SystemError extends Error implements ErrnoException {
 	constructor(public readonly code: string, message: string) {

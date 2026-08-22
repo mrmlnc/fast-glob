@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["ES2022"],
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"target": "es2024",
+		"lib": ["es2024"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"resolveJsonModule": true,
 
 		"rootDir": "src",
@@ -20,9 +20,9 @@
 		"noFallthroughCasesInSwitch": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": false,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
 
-		"downlevelIteration": true,
 		"declaration": true,
 		"newLine": "lf",
 		"stripInternal": true

@@ -1,9 +1,14 @@
-import * as utils from '../../utils';
+import * as utils from '../../utils/index.js';
+import type Settings from '../../settings.js';
+import type {
+	MicromatchOptions,
+	Entry,
+	EntryFilterFunction,
+	Pattern,
+	PatternRe,
+} from '../../types/index.js';
 
-import type Settings from '../../settings';
-import type { MicromatchOptions, Entry, EntryFilterFunction, Pattern, PatternRe } from '../../types';
-
-interface PatternsRegexSet {
+type PatternsRegexSet = {
 	positive: {
 		all: PatternRe[];
 	};
@@ -11,33 +16,17 @@ interface PatternsRegexSet {
 		absolute: PatternRe[];
 		relative: PatternRe[];
 	};
-}
+};
 
 export default class EntryFilter {
-	public readonly index = new Map<string, undefined>();
-
 	readonly #settings: Settings;
 	readonly #micromatchOptions: MicromatchOptions;
+
+	public readonly index = new Map<string, undefined>();
 
 	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
 		this.#settings = settings;
 		this.#micromatchOptions = micromatchOptions;
-	}
-
-	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
-		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
-
-		const patterns: PatternsRegexSet = {
-			positive: {
-				all: utils.pattern.convertPatternsToRe(positive, this.#micromatchOptions),
-			},
-			negative: {
-				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#micromatchOptions, dot: true }),
-				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#micromatchOptions, dot: true }),
-			},
-		};
-
-		return (entry) => this.#filter(entry, patterns);
 	}
 
 	#filter(entry: Entry, pattens: PatternsRegexSet): boolean {
@@ -90,11 +79,7 @@ export default class EntryFilter {
 		}
 
 		const isMatchedByAbsoluteNegative = this.#isMatchToAbsoluteNegative(filepath, patterns.negative.absolute, isDirectory);
-		if (isMatchedByAbsoluteNegative) {
-			return false;
-		}
-
-		return true;
+		return !isMatchedByAbsoluteNegative;
 	}
 
 	#isMatchToAbsoluteNegative(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
@@ -113,14 +98,30 @@ export default class EntryFilter {
 		}
 
 		// Trying to match files and directories by patterns.
-		const isMatched = utils.pattern.matchAny(filepath, patternsRe);
+		const isMatched = utils.pattern.isMatchAny(filepath, patternsRe);
 
 		// A pattern with a trailling slash can be used for directory matching.
 		// To apply such pattern, we need to add a tralling slash to the path.
 		if (!isMatched && isDirectory) {
-			return utils.pattern.matchAny(`${filepath}/`, patternsRe);
+			return utils.pattern.isMatchAny(`${filepath}/`, patternsRe);
 		}
 
 		return isMatched;
+	}
+
+	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
+		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
+
+		const patterns: PatternsRegexSet = {
+			positive: {
+				all: utils.pattern.convertPatternsToRe(positive, this.#micromatchOptions),
+			},
+			negative: {
+				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#micromatchOptions, dot: true }),
+				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#micromatchOptions, dot: true }),
+			},
+		};
+
+		return (entry) => this.#filter(entry, patterns);
 	}
 }

@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
-
-import type { FileSystemAdapter, Pattern } from './types';
+import * as process from 'node:process';
+import type { FileSystemAdapter, Pattern } from './types/index.js';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -11,7 +11,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync,
 };
 
-export interface Options {
+export type Options = {
 	/**
 	 * Return the absolute path for entries.
 	 *
@@ -145,7 +145,7 @@ export interface Options {
 	 * @default undefined
 	 */
 	signal?: AbortSignal;
-}
+};
 
 export default class Settings {
 	public readonly absolute: boolean;
@@ -181,7 +181,7 @@ export default class Settings {
 		this.braceExpansion = options.braceExpansion ?? true;
 		this.caseSensitiveMatch = options.caseSensitiveMatch ?? true;
 		this.cwd = options.cwd ?? process.cwd();
-		this.deep = options.deep ?? Number.POSITIVE_INFINITY;
+		this.deep = options.deep ?? Infinity;
 		this.dot = options.dot ?? false;
 		this.extglob = options.extglob ?? true;
 		this.followSymbolicLinks = options.followSymbolicLinks ?? true;

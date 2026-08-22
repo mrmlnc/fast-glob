@@ -1,15 +1,14 @@
-// https://stackoverflow.com/a/39415662
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import merge2 = require('merge2');
-
 import type { Readable } from 'node:stream';
+import merge2 from 'merge2';
 
 export function merge(streams: Readable[]): NodeJS.ReadableStream {
 	const mergedStream = merge2(streams);
 
-	streams.forEach((stream) => {
-		stream.once('error', (error) => mergedStream.emit('error', error));
-	});
+	for (const stream of streams) {
+		stream.once('error', (error) => {
+			mergedStream.emit('error', error);
+		});
+	}
 
 	mergedStream.once('close', () => {
 		propagateCloseEventToSources(streams);
@@ -22,5 +21,7 @@ export function merge(streams: Readable[]): NodeJS.ReadableStream {
 }
 
 function propagateCloseEventToSources(streams: Readable[]): void {
-	streams.forEach((stream) => stream.emit('close'));
+	for (const stream of streams) {
+		stream.emit('close');
+	}
 }

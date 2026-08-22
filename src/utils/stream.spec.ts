@@ -1,9 +1,7 @@
 import * as assert from 'node:assert';
 import * as stream from 'node:stream';
-
 import { describe, it } from 'mocha';
-
-import * as util from './stream';
+import * as util from './stream.js';
 
 describe('Utils → Stream', () => {
 	describe('.merge', () => {
@@ -30,7 +28,9 @@ describe('Utils → Stream', () => {
 
 			const actual: number[] = [];
 
-			mergedStream.on('error', (error: number) => actual.push(error));
+			mergedStream.on('error', (error: number) => {
+				actual.push(error);
+			});
 
 			mergedStream.once('finish', () => {
 				assert.deepStrictEqual(actual, expected);
@@ -53,8 +53,12 @@ describe('Utils → Stream', () => {
 
 			const actual: number[] = [];
 
-			first.once('close', () => actual.push(1));
-			second.once('close', () => actual.push(2));
+			first.once('close', () => {
+				actual.push(1);
+			});
+			second.once('close', () => {
+				actual.push(2);
+			});
 
 			mergedStream.once('finish', () => {
 				assert.deepStrictEqual(actual, expected);

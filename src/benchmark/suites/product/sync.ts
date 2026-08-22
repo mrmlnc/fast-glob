@@ -1,11 +1,10 @@
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import * as bencho from 'bencho';
+import * as utils from '../../utils.js';
 
-import * as utils from '../../utils';
+type GlobImplementation = 'fast-glob' | 'node-fs-glob' | 'node-glob' | 'tinyglobby';
 
-type GlobImplementation = 'fast-glob' | 'node-glob' | 'tinyglobby';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobImplFunction = (...args: any[]) => unknown[];
 
 class Glob {
@@ -17,6 +16,20 @@ class Glob {
 		this.#pattern = pattern;
 	}
 
+	#measure(function_: GlobImplFunction): void {
+		const timeStart = utils.timeStart();
+
+		const matches = function_();
+
+		const count = matches.length;
+		const memory = utils.getMemory();
+		const time = utils.timeEnd(timeStart);
+
+		bencho.time('time', time);
+		bencho.memory('memory', memory);
+		bencho.value('entries', count);
+	}
+
 	public async measureNodeGlob(): Promise<void> {
 		const glob = await utils.importAndMeasure(utils.importNodeGlob);
 
@@ -24,6 +37,19 @@ class Glob {
 			cwd: this.#cwd,
 			nodir: true,
 		}));
+	}
+
+	public async measureNodeFsGlob(): Promise<void> {
+		const fs = await utils.importAndMeasure(utils.importNodeFsGlob);
+
+		this.#measure(() => {
+			const entries = fs.globSync(this.#pattern, {
+				cwd: this.#cwd,
+				withFileTypes: true,
+			});
+
+			return entries.filter((entry) => !entry.isDirectory());
+		});
 	}
 
 	public async measureFastGlob(): Promise<void> {
@@ -44,23 +70,8 @@ class Glob {
 			followSymbolicLinks: false,
 		}));
 	}
-
-	#measure(function_: GlobImplFunction): void {
-		const timeStart = utils.timeStart();
-
-		const matches = function_();
-
-		const count = matches.length;
-		const memory = utils.getMemory();
-		const time = utils.timeEnd(timeStart);
-
-		bencho.time('time', time);
-		bencho.memory('memory', memory);
-		bencho.value('entries', count);
-	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
@@ -71,6 +82,11 @@ class Glob {
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
+		case 'node-fs-glob': {
+			await glob.measureNodeFsGlob();
+			break;
+		}
+
 		case 'node-glob': {
 			await glob.measureNodeGlob();
 			break;
@@ -86,6 +102,7 @@ class Glob {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown glob implementation.');
 		}

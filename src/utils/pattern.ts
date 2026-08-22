@@ -1,17 +1,13 @@
 import * as path from 'node:path';
-
-// https://stackoverflow.com/a/39415662
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import globParent = require('glob-parent');
-import * as micromatch from 'micromatch';
-
-import type { MicromatchOptions, Pattern, PatternRe } from '../types';
+import globParent from 'glob-parent';
+import micromatch from 'micromatch';
+import type { MicromatchOptions, Pattern, PatternRe } from '../types/index.js';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
-const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
+const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*\]/;
 const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\([^(]*\|[^|]*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\([^(]*\)/;
 const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
@@ -22,11 +18,11 @@ const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
  */
 const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
 
-interface PatternTypeOptions {
+type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
-}
+};
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
@@ -141,20 +137,24 @@ export function hasGlobStar(pattern: Pattern): boolean {
 	return pattern.includes(GLOBSTAR);
 }
 
-export function endsWithSlashGlobStar(pattern: Pattern): boolean {
+export function hasTrailingSlashGlobStar(pattern: Pattern): boolean {
 	return pattern.endsWith(`/${GLOBSTAR}`);
 }
 
 export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 	const basename = path.basename(pattern);
 
-	return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
+	return hasTrailingSlashGlobStar(pattern) || isStaticPattern(basename);
 }
 
 export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
-	return patterns.reduce<Pattern[]>((collection, pattern) => {
-		return collection.concat(expandBraceExpansion(pattern));
-	}, []);
+	const expandedPatterns: Pattern[] = [];
+
+	for (const pattern of patterns) {
+		expandedPatterns.push(...expandBraceExpansion(pattern));
+	}
+
+	return expandedPatterns;
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
@@ -169,7 +169,7 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 	/**
 	 * Micromatch can return an empty string in the case of patterns like `{a,}`.
 	 */
-	return patterns.filter((pattern) => pattern !== '');
+	return patterns.filter((it) => it !== '');
 }
 
 export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
@@ -206,7 +206,7 @@ export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOpti
 	return patterns.map((pattern) => makeRe(pattern, options));
 }
 
-export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
+export function isMatchAny(entry: string, patternsRe: PatternRe[]): boolean {
 	return patternsRe.some((patternRe) => patternRe.test(entry));
 }
 

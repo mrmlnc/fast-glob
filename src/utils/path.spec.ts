@@ -1,9 +1,8 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
-import * as util from './path';
+import * as util from './path.js';
 
 describe('Utils → Path', () => {
 	describe('.makeAbsolute', () => {
@@ -13,6 +12,23 @@ describe('Utils → Path', () => {
 			const actual = util.makeAbsolute(process.cwd(), 'file.md');
 
 			assert.strictEqual(actual, expected);
+		});
+	});
+
+	describe('.appendTrailingSeparatorToDeviceRoot', () => {
+		it('should return path without changes', () => {
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('a/b'), 'a/b');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('/a/b'), '/a/b');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('C:\\'), 'C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`C:\a`), String.raw`C:\a`);
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\server\share`), String.raw`\\server\share`);
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot('\\\\?\\C:\\'), '\\\\?\\C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\?\C:\a`), String.raw`\\?\C:\a`);
+		});
+
+		it('should append trailing separator to a device path to the root of a drive', () => {
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\?\C:`), '\\\\?\\C:\\');
+			assert.strictEqual(util.appendTrailingSeparatorToDeviceRoot(String.raw`\\.\D:`), '\\\\.\\D:\\');
 		});
 	});
 
@@ -84,7 +100,7 @@ describe('Utils → Path', () => {
 	describe('.removeBackslashes', () => {
 		it('should return path without backslashes', () => {
 			assert.strictEqual(util.removeBackslashes(String.raw`a\b`), 'ab');
-			assert.strictEqual(util.removeBackslashes(String.raw`a\\\b`), String.raw`ab`);
+			assert.strictEqual(util.removeBackslashes(String.raw`a\\\b`), 'ab');
 		});
 	});
 

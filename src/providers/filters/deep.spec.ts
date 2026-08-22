@@ -1,20 +1,16 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types/index.js';
+import DeepFilter from './deep.js';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import DeepFilter from './deep';
-
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
-import type { Options } from '../../settings';
-
-interface FilterOptions {
+type FilterOptions = {
 	base?: string;
 	positive: Pattern[];
 	negative?: Pattern[];
 	options?: Options;
-}
+};
 
 const DIRECTORY_ENTRY_LEVEL_1 = tests.entry.builder().path('root').directory().build();
 const DIRECTORY_ENTRY_LEVEL_2 = tests.entry.builder().path('root/directory').directory().build();
@@ -35,18 +31,18 @@ function getFilter(options: FilterOptions): EntryFilterFunction {
 	return getDeepFilterInstance(options.options).getFilter(base, options.positive, negative);
 }
 
-function getResult(entry: Entry, options: FilterOptions): boolean {
+function isAccepted(entry: Entry, options: FilterOptions): boolean {
 	const filter = getFilter(options);
 
 	return filter(entry);
 }
 
 function accept(entry: Entry, options: FilterOptions): void {
-	assert.strictEqual(getResult(entry, options), true);
+	assert.strictEqual(isAccepted(entry, options), true);
 }
 
 function reject(entry: Entry, options: FilterOptions): void {
-	assert.strictEqual(getResult(entry, options), false);
+	assert.strictEqual(isAccepted(entry, options), false);
 }
 
 describe('Providers → Filters → Deep', () => {
@@ -92,7 +88,7 @@ describe('Providers → Filters → Deep', () => {
 			it('should accept when an option has "Infinity" as value', () => {
 				accept(DIRECTORY_ENTRY_LEVEL_1, {
 					positive: ['**/*'],
-					options: { deep: Number.POSITIVE_INFINITY },
+					options: { deep: Infinity },
 				});
 			});
 		});

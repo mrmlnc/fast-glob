@@ -1,7 +1,6 @@
-import * as utils from '../../utils';
-
-import type { Pattern, MicromatchOptions } from '../../types';
-import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
+import * as utils from '../../utils/index.js';
+import type { Pattern, MicromatchOptions } from '../../types/index.js';
+import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher.js';
 
 class PatternSegmentBuilder {
 	readonly #segment: PatternSegment = {
@@ -41,6 +40,10 @@ class PatternInfoBuilder {
 		sections: [],
 	};
 
+	#buildPattern(): Pattern {
+		return this.#section.segments.map((it) => it.pattern).join('/');
+	}
+
 	public section(...segments: PatternSegment[]): this {
 		this.#section.sections.push(segments);
 
@@ -62,10 +65,6 @@ class PatternInfoBuilder {
 			...this.#section,
 			pattern: this.#buildPattern(),
 		};
-	}
-
-	#buildPattern(): Pattern {
-		return this.#section.segments.map((segment) => segment.pattern).join('/');
 	}
 }
 

@@ -1,13 +1,9 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import ErrorFilter from './error';
-
-import type { ErrorFilterFunction } from '../../types';
-import type { Options } from '../../settings';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { ErrorFilterFunction } from '../../types/index.js';
+import ErrorFilter from './error.js';
 
 function getErrorFilterInstance(options?: Options): ErrorFilter {
 	const settings = new Settings(options);
@@ -32,25 +28,25 @@ describe('Providers → Filters → Error', () => {
 		it('should return true for ENOENT error', () => {
 			const filter = getFilter();
 
-			const actual = filter(tests.errno.getEnoent());
+			const isActual = filter(tests.errno.getEnoent());
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return true for EPERM error when the `suppressErrors` options is enabled', () => {
 			const filter = getFilter({ suppressErrors: true });
 
-			const actual = filter(tests.errno.getEperm());
+			const isActual = filter(tests.errno.getEperm());
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false for EPERM error', () => {
 			const filter = getFilter();
 
-			const actual = filter(tests.errno.getEperm());
+			const isActual = filter(tests.errno.getEperm());
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 });

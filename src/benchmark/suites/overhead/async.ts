@@ -1,12 +1,11 @@
 import * as path from 'node:path';
+import * as process from 'node:process';
 import * as util from 'node:util';
-
 import * as bencho from 'bencho';
-
-import * as utils from '../../utils';
+import * as utils from '../../utils.js';
 
 type MeasurableImplementation = 'fast-glob' | 'fs-walk';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 type ImplementationFunction = (...args: any[]) => Promise<unknown[]>;
 
 class Glob {
@@ -16,30 +15,6 @@ class Glob {
 	constructor(cwd: string, pattern: string) {
 		this.#cwd = cwd;
 		this.#pattern = pattern;
-	}
-
-	public async measureFastGlob(): Promise<void> {
-		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
-
-		await this.#measure(() => glob.glob(this.#pattern, {
-			cwd: this.#cwd,
-			unique: false,
-			onlyFiles: false,
-			followSymbolicLinks: false,
-		}));
-	}
-
-	public async measureFsWalk(): Promise<void> {
-		const fsWalk = await utils.importAndMeasure(() => import('@nodelib/fs.walk'));
-
-		const walk = util.promisify(fsWalk.walk);
-
-		const settings = new fsWalk.Settings({
-			deepFilter: (entry) => this.#pattern !== '*' && !entry.name.startsWith('.'),
-			entryFilter: (entry) => !entry.name.startsWith('.'),
-		});
-
-		await this.#measure(() => walk(this.#cwd, settings));
 	}
 
 	async #measure(function_: ImplementationFunction): Promise<void> {
@@ -55,20 +30,43 @@ class Glob {
 		bencho.memory('memory', memory);
 		bencho.value('entries', count);
 	}
+
+	public async measureFastGlob(): Promise<void> {
+		const glob = await utils.importAndMeasure(utils.importCurrentFastGlob);
+
+		await this.#measure(async () => glob.glob(this.#pattern, {
+			cwd: this.#cwd,
+			unique: false,
+			onlyFiles: false,
+			followSymbolicLinks: false,
+		}));
+	}
+
+	public async measureFsWalk(): Promise<void> {
+		const fsWalk = await utils.importAndMeasure(async () => import('@nodelib/fs.walk'));
+
+		const walk = util.promisify(fsWalk.walk);
+
+		const settings = new fsWalk.Settings({
+			deepFilter: (entry) => this.#pattern !== '*' && !entry.name.startsWith('.'),
+			entryFilter: (entry) => !entry.name.startsWith('.'),
+		});
+
+		await this.#measure(async () => walk(this.#cwd, settings));
+	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const args = process.argv.slice(2);
 
 	const cwd = path.join(process.cwd(), args[0]);
 	const pattern = args[1];
-	const impl = args[2] as MeasurableImplementation;
 
 	if (!['*', '**'].includes(pattern)) {
 		throw new TypeError('Unknown pattern.');
 	}
 
+	const impl = args[2] as MeasurableImplementation;
 	const glob = new Glob(cwd, pattern);
 
 	switch (impl) {
@@ -82,6 +80,7 @@ class Glob {
 			break;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			throw new TypeError('Unknown implementation.');
 		}
