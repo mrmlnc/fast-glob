@@ -182,6 +182,8 @@ for await (const entry of stream) {
 
 Any correct pattern(s).
 
+If multiple patterns are passed, an entry is included in the result when it matches at least one of the positive patterns and does not match any of the negative patterns. In other words, positive patterns are combined by the logical OR rule, while negative patterns exclude entries from the result.
+
 > :1234: [Pattern syntax](#pattern-syntax)
 >
 > :warning: This package does not respect the order of patterns. First, all the negative patterns are applied, and only then the positive patterns. If you want to get a certain order of records, use sorting or split calls.
