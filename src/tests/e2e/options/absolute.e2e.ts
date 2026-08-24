@@ -5,16 +5,8 @@ import * as runner from '../runner.js';
 const CWD = process.cwd();
 const CWD_POSIX = CWD.replaceAll('\\', '/');
 
-function resultTransform(item: string): string {
-	return item
-		.replace(CWD, '<root>')
-		// Backslashes are used on Windows.
-		// The `fixtures` directory is under our control, so we are confident that the conversions are correct.
-		.replaceAll(/[/\\]/g, '/');
-}
-
 runner.suite('Options Absolute', {
-	resultTransform,
+	resultTransform: runner.absoluteResultTransform,
 	tests: [
 		{
 			pattern: 'fixtures/*',
@@ -45,7 +37,7 @@ runner.suite('Options Absolute', {
 });
 
 runner.suite('Options Absolute (ignore)', {
-	resultTransform,
+	resultTransform: runner.absoluteResultTransform,
 	tests: [
 		{
 			pattern: 'fixtures/*/*',
@@ -81,7 +73,7 @@ runner.suite('Options Absolute (ignore)', {
 });
 
 runner.suite('Options Absolute (cwd)', {
-	resultTransform,
+	resultTransform: runner.absoluteResultTransform,
 	tests: [
 		{
 			pattern: '*',
@@ -108,7 +100,7 @@ runner.suite('Options Absolute (cwd)', {
 });
 
 runner.suite('Options Absolute (cwd & ignore)', {
-	resultTransform,
+	resultTransform: runner.absoluteResultTransform,
 	tests: [
 		{
 			pattern: '*/*',

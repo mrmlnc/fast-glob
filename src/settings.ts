@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import type { FileSystemAdapter, Pattern } from './types/index.js';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
@@ -42,7 +43,7 @@ export type Options = {
 	 *
 	 * @default process.cwd()
 	 */
-	cwd?: string;
+	cwd?: string | URL;
 	/**
 	 * Specifies the maximum depth of a read directory relative to the start
 	 * directory.
@@ -180,7 +181,7 @@ export default class Settings {
 		this.baseNameMatch = options.baseNameMatch ?? false;
 		this.braceExpansion = options.braceExpansion ?? true;
 		this.caseSensitiveMatch = options.caseSensitiveMatch ?? true;
-		this.cwd = options.cwd ?? process.cwd();
+		this.cwd = options.cwd instanceof URL ? fileURLToPath(options.cwd) : options.cwd ?? process.cwd();
 		this.deep = options.deep ?? Infinity;
 		this.dot = options.dot ?? false;
 		this.extglob = options.extglob ?? true;

@@ -1,5 +1,6 @@
 import * as assert from 'node:assert';
 import * as process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import snapshotIt from 'snap-shot-it';
 import { describe, it } from 'mocha';
 import * as fg from '../../index.js';
@@ -82,6 +83,21 @@ export function suite(name: string, suiteOptions: Suite): void {
 	});
 }
 
+/**
+ * Replaces the current working directory with a placeholder to hide absolute
+ * paths from snapshots.
+ *
+ * The raw value of `process.cwd()` is used to match the platform-specific
+ * separators of absolute entries before they are normalized.
+ */
+export function absoluteResultTransform(item: string): string {
+	return item
+		.replace(process.cwd(), '<root>')
+		// Backslashes are used on Windows.
+		// The `fixtures` directory is under our control, so we are confident that the conversions are correct.
+		.replaceAll(/[/\\]/g, '/');
+}
+
 function getSuiteTests(tests: Test[] | Test[][]): Test[] {
 	return tests.flat();
 }
@@ -92,8 +108,10 @@ function getTestPatterns(test: Test): Pattern[] {
 
 function getTestTitle(test: Test): string {
 	// Replacing placeholders to hide absolute paths from snapshots.
+	// On Windows, `fileURLToPath` returns a path with backslashes, so it is converted to the POSIX form.
+	const cwd = test.options?.cwd instanceof URL ? fileURLToPath(test.options.cwd).replaceAll('\\', '/') : test.options?.cwd;
 	const replacements = {
-		cwd: test.options?.cwd?.replace(CWD, '<root>'),
+		cwd: cwd?.replace(CWD, '<root>'),
 		ignore: test.options?.ignore?.map((pattern) => pattern.replace(CWD, '<root>')),
 	};
 

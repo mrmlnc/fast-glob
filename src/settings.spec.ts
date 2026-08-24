@@ -1,5 +1,6 @@
 import * as assert from 'node:assert';
 import * as process from 'node:process';
+import { pathToFileURL } from 'node:url';
 import { describe, it } from 'mocha';
 import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings.js';
 
@@ -90,5 +91,13 @@ describe('Settings', () => {
 
 		const settingsPositive = new Settings({ deep: 5 });
 		assert.strictEqual(settingsPositive.deep, 5);
+	});
+
+	it('should transform URL to string on cwd', () => {
+		const settings = new Settings({
+			cwd: pathToFileURL(process.cwd()),
+		});
+
+		assert.strictEqual(settings.cwd, process.cwd());
 	});
 });

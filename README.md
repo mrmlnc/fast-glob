@@ -308,10 +308,14 @@ fg.win32.convertPathToPattern('\\\\?\\c:\\Program Files (x86)') + '/**/*';
 
 #### cwd
 
-* Type: `string`
+* Type: `string | URL`
 * Default: `process.cwd()`
 
-The current working directory in which to search.
+The current working directory in which to search. A `file:` URL is converted to a path with [`fileURLToPath`](https://nodejs.org/api/url.html#urlfileurltopathurl).
+
+```js
+fg.globSync('**', { cwd: new URL('./dir', import.meta.url) });
+```
 
 #### deep
 
