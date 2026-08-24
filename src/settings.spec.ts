@@ -98,6 +98,6 @@ describe('Settings', () => {
 			cwd: pathToFileURL(process.cwd()),
 		});
 
-		assert.strictEqual(typeof settings.cwd, 'string');
+		assert.strictEqual(settings.cwd, process.cwd());
 	});
 });
