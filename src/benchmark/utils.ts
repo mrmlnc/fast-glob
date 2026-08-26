@@ -2,7 +2,7 @@ import { performance } from 'node:perf_hooks';
 import * as process from 'node:process';
 import type * as fs from 'node:fs';
 import * as bencho from 'bencho';
-import type previousVersion from 'fast-glob';
+import type previousVersion from 'fast-glob-v3';
 import type * as glob from 'glob';
 import type * as tg from 'tinyglobby';
 import type * as currentVersion from '../index.js';
@@ -24,7 +24,7 @@ export async function importCurrentFastGlob(): Promise<typeof currentVersion> {
 }
 
 export async function importPreviousFastGlob(): Promise<typeof previousVersion> {
-	const { default: previousFastGlob } = await import('fast-glob');
+	const { default: previousFastGlob } = await import('fast-glob-v3');
 
 	return previousFastGlob;
 }
