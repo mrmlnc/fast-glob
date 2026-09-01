@@ -100,12 +100,6 @@ describe('Readers → Reader', () => {
 			assert.ok(reader.isFatalError(tests.errno.getEperm()));
 		});
 
-		it('should return false for EPERM error when the `suppressErrors` option is enabled', () => {
-			const reader = getReader({ suppressErrors: true });
-
-			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
-		});
-
 		it('should return true for ENOENT error when the `errorFilter` option returns false', () => {
 			const reader = getReader({ errorFilter: () => false });
 
@@ -114,12 +108,6 @@ describe('Readers → Reader', () => {
 
 		it('should return false for EPERM error when the `errorFilter` option returns true', () => {
 			const reader = getReader({ errorFilter: () => true });
-
-			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
-		});
-
-		it('should return false for EPERM error when the `suppressErrors` option is enabled and the `errorFilter` option returns false', () => {
-			const reader = getReader({ suppressErrors: true, errorFilter: () => false });
 
 			assert.ok(!reader.isFatalError(tests.errno.getEperm()));
 		});

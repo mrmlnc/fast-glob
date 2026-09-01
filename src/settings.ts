@@ -120,17 +120,10 @@ export type Options = {
 	 */
 	stats?: boolean;
 	/**
-	 * By default this package suppress only `ENOENT` and `ENOTDIR` errors.
-	 * Set to `true` to suppress any error.
-	 *
-	 * @default false
-	 */
-	suppressErrors?: boolean;
-	/**
 	 * A function that decides whether an error is fatal. Receives all
 	 * errors, including `ENOENT` and `ENOTDIR`, which are suppressed
 	 * by default. Return `true` to suppress the error, `false` to throw
-	 * it. Ignored when the `suppressErrors` option is enabled.
+	 * it.
 	 *
 	 * @default undefined
 	 */
@@ -175,7 +168,6 @@ export default class Settings {
 	public readonly onlyDirectories: boolean;
 	public readonly onlyFiles: boolean;
 	public readonly stats: boolean;
-	public readonly suppressErrors: boolean;
 	public readonly errorFilter: ((error: ErrnoException) => boolean) | undefined;
 	public readonly throwErrorOnBrokenSymbolicLink: boolean;
 	public readonly unique: boolean;
@@ -204,7 +196,6 @@ export default class Settings {
 		this.onlyDirectories = options.onlyDirectories ?? false;
 		this.onlyFiles = options.onlyFiles ?? true;
 		this.stats = options.stats ?? false;
-		this.suppressErrors = options.suppressErrors ?? false;
 		this.errorFilter = options.errorFilter ?? undefined;
 		this.throwErrorOnBrokenSymbolicLink = options.throwErrorOnBrokenSymbolicLink ?? false;
 		this.unique = options.unique ?? true;

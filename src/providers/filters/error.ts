@@ -10,10 +10,6 @@ export default class ErrorFilter {
 	}
 
 	#isNonFatalError(error: ErrnoException): boolean {
-		if (this.#settings.suppressErrors) {
-			return true;
-		}
-
 		if (this.#settings.errorFilter !== undefined) {
 			return this.#settings.errorFilter(error);
 		}

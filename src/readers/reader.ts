@@ -47,10 +47,6 @@ export abstract class Reader<T> {
 	}
 
 	protected _isFatalError(error: ErrnoException): boolean {
-		if (this.#settings.suppressErrors) {
-			return false;
-		}
-
 		if (this.#settings.errorFilter !== undefined) {
 			return !this.#settings.errorFilter(error);
 		}
