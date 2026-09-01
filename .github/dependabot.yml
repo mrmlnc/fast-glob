@@ -1,10 +1,8 @@
 version: 2
 updates:
-  - package-ecpsystem: "github-actions"
+  - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: "monthly"
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "monthly"
+      interval: weekly
+      time: "02:00"
+    open-pull-requests-limit: 10
