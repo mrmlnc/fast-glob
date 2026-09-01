@@ -13,4 +13,18 @@ describe('Utils → Errno', () => {
 			assert.ok(!util.isEnoentCodeError(tests.errno.getEperm()));
 		});
 	});
+
+	describe('.isEnotdirCodeError', () => {
+		it('should return true for ENOTDIR error', () => {
+			assert.ok(util.isEnotdirCodeError(tests.errno.getEnotdir()));
+		});
+
+		it('should return false for ENOENT error', () => {
+			assert.ok(!util.isEnotdirCodeError(tests.errno.getEnoent()));
+		});
+
+		it('should return false for EPERM error', () => {
+			assert.ok(!util.isEnotdirCodeError(tests.errno.getEperm()));
+		});
+	});
 });

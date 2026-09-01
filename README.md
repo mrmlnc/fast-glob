@@ -399,7 +399,7 @@ fg.globSync('*.json', { ignore: ['package-lock.json'] }); // ['package.json']
 * Type: `boolean`
 * Default: `false`
 
-By default this package suppress only `ENOENT` errors. Set to `true` to suppress any error.
+By default this package suppress only `ENOENT` and `ENOTDIR` errors. Set to `true` to suppress any error.
 
 > :book: Can be useful when the directory has entries with a special level of access.
 
