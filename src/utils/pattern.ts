@@ -18,6 +18,33 @@ const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
  */
 const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
 
+/**
+ * Prevent an unmatched quote in a path segment from quoting the glob syntax that follows it.
+ * Paired quotes and quotes already escaped by the caller keep their existing micromatch semantics.
+ */
+function escapeUnmatchedDoubleQuote(pattern: Pattern): Pattern {
+	let backslashes = 0;
+	let quoteCount = 0;
+	let lastQuoteIndex = -1;
+	let index = 0;
+
+	for (const character of pattern) {
+		if (character === '"' && backslashes % 2 === 0) {
+			quoteCount++;
+			lastQuoteIndex = index;
+		}
+
+		backslashes = character === ESCAPE_SYMBOL ? backslashes + 1 : 0;
+		index += character.length;
+	}
+
+	if (quoteCount % 2 === 0) {
+		return pattern;
+	}
+
+	return `${pattern.slice(0, lastQuoteIndex)}\\${pattern.slice(lastQuoteIndex)}`;
+}
+
 type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
@@ -199,7 +226,7 @@ export function getPatternParts(pattern: Pattern, options: MicromatchOptions): P
 }
 
 export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
-	return micromatch.makeRe(pattern, options);
+	return micromatch.makeRe(escapeUnmatchedDoubleQuote(pattern), options);
 }
 
 export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOptions): PatternRe[] {

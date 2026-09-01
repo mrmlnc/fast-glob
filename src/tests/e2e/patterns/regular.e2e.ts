@@ -39,6 +39,16 @@ runner.suite('Patterns Regular', {
 	],
 });
 
+runner.suite('Patterns Regular (literal double quote)', {
+	tests: [
+		{
+			pattern: 'fixtures-quote/"directory/*.md',
+			issue: 494,
+			expected: () => ['fixtures-quote/"directory/file.md'],
+		},
+	],
+});
+
 runner.suite('Patterns Regular (cwd)', {
 	tests: [
 		{ pattern: '*', options: { cwd: 'fixtures' } },
