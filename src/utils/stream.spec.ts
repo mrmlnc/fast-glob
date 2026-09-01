@@ -43,6 +43,19 @@ describe('Utils → Stream', () => {
 			});
 		});
 
+		it('should support asynchronous iteration', async () => {
+			const first = stream.Readable.from(['one']);
+			const second = stream.Readable.from(['two']);
+
+			const expected = ['one', 'two'];
+
+			const mergedStream: AsyncIterable<string> = util.merge([first, second]);
+
+			const actual = await Array.fromAsync(mergedStream);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should propagate first error into merged stream (first)', (done) => {
 			const first = new stream.Readable({
 				read() {
