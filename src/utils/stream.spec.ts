@@ -3,49 +3,110 @@ import * as stream from 'node:stream';
 import { describe, it } from 'mocha';
 import * as util from './stream.js';
 
+function concat<T>(fn: (data: T[]) => void): stream.Writable {
+	const data: T[] = [];
+
+	return new stream.Writable({
+		objectMode: true,
+		write(chunk: T, _encoding, callback): void {
+			data.push(chunk);
+
+			callback();
+		},
+		final(callback): void {
+			fn(data);
+
+			callback();
+		},
+	});
+}
+
 describe('Utils → Stream', () => {
 	describe('.merge', () => {
-		it('should merge two streams into one stream', () => {
-			const first = new stream.PassThrough();
-			const second = new stream.PassThrough();
+		it('should merge two streams into one stream', (done) => {
+			const first = stream.Readable.from(['one']);
+			const second = stream.Readable.from(['two']);
 
-			const expected = 3;
-
-			const mergedStream = util.merge([first, second]);
-
-			const actual = mergedStream.listenerCount('close');
-
-			assert.strictEqual(actual, expected);
-		});
-
-		it('should propagate errors into merged stream', (done) => {
-			const first = new stream.PassThrough();
-			const second = new stream.PassThrough();
-
-			const expected = [1, 2, 3];
+			const expected = ['one', 'two'];
 
 			const mergedStream = util.merge([first, second]);
 
-			const actual: number[] = [];
-
-			mergedStream.on('error', (error: number) => {
-				actual.push(error);
-			});
-
-			mergedStream.once('finish', () => {
-				assert.deepStrictEqual(actual, expected);
+			stream.pipeline([
+				mergedStream,
+				concat((actual: string[]) => {
+					assert.deepStrictEqual(actual, expected);
+				}),
+			], (error) => {
+				assert.ifError(error);
 
 				done();
 			});
-
-			first.emit('error', 1);
-			second.emit('error', 2);
-			mergedStream.emit('error', 3);
 		});
 
-		it('should propagate close event to source streams', (done) => {
-			const first = new stream.PassThrough();
-			const second = new stream.PassThrough();
+		it('should support asynchronous iteration', async () => {
+			const first = stream.Readable.from(['one']);
+			const second = stream.Readable.from(['two']);
+
+			const expected = ['one', 'two'];
+
+			const mergedStream: AsyncIterable<string> = util.merge([first, second]);
+
+			const actual = await Array.fromAsync(mergedStream);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should propagate first error into merged stream (first)', (done) => {
+			const first = new stream.Readable({
+				read() {
+					this.destroy(new Error('1'));
+				},
+			});
+			const second = stream.Readable.from([]);
+
+			const expected = '1';
+
+			const mergedStream = util.merge([first, second]);
+
+			stream.pipeline([
+				mergedStream,
+				concat(() => {
+					assert.fail('Should not reach the concat callback');
+				}),
+			], (error) => {
+				assert.strictEqual(error?.message, expected);
+
+				done();
+			});
+		});
+
+		it('should propagate first error into merged stream (second)', (done) => {
+			const first = stream.Readable.from([]);
+			const second = new stream.Readable({
+				read() {
+					this.destroy(new Error('2'));
+				},
+			});
+
+			const expected = '2';
+
+			const mergedStream = util.merge([first, second]);
+
+			stream.pipeline([
+				mergedStream,
+				concat(() => {
+					assert.fail('Should not reach the concat callback');
+				}),
+			], (error) => {
+				assert.strictEqual(error?.message, expected);
+
+				done();
+			});
+		});
+
+		it('should propagate destroy to source streams', (done) => {
+			const first = stream.Readable.from([]);
+			const second = stream.Readable.from([]);
 
 			const mergedStream = util.merge([first, second]);
 
@@ -53,20 +114,39 @@ describe('Utils → Stream', () => {
 
 			const actual: number[] = [];
 
+			let closeCount = 0;
+
 			first.once('close', () => {
+				closeCount++;
+
 				actual.push(1);
+
+				checkCloses();
 			});
 			second.once('close', () => {
+				closeCount++;
+
 				actual.push(2);
+
+				checkCloses();
+			});
+			mergedStream.once('close', () => {
+				closeCount++;
+
+				checkCloses();
 			});
 
-			mergedStream.once('finish', () => {
+			mergedStream.destroy();
+
+			function checkCloses(): void {
+				if (closeCount !== 3) {
+					return;
+				}
+
 				assert.deepStrictEqual(actual, expected);
 
 				done();
-			});
-
-			mergedStream.emit('close');
+			}
 		});
 	});
 });
