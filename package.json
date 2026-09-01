@@ -12,8 +12,10 @@
     "node": "^22.13.0 || >=24"
   },
   "type": "module",
-  "main": "out/index.js",
-  "typings": "out/index.d.ts",
+  "exports": {
+    "types": "./out/index.d.ts",
+    "default": "./out/index.js"
+  },
   "files": [
     "out",
     "!out/{benchmark,tests}",
@@ -39,7 +41,7 @@
     "eslint": "^10.7.0",
     "eslint-config-mrmlnc": "^6.1.0",
     "execa": "^10.0.0",
-    "fast-glob": "^3.3.3",
+    "fast-glob-v3": "npm:fast-glob@^3.3.3",
     "glob": "^13.0.6",
     "hereby": "^1.15.1",
     "mocha": "^11.7.6",
