@@ -85,6 +85,18 @@ describe('Readers → Reader', () => {
 
 			assert.ok(actual.stats);
 		});
+
+		it('should return created entry with basename as `name` for a pattern with a directory part', () => {
+			const reader = getReader();
+			const pattern = './directory/config.json';
+			const stats = new Stats({ mode: StatsMode.File });
+
+			const actual = reader.makeEntry(stats, pattern);
+
+			assert.strictEqual(actual.name, 'config.json');
+			assert.strictEqual(actual.path, pattern);
+			assert.strictEqual(actual.dirent.name, 'config.json');
+		});
 	});
 
 	describe('.isFatalError', () => {

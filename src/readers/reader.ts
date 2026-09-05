@@ -33,10 +33,11 @@ export abstract class Reader<T> {
 	}
 
 	protected _makeEntry(stats: FsStats, pattern: Pattern): Entry {
+		const name = path.basename(pattern);
 		const entry: Entry = {
-			name: pattern,
+			name,
 			path: pattern,
-			dirent: utils.fs.createDirentFromStats(pattern, stats),
+			dirent: utils.fs.createDirentFromStats(name, stats),
 		};
 
 		if (this.#settings.stats) {
