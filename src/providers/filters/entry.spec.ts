@@ -279,6 +279,24 @@ describe('Providers → Filters → Entry', () => {
 					options: { dot: false },
 				});
 			});
+
+			it('should reject a file entry whose path already has a trailing slash', () => {
+				const entry = tests.entry.builder().path('root/file.txt/').file().build();
+
+				reject(entry, {
+					positive: ['root/file.txt/'],
+					options: { onlyFiles: false },
+				});
+			});
+
+			it('should accept a directory entry whose path already has a trailing slash', () => {
+				const entry = tests.entry.builder().path('root/directory/').directory().build();
+
+				accept(entry, {
+					positive: ['root/directory/'],
+					options: { onlyFiles: false },
+				});
+			});
 		});
 	});
 

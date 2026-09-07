@@ -38,6 +38,11 @@ export default class EntryFilter {
 
 		const isDirectory = entry.dirent.isDirectory();
 
+		// A trailing slash requires a directory, even for statically resolved paths.
+		if (!isDirectory && filepath.endsWith('/')) {
+			return false;
+		}
+
 		if (this.#onlyFileFilter(isDirectory) || this.#onlyDirectoryFilter(isDirectory)) {
 			return false;
 		}
