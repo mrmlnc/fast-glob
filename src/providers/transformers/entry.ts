@@ -21,7 +21,7 @@ export default class EntryTransformer {
 			filepath = utils.string.flatHeavilyConcatenatedString(filepath);
 		}
 
-		if (this.#settings.markDirectories && entry.dirent.isDirectory()) {
+		if (this.#settings.markDirectories && entry.dirent.isDirectory() && !filepath.endsWith(this.#pathSeparatorSymbol)) {
 			filepath += this.#pathSeparatorSymbol;
 		}
 
