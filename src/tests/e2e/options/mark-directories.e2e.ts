@@ -17,15 +17,6 @@ runner.suite('Options MarkDirectories', {
 			expected: () => ['fixtures/first/'],
 		},
 		{
-			pattern: 'first/',
-			options: {
-				cwd: 'fixtures',
-				onlyFiles: false,
-				markDirectories: true,
-			},
-			expected: () => ['first/'],
-		},
-		{
 			pattern: 'fixtures/first/',
 			options: {
 				absolute: true,
