@@ -673,6 +673,8 @@ A pattern is considered dynamic if it contains the following characters (`â€¦` â
 
 Always use forward-slashes in glob expressions (patterns and [`ignore`](#ignore) option). Use backslashes for escaping characters. With the [`cwd`](#cwd) option use a convenient format.
 
+Rooted absolute negative patterns without a drive letter (for example, `!/project/*.js`) use the drive or UNC share of the resolved [`cwd`](#cwd). This also applies to [`ignore`](#ignore); patterns with an explicit drive or UNC root keep their own root.
+
 **Bad**
 
 ```ts

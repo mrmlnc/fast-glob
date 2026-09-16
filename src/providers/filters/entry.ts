@@ -1,3 +1,4 @@
+import * as path from 'node:path';
 import * as utils from '../../utils/index.js';
 import type Settings from '../../settings.js';
 import type {
@@ -109,15 +110,34 @@ export default class EntryFilter {
 		return isMatched;
 	}
 
+	#getAbsoluteNegativePatterns(patterns: Pattern[]): Pattern[] {
+		if (path.sep !== '\\' || patterns.length === 0) {
+			return patterns;
+		}
+
+		// Resolve only the root to preserve glob syntax and escaping in the rest of the pattern.
+		const { root } = path.parse(utils.path.makeAbsolute(this.#settings.cwd, '.'));
+		const rootPattern = utils.path.convertPathToPattern(utils.path.appendTrailingSeparatorToDeviceRoot(root));
+
+		return patterns.map((pattern) => {
+			if (pattern.startsWith('/') && !pattern.startsWith('//')) {
+				return rootPattern + pattern.slice(1);
+			}
+
+			return pattern;
+		});
+	}
+
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
+		const absoluteNegativePatterns = this.#getAbsoluteNegativePatterns(absoluteNegative);
 
 		const patterns: PatternsRegexSet = {
 			positive: {
 				all: utils.pattern.convertPatternsToRe(positive, this.#micromatchOptions),
 			},
 			negative: {
-				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#micromatchOptions, dot: true }),
+				absolute: utils.pattern.convertPatternsToRe(absoluteNegativePatterns, { ...this.#micromatchOptions, dot: true }),
 				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#micromatchOptions, dot: true }),
 			},
 		};
