@@ -222,6 +222,115 @@ describe('Providers → Filters → Entry', () => {
 			});
 		});
 
+		describe('Rooted negative patterns', () => {
+			const { root } = path.parse(process.cwd());
+
+			it('should use the cwd root rather than its directory', () => {
+				const entry = tests.entry.builder().path('/root/file.txt').file().build();
+
+				reject(entry, {
+					positive: ['/root/file.txt'],
+					negative: ['/root/file.txt'],
+					options: { cwd: path.join(root, 'workspace'), absolute: true },
+				});
+			});
+
+			it('should use the cwd drive on Windows', () => {
+				const entry = tests.entry.builder().path('X:/root/file.txt').file().build();
+				const isActual = isAccepted(entry, {
+					positive: ['**/*'],
+					negative: ['/root/file.txt'],
+					options: { cwd: 'X:/workspace', absolute: true },
+				});
+
+				assert.strictEqual(isActual, !tests.platform.isWindows());
+			});
+
+			it('should not apply a rooted negative pattern to a different drive', () => {
+				const entry = tests.entry.builder().path('Y:/root/file.txt').file().build();
+
+				accept(entry, {
+					positive: ['**/*'],
+					negative: ['/root/file.txt'],
+					options: { cwd: 'X:/workspace', absolute: true },
+				});
+			});
+
+			it('should preserve explicit drives independently of cwd', () => {
+				const entry = tests.entry.builder().path('Y:/root/file.txt').file().build();
+				const options = { cwd: 'X:/workspace', absolute: true };
+
+				reject(entry, { positive: ['**/*'], negative: ['Y:/root/file.txt'], options });
+				accept(entry, { positive: ['**/*'], negative: ['X:/root/file.txt'], options });
+			});
+
+			for (const share of ['share', 'share[1]', 'share{one,two}']) {
+				it(`should use the literal UNC share "${share}" of cwd on Windows`, () => {
+					const isActual = isAccepted(FILE_ENTRY, {
+						positive: ['**/*'],
+						negative: ['/workspace/root/file.txt'],
+						options: { cwd: `//server/${share}/workspace`, absolute: true },
+					});
+
+					assert.strictEqual(isActual, !tests.platform.isWindows());
+				});
+			}
+
+			it('should not interpret glob characters in the cwd share as a pattern', () => {
+				const entry = tests.entry.builder().path('//server/share1/workspace/root/file.txt').file().build();
+
+				accept(entry, {
+					positive: ['**/*'],
+					negative: ['/workspace/root/file.txt'],
+					options: { cwd: '//server/share[1]/workspace', absolute: true },
+				});
+			});
+
+			it('should preserve explicit UNC roots on Windows', () => {
+				const options = { cwd: '//server/share/workspace', absolute: true };
+				const isActual = isAccepted(FILE_ENTRY, {
+					positive: ['**/*'],
+					negative: ['//server/share/workspace/root/file.txt'],
+					options,
+				});
+
+				assert.strictEqual(isActual, !tests.platform.isWindows());
+				accept(FILE_ENTRY, {
+					positive: ['**/*'],
+					negative: ['//server/other/workspace/root/file.txt'],
+					options,
+				});
+			});
+
+			it('should preserve a device drive root on Windows', () => {
+				const isActual = isAccepted(FILE_ENTRY, {
+					positive: ['**/*'],
+					negative: ['/root/file.txt'],
+					options: { cwd: '//?/X:/', absolute: true },
+				});
+
+				assert.strictEqual(isActual, !tests.platform.isWindows());
+			});
+
+			it('should preserve escaped characters in the pattern', () => {
+				const entry = tests.entry.builder().path('root/[file].txt').file().build();
+
+				reject(entry, {
+					positive: ['**/*'],
+					negative: [String.raw`/root/\[file\].txt`],
+					options: { cwd: root, absolute: true },
+				});
+			});
+
+			it('should not normalize parent segments in the pattern', () => {
+				accept(FILE_ENTRY, {
+					positive: ['**/*'],
+					negative: ['/root/missing/../file.txt'],
+					options: { cwd: root, absolute: true },
+				});
+			});
+		});
+
 		describe('Pattern', () => {
 			it('should reject when an entry match to the negative pattern', () => {
 				reject(FILE_ENTRY, {
