@@ -482,6 +482,22 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
+	it('should match a literal double quote at the beginning of a path segment', () => {
+		const actual = util.makeRe('root/"directory/*.js', {});
+
+		assert.ok(actual.test('root/"directory/index.js'));
+	});
+
+	it('should preserve paired and already escaped double quote behavior', () => {
+		const paired = util.makeRe('root/"directory"/*.js', {});
+		const pairedAcrossSegments = util.makeRe('"root/directory"/*.js', {});
+		const escaped = util.makeRe(String.raw`root/\"directory/*.js`, {});
+
+		assert.ok(paired.test('root/directory/index.js'));
+		assert.ok(pairedAcrossSegments.test('root/directory/index.js'));
+		assert.ok(escaped.test('root/"directory/index.js'));
+	});
+
 	describe('.convertPatternsToRe', () => {
 		it('should return regexps for provided patterns', () => {
 			const [actual] = util.convertPatternsToRe(['*.js'], {});
