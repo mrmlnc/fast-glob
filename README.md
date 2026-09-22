@@ -257,7 +257,7 @@ See [Options](#options-3) section.
 Returns the path with escaped special characters depending on the platform.
 
 * Posix:
-  * `*?|(){}[]`;
+  * `*?|(){}[]"`;
   * `!` at the beginning of line;
   * `@+!` before the opening parenthesis;
   * `\\` before non-special characters;

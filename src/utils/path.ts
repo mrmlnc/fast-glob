@@ -6,10 +6,10 @@ const IS_WINDOWS_PLATFORM = os.platform() === 'win32';
 const LEADING_DOT_SEGMENT_CHARACTERS_COUNT = 2; // ./ or .\\
 /**
  * All non-escaped special characters.
- * Posix: ()*?[]{|}, !+@ before (, ! at the beginning, \\ before non-special characters.
+ * Posix: ()*?[]{|}", !+@ before (, ! at the beginning, \\ before non-special characters.
  * Windows: (){}[], !+@ before (, ! at the beginning.
  */
-const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>[()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!()*+?@[\]{|}]))/g;
+const POSIX_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>["()*?[\]{|}]|^!|[!+@](?=\()|\\(?![!"()*+?@[\]{|}]))/g;
 const WINDOWS_UNESCAPED_GLOB_SYMBOLS_RE = /\\?(?<symbols>[()[\]{}]|^!|[!+@](?=\())/g;
 /**
  * The device path (\\.\ or \\?\).

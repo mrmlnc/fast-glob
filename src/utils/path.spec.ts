@@ -66,6 +66,16 @@ describe('Utils → Path', () => {
 		});
 	});
 
+	describe('POSIX double quotes', () => {
+		it('should escape double quotes without double-escaping existing escapes', () => {
+			assert.strictEqual(util.escapePosixPath('"path'), String.raw`\"path`);
+			assert.strictEqual(util.escapePosixPath('pa"th'), String.raw`pa\"th`);
+			assert.strictEqual(util.escapePosixPath('"path"'), String.raw`\"path\"`);
+			assert.strictEqual(util.escapePosixPath(String.raw`\"path`), String.raw`\"path`);
+			assert.strictEqual(util.convertPosixPathToPattern('"path'), String.raw`\"path`);
+		});
+	});
+
 	describe('.escapeWindowsPattern', () => {
 		it('should return pattern with escaped glob symbols', () => {
 			assert.strictEqual(util.escapeWindowsPath('!abc'), String.raw`\!abc`);
