@@ -24,6 +24,10 @@ const DOS_DEVICE_PATH_RE = /^\\\\(?=[.?])/;
  */
 const DOS_DEVICE_DRIVE_ROOT_RE = /^\\\\[.?]\\[a-z]:$/i;
 /**
+ * A drive letter without the trailing separator, for example `C:`.
+ */
+const DRIVE_LETTER_RE = /^[a-z]:$/i;
+/**
  * All backslashes except those escaping special characters.
  * Windows: !()+@{}
  * https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
@@ -40,6 +44,18 @@ export function appendTrailingSeparatorToDeviceRoot(filepath: string): string {
 	}
 
 	return filepath;
+}
+
+/**
+ * Windows treats a drive letter without the trailing separator (`C:`) as the current directory on that drive,
+ * so the base directory of a pattern starting at the root of a drive (`C:/*`) must keep its separator.
+ */
+export function appendTrailingSeparatorToDriveRoot(base: string, pattern: Pattern): string {
+	if (IS_WINDOWS_PLATFORM && DRIVE_LETTER_RE.test(base) && pattern.startsWith(`${base}/`)) {
+		return `${base}/`;
+	}
+
+	return base;
 }
 
 export function removeLeadingDotSegment(entry: string): string {

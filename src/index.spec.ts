@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as path from 'node:path';
 import { describe, it } from 'mocha';
 import * as tests from './tests/index.js';
 import type { EntryItem, ErrnoException } from './types/index.js';
@@ -51,6 +52,22 @@ describe('Package', () => {
 			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should read the root of a drive rather than the current directory', () => {
+			const directories: string[] = [];
+			const readdirSync = (directory: string): never[] => {
+				directories.push(directory);
+
+				return [];
+			};
+
+			fg.globSync('C:/*', { fs: { readdirSync } });
+
+			const actual = directories.map((directory) => path.resolve(directory));
+			const expected = tests.platform.isWindows() ? 'C:\\' : path.resolve('C:');
+
+			assert.deepStrictEqual(actual, [expected]);
 		});
 	});
 

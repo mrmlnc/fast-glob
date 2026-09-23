@@ -120,6 +120,7 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 		 * so escaping leads to referencing non-existent paths.
 		 */
 		base = utils.path.removeBackslashes(base);
+		base = utils.path.appendTrailingSeparatorToDriveRoot(base, pattern);
 
 		if (Object.hasOwn(group, base)) {
 			group[base].push(pattern);
