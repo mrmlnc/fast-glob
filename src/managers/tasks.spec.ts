@@ -191,6 +191,19 @@ describe('Managers → Task', () => {
 	});
 
 	describe('.groupPatternsByBaseDirectory', () => {
+		it('should group patterns under prototype property names', () => {
+			const expected: PatternsGroup = {
+				['__proto__']: ['__proto__/*.md', '__proto__/*.txt'],
+				constructor: ['constructor/*'],
+				toString: ['toString/*'],
+				a: ['a/*'],
+			};
+
+			const actual = manager.groupPatternsByBaseDirectory(['__proto__/*.md', 'constructor/*', '__proto__/*.txt', 'toString/*', 'a/*']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should return empty object', () => {
 			const expected: PatternsGroup = {};
 
