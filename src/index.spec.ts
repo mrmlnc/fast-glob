@@ -309,6 +309,14 @@ describe('Package', () => {
 
 			assert.strictEqual(actual, expected);
 		});
+
+		it('should convert paths containing an at-sign for the current platform', () => {
+			const expected = tests.platform.isWindows() ? 'node_modules/@vitest' : String.raw`node_modules\@vitest`;
+
+			const actual = fg.convertPathToPattern(String.raw`node_modules\@vitest`);
+
+			assert.strictEqual(actual, expected);
+		});
 	});
 
 	describe('posix', () => {
@@ -330,6 +338,10 @@ describe('Package', () => {
 
 				assert.strictEqual(actual, expected);
 			});
+
+			it('should preserve escaped at-signs', () => {
+				assert.strictEqual(fg.posix.convertPathToPattern(String.raw`node_modules\@vitest`), String.raw`node_modules\@vitest`);
+			});
 		});
 	});
 
@@ -349,6 +361,14 @@ describe('Package', () => {
 				const expected = String.raw`C:/Program Files \(x86\)/**/*`;
 
 				const actual = fg.win32.convertPathToPattern(String.raw`C:\Program Files (x86)\**\*`);
+
+				assert.strictEqual(actual, expected);
+			});
+
+			it('should convert a path separator before an at-sign', () => {
+				const expected = 'node_modules/@vitest/coverage-v8/dist';
+
+				const actual = fg.win32.convertPathToPattern(String.raw`node_modules\@vitest\coverage-v8\dist`);
 
 				assert.strictEqual(actual, expected);
 			});
