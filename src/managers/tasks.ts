@@ -110,7 +110,7 @@ export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Patte
 }
 
 export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup {
-	const group: PatternsGroup = {};
+	const group = new Map<string, Pattern[]>();
 
 	for (const pattern of patterns) {
 		let base = utils.pattern.getBaseDirectory(pattern);
@@ -121,14 +121,16 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 		 */
 		base = utils.path.removeBackslashes(base);
 
-		if (Object.hasOwn(group, base)) {
-			group[base].push(pattern);
+		const existing = group.get(base);
+
+		if (existing) {
+			existing.push(pattern);
 		} else {
-			group[base] = [pattern];
+			group.set(base, [pattern]);
 		}
 	}
 
-	return group;
+	return Object.fromEntries(group);
 }
 
 export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], isDynamic: boolean): Task[] {
