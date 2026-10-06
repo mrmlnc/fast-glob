@@ -5,7 +5,7 @@ import { describe, it } from 'mocha';
 import Settings, { type Options } from '../settings.js';
 import * as tests from '../tests/index.js';
 import type { Task } from '../managers/tasks.js';
-import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types/index.js';
+import type { Dictionary, MatcherOptions, ReaderOptions } from '../types/index.js';
 import { Provider } from './provider.js';
 
 class TestProvider extends Provider<Dictionary[]> {
@@ -21,8 +21,8 @@ class TestProvider extends Provider<Dictionary[]> {
 		return this._getReaderOptions(task);
 	}
 
-	public getMicromatchOptions(): MicromatchOptions {
-		return this._getMicromatchOptions();
+	public getMatcherOptions(): MatcherOptions {
+		return this._getMatcherOptions();
 	}
 }
 
@@ -95,11 +95,11 @@ describe('Providers → Provider', () => {
 		});
 	});
 
-	describe('.getMicromatchOptions', () => {
-		it('should return options for micromatch', () => {
+	describe('.getMatcherOptions', () => {
+		it('should return options for matcher', () => {
 			const provider = getProvider();
 
-			const expected: MicromatchOptions = {
+			const expected: MatcherOptions = {
 				dot: false,
 				matchBase: false,
 				nobrace: false,
@@ -110,7 +110,7 @@ describe('Providers → Provider', () => {
 				strictSlashes: false,
 			};
 
-			const actual = provider.getMicromatchOptions();
+			const actual = provider.getMatcherOptions();
 
 			assert.deepStrictEqual(actual, expected);
 		});

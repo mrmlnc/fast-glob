@@ -2,7 +2,7 @@ import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
 import * as tests from '../../tests/index.js';
 import Settings from '../../settings.js';
-import type { Pattern, MicromatchOptions } from '../../types/index.js';
+import type { Pattern, MatcherOptions } from '../../types/index.js';
 import Matcher, { type PatternInfo } from './matcher.js';
 
 class TestMatcher extends Matcher {
@@ -11,7 +11,7 @@ class TestMatcher extends Matcher {
 	}
 }
 
-function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): TestMatcher {
+function getMatcher(patterns: Pattern[], options: MatcherOptions = {}): TestMatcher {
 	return new TestMatcher(patterns, new Settings(), options);
 }
 

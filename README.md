@@ -79,7 +79,7 @@ This package provides methods for traversing the file system and returning pathn
 
 There is more than one form of syntax: basic and advanced. Below is a brief overview of the supported features. Also pay attention to our [FAQ](#faq).
 
-> :book: This package uses [`micromatch`][micromatch] as a library for pattern matching.
+> :book: This package uses [`picomatch`][picomatch] for pattern matching and [`braces`][braces] for brace expansion.
 
 ### Basic syntax
 
@@ -98,14 +98,14 @@ Some examples:
 
 ### Advanced syntax
 
-* [Escapes characters][micromatch_backslashes] (`\\`) — matching special characters (`$^*+?()[]`) as literals.
+* [Escapes characters][picomatch_matching_special_characters_as_literals] (`\\`) — matching special characters (`$^*+?()[]`) as literals.
 * [POSIX character classes][picomatch_posix_brackets] (`[[:digit:]]`).
-* [Extended globs][micromatch_extglobs] (`?(pattern-list)`).
-* [Bash style brace expansions][micromatch_braces] (`{}`).
-* [Regexp character classes][micromatch_regex_character_classes] (`[1-5]`).
+* [Extended globs][picomatch_extglobs] (`?(pattern-list)`).
+* [Bash style brace expansions][braces] (`{}`).
+* [Regexp character classes][picomatch_basic_globbing] (`[1-5]`).
 * [Regex groups][regular_expressions_brackets] (`(a|b)`).
 
-> :book: A few additional words about the [advanced matching behavior][micromatch_extended_globbing].
+> :book: A few additional words about the [advanced matching behavior][picomatch_advanced_globbing].
 
 Some examples:
 
@@ -542,7 +542,7 @@ If `true` and similar entries are found, the result is the first found.
 
 Enables Bash-like brace expansion.
 
-> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or more [detailed description][micromatch_braces].
+> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or more [detailed description][braces].
 
 ```js
 dir/
@@ -601,7 +601,7 @@ fg.globSync('*', { dot: true });  // ['.editorconfig', 'package.json']
 
 Enables Bash-like `extglob` functionality.
 
-> :1234: [Syntax description][micromatch_extglobs].
+> :1234: [Syntax description][picomatch_extglobs].
 
 ```js
 dir/
@@ -693,7 +693,7 @@ Always use forward-slashes in glob expressions (patterns and [`ignore`](#ignore)
 
 > :book: Use the [`.convertPathToPattern`](#convertpathtopatternpath) package to convert Windows-style path to a Unix-style path.
 
-Read more about [matching with backslashes][micromatch_backslashes].
+Read more about [matching with backslashes][picomatch_matching_special_characters_as_literals].
 
 ## Why are parentheses match wrong?
 
@@ -787,24 +787,23 @@ See the [Releases section of our GitHub project][github_releases] for changelog 
 This software is released under the terms of the MIT license.
 
 [bash_hackers_syntax_expansion_brace]: https://wiki.bash-hackers.org/syntax/expansion/brace
+[braces]: https://github.com/micromatch/braces
 [github_releases]: https://github.com/mrmlnc/fast-glob/releases
 [glob_definition]: https://en.wikipedia.org/wiki/Glob_(programming)
 [glob_linux_man]: http://man7.org/linux/man-pages/man3/glob.3.html
-[micromatch_backslashes]: https://github.com/micromatch/micromatch#backslashes
-[micromatch_braces]: https://github.com/micromatch/braces
-[micromatch_extended_globbing]: https://github.com/micromatch/micromatch#extended-globbing
-[micromatch_extglobs]: https://github.com/micromatch/micromatch#extglobs
-[micromatch_regex_character_classes]: https://github.com/micromatch/micromatch#regex-character-classes
-[micromatch]: https://github.com/micromatch/micromatch
 [node_js_fs_class_fs_dirent]: https://nodejs.org/api/fs.html#fs_class_fs_dirent
 [node_js_fs_class_fs_stats]: https://nodejs.org/api/fs.html#fs_class_fs_stats
 [node_js_stream_readable_streams]: https://nodejs.org/api/stream.html#stream_readable_streams
 [node_js]: https://nodejs.org/en
 [npm_normalize_path]: https://www.npmjs.com/package/normalize-path
 [npm_unixify]: https://www.npmjs.com/package/unixify
+[picomatch_advanced_globbing]: https://github.com/micromatch/picomatch#advanced-globbing
+[picomatch_basic_globbing]: https://github.com/micromatch/picomatch#basic-globbing
+[picomatch_extglobs]: https://github.com/micromatch/picomatch#extglobs
 [picomatch_matching_behavior]: https://github.com/micromatch/picomatch#matching-behavior-vs-bash
 [picomatch_matching_special_characters_as_literals]: https://github.com/micromatch/picomatch#matching-special-characters-as-literals
 [picomatch_posix_brackets]: https://github.com/micromatch/picomatch#posix-brackets
+[picomatch]: https://github.com/micromatch/picomatch
 [regular_expressions_brackets]: https://www.regular-expressions.info/brackets.html
 [unc_path]: https://learn.microsoft.com/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
 [wikipedia_case_sensitivity]: https://en.wikipedia.org/wiki/Case_sensitivity

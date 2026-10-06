@@ -1,5 +1,5 @@
 import * as utils from '../../utils/index.js';
-import type { Pattern, MicromatchOptions } from '../../types/index.js';
+import type { Pattern, MatcherOptions } from '../../types/index.js';
 import type { PatternSegment, PatternInfo } from '../../providers/matchers/matcher.js';
 
 class PatternSegmentBuilder {
@@ -20,7 +20,7 @@ class PatternSegmentBuilder {
 		return this;
 	}
 
-	public build(options: MicromatchOptions = {}): PatternSegment {
+	public build(options: MatcherOptions = {}): PatternSegment {
 		if (!this.#segment.dynamic) {
 			return this.#segment;
 		}

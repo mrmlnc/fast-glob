@@ -1,7 +1,9 @@
 import * as path from 'node:path';
+import braces from 'braces';
 import globParent from 'glob-parent';
-import micromatch from 'micromatch';
-import type { MicromatchOptions, Pattern, PatternRe } from '../types/index.js';
+import picomatch from 'picomatch';
+import type { MatcherOptions, Pattern, PatternRe } from '../types/index.js';
+import { IS_WINDOWS_PLATFORM } from './path.js';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
@@ -158,51 +160,56 @@ export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[]
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
-	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
+	const openingBraceIndex = pattern.indexOf('{');
+
+	/**
+	 * Avoid parsing patterns without a brace pair, which can change quotes and escaping.
+	 */
+	if (openingBraceIndex === -1 || !pattern.includes('}', openingBraceIndex)) {
+		return [pattern];
+	}
+
+	const patterns = braces(pattern, {
+		expand: true,
+		nodupes: true,
+		// @ts-expect-error The noempty option needs to be added to @types/braces.
+		noempty: true,
+		keepEscaping: true,
+	});
 
 	/**
 	 * Sort the patterns by length so that the same depth patterns are processed side by side.
 	 * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
 	 */
-	patterns.sort((a, b) => a.length - b.length);
-
-	/**
-	 * Micromatch can return an empty string in the case of patterns like `{a,}`.
-	 */
-	return patterns.filter((it) => it !== '');
+	return patterns.toSorted((a, b) => a.length - b.length);
 }
 
-export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
-	let { parts } = micromatch.scan(pattern, {
-		...options,
-		parts: true,
-	});
+export function getPatternParts(pattern: Pattern, options: MatcherOptions): Pattern[] {
+	const { parts = [] } = picomatch.scan(pattern, { ...options, parts: true });
 
 	/**
-	 * The scan method returns an empty array in some cases.
-	 * See micromatch/picomatch#58 for more details.
+	 * A trailing slash marks a directory and must not add another level of traversal.
 	 */
-	if (parts.length === 0) {
-		parts = [pattern];
+	if (parts.at(-1) === '') {
+		parts.pop();
 	}
 
 	/**
-	 * The scan method does not return an empty part for the pattern with a forward slash.
-	 * This is another part of micromatch/picomatch#58.
+	 * Preserve the original pattern when no parts remain, for example, for an empty string or `./`.
 	 */
-	if (parts[0].startsWith('/')) {
-		parts[0] = parts[0].slice(1);
-		parts.unshift('');
+	if (parts.length === 0) {
+		return [pattern];
 	}
 
 	return parts;
 }
 
-export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
-	return micromatch.makeRe(pattern, options);
+export function makeRe(pattern: Pattern, options: MatcherOptions): PatternRe {
+	// The picomatch does not detect the platform automatically.
+	return picomatch.makeRe(pattern, { ...options, windows: IS_WINDOWS_PLATFORM });
 }
 
-export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOptions): PatternRe[] {
+export function convertPatternsToRe(patterns: Pattern[], options: MatcherOptions): PatternRe[] {
 	return patterns.map((pattern) => makeRe(pattern, options));
 }
 

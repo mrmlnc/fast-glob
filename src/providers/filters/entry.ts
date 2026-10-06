@@ -1,7 +1,7 @@
 import * as utils from '../../utils/index.js';
 import type Settings from '../../settings.js';
 import type {
-	MicromatchOptions,
+	MatcherOptions,
 	Entry,
 	EntryFilterFunction,
 	Pattern,
@@ -20,13 +20,13 @@ type PatternsRegexSet = {
 
 export default class EntryFilter {
 	readonly #settings: Settings;
-	readonly #micromatchOptions: MicromatchOptions;
+	readonly #matcherOptions: MatcherOptions;
 
 	public readonly index = new Map<string, undefined>();
 
-	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
+	constructor(settings: Settings, matcherOptions: MatcherOptions) {
 		this.#settings = settings;
-		this.#micromatchOptions = micromatchOptions;
+		this.#matcherOptions = matcherOptions;
 	}
 
 	#filter(entry: Entry, pattens: PatternsRegexSet): boolean {
@@ -114,11 +114,11 @@ export default class EntryFilter {
 
 		const patterns: PatternsRegexSet = {
 			positive: {
-				all: utils.pattern.convertPatternsToRe(positive, this.#micromatchOptions),
+				all: utils.pattern.convertPatternsToRe(positive, this.#matcherOptions),
 			},
 			negative: {
-				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#micromatchOptions, dot: true }),
-				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#micromatchOptions, dot: true }),
+				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#matcherOptions, dot: true }),
+				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#matcherOptions, dot: true }),
 			},
 		};
 

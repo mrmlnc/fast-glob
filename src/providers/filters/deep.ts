@@ -1,7 +1,7 @@
 import * as utils from '../../utils/index.js';
 import PartialMatcher from '../matchers/partial.js';
 import type {
-	MicromatchOptions,
+	MatcherOptions,
 	Entry,
 	EntryFilterFunction,
 	Pattern,
@@ -11,21 +11,21 @@ import type Settings from '../../settings.js';
 
 export default class DeepFilter {
 	readonly #settings: Settings;
-	readonly #micromatchOptions: MicromatchOptions;
+	readonly #matcherOptions: MatcherOptions;
 
-	constructor(settings: Settings, micromatchOptions: MicromatchOptions) {
+	constructor(settings: Settings, matcherOptions: MatcherOptions) {
 		this.#settings = settings;
-		this.#micromatchOptions = micromatchOptions;
+		this.#matcherOptions = matcherOptions;
 	}
 
 	#getMatcher(patterns: Pattern[]): PartialMatcher {
-		return new PartialMatcher(patterns, this.#settings, this.#micromatchOptions);
+		return new PartialMatcher(patterns, this.#settings, this.#matcherOptions);
 	}
 
 	#getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
 		const affectDepthOfReadingPatterns = patterns.filter((pattern) => utils.pattern.isAffectDepthOfReadingPattern(pattern));
 
-		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this.#micromatchOptions);
+		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this.#matcherOptions);
 	}
 
 	#filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
