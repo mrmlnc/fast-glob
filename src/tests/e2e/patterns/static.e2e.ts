@@ -15,6 +15,60 @@ runner.suite('Patterns Static (cwd)', {
 	],
 });
 
+runner.suite('Patterns Static (trailing slash)', {
+	tests: [
+		{
+			pattern: 'fixtures/file.md/',
+			issue: 458,
+			expected: () => [],
+		},
+		{
+			pattern: 'fixtures/file.md/',
+			options: { onlyFiles: false },
+			issue: 458,
+			expected: () => [],
+		},
+		{
+			pattern: 'file.md/',
+			options: { cwd: 'fixtures', onlyFiles: false },
+			expected: () => [],
+		},
+		{
+			pattern: 'fixtures/*.md/',
+			options: { onlyFiles: false },
+			expected: () => [],
+		},
+		{
+			pattern: 'fixtures/first/',
+			options: { onlyFiles: false },
+			expected: () => ['fixtures/first/'],
+		},
+		{
+			pattern: ['fixtures/file.md/', 'fixtures/file.md'],
+			expected: () => ['fixtures/file.md'],
+		},
+		{
+			pattern: ['fixtures/file.md', 'fixtures/file.md/'],
+			options: { unique: false },
+			expected: () => ['fixtures/file.md'],
+		},
+		{
+			pattern: ['fixtures/file.md/', 'fixtures/first/'],
+			options: { onlyFiles: false },
+			expected: () => ['fixtures/first/'],
+		},
+		{
+			pattern: ['fixtures/file.md', '!fixtures/file.md/'],
+			expected: () => ['fixtures/file.md'],
+		},
+		{
+			pattern: 'fixtures/first/',
+			options: { onlyFiles: false, ignore: ['fixtures/first/'] },
+			expected: () => [],
+		},
+	],
+});
+
 runner.suite('Patterns Static (ignore)', {
 	tests: [
 		// Files
