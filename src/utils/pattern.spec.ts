@@ -1,5 +1,6 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
+import * as tests from '../tests/index.js';
 import type { Pattern } from '../types/index.js';
 import * as util from './pattern.js';
 
@@ -407,6 +408,28 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.expandBraceExpansion', () => {
+		it('should preserve patterns without a brace pair', () => {
+			const patterns = ['a/"b"', 'a/\'b\'', 'a/`b`', 'a]', 'a/"{b"', 'a/"b}"', 'a/"}b{"'];
+
+			for (const pattern of patterns) {
+				assert.deepStrictEqual(util.expandBraceExpansion(pattern), [pattern]);
+			}
+		});
+
+		it('should process quotes when a literal brace pair is present', () => {
+			const actual = util.expandBraceExpansion('a/"{b}"');
+
+			assert.deepStrictEqual(actual, ['a/{b}']);
+		});
+
+		it('should expand numeric ranges', () => {
+			const expected = ['a/01', 'a/02', 'a/03'];
+
+			const actual = util.expandBraceExpansion('a/{01..03}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should return an array of expanded patterns with brace expansion without dupes', () => {
 			const expected = ['a/b', 'a/c', 'a/c/d'];
 
@@ -465,6 +488,16 @@ describe('Utils → Pattern', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
+		it('should remove only the trailing empty part', () => {
+			assert.deepStrictEqual(util.getPatternParts('*/', {}), ['*']);
+			assert.deepStrictEqual(util.getPatternParts('/lib/*/', {}), ['', 'lib', '*']);
+			assert.deepStrictEqual(util.getPatternParts('a//b/', {}), ['a', '', 'b']);
+		});
+
+		it('should preserve a prefix-only pattern', () => {
+			assert.deepStrictEqual(util.getPatternParts('./', {}), ['./']);
+		});
+
 		it('should return an array of pattern parts', () => {
 			const expected: Pattern[] = ['a', '*', 'b', '**', 'c'];
 
@@ -479,6 +512,18 @@ describe('Utils → Pattern', () => {
 			const actual = util.makeRe('*.js', {});
 
 			assert.ok(actual instanceof RegExp);
+		});
+
+		it('should match absolute paths with forward slashes', () => {
+			const actual = util.makeRe('C:/root/*.txt', {});
+
+			assert.ok(actual.test('C:/root/file.txt'));
+		});
+
+		it('should treat backslashes as path separators only on Windows', () => {
+			const actual = util.makeRe('C:/root/*.txt', {});
+
+			assert.strictEqual(actual.test(String.raw`C:\root\file.txt`), tests.platform.isWindows());
 		});
 	});
 

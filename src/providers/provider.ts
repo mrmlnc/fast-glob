@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 import type Settings from '../settings.js';
 import * as utils from '../utils/index.js';
-import type { MicromatchOptions, ReaderOptions } from '../types/index.js';
+import type { MatcherOptions, ReaderOptions } from '../types/index.js';
 import type { Task } from '../managers/tasks.js';
 import DeepFilter from './filters/deep.js';
 import EntryFilter from './filters/entry.js';
@@ -19,11 +19,11 @@ export abstract class Provider<T> {
 	constructor(settings: Settings) {
 		this.#settings = settings;
 
-		const micromatchOptions = this._getMicromatchOptions();
+		const matcherOptions = this._getMatcherOptions();
 
 		this.errorFilter = new ErrorFilter(settings);
-		this.entryFilter = new EntryFilter(settings, micromatchOptions);
-		this.deepFilter = new DeepFilter(settings, micromatchOptions);
+		this.entryFilter = new EntryFilter(settings, matcherOptions);
+		this.deepFilter = new DeepFilter(settings, matcherOptions);
 		this.entryTransformer = new EntryTransformer(settings);
 	}
 
@@ -53,7 +53,7 @@ export abstract class Provider<T> {
 		};
 	}
 
-	protected _getMicromatchOptions(): MicromatchOptions {
+	protected _getMatcherOptions(): MatcherOptions {
 		return {
 			dot: this.#settings.dot,
 			matchBase: this.#settings.baseNameMatch,

@@ -1,5 +1,5 @@
 import * as utils from '../../utils/index.js';
-import type { MicromatchOptions, Pattern, PatternRe } from '../../types/index.js';
+import type { MatcherOptions, Pattern, PatternRe } from '../../types/index.js';
 import type Settings from '../../settings.js';
 
 export type PatternSegment = DynamicPatternSegment | StaticPatternSegment;
@@ -30,14 +30,14 @@ export type PatternInfo = {
 export default abstract class Matcher {
 	readonly #patterns: string[];
 	readonly #settings: Settings;
-	readonly #micromatchOptions: MicromatchOptions;
+	readonly #matcherOptions: MatcherOptions;
 
 	protected readonly _storage: PatternInfo[] = [];
 
-	constructor(patterns: Pattern[], settings: Settings, micromatchOptions: MicromatchOptions) {
+	constructor(patterns: Pattern[], settings: Settings, matcherOptions: MatcherOptions) {
 		this.#patterns = patterns;
 		this.#settings = settings;
-		this.#micromatchOptions = micromatchOptions;
+		this.#matcherOptions = matcherOptions;
 
 		this.#fillStorage();
 	}
@@ -57,7 +57,7 @@ export default abstract class Matcher {
 	}
 
 	#getPatternSegments(pattern: Pattern): PatternSegment[] {
-		const parts = utils.pattern.getPatternParts(pattern, this.#micromatchOptions);
+		const parts = utils.pattern.getPatternParts(pattern, this.#matcherOptions);
 
 		return parts.map((part) => {
 			const isDynamic = utils.pattern.isDynamicPattern(part, this.#settings);
@@ -72,7 +72,7 @@ export default abstract class Matcher {
 			return {
 				dynamic: true,
 				pattern: part,
-				patternRe: utils.pattern.makeRe(part, this.#micromatchOptions),
+				patternRe: utils.pattern.makeRe(part, this.#matcherOptions),
 			};
 		});
 	}
