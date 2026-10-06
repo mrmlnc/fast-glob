@@ -32,6 +32,21 @@ describe('Utils → Path', () => {
 		});
 	});
 
+	describe('.appendTrailingSeparatorToDriveRoot', () => {
+		it('should return base directory without changes', () => {
+			assert.strictEqual(util.appendTrailingSeparatorToDriveRoot('.', '*'), '.');
+			assert.strictEqual(util.appendTrailingSeparatorToDriveRoot('/', '/*'), '/');
+			assert.strictEqual(util.appendTrailingSeparatorToDriveRoot('C:/a', 'C:/a/*'), 'C:/a');
+			assert.strictEqual(util.appendTrailingSeparatorToDriveRoot('C:', 'C:'), 'C:');
+		});
+
+		it('should append trailing separator to the root of a drive on Windows', () => {
+			const expected = process.platform === 'win32' ? 'C:/' : 'C:';
+
+			assert.strictEqual(util.appendTrailingSeparatorToDriveRoot('C:', 'C:/*'), expected);
+		});
+	});
+
 	describe('.escape', () => {
 		it('should return pattern without additional escape characters', () => {
 			assert.strictEqual(util.escape(String.raw`\!abc`), String.raw`\!abc`);

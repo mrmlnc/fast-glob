@@ -219,6 +219,17 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should keep the trailing slash for the root of a drive on Windows', () => {
+			// On Windows, `C:` without a trailing slash is the current directory on drive C, not its root.
+			const windows: PatternsGroup = { 'C:/': ['C:/*', 'C:/**/*.md'], 'c:/': ['c:/*'], 'C:/root': ['C:/root/*'] };
+			const posix: PatternsGroup = { 'C:': ['C:/*', 'C:/**/*.md'], 'c:': ['c:/*'], 'C:/root': ['C:/root/*'] };
+			const expected = tests.platform.isWindows() ? windows : posix;
+
+			const actual = manager.groupPatternsByBaseDirectory(['C:/*', 'C:/**/*.md', 'c:/*', 'C:/root/*']);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternGroupsToTasks', () => {
