@@ -286,6 +286,8 @@ Converts a path to a pattern depending on the platform, including special charac
 * Posix. Works similarly to the `fg.posix.escapePath` method.
 * Windows. Works similarly to the `fg.win32.escapePath` method, additionally converting backslashes to forward slashes in cases where they are not escape characters (`!()+@{}[]`).
 
+A single backslash before a plain `@` is converted to a separator; a second backslash and escapes for extglob operators are preserved.
+
 ```js
 fg.convertPathToPattern('[OpenSource] mrmlnc – fast-glob (Deluxe Edition) 2014') + '/*.flac';
 // \\[OpenSource\\] mrmlnc – fast-glob \\(Deluxe Edition\\) 2014/*.flac
