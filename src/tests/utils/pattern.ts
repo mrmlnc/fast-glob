@@ -1,4 +1,4 @@
-import { Pattern, MicromatchOptions } from '../../types';
+import { Pattern, MatcherOptions } from '../../types';
 import * as utils from '../../utils';
 import { PatternSegment, PatternInfo } from '../../providers/matchers/matcher';
 
@@ -20,7 +20,7 @@ class PatternSegmentBuilder {
 		return this;
 	}
 
-	public build(options: MicromatchOptions = {}): PatternSegment {
+	public build(options: MatcherOptions = {}): PatternSegment {
 		if (!this._segment.dynamic) {
 			return this._segment;
 		}

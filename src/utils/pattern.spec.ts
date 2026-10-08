@@ -407,6 +407,34 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.expandBraceExpansion', () => {
+		it('should preserve patterns without a brace pair', () => {
+			const patterns = ['a/"b"', 'a/\'b\'', 'a/`b`', 'a]', 'a/"{b"', 'a/"b}"', 'a/"}b{"'];
+
+			for (const pattern of patterns) {
+				assert.deepStrictEqual(util.expandBraceExpansion(pattern), [pattern]);
+			}
+		});
+
+		it('should process quotes when a literal brace pair is present', () => {
+			const actual = util.expandBraceExpansion('a/"{b}"');
+
+			assert.deepStrictEqual(actual, ['a/{b}']);
+		});
+
+		it('should not expand separators inside quotes', () => {
+			const actual = util.expandBraceExpansion('a/{"b,c",d}');
+
+			assert.deepStrictEqual(actual, ['a/d', 'a/b,c']);
+		});
+
+		it('should expand numeric ranges', () => {
+			const expected = ['a/01', 'a/02', 'a/03'];
+
+			const actual = util.expandBraceExpansion('a/{01..03}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should return an array of expanded patterns with brace expansion without dupes', () => {
 			const expected = ['a/b', 'a/c', 'a/c/d'];
 
@@ -437,6 +465,17 @@ describe('Utils → Pattern', () => {
 			const actual = util.expandBraceExpansion('foo@(\\\\)/**/{*.a,*.b}');
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should preserve escaped brace expansion characters', () => {
+			assert.deepStrictEqual(util.expandBraceExpansion('a/{b\\,c,d}'), ['a/d', 'a/b\\,c']);
+			assert.deepStrictEqual(util.expandBraceExpansion('a/\\{b,c}/d'), ['a/\\{b,c}/d']);
+		});
+
+		it('should not exhaust the stack for deeply nested patterns', () => {
+			const pattern = `${'{'.repeat(4500)}a,b${'}'.repeat(4500)}`;
+
+			assert.deepStrictEqual(util.expandBraceExpansion(pattern), [pattern]);
 		});
 	});
 

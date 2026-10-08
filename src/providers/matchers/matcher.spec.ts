@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as tests from '../../tests';
-import { Pattern, MicromatchOptions } from '../../types';
+import { Pattern, MatcherOptions } from '../../types';
 import Settings from '../../settings';
 import Matcher, { PatternInfo } from './matcher';
 
@@ -11,7 +11,7 @@ class TestMatcher extends Matcher {
 	}
 }
 
-function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): TestMatcher {
+function getMatcher(patterns: Pattern[], options: MatcherOptions = {}): TestMatcher {
 	return new TestMatcher(patterns, new Settings(), options);
 }
 

@@ -4,7 +4,7 @@ import * as path from 'path';
 import { Task } from '../managers/tasks';
 import Settings, { Options } from '../settings';
 import * as tests from '../tests';
-import { MicromatchOptions, ReaderOptions } from '../types';
+import { MatcherOptions, ReaderOptions } from '../types';
 import Provider from './provider';
 
 export class TestProvider extends Provider<Array<{}>> {
@@ -20,8 +20,8 @@ export class TestProvider extends Provider<Array<{}>> {
 		return this._getReaderOptions(task);
 	}
 
-	public getMicromatchOptions(): MicromatchOptions {
-		return this._getMicromatchOptions();
+	public getMatcherOptions(): MatcherOptions {
+		return this._getMatcherOptions();
 	}
 }
 
@@ -94,11 +94,11 @@ describe('Providers → Provider', () => {
 		});
 	});
 
-	describe('.getMicromatchOptions', () => {
-		it('should return options for micromatch', () => {
+	describe('.getMatcherOptions', () => {
+		it('should return options for the matcher', () => {
 			const provider = getProvider();
 
-			const expected: MicromatchOptions = {
+			const expected: MatcherOptions = {
 				dot: false,
 				matchBase: false,
 				nobrace: false,
@@ -109,7 +109,7 @@ describe('Providers → Provider', () => {
 				strictSlashes: false
 			};
 
-			const actual = provider.getMicromatchOptions();
+			const actual = provider.getMatcherOptions();
 
 			assert.deepStrictEqual(actual, expected);
 		});
