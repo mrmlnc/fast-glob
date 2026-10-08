@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import braces from 'braces';
+import { expand as expandBraces } from 'brace-expansion';
 import globParent from 'glob-parent';
 import picomatch from 'picomatch';
 import type { MatcherOptions, Pattern, PatternRe } from '../types/index.js';
@@ -7,6 +7,7 @@ import { IS_WINDOWS_PLATFORM } from './path.js';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
+const BRACE_EXPANSION_LITERAL_PREFIX = '\0fast_glob_brace_literal_';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
 const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*\]/;
@@ -169,19 +170,75 @@ export function expandBraceExpansion(pattern: Pattern): Pattern[] {
 		return [pattern];
 	}
 
-	const patterns = braces(pattern, {
-		expand: true,
-		nodupes: true,
-		// @ts-expect-error The noempty option needs to be added to @types/braces.
-		noempty: true,
-		keepEscaping: true,
-	});
+	const [protectedPattern, literals] = protectBraceExpansionLiterals(pattern);
+	const patterns = expandBraces(protectedPattern).map((expandedPattern) => restoreBraceExpansionLiterals(expandedPattern, literals));
+	const uniquePatterns = [...new Set(patterns)].filter(Boolean);
 
 	/**
 	 * Sort the patterns by length so that the same depth patterns are processed side by side.
 	 * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
 	 */
-	return patterns.toSorted((a, b) => a.length - b.length);
+	return uniquePatterns.toSorted((a, b) => a.length - b.length);
+}
+
+function protectBraceExpansionLiterals(pattern: Pattern): [Pattern, string[]] {
+	const literals: string[] = [];
+	let protectedPattern = '';
+	let index = 0;
+
+	const addLiteral = (literal: string): void => {
+		protectedPattern += `${BRACE_EXPANSION_LITERAL_PREFIX}${literals.length}\0`;
+		literals.push(literal);
+	};
+
+	while (index < pattern.length) {
+		const character = pattern[index];
+
+		if (character === ESCAPE_SYMBOL) {
+			addLiteral(pattern.slice(index, index + 2));
+			index += 2;
+			continue;
+		}
+
+		if (['"', '\'', '`'].includes(character)) {
+			const [value, nextIndex] = readQuotedBraceExpansionLiteral(pattern, index + 1, character);
+
+			index = nextIndex;
+			addLiteral(value);
+			continue;
+		}
+
+		protectedPattern += character;
+		index++;
+	}
+
+	return [protectedPattern, literals];
+}
+
+function readQuotedBraceExpansionLiteral(pattern: Pattern, index: number, quote: string): [string, number] {
+	let value = '';
+
+	while (index < pattern.length) {
+		const character = pattern[index++];
+
+		if (character === ESCAPE_SYMBOL && index < pattern.length) {
+			value += character + pattern[index++];
+		} else if (character === quote) {
+			return [value, index];
+		} else {
+			value += character;
+		}
+	}
+
+	return [value, index];
+}
+
+function restoreBraceExpansionLiterals(pattern: Pattern, literals: string[]): Pattern {
+	for (const [index, literal] of literals.entries()) {
+		pattern = pattern.replaceAll(`${BRACE_EXPANSION_LITERAL_PREFIX}${index}\0`, () => literal);
+	}
+
+	return pattern;
 }
 
 export function getPatternParts(pattern: Pattern, options: MatcherOptions): Pattern[] {
