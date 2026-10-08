@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { Task } from '../managers/tasks';
 import Settings from '../settings';
-import { MicromatchOptions, ReaderOptions } from '../types';
+import { MatcherOptions, ReaderOptions } from '../types';
 import DeepFilter from './filters/deep';
 import EntryFilter from './filters/entry';
 import ErrorFilter from './filters/error';
@@ -10,8 +10,8 @@ import EntryTransformer from './transformers/entry';
 
 export default abstract class Provider<T> {
 	public readonly errorFilter: ErrorFilter = new ErrorFilter(this._settings);
-	public readonly entryFilter: EntryFilter = new EntryFilter(this._settings, this._getMicromatchOptions());
-	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this._getMicromatchOptions());
+	public readonly entryFilter: EntryFilter = new EntryFilter(this._settings, this._getMatcherOptions());
+	public readonly deepFilter: DeepFilter = new DeepFilter(this._settings, this._getMatcherOptions());
 	public readonly entryTransformer: EntryTransformer = new EntryTransformer(this._settings);
 
 	constructor(protected readonly _settings: Settings) { }
@@ -40,7 +40,7 @@ export default abstract class Provider<T> {
 		};
 	}
 
-	protected _getMicromatchOptions(): MicromatchOptions {
+	protected _getMatcherOptions(): MatcherOptions {
 		return {
 			dot: this._settings.dot,
 			matchBase: this._settings.baseNameMatch,

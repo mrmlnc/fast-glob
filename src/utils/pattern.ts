@@ -1,12 +1,16 @@
 import * as path from 'path';
 
 import * as globParent from 'glob-parent';
-import * as micromatch from 'micromatch';
+import * as picomatch from 'picomatch';
 
-import { MicromatchOptions, Pattern, PatternRe } from '../types';
+import { MatcherOptions, Pattern, PatternRe } from '../types';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import expandBraces = require('brace-expansion');
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
+const BRACE_EXPANSION_LITERAL_PREFIX = '\0fast_glob_brace_literal_';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
 const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
@@ -24,6 +28,16 @@ type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
+};
+
+type ProtectedBraceExpansionPattern = {
+	pattern: Pattern;
+	literals: string[];
+};
+
+type QuotedBraceExpansionLiteral = {
+	value: string;
+	index: number;
 };
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
@@ -156,22 +170,88 @@ export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[]
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
-	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
+	const openingBraceIndex = pattern.indexOf('{');
+
+	/**
+	 * Avoid parsing patterns without a brace pair, which can change quotes and escaping.
+	 */
+	if (openingBraceIndex === -1 || !pattern.includes('}', openingBraceIndex)) {
+		return [pattern];
+	}
+
+	const protectedPattern = protectBraceExpansionLiterals(pattern);
+	const patterns = expandBraces(protectedPattern.pattern).map((expandedPattern) => restoreBraceExpansionLiterals(expandedPattern, protectedPattern.literals));
+	const uniquePatterns = [...new Set(patterns)].filter((expandedPattern) => expandedPattern !== '');
 
 	/**
 	 * Sort the patterns by length so that the same depth patterns are processed side by side.
 	 * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
 	 */
-	patterns.sort((a, b) => a.length - b.length);
-
-	/**
-	 * Micromatch can return an empty string in the case of patterns like `{a,}`.
-	 */
-	return patterns.filter((pattern) => pattern !== '');
+	return uniquePatterns.sort((a, b) => a.length - b.length);
 }
 
-export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
-	let { parts } = micromatch.scan(pattern, {
+function protectBraceExpansionLiterals(pattern: Pattern): ProtectedBraceExpansionPattern {
+	const literals: string[] = [];
+	let protectedPattern = '';
+	let index = 0;
+
+	const addLiteral = (literal: string): void => {
+		protectedPattern += `${BRACE_EXPANSION_LITERAL_PREFIX}${literals.length}\0`;
+		literals.push(literal);
+	};
+
+	while (index < pattern.length) {
+		const character = pattern[index];
+
+		if (character === ESCAPE_SYMBOL) {
+			addLiteral(pattern.slice(index, index + 2));
+			index += 2;
+			continue;
+		}
+
+		if (['"', '\'', '`'].includes(character)) {
+			const literal = readQuotedBraceExpansionLiteral(pattern, index + 1, character);
+
+			index = literal.index;
+			addLiteral(literal.value);
+			continue;
+		}
+
+		protectedPattern += character;
+		index++;
+	}
+
+	return { pattern: protectedPattern, literals };
+}
+
+function readQuotedBraceExpansionLiteral(pattern: Pattern, index: number, quote: string): QuotedBraceExpansionLiteral {
+	let value = '';
+
+	while (index < pattern.length) {
+		const character = pattern[index++];
+
+		if (character === ESCAPE_SYMBOL && index < pattern.length) {
+			value += character + pattern[index++];
+		} else if (character === quote) {
+			return { value, index };
+		} else {
+			value += character;
+		}
+	}
+
+	return { value, index };
+}
+
+function restoreBraceExpansionLiterals(pattern: Pattern, literals: string[]): Pattern {
+	for (const [index, literal] of literals.entries()) {
+		pattern = pattern.split(`${BRACE_EXPANSION_LITERAL_PREFIX}${index}\0`).join(literal);
+	}
+
+	return pattern;
+}
+
+export function getPatternParts(pattern: Pattern, options: MatcherOptions): Pattern[] {
+	let { parts = [] } = picomatch.scan(pattern, {
 		...options,
 		parts: true
 	});
@@ -196,11 +276,11 @@ export function getPatternParts(pattern: Pattern, options: MicromatchOptions): P
 	return parts;
 }
 
-export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
-	return micromatch.makeRe(pattern, options);
+export function makeRe(pattern: Pattern, options: MatcherOptions): PatternRe {
+	return picomatch.makeRe(pattern, options);
 }
 
-export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOptions): PatternRe[] {
+export function convertPatternsToRe(patterns: Pattern[], options: MatcherOptions): PatternRe[] {
 	return patterns.map((pattern) => makeRe(pattern, options));
 }
 

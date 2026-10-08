@@ -1,10 +1,10 @@
-import { Entry, MicromatchOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
+import { Entry, MatcherOptions, EntryFilterFunction, Pattern, PatternRe } from '../../types';
 import Settings from '../../settings';
 import * as utils from '../../utils';
 import PartialMatcher from '../matchers/partial';
 
 export default class DeepFilter {
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) { }
+	constructor(private readonly _settings: Settings, private readonly _matcherOptions: MatcherOptions) { }
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const matcher = this._getMatcher(positive);
@@ -14,13 +14,13 @@ export default class DeepFilter {
 	}
 
 	private _getMatcher(patterns: Pattern[]): PartialMatcher {
-		return new PartialMatcher(patterns, this._settings, this._micromatchOptions);
+		return new PartialMatcher(patterns, this._settings, this._matcherOptions);
 	}
 
 	private _getNegativePatternsRe(patterns: Pattern[]): PatternRe[] {
 		const affectDepthOfReadingPatterns = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
 
-		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
+		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._matcherOptions);
 	}
 
 	private _filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {

@@ -31,7 +31,7 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
 
 	/**
 	 * The original pattern like `{,*,**,a/*}` can lead to problems checking the depth when matching entry
-	 * and some problems with the micromatch package (see fast-glob issues: #365, #394).
+	 * and some problems with pattern matching (see fast-glob issues: #365, #394).
 	 *
 	 * To solve this problem, we expand all patterns containing brace expansion. This can lead to a slight slowdown
 	 * in matching in the case of a large set of patterns after expansion.

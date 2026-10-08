@@ -23,7 +23,7 @@ export type EntryFilterFunction = fsWalk.EntryFilterFunction;
 export type DeepFilterFunction = fsWalk.DeepFilterFunction;
 export type EntryTransformerFunction = (entry: Entry) => EntryItem;
 
-export type MicromatchOptions = {
+export type MatcherOptions = {
 	dot?: boolean;
 	matchBase?: boolean;
 	nobrace?: boolean;

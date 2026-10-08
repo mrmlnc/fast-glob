@@ -1,5 +1,5 @@
 import Settings from '../../settings';
-import { Entry, EntryFilterFunction, MicromatchOptions, Pattern, PatternRe } from '../../types';
+import { Entry, EntryFilterFunction, MatcherOptions, Pattern, PatternRe } from '../../types';
 import * as utils from '../../utils';
 
 type PatternsRegexSet = {
@@ -15,18 +15,18 @@ type PatternsRegexSet = {
 export default class EntryFilter {
 	public readonly index: Map<string, undefined> = new Map();
 
-	constructor(private readonly _settings: Settings, private readonly _micromatchOptions: MicromatchOptions) {}
+	constructor(private readonly _settings: Settings, private readonly _matcherOptions: MatcherOptions) {}
 
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
 
 		const patterns: PatternsRegexSet = {
 			positive: {
-				all: utils.pattern.convertPatternsToRe(positive, this._micromatchOptions)
+				all: utils.pattern.convertPatternsToRe(positive, this._matcherOptions)
 			},
 			negative: {
-				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this._micromatchOptions, dot: true }),
-				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this._micromatchOptions, dot: true })
+				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this._matcherOptions, dot: true }),
+				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this._matcherOptions, dot: true })
 			}
 		};
 
