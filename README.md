@@ -79,7 +79,7 @@ This package provides methods for traversing the file system and returning pathn
 
 There is more than one form of syntax: basic and advanced. Below is a brief overview of the supported features. Also pay attention to our [FAQ](#faq).
 
-> :book: This package uses [`picomatch`][picomatch] for pattern matching and [`braces`][braces] for brace expansion.
+> :book: This package uses [`picomatch`][picomatch] for pattern matching and [`brace-expansion`][brace_expansion] for brace expansion.
 
 ### Basic syntax
 
@@ -101,7 +101,7 @@ Some examples:
 * [Escapes characters][picomatch_matching_special_characters_as_literals] (`\\`) — matching special characters (`$^*+?()[]`) as literals.
 * [POSIX character classes][picomatch_posix_brackets] (`[[:digit:]]`).
 * [Extended globs][picomatch_extglobs] (`?(pattern-list)`).
-* [Bash style brace expansions][braces] (`{}`).
+* [Bash style brace expansions][brace_expansion] (`{}`).
 * [Regexp character classes][picomatch_basic_globbing] (`[1-5]`).
 * [Regex groups][regular_expressions_brackets] (`(a|b)`).
 
@@ -542,7 +542,7 @@ If `true` and similar entries are found, the result is the first found.
 
 Enables Bash-like brace expansion.
 
-> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or more [detailed description][braces].
+> :1234: [Syntax description][bash_hackers_syntax_expansion_brace] or more [detailed description][brace_expansion].
 
 ```js
 dir/
@@ -787,7 +787,7 @@ See the [Releases section of our GitHub project][github_releases] for changelog 
 This software is released under the terms of the MIT license.
 
 [bash_hackers_syntax_expansion_brace]: https://wiki.bash-hackers.org/syntax/expansion/brace
-[braces]: https://github.com/micromatch/braces
+[brace_expansion]: https://github.com/juliangruber/brace-expansion
 [github_releases]: https://github.com/mrmlnc/fast-glob/releases
 [glob_definition]: https://en.wikipedia.org/wiki/Glob_(programming)
 [glob_linux_man]: http://man7.org/linux/man-pages/man3/glob.3.html

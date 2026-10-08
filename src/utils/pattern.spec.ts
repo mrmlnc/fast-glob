@@ -422,6 +422,12 @@ describe('Utils → Pattern', () => {
 			assert.deepStrictEqual(actual, ['a/{b}']);
 		});
 
+		it('should not expand separators inside quotes', () => {
+			const actual = util.expandBraceExpansion('a/{"b,c",d}');
+
+			assert.deepStrictEqual(actual, ['a/d', 'a/b,c']);
+		});
+
 		it('should expand numeric ranges', () => {
 			const expected = ['a/01', 'a/02', 'a/03'];
 
@@ -460,6 +466,17 @@ describe('Utils → Pattern', () => {
 			const actual = util.expandBraceExpansion(String.raw`foo@(\\)/**/{*.a,*.b}`);
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should preserve escaped brace expansion characters', () => {
+			assert.deepStrictEqual(util.expandBraceExpansion(String.raw`a/{b\,c,d}`), ['a/d', String.raw`a/b\,c`]);
+			assert.deepStrictEqual(util.expandBraceExpansion(String.raw`a/\{b,c}/d`), [String.raw`a/\{b,c}/d`]);
+		});
+
+		it('should not exhaust the stack for deeply nested patterns', () => {
+			const pattern = `${'{'.repeat(4500)}a,b${'}'.repeat(4500)}`;
+
+			assert.deepStrictEqual(util.expandBraceExpansion(pattern), [pattern]);
 		});
 	});
 
