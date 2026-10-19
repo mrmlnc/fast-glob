@@ -5,6 +5,24 @@ import { describe, it } from 'mocha';
 import * as util from './path.js';
 
 describe('Utils → Path', () => {
+	describe('.makeRelative', () => {
+		it('should make an absolute path relative using forward slashes', () => {
+			assert.strictEqual(util.makeRelative(process.cwd(), path.resolve('root', 'file.md')), 'root/file.md');
+		});
+
+		it('should preserve relative paths', () => {
+			assert.strictEqual(util.makeRelative(process.cwd(), '../root/file.md'), '../root/file.md');
+		});
+
+		it('should resolve a relative working directory', () => {
+			assert.strictEqual(util.makeRelative('root', path.resolve('root', 'file.md')), 'file.md');
+		});
+
+		it('should preserve paths outside the working directory', () => {
+			assert.strictEqual(util.makeRelative(path.resolve('root'), path.resolve('file.md')), '../file.md');
+		});
+	});
+
 	describe('.makeAbsolute', () => {
 		it('should return absolute filepath', () => {
 			const expected = path.join(process.cwd(), 'file.md');
