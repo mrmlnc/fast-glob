@@ -73,13 +73,23 @@ export default class EntryFilter {
 			return false;
 		}
 
-		const isMatchedByRelativeNegative = this.#isMatchToPatterns(filepath, patterns.negative.relative, isDirectory);
+		const isMatchedByRelativeNegative = this.#isMatchToRelativeNegative(filepath, patterns.negative.relative, isDirectory);
 		if (isMatchedByRelativeNegative) {
 			return false;
 		}
 
 		const isMatchedByAbsoluteNegative = this.#isMatchToAbsoluteNegative(filepath, patterns.negative.absolute, isDirectory);
 		return !isMatchedByAbsoluteNegative;
+	}
+
+	#isMatchToRelativeNegative(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
+		if (patternsRe.length === 0) {
+			return false;
+		}
+
+		const relativePath = utils.path.makeRelative(this.#settings.cwd, filepath);
+
+		return this.#isMatchToPatterns(relativePath, patternsRe, isDirectory);
 	}
 
 	#isMatchToAbsoluteNegative(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {

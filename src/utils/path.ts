@@ -34,6 +34,10 @@ export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);
 }
 
+export function makeRelative(cwd: string, filepath: string): string {
+	return path.isAbsolute(filepath) ? path.relative(cwd, filepath).split(path.sep).join('/') : filepath;
+}
+
 export function appendTrailingSeparatorToDeviceRoot(filepath: string): string {
 	if (DOS_DEVICE_DRIVE_ROOT_RE.test(filepath)) {
 		return `${filepath}\\`;

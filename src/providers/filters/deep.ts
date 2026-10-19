@@ -9,6 +9,11 @@ import type {
 } from '../../types/index.js';
 import type Settings from '../../settings.js';
 
+type NegativePatterns = {
+	absolute: PatternRe[];
+	relative: PatternRe[];
+};
+
 export default class DeepFilter {
 	readonly #settings: Settings;
 	readonly #matcherOptions: MatcherOptions;
@@ -28,7 +33,7 @@ export default class DeepFilter {
 		return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this.#matcherOptions);
 	}
 
-	#filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: PatternRe[]): boolean {
+	#filter(basePath: string, entry: Entry, matcher: PartialMatcher, negativeRe: NegativePatterns): boolean {
 		if (this.#isSkippedByDeep(basePath, entry.path)) {
 			return false;
 		}
@@ -77,13 +82,31 @@ export default class DeepFilter {
 		return !this.#settings.baseNameMatch && !matcher.match(entryPath);
 	}
 
-	#isSkippedByNegativePatterns(entryPath: string, patternsRe: PatternRe[]): boolean {
-		return !utils.pattern.isMatchAny(entryPath, patternsRe);
+	#isSkippedByNegativePatterns(entryPath: string, patternsRe: NegativePatterns): boolean {
+		if (patternsRe.relative.length > 0) {
+			const relativePath = utils.path.makeRelative(this.#settings.cwd, entryPath);
+			if (utils.pattern.isMatchAny(relativePath, patternsRe.relative)) {
+				return false;
+			}
+		}
+
+		if (patternsRe.absolute.length > 0) {
+			const absolutePath = utils.path.makeAbsolute(this.#settings.cwd, entryPath);
+			if (utils.pattern.isMatchAny(absolutePath, patternsRe.absolute)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public getFilter(basePath: string, positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const matcher = this.#getMatcher(positive);
-		const negativeRe = this.#getNegativePatternsRe(negative);
+		const [absolute, relative] = utils.pattern.partitionAbsoluteAndRelative(negative);
+		const negativeRe = {
+			absolute: this.#getNegativePatternsRe(absolute),
+			relative: this.#getNegativePatternsRe(relative),
+		};
 
 		return (entry) => this.#filter(basePath, entry, matcher, negativeRe);
 	}
