@@ -1,16 +1,19 @@
 import * as path from 'node:path';
-
 import * as fsStat from '@nodelib/fs.stat';
-
-import * as utils from '../utils';
-
-import type Settings from '../settings';
-import type { Entry, ErrnoException, FsStats, Pattern, ReaderOptions } from '../types';
+import * as utils from '../utils/index.js';
+import type Settings from '../settings.js';
+import type {
+	Entry,
+	ErrnoException,
+	FsStats,
+	Pattern,
+	ReaderOptions,
+} from '../types/index.js';
 
 export abstract class Reader<T> {
-	protected readonly _fsStatSettings: fsStat.Settings;
-
 	readonly #settings: Settings;
+
+	protected readonly _fsStatSettings: fsStat.Settings;
 
 	constructor(settings: Settings) {
 		this.#settings = settings;
@@ -44,6 +47,10 @@ export abstract class Reader<T> {
 	}
 
 	protected _isFatalError(error: ErrnoException): boolean {
-		return !utils.errno.isEnoentCodeError(error) && !this.#settings.suppressErrors;
+		if (this.#settings.errorFilter !== undefined) {
+			return !this.#settings.errorFilter(error);
+		}
+
+		return !utils.errno.isEnoentCodeError(error) && !utils.errno.isEnotdirCodeError(error);
 	}
 }

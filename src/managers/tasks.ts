@@ -1,15 +1,14 @@
-import * as utils from '../utils';
+import * as utils from '../utils/index.js';
+import type Settings from '../settings.js';
+import type { Pattern, PatternsGroup } from '../types/index.js';
 
-import type Settings from '../settings';
-import type { Pattern, PatternsGroup } from '../types';
-
-export interface Task {
+export type Task = {
 	base: string;
 	dynamic: boolean;
 	patterns: Pattern[];
 	positive: Pattern[];
 	negative: Pattern[];
-}
+};
 
 export function generate(input: readonly Pattern[], settings: Settings): Task[] {
 	const patterns = processPatterns([...input], settings);
@@ -24,7 +23,7 @@ export function generate(input: readonly Pattern[], settings: Settings): Task[] 
 	const staticTasks = convertPatternsToTasks(staticPatterns, negativePatterns, /* dynamic */ false);
 	const dynamicTasks = convertPatternsToTasks(dynamicPatterns, negativePatterns, /* dynamic */ true);
 
-	return staticTasks.concat(dynamicTasks);
+	return [...staticTasks, ...dynamicTasks];
 }
 
 function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
@@ -32,7 +31,7 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
 
 	/**
 	 * The original pattern like `{,*,**,a/*}` can lead to problems checking the depth when matching entry
-	 * and some problems with the micromatch package (see fast-glob issues: #365, #394).
+	 * and some problems with pattern matching (see fast-glob issues: #365, #394).
 	 *
 	 * To solve this problem, we expand all patterns containing brace expansion. This can lead to a slight slowdown
 	 * in matching in the case of a large set of patterns after expansion.
@@ -65,7 +64,7 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
  * Patterns that can be found inside (`./`) and outside (`../`) the current directory are handled separately.
  * This is necessary because directory traversal starts at the base directory and goes deeper.
  */
-export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], dynamic: boolean): Task[] {
+export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[], isDynamic: boolean): Task[] {
 	const tasks: Task[] = [];
 
 	const patternsOutsideCurrentDirectory = utils.pattern.getPatternsOutsideCurrentDirectory(positive);
@@ -74,16 +73,26 @@ export function convertPatternsToTasks(positive: Pattern[], negative: Pattern[],
 	const outsideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsOutsideCurrentDirectory);
 	const insideCurrentDirectoryGroup = groupPatternsByBaseDirectory(patternsInsideCurrentDirectory);
 
-	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, negative, dynamic));
+	tasks.push(...convertPatternGroupsToTasks(outsideCurrentDirectoryGroup, negative, isDynamic));
 
 	/*
 	 * For the sake of reducing future accesses to the file system, we merge all tasks within the current directory
 	 * into a global task, if at least one pattern refers to the root (`.`). In this case, the global task covers the rest.
+	 *
+	 * Absolute patterns must not participate in this merge, because their base directory is independent of the current
+	 * directory. Otherwise, entries found by traversing the current directory will be matched against the absolute
+	 * pattern without the path prefix and never match.
 	 */
-	if ('.' in insideCurrentDirectoryGroup) {
-		tasks.push(convertPatternGroupToTask('.', patternsInsideCurrentDirectory, negative, dynamic));
+	if (Object.hasOwn(insideCurrentDirectoryGroup, '.')) {
+		const [absolutePatterns, relativePatterns] = utils.pattern.partitionAbsoluteAndRelative(patternsInsideCurrentDirectory);
+
+		if (absolutePatterns.length > 0) {
+			tasks.push(...convertPatternGroupsToTasks(groupPatternsByBaseDirectory(absolutePatterns), negative, isDynamic));
+		}
+
+		tasks.push(convertPatternGroupToTask('.', relativePatterns, negative, isDynamic));
 	} else {
-		tasks.push(...convertPatternGroupsToTasks(insideCurrentDirectoryGroup, negative, dynamic));
+		tasks.push(...convertPatternGroupsToTasks(insideCurrentDirectoryGroup, negative, isDynamic));
 	}
 
 	return tasks;
@@ -94,7 +103,7 @@ export function getPositivePatterns(patterns: Pattern[]): Pattern[] {
 }
 
 export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Pattern[]): Pattern[] {
-	const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
+	const negative = [...utils.pattern.getNegativePatterns(patterns), ...ignore];
 	const positive = negative.map((pattern) => utils.pattern.convertToPositivePattern(pattern));
 
 	return positive;
@@ -103,7 +112,7 @@ export function getNegativePatternsAsPositive(patterns: Pattern[], ignore: Patte
 export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup {
 	const group: PatternsGroup = {};
 
-	return patterns.reduce((collection, pattern) => {
+	for (const pattern of patterns) {
 		let base = utils.pattern.getBaseDirectory(pattern);
 
 		/**
@@ -112,28 +121,26 @@ export function groupPatternsByBaseDirectory(patterns: Pattern[]): PatternsGroup
 		 */
 		base = utils.path.removeBackslashes(base);
 
-		if (base in collection) {
-			collection[base].push(pattern);
+		if (Object.hasOwn(group, base)) {
+			group[base].push(pattern);
 		} else {
-			collection[base] = [pattern];
+			group[base] = [pattern];
 		}
+	}
 
-		return collection;
-	}, group);
+	return group;
 }
 
-export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], dynamic: boolean): Task[] {
-	return Object.keys(positive).map((base) => {
-		return convertPatternGroupToTask(base, positive[base], negative, dynamic);
-	});
+export function convertPatternGroupsToTasks(positive: PatternsGroup, negative: Pattern[], isDynamic: boolean): Task[] {
+	return Object.entries(positive).map(([base, value]) => convertPatternGroupToTask(base, value, negative, isDynamic));
 }
 
-export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], dynamic: boolean): Task {
+export function convertPatternGroupToTask(base: string, positive: Pattern[], negative: Pattern[], isDynamic: boolean): Task {
 	return {
-		dynamic,
+		dynamic: isDynamic,
 		positive,
 		negative,
 		base,
-		patterns: ([] as Pattern[]).concat(positive, negative.map((pattern) => utils.pattern.convertToNegativePattern(pattern))),
+		patterns: [...positive, ...negative.map((pattern) => utils.pattern.convertToNegativePattern(pattern))],
 	};
 }

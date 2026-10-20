@@ -1,4 +1,4 @@
-import * as runner from '../runner';
+import * as runner from '../runner.js';
 
 runner.suite('Options MarkDirectories', {
 	tests: [
@@ -7,6 +7,32 @@ runner.suite('Options MarkDirectories', {
 			options: {
 				markDirectories: true,
 			},
+		},
+		{
+			pattern: 'fixtures/first/',
+			options: {
+				onlyFiles: false,
+				markDirectories: true,
+			},
+			expected: () => ['fixtures/first/'],
+		},
+		{
+			pattern: 'fixtures/first/',
+			options: {
+				absolute: true,
+				onlyFiles: false,
+				markDirectories: true,
+			},
+			resultTransform: runner.absoluteResultTransform,
+			expected: () => ['<root>/fixtures/first/'],
+		},
+		{
+			pattern: 'fixtures/fi*/',
+			options: {
+				onlyFiles: false,
+				markDirectories: true,
+			},
+			expected: () => ['fixtures/first/'],
 		},
 	],
 });

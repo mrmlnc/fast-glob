@@ -1,4 +1,4 @@
-import Matcher from './matcher';
+import Matcher from './matcher.js';
 
 export default class PartialMatcher extends Matcher {
 	public match(filepath: string): boolean {
@@ -15,13 +15,13 @@ export default class PartialMatcher extends Matcher {
 			 * but only if the level has reached the end of the first group.
 			 *
 			 * fixtures/{a,b}/**
-			 *  ^ true/false  ^ always true
-			*/
+			 * ^ true/false  ^ always true
+			 */
 			if (!pattern.complete && levels > section.length) {
 				return true;
 			}
 
-			const match = parts.every((part, index) => {
+			const isMatch = parts.every((part, index) => {
 				const segment = pattern.segments[index];
 
 				if (segment.dynamic && segment.patternRe.test(part)) {
@@ -35,7 +35,7 @@ export default class PartialMatcher extends Matcher {
 				return false;
 			});
 
-			if (match) {
+			if (isMatch) {
 				return true;
 			}
 		}

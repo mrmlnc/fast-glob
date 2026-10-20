@@ -1,14 +1,11 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import EntryTransformer from './entry';
-
-import type { EntryTransformerFunction } from '../../types';
-import type { Options } from '../../settings';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { EntryTransformerFunction } from '../../types/index.js';
+import EntryTransformer from './entry.js';
 
 function getEntryTransformer(options?: Options): EntryTransformer {
 	return new EntryTransformer(new Settings(options));
@@ -81,6 +78,36 @@ describe('Providers → Transformers → Entry', () => {
 			const actual = transformer(entry);
 
 			assert.strictEqual(actual, expected);
+		});
+
+		it('should preserve an existing trailing slash when the `markDirectories` option is enabled', () => {
+			const transformer = getTransformer({ markDirectories: true });
+			const entry = tests.entry.builder().path('root/directory/').directory().build();
+
+			const actual = transformer(entry);
+
+			assert.strictEqual(actual, 'root/directory/');
+		});
+
+		it('should preserve an existing trailing slash in object mode without mutating the entry', () => {
+			const transformer = getTransformer({ markDirectories: true, objectMode: true });
+			const entry = tests.entry.builder().path('root/directory/').directory().build();
+
+			const actual = transformer(entry);
+
+			assert.deepStrictEqual(actual, entry);
+			assert.notStrictEqual(actual, entry);
+			assert.strictEqual(entry.path, 'root/directory/');
+		});
+
+		it('should preserve the filesystem root when the `absolute` and `markDirectories` options are enabled', () => {
+			const transformer = getTransformer({ absolute: true, markDirectories: true });
+			const { root } = path.parse(process.cwd());
+			const entry = tests.entry.builder().path(root).directory().build();
+
+			const actual = transformer(entry);
+
+			assert.strictEqual(actual, root);
 		});
 
 		it('should return correct entry when the `absolute` and `markDirectories` options is enabled', () => {

@@ -1,5 +1,5 @@
-import * as runner from '../runner';
-import * as utils from '../..';
+import * as runner from '../runner.js';
+import * as utils from '../../index.js';
 
 runner.suite('Options CaseSensitiveMatch', {
 	tests: [

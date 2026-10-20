@@ -1,13 +1,10 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
+import Settings from '../../settings.js';
+import type { Pattern, MatcherOptions } from '../../types/index.js';
+import Matcher from './partial.js';
 
-import Settings from '../../settings';
-import Matcher from './partial';
-
-import type { Pattern, MicromatchOptions } from '../../types';
-
-function getMatcher(patterns: Pattern[], options: MicromatchOptions = {}): Matcher {
+function getMatcher(patterns: Pattern[], options: MatcherOptions = {}): Matcher {
 	return new Matcher(patterns, new Settings(), options);
 }
 
@@ -38,6 +35,12 @@ describe('Providers → Matchers → Partial', () => {
 			assertMatch(['b/*'], 'b');
 			assertNotMatch(['*'], 'a');
 			assertNotMatch(['a/*'], 'a/b');
+		});
+
+		it('should not descend into the last segment of a directory pattern', () => {
+			assertMatch(['a/*/'], 'a');
+			assertNotMatch(['*/'], 'a');
+			assertNotMatch(['a/*/'], 'a/b');
 		});
 
 		it('should trying to match all patterns', () => {

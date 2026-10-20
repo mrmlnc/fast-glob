@@ -1,12 +1,9 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
-import * as tests from '../tests';
-import * as manager from './tasks';
-
-import type { PatternsGroup } from '../types';
+import Settings from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { PatternsGroup } from '../types/index.js';
+import * as manager from './tasks.js';
 
 describe('Managers → Task', () => {
 	describe('.generate', () => {
@@ -130,6 +127,39 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should not merge the absolute pattern into the global task when it is mixed with a pattern referring to the root', () => {
+			const expected = [
+				tests.task.builder().base('/absolute/path').positive('/absolute/path/*.ts').negative('*.md').build(),
+				tests.task.builder().base('.').positive('*.config.ts').negative('*.md').build(),
+			];
+
+			const actual = manager.convertPatternsToTasks(['/absolute/path/*.ts', '*.config.ts'], ['*.md'], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should keep the absolute pattern outside of the global task when the global merge is applied', () => {
+			const expected = [
+				tests.task.builder().base('/absolute/path').positive('/absolute/path/*.ts').negative('*.md').build(),
+				tests.task.builder().base('.').positive('*').positive('*.config.ts').negative('*.md').build(),
+			];
+
+			const actual = manager.convertPatternsToTasks(['*', '*.config.ts', '/absolute/path/*.ts'], ['*.md'], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should keep the original order of tasks when the global merge is not applied', () => {
+			const expected = [
+				tests.task.builder().base('a').positive('a/*').build(),
+				tests.task.builder().base('/absolute/path').positive('/absolute/path/*.ts').build(),
+			];
+
+			const actual = manager.convertPatternsToTasks(['a/*', '/absolute/path/*.ts'], [], /* dynamic */ true);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.getPositivePatterns', () => {
@@ -182,7 +212,7 @@ describe('Managers → Task', () => {
 
 		it('should remove backslashes from the base directory', () => {
 			const expected: PatternsGroup = {
-				"a'b": [String.raw`a\'b/*`],
+				'a\'b': [String.raw`a\'b/*`],
 			};
 
 			const actual = manager.groupPatternsByBaseDirectory([String.raw`a\'b/*`]);

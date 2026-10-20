@@ -1,16 +1,16 @@
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-
-import * as runner from '../runner';
-import * as utils from '../..';
+import * as process from 'node:process';
+import * as runner from '../runner.js';
+import * as utils from '../../index.js';
 
 const CWD = process.cwd().replaceAll('\\', '/');
 const ROOT = path.parse(CWD).root;
 
-function getRootEntries(root: string, withBase: boolean = false): string[] {
+function getRootEntries(root: string, shouldIncludeBase = false): string[] {
 	let result = getRootEntriesWithFileTypes(root);
 
-	if (withBase) {
+	if (shouldIncludeBase) {
 		const separator = root.endsWith('/') ? '' : '/';
 
 		result = result.map((item) => `${root}${separator}${item}`);
@@ -72,6 +72,19 @@ runner.suite('Patterns Root (cwd)', {
 			},
 			condition: () => utils.platform.isWindows(),
 			expected: () => getRootEntries(`//?/${ROOT}`),
+		},
+	],
+});
+
+runner.suite('Patterns Root (mix of absolute and relative patterns)', {
+	tests: [
+		// The absolute pattern must not be merged into the global task rooted at the current
+		// directory, otherwise its entries will never match and will be silently dropped.
+		{
+			pattern: [`${CWD}/fixtures/first/*.md`, '*.md'],
+			options: { cwd: 'fixtures' },
+			issue: 497,
+			expected: () => [`${CWD}/fixtures/first/file.md`, 'file.md'],
 		},
 	],
 });

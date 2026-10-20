@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
-
-import type { FileSystemAdapter, Pattern } from './types';
+import * as process from 'node:process';
+import { fileURLToPath } from 'node:url';
+import type { ErrnoException, FileSystemAdapter, Pattern } from './types/index.js';
 
 export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	lstat: fs.lstat,
@@ -11,7 +12,7 @@ export const DEFAULT_FILE_SYSTEM_ADAPTER: FileSystemAdapter = {
 	readdirSync: fs.readdirSync,
 };
 
-export interface Options {
+export type Options = {
 	/**
 	 * Return the absolute path for entries.
 	 *
@@ -42,7 +43,7 @@ export interface Options {
 	 *
 	 * @default process.cwd()
 	 */
-	cwd?: string;
+	cwd?: string | URL;
 	/**
 	 * Specifies the maximum depth of a read directory relative to the start
 	 * directory.
@@ -119,12 +120,14 @@ export interface Options {
 	 */
 	stats?: boolean;
 	/**
-	 * By default this package suppress only `ENOENT` errors.
-	 * Set to `true` to suppress any error.
+	 * A function that decides whether an error is fatal. Receives all
+	 * errors, including `ENOENT` and `ENOTDIR`, which are suppressed
+	 * by default. Return `true` to suppress the error, `false` to throw
+	 * it.
 	 *
-	 * @default false
+	 * @default undefined
 	 */
-	suppressErrors?: boolean;
+	errorFilter?: (error: ErrnoException) => boolean;
 	/**
 	 * Throw an error when symbolic link is broken if `true` or safely
 	 * return `lstat` call if `false`.
@@ -145,7 +148,7 @@ export interface Options {
 	 * @default undefined
 	 */
 	signal?: AbortSignal;
-}
+};
 
 export default class Settings {
 	public readonly absolute: boolean;
@@ -165,7 +168,7 @@ export default class Settings {
 	public readonly onlyDirectories: boolean;
 	public readonly onlyFiles: boolean;
 	public readonly stats: boolean;
-	public readonly suppressErrors: boolean;
+	public readonly errorFilter: ((error: ErrnoException) => boolean) | undefined;
 	public readonly throwErrorOnBrokenSymbolicLink: boolean;
 	public readonly unique: boolean;
 	public readonly signal?: AbortSignal;
@@ -180,8 +183,8 @@ export default class Settings {
 		this.baseNameMatch = options.baseNameMatch ?? false;
 		this.braceExpansion = options.braceExpansion ?? true;
 		this.caseSensitiveMatch = options.caseSensitiveMatch ?? true;
-		this.cwd = options.cwd ?? process.cwd();
-		this.deep = options.deep ?? Number.POSITIVE_INFINITY;
+		this.cwd = options.cwd instanceof URL ? fileURLToPath(options.cwd) : options.cwd ?? process.cwd();
+		this.deep = options.deep ?? Infinity;
 		this.dot = options.dot ?? false;
 		this.extglob = options.extglob ?? true;
 		this.followSymbolicLinks = options.followSymbolicLinks ?? true;
@@ -193,7 +196,7 @@ export default class Settings {
 		this.onlyDirectories = options.onlyDirectories ?? false;
 		this.onlyFiles = options.onlyFiles ?? true;
 		this.stats = options.stats ?? false;
-		this.suppressErrors = options.suppressErrors ?? false;
+		this.errorFilter = options.errorFilter ?? undefined;
 		this.throwErrorOnBrokenSymbolicLink = options.throwErrorOnBrokenSymbolicLink ?? false;
 		this.unique = options.unique ?? true;
 		this.signal = options.signal;

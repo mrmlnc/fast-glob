@@ -1,8 +1,8 @@
 import * as assert from 'node:assert';
-
+import * as process from 'node:process';
+import { pathToFileURL } from 'node:url';
 import { describe, it } from 'mocha';
-
-import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings';
+import Settings, { DEFAULT_FILE_SYSTEM_ADAPTER } from './settings.js';
 
 describe('Settings', () => {
 	it('should return instance with default values', () => {
@@ -17,11 +17,11 @@ describe('Settings', () => {
 		assert.ok(!settings.objectMode);
 		assert.ok(!settings.onlyDirectories);
 		assert.ok(!settings.stats);
-		assert.ok(!settings.suppressErrors);
+		assert.ok(!settings.errorFilter);
 		assert.ok(!settings.throwErrorOnBrokenSymbolicLink);
 		assert.ok(settings.braceExpansion);
 		assert.ok(settings.caseSensitiveMatch);
-		assert.ok(settings.deep);
+		assert.strictEqual(settings.deep, Infinity);
 		assert.ok(settings.extglob);
 		assert.ok(settings.followSymbolicLinks);
 		assert.ok(settings.globstar);
@@ -91,5 +91,13 @@ describe('Settings', () => {
 
 		const settingsPositive = new Settings({ deep: 5 });
 		assert.strictEqual(settingsPositive.deep, 5);
+	});
+
+	it('should transform URL to string on cwd', () => {
+		const settings = new Settings({
+			cwd: pathToFileURL(process.cwd()),
+		});
+
+		assert.strictEqual(settings.cwd, process.cwd());
 	});
 });

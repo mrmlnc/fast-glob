@@ -1,37 +1,38 @@
 import * as path from 'node:path';
-
-import DeepFilter from './filters/deep';
-import EntryFilter from './filters/entry';
-import ErrorFilter from './filters/error';
-import EntryTransformer from './transformers/entry';
-
-import type Settings from '../settings';
-import type { MicromatchOptions, ReaderOptions } from '../types';
-import type { Task } from '../managers/tasks';
+import type Settings from '../settings.js';
+import * as utils from '../utils/index.js';
+import type { MatcherOptions, ReaderOptions } from '../types/index.js';
+import type { Task } from '../managers/tasks.js';
+import DeepFilter from './filters/deep.js';
+import EntryFilter from './filters/entry.js';
+import ErrorFilter from './filters/error.js';
+import EntryTransformer from './transformers/entry.js';
 
 export abstract class Provider<T> {
+	readonly #settings: Settings;
+
 	public readonly errorFilter: ErrorFilter;
 	public readonly entryFilter: EntryFilter;
 	public readonly deepFilter: DeepFilter;
 	public readonly entryTransformer: EntryTransformer;
 
-	readonly #settings: Settings;
-
 	constructor(settings: Settings) {
 		this.#settings = settings;
 
-		const micromatchOptions = this._getMicromatchOptions();
+		const matcherOptions = this._getMatcherOptions();
 
 		this.errorFilter = new ErrorFilter(settings);
-		this.entryFilter = new EntryFilter(settings, micromatchOptions);
-		this.deepFilter = new DeepFilter(settings, micromatchOptions);
+		this.entryFilter = new EntryFilter(settings, matcherOptions);
+		this.deepFilter = new DeepFilter(settings, matcherOptions);
 		this.entryTransformer = new EntryTransformer(settings);
 	}
 
 	public abstract read(_task: Task): T;
 
 	protected _getRootDirectory(task: Task): string {
-		return path.resolve(this.#settings.cwd, task.base);
+		const root = path.resolve(this.#settings.cwd, task.base);
+
+		return utils.path.appendTrailingSeparatorToDeviceRoot(root);
 	}
 
 	protected _getReaderOptions(task: Task): ReaderOptions {
@@ -52,7 +53,7 @@ export abstract class Provider<T> {
 		};
 	}
 
-	protected _getMicromatchOptions(): MicromatchOptions {
+	protected _getMatcherOptions(): MatcherOptions {
 		return {
 			dot: this.#settings.dot,
 			matchBase: this.#settings.baseNameMatch,

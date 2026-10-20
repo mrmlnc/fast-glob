@@ -1,23 +1,21 @@
 import * as assert from 'node:assert';
-
 import { describe, it } from 'mocha';
-
-import * as util from './pattern';
-
-import type { Pattern } from '../types';
+import * as tests from '../tests/index.js';
+import type { Pattern } from '../types/index.js';
+import * as util from './pattern.js';
 
 describe('Utils → Pattern', () => {
 	describe('.isStaticPattern', () => {
 		it('should return true for static pattern', () => {
-			const actual = util.isStaticPattern('dir');
+			const isActual = util.isStaticPattern('dir');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false for dynamic pattern', () => {
-			const actual = util.isStaticPattern('*');
+			const isActual = util.isStaticPattern('*');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
@@ -213,35 +211,35 @@ describe('Utils → Pattern', () => {
 
 	describe('.isNegativePattern', () => {
 		it('should returns true', () => {
-			const actual = util.isNegativePattern('!*.md');
+			const isActual = util.isNegativePattern('!*.md');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should returns false', () => {
-			const actual = util.isNegativePattern('*.md');
+			const isActual = util.isNegativePattern('*.md');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 
 		it('should returns false for extglob', () => {
-			const actual = util.isNegativePattern('!(a|b|c)');
+			const isActual = util.isNegativePattern('!(a|b|c)');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
 	describe('.isPositivePattern', () => {
 		it('should returns true', () => {
-			const actual = util.isPositivePattern('*.md');
+			const isActual = util.isPositivePattern('*.md');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should returns false', () => {
-			const actual = util.isPositivePattern('!*.md');
+			const isActual = util.isPositivePattern('!*.md');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
@@ -303,27 +301,27 @@ describe('Utils → Pattern', () => {
 
 	describe('.isPatternRelatedToParentDirectory', () => {
 		it('should be `false` when the pattern refers to the current directory', () => {
-			const actual = util.isPatternRelatedToParentDirectory('.');
+			const isActual = util.isPatternRelatedToParentDirectory('.');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 
 		it('should be `true` when the pattern equals to `..`', () => {
-			const actual = util.isPatternRelatedToParentDirectory('..');
+			const isActual = util.isPatternRelatedToParentDirectory('..');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should be `true` when the pattern starts with `..` segment', () => {
-			const actual = util.isPatternRelatedToParentDirectory('../*');
+			const isActual = util.isPatternRelatedToParentDirectory('../*');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should be `true` when the pattern starts with `./..` segment', () => {
-			const actual = util.isPatternRelatedToParentDirectory('./../*');
+			const isActual = util.isPatternRelatedToParentDirectory('./../*');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 	});
 
@@ -371,55 +369,55 @@ describe('Utils → Pattern', () => {
 
 	describe('.hasGlobStar', () => {
 		it('should returns true for pattern that includes globstar', () => {
-			const actual = util.hasGlobStar('**/*.js');
+			const isActual = util.hasGlobStar('**/*.js');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should returns false for pattern that has no globstar', () => {
-			const actual = util.hasGlobStar('*.js');
+			const isActual = util.hasGlobStar('*.js');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
-	describe('.endsWithSlashGlobStar', () => {
+	describe('.hasTrailingSlashGlobStar', () => {
 		it('should returns true for pattern that ends with slash and globstar', () => {
-			const actual = util.endsWithSlashGlobStar('name/**');
+			const isActual = util.hasTrailingSlashGlobStar('name/**');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should returns false for pattern that has no slash, but ends with globstar', () => {
-			const actual = util.endsWithSlashGlobStar('**');
+			const isActual = util.hasTrailingSlashGlobStar('**');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 
 		it('should returns false for pattern that does not ends with globstar', () => {
-			const actual = util.endsWithSlashGlobStar('name/**/*');
+			const isActual = util.hasTrailingSlashGlobStar('name/**/*');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
 	describe('.isAffectDepthOfReadingPattern', () => {
 		it('should return true for pattern that ends with slash and globstar', () => {
-			const actual = util.isAffectDepthOfReadingPattern('name/**');
+			const isActual = util.isAffectDepthOfReadingPattern('name/**');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return true for pattern when the last partial of the pattern is static pattern', () => {
-			const actual = util.isAffectDepthOfReadingPattern('**/name');
+			const isActual = util.isAffectDepthOfReadingPattern('**/name');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false', () => {
-			const actual = util.isAffectDepthOfReadingPattern('**/name/*');
+			const isActual = util.isAffectDepthOfReadingPattern('**/name/*');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
@@ -434,6 +432,28 @@ describe('Utils → Pattern', () => {
 	});
 
 	describe('.expandBraceExpansion', () => {
+		it('should preserve patterns without a brace pair', () => {
+			const patterns = ['a/"b"', 'a/\'b\'', 'a/`b`', 'a]', 'a/"{b"', 'a/"b}"', 'a/"}b{"'];
+
+			for (const pattern of patterns) {
+				assert.deepStrictEqual(util.expandBraceExpansion(pattern), [pattern]);
+			}
+		});
+
+		it('should process quotes when a literal brace pair is present', () => {
+			const actual = util.expandBraceExpansion('a/"{b}"');
+
+			assert.deepStrictEqual(actual, ['a/{b}']);
+		});
+
+		it('should expand numeric ranges', () => {
+			const expected = ['a/01', 'a/02', 'a/03'];
+
+			const actual = util.expandBraceExpansion('a/{01..03}');
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
 		it('should return an array of expanded patterns with brace expansion without dupes', () => {
 			const expected = ['a/b', 'a/c', 'a/c/d'];
 
@@ -492,6 +512,16 @@ describe('Utils → Pattern', () => {
 			assert.deepStrictEqual(actual, expected);
 		});
 
+		it('should remove only the trailing empty part', () => {
+			assert.deepStrictEqual(util.getPatternParts('*/', {}), ['*']);
+			assert.deepStrictEqual(util.getPatternParts('/lib/*/', {}), ['', 'lib', '*']);
+			assert.deepStrictEqual(util.getPatternParts('a//b/', {}), ['a', '', 'b']);
+		});
+
+		it('should preserve a prefix-only pattern', () => {
+			assert.deepStrictEqual(util.getPatternParts('./', {}), ['./']);
+		});
+
 		it('should return an array of pattern parts', () => {
 			const expected: Pattern[] = ['a', '*', 'b', '**', 'c'];
 
@@ -507,6 +537,18 @@ describe('Utils → Pattern', () => {
 
 			assert.ok(actual instanceof RegExp);
 		});
+
+		it('should match absolute paths with forward slashes', () => {
+			const actual = util.makeRe('C:/root/*.txt', {});
+
+			assert.ok(actual.test('C:/root/file.txt'));
+		});
+
+		it('should treat backslashes as path separators only on Windows', () => {
+			const actual = util.makeRe('C:/root/*.txt', {});
+
+			assert.strictEqual(actual.test(String.raw`C:\root\file.txt`), tests.platform.isWindows());
+		});
 	});
 
 	describe('.convertPatternsToRe', () => {
@@ -517,17 +559,17 @@ describe('Utils → Pattern', () => {
 		});
 	});
 
-	describe('.matchAny', () => {
+	describe('.isMatchAny', () => {
 		it('should return true', () => {
-			const actual = util.matchAny('fixtures/nested/file.txt', [/fixture/, /fixtures\/nested\/file/]);
+			const isActual = util.isMatchAny('fixtures/nested/file.txt', [/fixture/, /fixtures\/nested\/file/]);
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false', () => {
-			const actual = util.matchAny('fixtures/directory', [/fixtures\/file/]);
+			const isActual = util.isMatchAny('fixtures/directory', [/fixtures\/file/]);
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 
@@ -569,15 +611,15 @@ describe('Utils → Pattern', () => {
 
 	describe('.isAbsolute', () => {
 		it('should return true', () => {
-			const actual = util.isAbsolute('/directory/file.txt');
+			const isActual = util.isAbsolute('/directory/file.txt');
 
-			assert.ok(actual);
+			assert.ok(isActual);
 		});
 
 		it('should return false', () => {
-			const actual = util.isAbsolute('directory/file.txt');
+			const isActual = util.isAbsolute('directory/file.txt');
 
-			assert.ok(!actual);
+			assert.ok(!isActual);
 		});
 	});
 });

@@ -1,20 +1,17 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
+import Settings, { type Options } from '../../settings.js';
+import * as tests from '../../tests/index.js';
+import type { EntryFilterFunction, Pattern, Entry } from '../../types/index.js';
+import EntryFilter from './entry.js';
 
-import Settings from '../../settings';
-import * as tests from '../../tests';
-import EntryFilter from './entry';
-
-import type { EntryFilterFunction, Pattern, Entry } from '../../types';
-import type { Options } from '../../settings';
-
-interface FilterOptions {
+type FilterOptions = {
 	positive: Pattern[];
 	negative?: Pattern[];
 	options?: Options;
-}
+};
 
 const FILE_ENTRY = tests.entry.builder().path('root/file.txt').file().build();
 const SOCKET_ENTRY = tests.entry.builder().path('/tmp/test.sock').socket().build();
@@ -34,18 +31,18 @@ function getFilter(options: FilterOptions): EntryFilterFunction {
 	return getEntryFilterInstance(options.options).getFilter(options.positive, negative);
 }
 
-function getResult(entry: Entry, options: FilterOptions): boolean {
+function isAccepted(entry: Entry, options: FilterOptions): boolean {
 	const filter = getFilter(options);
 
 	return filter(entry);
 }
 
 function accept(entry: Entry, options: FilterOptions): void {
-	assert.strictEqual(getResult(entry, options), true);
+	assert.strictEqual(isAccepted(entry, options), true);
 }
 
 function reject(entry: Entry, options: FilterOptions): void {
-	assert.strictEqual(getResult(entry, options), false);
+	assert.strictEqual(isAccepted(entry, options), false);
 }
 
 describe('Providers → Filters → Entry', () => {
@@ -86,9 +83,9 @@ describe('Providers → Filters → Entry', () => {
 
 				filter(FILE_ENTRY);
 
-				const actual = filter(FILE_ENTRY);
+				const isActual = filter(FILE_ENTRY);
 
-				assert.ok(!actual);
+				assert.ok(!isActual);
 			});
 
 			it('should reject a duplicate entry when the two entries differ only by the leading dot segment', () => {
@@ -111,9 +108,9 @@ describe('Providers → Filters → Entry', () => {
 
 				filter(FILE_ENTRY);
 
-				const actual = filter(FILE_ENTRY);
+				const isActual = filter(FILE_ENTRY);
 
-				assert.ok(actual);
+				assert.ok(isActual);
 			});
 		});
 

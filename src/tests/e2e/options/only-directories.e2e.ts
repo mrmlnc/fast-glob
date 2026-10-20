@@ -1,4 +1,4 @@
-import * as runner from '../runner';
+import * as runner from '../runner.js';
 
 runner.suite('Options OnlyDirectories', {
 	tests: [

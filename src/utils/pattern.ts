@@ -1,18 +1,16 @@
 import * as path from 'node:path';
-
-// https://stackoverflow.com/a/39415662
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import globParent = require('glob-parent');
-import * as micromatch from 'micromatch';
-
-import type { MicromatchOptions, Pattern, PatternRe } from '../types';
+import braces from 'braces';
+import globParent from 'glob-parent';
+import picomatch from 'picomatch';
+import type { MatcherOptions, Pattern, PatternRe } from '../types/index.js';
+import { IS_WINDOWS_PLATFORM } from './path.js';
 
 const GLOBSTAR = '**';
 const ESCAPE_SYMBOL = '\\';
 const QUESTION_MARK_SYMBOL = '?';
 
 const COMMON_GLOB_SYMBOLS_RE = /[*?]|^!/;
-const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*]/;
+const REGEX_CHARACTER_CLASS_SYMBOLS_RE = /\[[^[]*\]/;
 const REGEX_GROUP_SYMBOLS_RE = /(?:^|[^!*+?@])\([^(]*\|[^|]*\)/;
 const GLOB_EXTENSION_SYMBOLS_RE = /[!*+?@]\([^(]*\)/;
 const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
@@ -23,11 +21,11 @@ const BRACE_EXPANSION_SEPARATORS_RE = /,|\.\./;
  */
 const DOUBLE_SLASH_RE = /(?!^)\/{2,}/g;
 
-interface PatternTypeOptions {
+type PatternTypeOptions = {
 	braceExpansion?: boolean;
 	caseSensitiveMatch?: boolean;
 	extglob?: boolean;
-}
+};
 
 export function isStaticPattern(pattern: Pattern, options: PatternTypeOptions = {}): boolean {
 	return !isDynamicPattern(pattern, options);
@@ -180,72 +178,81 @@ export function hasGlobStar(pattern: Pattern): boolean {
 	return pattern.includes(GLOBSTAR);
 }
 
-export function endsWithSlashGlobStar(pattern: Pattern): boolean {
+export function hasTrailingSlashGlobStar(pattern: Pattern): boolean {
 	return pattern.endsWith(`/${GLOBSTAR}`);
 }
 
 export function isAffectDepthOfReadingPattern(pattern: Pattern): boolean {
 	const basename = path.basename(pattern);
 
-	return endsWithSlashGlobStar(pattern) || isStaticPattern(basename);
+	return hasTrailingSlashGlobStar(pattern) || isStaticPattern(basename);
 }
 
 export function expandPatternsWithBraceExpansion(patterns: Pattern[]): Pattern[] {
-	return patterns.reduce<Pattern[]>((collection, pattern) => {
-		return collection.concat(expandBraceExpansion(pattern));
-	}, []);
+	const expandedPatterns: Pattern[] = [];
+
+	for (const pattern of patterns) {
+		expandedPatterns.push(...expandBraceExpansion(pattern));
+	}
+
+	return expandedPatterns;
 }
 
 export function expandBraceExpansion(pattern: Pattern): Pattern[] {
-	const patterns = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
+	const openingBraceIndex = pattern.indexOf('{');
+
+	/**
+	 * Avoid parsing patterns without a brace pair, which can change quotes and escaping.
+	 */
+	if (openingBraceIndex === -1 || !pattern.includes('}', openingBraceIndex)) {
+		return [pattern];
+	}
+
+	const patterns = braces(pattern, {
+		expand: true,
+		nodupes: true,
+		// @ts-expect-error The noempty option needs to be added to @types/braces.
+		noempty: true,
+		keepEscaping: true,
+	});
 
 	/**
 	 * Sort the patterns by length so that the same depth patterns are processed side by side.
 	 * `a/{b,}/{c,}/*` – `['a///*', 'a/b//*', 'a//c/*', 'a/b/c/*']`
 	 */
-	patterns.sort((a, b) => a.length - b.length);
-
-	/**
-	 * Micromatch can return an empty string in the case of patterns like `{a,}`.
-	 */
-	return patterns.filter((pattern) => pattern !== '');
+	return patterns.toSorted((a, b) => a.length - b.length);
 }
 
-export function getPatternParts(pattern: Pattern, options: MicromatchOptions): Pattern[] {
-	let { parts } = micromatch.scan(pattern, {
-		...options,
-		parts: true,
-	});
+export function getPatternParts(pattern: Pattern, options: MatcherOptions): Pattern[] {
+	const { parts = [] } = picomatch.scan(pattern, { ...options, parts: true });
 
 	/**
-	 * The scan method returns an empty array in some cases.
-	 * See micromatch/picomatch#58 for more details.
+	 * A trailing slash marks a directory and must not add another level of traversal.
 	 */
-	if (parts.length === 0) {
-		parts = [pattern];
+	if (parts.at(-1) === '') {
+		parts.pop();
 	}
 
 	/**
-	 * The scan method does not return an empty part for the pattern with a forward slash.
-	 * This is another part of micromatch/picomatch#58.
+	 * Preserve the original pattern when no parts remain, for example, for an empty string or `./`.
 	 */
-	if (parts[0].startsWith('/')) {
-		parts[0] = parts[0].slice(1);
-		parts.unshift('');
+	if (parts.length === 0) {
+		return [pattern];
 	}
 
 	return parts;
 }
 
-export function makeRe(pattern: Pattern, options: MicromatchOptions): PatternRe {
-	return micromatch.makeRe(pattern, options);
+export function makeRe(pattern: Pattern, options: MatcherOptions): PatternRe {
+	// The picomatch does not detect the platform automatically.
+	return picomatch.makeRe(pattern, { ...options, windows: IS_WINDOWS_PLATFORM });
 }
 
-export function convertPatternsToRe(patterns: Pattern[], options: MicromatchOptions): PatternRe[] {
+export function convertPatternsToRe(patterns: Pattern[], options: MatcherOptions): PatternRe[] {
 	return patterns.map((pattern) => makeRe(pattern, options));
 }
 
-export function matchAny(entry: string, patternsRe: PatternRe[]): boolean {
+export function isMatchAny(entry: string, patternsRe: PatternRe[]): boolean {
 	return patternsRe.some((patternRe) => patternRe.test(entry));
 }
 

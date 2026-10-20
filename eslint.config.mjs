@@ -1,8 +1,12 @@
-import cfg from 'eslint-config-mrmlnc';
+import { build } from 'eslint-config-mrmlnc';
+import { defineConfig } from 'eslint/config';
 
-/** @type {import('eslint').Linter.Config[]} */
-const overrides = [
-	...cfg.build({}),
-];
-
-export default overrides;
+export default defineConfig([
+	...build(),
+	{
+		rules: {
+			'require-unicode-regexp': 'off',
+			'unicorn/prefer-top-level-await': 'off',
+		},
+	},
+]);

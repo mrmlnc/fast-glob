@@ -1,15 +1,12 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
-
+import * as process from 'node:process';
 import { describe, it } from 'mocha';
-
-import Settings from '../settings';
-import * as tests from '../tests';
-import { Provider } from './provider';
-
-import type { Task } from '../managers/tasks';
-import type { Options } from '../settings';
-import type { Dictionary, MicromatchOptions, ReaderOptions } from '../types';
+import Settings, { type Options } from '../settings.js';
+import * as tests from '../tests/index.js';
+import type { Task } from '../managers/tasks.js';
+import type { Dictionary, MatcherOptions, ReaderOptions } from '../types/index.js';
+import { Provider } from './provider.js';
 
 class TestProvider extends Provider<Dictionary[]> {
 	public read(): Dictionary[] {
@@ -24,8 +21,8 @@ class TestProvider extends Provider<Dictionary[]> {
 		return this._getReaderOptions(task);
 	}
 
-	public getMicromatchOptions(): MicromatchOptions {
-		return this._getMicromatchOptions();
+	public getMatcherOptions(): MatcherOptions {
+		return this._getMatcherOptions();
 	}
 }
 
@@ -83,7 +80,7 @@ describe('Providers → Provider', () => {
 			assert.strictEqual(actual.followSymbolicLinks, true);
 			assert.strictEqual(typeof actual.fs, 'object');
 			assert.ok(!actual.stats);
-			assert.ok(actual.throwErrorOnBrokenSymbolicLink === false);
+			assert.strictEqual(actual.throwErrorOnBrokenSymbolicLink, false);
 			assert.strictEqual(typeof actual.transform, 'function');
 			assert.strictEqual(actual.signal, undefined);
 		});
@@ -98,11 +95,11 @@ describe('Providers → Provider', () => {
 		});
 	});
 
-	describe('.getMicromatchOptions', () => {
-		it('should return options for micromatch', () => {
+	describe('.getMatcherOptions', () => {
+		it('should return options for matcher', () => {
 			const provider = getProvider();
 
-			const expected: MicromatchOptions = {
+			const expected: MatcherOptions = {
 				dot: false,
 				matchBase: false,
 				nobrace: false,
@@ -113,7 +110,7 @@ describe('Providers → Provider', () => {
 				strictSlashes: false,
 			};
 
-			const actual = provider.getMicromatchOptions();
+			const actual = provider.getMatcherOptions();
 
 			assert.deepStrictEqual(actual, expected);
 		});

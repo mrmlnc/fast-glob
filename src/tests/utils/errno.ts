@@ -1,4 +1,4 @@
-import type { ErrnoException } from '../../types';
+import type { ErrnoException } from '../../types/index.js';
 
 class SystemError extends Error implements ErrnoException {
 	constructor(public readonly code: string, message: string) {
@@ -9,6 +9,10 @@ class SystemError extends Error implements ErrnoException {
 
 export function getEnoent(): ErrnoException {
 	return new SystemError('ENOENT', 'no such file or directory');
+}
+
+export function getEnotdir(): ErrnoException {
+	return new SystemError('ENOTDIR', 'not a directory');
 }
 
 export function getEperm(): ErrnoException {
