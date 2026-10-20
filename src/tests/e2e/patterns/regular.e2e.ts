@@ -506,8 +506,18 @@ runner.suite('Patterns Regular (segmented lists)', {
 
 runner.suite('Patterns Regular (question mark in the base directory)', {
 	tests: [
-		{ pattern: 'fi?st/file.md', options: { cwd: 'fixtures' }, issue: 380, expected: () => ['first/file.md'] },
-		{ pattern: '?????/file.md', options: { cwd: 'fixtures' }, issue: 380, expected: () => ['first/file.md'] },
+		{
+			pattern: 'fi?st/file.md',
+			options: { cwd: 'fixtures' },
+			issue: 380,
+			expected: () => ['first/file.md'],
+		},
+		{
+			pattern: '?????/file.md',
+			options: { cwd: 'fixtures' },
+			issue: 380,
+			expected: () => ['first/file.md'],
+		},
 		{ pattern: 'fixtures/fi?st/file.md', issue: 380, expected: () => ['fixtures/first/file.md'] },
 	],
 });
