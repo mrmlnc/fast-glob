@@ -132,7 +132,11 @@ export function isPatternRelatedToParentDirectory(pattern: Pattern): boolean {
 }
 
 export function getBaseDirectory(pattern: Pattern): string {
-	return globParent(pattern, { flipBackslashes: false });
+	// `is-glob` intentionally excludes bare `?` in strict mode, while fast-glob treats it as a wildcard.
+	// Preserve escaped characters and Windows device prefixes; matching still uses the original pattern.
+	const patternForBase = pattern.replaceAll(/^\/\/\?\/|\\[\s\S]|\?/g, (match) => match === '?' ? '*' : match);
+
+	return globParent(patternForBase, { flipBackslashes: false });
 }
 
 export function hasGlobStar(pattern: Pattern): boolean {
