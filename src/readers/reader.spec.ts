@@ -77,6 +77,18 @@ describe('Readers → Reader', () => {
 			assert.ok(actual.dirent.isFile());
 		});
 
+		it('should return created entry with the last part of the pattern as the name', () => {
+			const reader = getReader();
+			const pattern = 'directory/config.json';
+			const stats = new Stats({ mode: StatsMode.File });
+
+			const actual = reader.makeEntry(stats, pattern);
+
+			assert.strictEqual(actual.name, 'config.json');
+			assert.strictEqual(actual.path, pattern);
+			assert.strictEqual(actual.dirent.name, 'config.json');
+		});
+
 		it('should return created entry with fs.Stats', () => {
 			const reader = getReader({ stats: true });
 			const pattern = 'config.json';
