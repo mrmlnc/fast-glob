@@ -93,6 +93,32 @@ describe('Managers → Task', () => {
 
 			assert.deepStrictEqual(actual, expected);
 		});
+
+		it('should preserve negative basename patterns when adding glob star', () => {
+			const settings = new Settings({ baseNameMatch: true });
+			const expected = [tests.task.builder().base('.').positive('**/*.txt').negative('**/a.txt').build()];
+
+			const actual = manager.generate(['*.txt', '!a.txt'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should not create positive tasks from negative basename patterns', () => {
+			const settings = new Settings({ baseNameMatch: true });
+
+			const actual = manager.generate(['!a.txt'], settings);
+
+			assert.deepStrictEqual(actual, []);
+		});
+
+		it('should preserve negated extglobs as positive basename patterns', () => {
+			const settings = new Settings({ baseNameMatch: true });
+			const expected = [tests.task.builder().base('.').positive('**/!(a).txt').build()];
+
+			const actual = manager.generate(['!(a).txt'], settings);
+
+			assert.deepStrictEqual(actual, expected);
+		});
 	});
 
 	describe('.convertPatternsToTasks', () => {
