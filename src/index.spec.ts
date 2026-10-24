@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 import { describe, it } from 'mocha';
 import * as tests from './tests/index.js';
-import type { EntryItem, ErrnoException } from './types/index.js';
+import type { Entry, EntryItem, ErrnoException } from './types/index.js';
 import * as fg from './index.js';
 
 // Only for validating the input data.
@@ -51,6 +51,15 @@ describe('Package', () => {
 			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return the same entry name for static and dynamic patterns', () => {
+			const [staticEntry] = fg.globSync('fixtures/first/file.md', { objectMode: true });
+			const [dynamicEntry] = fg.globSync('fixtures/first/*.md', { objectMode: true });
+
+			assert.strictEqual(staticEntry.name, 'file.md');
+			assert.strictEqual(staticEntry.dirent.name, 'file.md');
+			assert.strictEqual(staticEntry.name, dynamicEntry.name);
 		});
 	});
 
@@ -104,6 +113,15 @@ describe('Package', () => {
 			actual.sort((a, b) => a.localeCompare(b));
 
 			assert.deepStrictEqual(actual, expected);
+		});
+
+		it('should return the same entry name for static and dynamic patterns', async () => {
+			const [staticEntry] = await fg.glob('fixtures/first/file.md', { objectMode: true });
+			const [dynamicEntry] = await fg.glob('fixtures/first/*.md', { objectMode: true });
+
+			assert.strictEqual(staticEntry.name, 'file.md');
+			assert.strictEqual(staticEntry.dirent.name, 'file.md');
+			assert.strictEqual(staticEntry.name, dynamicEntry.name);
 		});
 
 		it('should abort processing dynamic pattern with abort signal', async () => {
@@ -192,6 +210,24 @@ describe('Package', () => {
 				actual.sort();
 
 				assert.deepStrictEqual(actual, expected);
+				done();
+			});
+		});
+
+		it('should return the same entry name for static and dynamic patterns', (done) => {
+			const actual: string[][] = [];
+
+			const stream = fg.globStream(['fixtures/first/file.md', 'fixtures/first/*.md'], { objectMode: true, unique: false });
+
+			stream.on('data', (entry: Entry) => {
+				actual.push([entry.path, entry.name, entry.dirent.name]);
+			});
+			stream.once('error', (error: ErrnoException) => assert.fail(error));
+			stream.once('end', () => {
+				assert.deepStrictEqual(actual, [
+					['fixtures/first/file.md', 'file.md', 'file.md'],
+					['fixtures/first/file.md', 'file.md', 'file.md'],
+				]);
 				done();
 			});
 		});
