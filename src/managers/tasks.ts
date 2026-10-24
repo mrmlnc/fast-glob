@@ -49,7 +49,15 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
 	 * in the application. Only on the input.
 	 */
 	if (settings.baseNameMatch) {
-		patterns = patterns.map((pattern) => pattern.includes('/') ? pattern : `**/${pattern}`);
+		patterns = patterns.map((pattern) => {
+			if (pattern.includes('/')) {
+				return pattern;
+			}
+
+			return utils.pattern.isNegativePattern(pattern)
+				? `!**/${utils.pattern.convertToPositivePattern(pattern)}`
+				: `**/${pattern}`;
+		});
 	}
 
 	/**
