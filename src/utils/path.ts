@@ -25,10 +25,11 @@ const DOS_DEVICE_PATH_RE = /^\\\\(?=[.?])/;
 const DOS_DEVICE_DRIVE_ROOT_RE = /^\\\\[.?]\\[a-z]:$/i;
 /**
  * All backslashes except those escaping special characters.
- * Windows: !()+@{}
+ * A single backslash before a plain @ is a separator; preserve explicit and extglob escapes.
+ * Windows: !()+@{}[]
  * https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
  */
-const WINDOWS_BACKSLASHES_RE = /\\(?![!()+@[\]{}])/g;
+const WINDOWS_BACKSLASHES_RE = /(?<!\\)\\(?=@(?!\\\())|\\(?![!()+@[\]{}])/g;
 
 export function makeAbsolute(cwd: string, filepath: string): string {
 	return path.resolve(cwd, filepath);

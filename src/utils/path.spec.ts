@@ -114,6 +114,11 @@ describe('Utils → Path', () => {
 		it('should escape special characters', () => {
 			assert.strictEqual(util.convertPosixPathToPattern(String.raw`./**\*`), String.raw`./\*\*\*`);
 		});
+
+		it('should preserve escaped at-signs', () => {
+			assert.strictEqual(util.convertPosixPathToPattern(String.raw`node_modules\@vitest`), String.raw`node_modules\@vitest`);
+			assert.strictEqual(util.convertPosixPathToPattern('node_modules/@vitest'), 'node_modules/@vitest');
+		});
 	});
 
 	describe('.convertWindowsPathToPattern', () => {
@@ -124,7 +129,7 @@ describe('Utils → Path', () => {
 		it('should do nothing with escaped glob symbols', () => {
 			assert.strictEqual(util.convertWindowsPathToPattern('\\!\\'), String.raw`\!/`);
 			assert.strictEqual(util.convertWindowsPathToPattern('\\+\\'), String.raw`\+/`);
-			assert.strictEqual(util.convertWindowsPathToPattern('\\@\\'), String.raw`\@/`);
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`\\@`), String.raw`/\@`);
 			assert.strictEqual(util.convertWindowsPathToPattern('\\(\\'), String.raw`\(/`);
 			assert.strictEqual(util.convertWindowsPathToPattern('\\)\\'), String.raw`\)/`);
 			assert.strictEqual(util.convertWindowsPathToPattern('\\{\\'), String.raw`\{/`);
@@ -137,6 +142,33 @@ describe('Utils → Path', () => {
 			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`.\**\*`), './**/*');
 
 			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`a\{b,c\d,{b,c}}`), String.raw`a\{b,c/d,\{b,c\}\}`);
+		});
+
+		it('should convert path separators before ordinary at-signs', () => {
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`\@`), '/@');
+			assert.strictEqual(util.convertWindowsPathToPattern('\\@\\'), '/@/');
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`.\@scope`), './@scope');
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`directory\@`), 'directory/@');
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`@root\@scope\@file`), '@root/@scope/@file');
+			assert.strictEqual(util.convertWindowsPathToPattern('@scope'), '@scope');
+		});
+
+		it('should preserve an escaped at-sign after a path separator', () => {
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`node_modules\\@vitest\file`), String.raw`node_modules/\@vitest/file`);
+		});
+
+		it('should preserve escapes for extglob operators', () => {
+			assert.strictEqual(util.convertWindowsPathToPattern('@(scope)'), String.raw`\@\(scope\)`);
+			assert.strictEqual(util.convertWindowsPathToPattern('!(scope)'), String.raw`\!\(scope\)`);
+			assert.strictEqual(util.convertWindowsPathToPattern('+(scope)'), String.raw`\+\(scope\)`);
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`\@\(scope\)`), String.raw`\@\(scope\)`);
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`directory/\@\(scope\)`), String.raw`directory/\@\(scope\)`);
+		});
+
+		it('should convert path separators before at-signs in absolute Windows paths', () => {
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`C:\node_modules\@scope\file`), 'C:/node_modules/@scope/file');
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`\\server\share\@scope\file`), '//server/share/@scope/file');
+			assert.strictEqual(util.convertWindowsPathToPattern(String.raw`\\?\C:\@scope\file`), '//?/C:/@scope/file');
 		});
 
 		it('should convert slashes', () => {
