@@ -53,9 +53,10 @@ function processPatterns(input: Pattern[], settings: Settings): Pattern[] {
 	}
 
 	/**
-	 * This method also removes duplicate slashes that may have been in the pattern or formed as a result of expansion.
+	 * Remove duplicate slashes and redundant leading dot segments before preparing tasks.
+	 * Retain a single leading `./` so existing entry path formatting does not change.
 	 */
-	return patterns.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern));
+	return patterns.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern).replaceAll(/^(?:\.\/){2,}/g, './'));
 }
 
 /**
