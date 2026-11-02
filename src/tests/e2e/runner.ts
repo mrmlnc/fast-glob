@@ -9,13 +9,14 @@ import type { Pattern } from '../../types/index.js';
 const CWD = process.cwd().replaceAll('\\', '/');
 
 type TransformFunction = (entry: string) => string;
+type StringOptions = fg.Options & { objectMode?: false; stats?: false };
 
 type Suite = {
 	tests: Test[] | Test[][];
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: boolean | StringOptions;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -25,11 +26,11 @@ type Suite = {
 
 type Test = {
 	pattern: Pattern | Pattern[];
-	options?: fg.Options;
+	options?: StringOptions;
 	/**
 	 * Allow to run only one test case with debug information.
 	 */
-	debug?: boolean | fg.Options;
+	debug?: boolean | StringOptions;
 	/**
 	 * The ability to conditionally run the test.
 	 */
@@ -139,7 +140,7 @@ function getTestMochaDefinition(suiteOptions: Suite, test: Test): MochaDefinitio
 	return it;
 }
 
-function getFastGlobOptions(suiteOptions: Suite, test: Test): fg.Options | undefined {
+function getFastGlobOptions(suiteOptions: Suite, test: Test): StringOptions | undefined {
 	let { options } = test;
 
 	if (typeof suiteOptions.debug !== 'boolean') {
@@ -167,15 +168,15 @@ function getResultTransformers(suiteOptions: Suite, test: Test): TransformFuncti
 	return transformers;
 }
 
-function getFastGlobEntriesSync(patterns: Pattern[], options?: fg.Options): string[] {
+function getFastGlobEntriesSync(patterns: Pattern[], options?: StringOptions): string[] {
 	return fg.globSync(patterns, options);
 }
 
-async function getFastGlobEntriesAsync(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
+async function getFastGlobEntriesAsync(patterns: Pattern[], options?: StringOptions): Promise<string[]> {
 	return fg.glob(patterns, options);
 }
 
-async function getFastGlobEntriesStream(patterns: Pattern[], options?: fg.Options): Promise<string[]> {
+async function getFastGlobEntriesStream(patterns: Pattern[], options?: StringOptions): Promise<string[]> {
 	const entries: string[] = [];
 
 	const stream = fg.globStream(patterns, options);

@@ -1,3 +1,4 @@
+import type { Readable } from 'node:stream';
 import * as taskManager from './managers/tasks.js';
 import Settings, { type Options as OptionsInternal } from './settings.js';
 import * as utils from './utils/index.js';
@@ -15,6 +16,13 @@ type InputPattern = PatternInternal | readonly PatternInternal[];
 type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
+type EntryStringPredicate = { objectMode?: false; stats?: false };
+
+// An interface replaces the inherited iterator signature instead of retaining its untyped overload.
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+interface EntryStream<T extends EntryItem> extends Readable {
+	[Symbol.asyncIterator](): NodeJS.AsyncIterator<T>;
+}
 
 export type Options = OptionsInternal;
 export type Entry = EntryInternal;
@@ -23,7 +31,8 @@ export type Pattern = PatternInternal;
 export type FileSystemAdapter = FileSystemAdapterInternal;
 
 export function glob(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
-export function glob(source: InputPattern, options?: OptionsInternal): Promise<string[]>;
+export function glob(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): Promise<string[]>;
+export function glob(source: InputPattern, options?: OptionsInternal): Promise<EntryItem[]>;
 export async function glob(source: InputPattern, options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
 
@@ -46,7 +55,8 @@ export async function glob(source: InputPattern, options?: OptionsInternal): Pro
 export const async = glob;
 
 export function globSync(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
-export function globSync(source: InputPattern, options?: OptionsInternal): string[];
+export function globSync(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): string[];
+export function globSync(source: InputPattern, options?: OptionsInternal): EntryItem[];
 export function globSync(source: InputPattern, options?: OptionsInternal): EntryItem[] {
 	assertPatternsInput(source);
 
@@ -66,7 +76,10 @@ export function globSync(source: InputPattern, options?: OptionsInternal): Entry
  */
 export const sync = globSync;
 
-export function globStream(source: InputPattern, options?: OptionsInternal): NodeJS.ReadableStream {
+export function globStream(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): EntryStream<EntryInternal>;
+export function globStream(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): EntryStream<string>;
+export function globStream(source: InputPattern, options?: OptionsInternal): EntryStream<EntryItem>;
+export function globStream(source: InputPattern, options?: OptionsInternal): Readable {
 	assertPatternsInput(source);
 
 	const settings = new Settings(options);
