@@ -31,6 +31,31 @@ describe('Providers → Matchers → Partial', () => {
 			assertNotMatch(['a/**'], 'b');
 		});
 
+		it('should not treat embedded or repeated stars as a globstar segment', () => {
+			for (const pattern of ['a**/file.md', '**a/file.md', '***/file.md', '@(a|**)/file.md']) {
+				assertMatch([pattern], 'a');
+				assertNotMatch([pattern], 'a/deep');
+			}
+
+			assertNotMatch(['a**/file.md'], 'unrelated');
+		});
+
+		it('should limit traversal when the globstar option is disabled', () => {
+			const matcher = new Matcher(['**/file.md'], new Settings({ globstar: false }), { noglobstar: true });
+
+			assert.ok(matcher.match('a'));
+			assert.ok(!matcher.match('a/deep'));
+		});
+
+		it('should continue traversing compound segments containing a slash', () => {
+			for (const globstar of [false, true]) {
+				const matcher = new Matcher(['@(a|**/deep)/*.md'], new Settings({ globstar }), { noglobstar: !globstar });
+
+				assert.ok(matcher.match('a'));
+				assert.ok(matcher.match('a/deep'));
+			}
+		});
+
 		it('should do not match the latest segment', () => {
 			assertMatch(['b/*'], 'b');
 			assertNotMatch(['*'], 'a');

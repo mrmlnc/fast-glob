@@ -78,6 +78,11 @@ export default abstract class Matcher {
 	}
 
 	#splitSegmentsIntoSections(segments: PatternSegment[]): PatternSection[] {
-		return utils.array.splitWhen(segments, (segment) => segment.dynamic && utils.pattern.hasGlobStar(segment.pattern));
+		// Compound patterns may span directories within a single scanned segment.
+		// Keep their existing conservative traversal when they contain a globstar.
+		return utils.array.splitWhen(segments, (segment) => segment.dynamic && (
+			(this.#settings.globstar && segment.pattern === '**')
+			|| (segment.pattern.includes('/') && utils.pattern.hasGlobStar(segment.pattern))
+		));
 	}
 }
