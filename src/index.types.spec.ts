@@ -32,4 +32,38 @@ describe('Package types', () => {
 		// @ts-expect-error A widened boolean may enable stats and object output.
 		assert.strictEqual(typeof (async satisfies string[])[0], 'object');
 	});
+
+	it('should iterate over strings when stream object output is disabled', async () => {
+		const entries: string[] = [];
+
+		for await (const entry of fg.globStream('fixtures/file.md')) {
+			entries.push(entry satisfies string);
+		}
+
+		assert.deepStrictEqual(entries, ['fixtures/file.md']);
+	});
+
+	it('should iterate over objects when stream object output is enabled', async () => {
+		const entries: fg.Entry[] = [];
+
+		for await (const entry of fg.globStream('fixtures/file.md', { stats: true })) {
+			entries.push(entry satisfies fg.Entry);
+		}
+
+		assert.strictEqual(entries[0].path, 'fixtures/file.md');
+		assert.ok(entries[0].stats);
+	});
+
+	it('should include objects when stream output modes are unknown', async () => {
+		const options: fg.Options = { objectMode: true };
+		const entries: Array<string | fg.Entry> = [];
+
+		for await (const entry of fg.globStream('fixtures/file.md', options)) {
+			entries.push(entry satisfies string | fg.Entry);
+			// @ts-expect-error Options may enable object output.
+			assert.strictEqual(typeof (entry satisfies string), 'object');
+		}
+
+		assert.strictEqual(entries.length, 1);
+	});
 });

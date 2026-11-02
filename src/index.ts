@@ -1,3 +1,4 @@
+import type { Readable } from 'node:stream';
 import * as taskManager from './managers/tasks.js';
 import Settings, { type Options as OptionsInternal } from './settings.js';
 import * as utils from './utils/index.js';
@@ -69,7 +70,10 @@ export function globSync(source: InputPattern, options?: OptionsInternal): Entry
  */
 export const sync = globSync;
 
-export function globStream(source: InputPattern, options?: OptionsInternal): NodeJS.ReadableStream {
+export function globStream(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): Readable & AsyncIterable<EntryInternal>;
+export function globStream(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): Readable & AsyncIterable<string>;
+export function globStream(source: InputPattern, options?: OptionsInternal): Readable & AsyncIterable<EntryItem>;
+export function globStream(source: InputPattern, options?: OptionsInternal): Readable {
 	assertPatternsInput(source);
 
 	const settings = new Settings(options);
