@@ -1,0 +1,35 @@
+import * as assert from 'node:assert';
+import { describe, it } from 'mocha';
+import * as fg from './index.js';
+
+describe('Package types', () => {
+	it('should retain string results when object output is disabled', async () => {
+		const sync = fg.globSync('fixtures/file.md');
+		const async = await fg.glob('fixtures/file.md', { objectMode: false, stats: false });
+
+		assert.deepStrictEqual(sync satisfies string[], ['fixtures/file.md']);
+		assert.deepStrictEqual(async satisfies string[], sync);
+	});
+
+	it('should retain object results when object output is enabled', async () => {
+		const sync = fg.globSync('fixtures/file.md', { objectMode: true });
+		const async = await fg.glob('fixtures/file.md', { stats: true });
+
+		assert.strictEqual((sync satisfies fg.Entry[])[0].path, 'fixtures/file.md');
+		assert.strictEqual((async satisfies fg.Entry[])[0].path, sync[0].path);
+	});
+
+	it('should include objects in results for options with unknown output modes', async () => {
+		const options: fg.Options = { objectMode: true };
+		const inferredOptions = { stats: true };
+		const sync = fg.globSync('fixtures/file.md', options);
+		const async = await fg.glob('fixtures/file.md', inferredOptions);
+
+		assert.ok(Array.isArray(sync satisfies Array<string | fg.Entry>));
+		assert.ok(Array.isArray(async satisfies Array<string | fg.Entry>));
+		// @ts-expect-error Options may enable object output.
+		assert.strictEqual(typeof (sync satisfies string[])[0], 'object');
+		// @ts-expect-error A widened boolean may enable stats and object output.
+		assert.strictEqual(typeof (async satisfies string[])[0], 'object');
+	});
+});

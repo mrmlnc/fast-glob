@@ -15,6 +15,7 @@ type InputPattern = PatternInternal | readonly PatternInternal[];
 type EntryObjectModePredicate = { [TKey in keyof Pick<OptionsInternal, 'objectMode'>]-?: true };
 type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: true };
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
+type EntryStringPredicate = { objectMode?: false; stats?: false };
 
 export type Options = OptionsInternal;
 export type Entry = EntryInternal;
@@ -23,7 +24,8 @@ export type Pattern = PatternInternal;
 export type FileSystemAdapter = FileSystemAdapterInternal;
 
 export function glob(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): Promise<EntryInternal[]>;
-export function glob(source: InputPattern, options?: OptionsInternal): Promise<string[]>;
+export function glob(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): Promise<string[]>;
+export function glob(source: InputPattern, options?: OptionsInternal): Promise<EntryItem[]>;
 export async function glob(source: InputPattern, options?: OptionsInternal): Promise<EntryItem[]> {
 	assertPatternsInput(source);
 
@@ -46,7 +48,8 @@ export async function glob(source: InputPattern, options?: OptionsInternal): Pro
 export const async = glob;
 
 export function globSync(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): EntryInternal[];
-export function globSync(source: InputPattern, options?: OptionsInternal): string[];
+export function globSync(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): string[];
+export function globSync(source: InputPattern, options?: OptionsInternal): EntryItem[];
 export function globSync(source: InputPattern, options?: OptionsInternal): EntryItem[] {
 	assertPatternsInput(source);
 
