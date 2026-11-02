@@ -66,4 +66,17 @@ describe('Package types', () => {
 
 		assert.strictEqual(entries.length, 1);
 	});
+
+	it('should preserve entry types when advancing a stream iterator manually', async () => {
+		const iterator = fg.globStream('fixtures/file.md', { objectMode: true })[Symbol.asyncIterator]();
+		const result = await iterator.next();
+
+		assert.ok(!result.done);
+		assert.strictEqual((result.value satisfies fg.Entry).path, 'fixtures/file.md');
+		// @ts-expect-error Object output must not become an untyped iterator value.
+		assert.strictEqual(typeof (result.value satisfies string), 'object');
+		const end = await iterator.next();
+
+		assert.ok(end.done);
+	});
 });

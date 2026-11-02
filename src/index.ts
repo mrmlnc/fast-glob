@@ -18,6 +18,12 @@ type EntryStatsPredicate = { [TKey in keyof Pick<OptionsInternal, 'stats'>]-?: t
 type EntryObjectPredicate = EntryObjectModePredicate | EntryStatsPredicate;
 type EntryStringPredicate = { objectMode?: false; stats?: false };
 
+// An interface replaces the inherited iterator signature instead of retaining its untyped overload.
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+interface EntryStream<T extends EntryItem> extends Readable {
+	[Symbol.asyncIterator](): NodeJS.AsyncIterator<T>;
+}
+
 export type Options = OptionsInternal;
 export type Entry = EntryInternal;
 export type Task = taskManager.Task;
@@ -70,9 +76,9 @@ export function globSync(source: InputPattern, options?: OptionsInternal): Entry
  */
 export const sync = globSync;
 
-export function globStream(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): Readable & AsyncIterable<EntryInternal>;
-export function globStream(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): Readable & AsyncIterable<string>;
-export function globStream(source: InputPattern, options?: OptionsInternal): Readable & AsyncIterable<EntryItem>;
+export function globStream(source: InputPattern, options: EntryObjectPredicate & OptionsInternal): EntryStream<EntryInternal>;
+export function globStream(source: InputPattern, options?: EntryStringPredicate & OptionsInternal): EntryStream<string>;
+export function globStream(source: InputPattern, options?: OptionsInternal): EntryStream<EntryItem>;
 export function globStream(source: InputPattern, options?: OptionsInternal): Readable {
 	assertPatternsInput(source);
 
