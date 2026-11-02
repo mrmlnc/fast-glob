@@ -31,8 +31,11 @@ export default class EntryFilter {
 
 	#filter(entry: Entry, pattens: PatternsRegexSet): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
+		const indexKey = this.#settings.unique && this.#settings.absolute
+			? utils.path.makeAbsolute(this.#settings.cwd, filepath)
+			: filepath;
 
-		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
+		if (this.#settings.unique && this.#isDuplicateEntry(indexKey)) {
 			return false;
 		}
 
@@ -45,7 +48,7 @@ export default class EntryFilter {
 		const isMatched = this.#isMatchToPatternsSet(filepath, pattens, isDirectory);
 
 		if (this.#settings.unique && isMatched) {
-			this.#createIndexRecord(filepath);
+			this.#createIndexRecord(indexKey);
 		}
 
 		return isMatched;

@@ -112,6 +112,30 @@ describe('Providers → Filters → Entry', () => {
 
 				assert.ok(isActual);
 			});
+
+			it('should reject entries with the same absolute output path across task filters', () => {
+				const relative = tests.entry.builder().path('root/file.txt').file().build();
+				const absolute = tests.entry.builder().path(path.resolve(relative.path).replaceAll('\\', '/')).file().build();
+				const filterInstance = getEntryFilterInstance({ absolute: true });
+
+				const relativeFilter = filterInstance.getFilter([relative.path], []);
+				const absoluteFilter = filterInstance.getFilter([absolute.path], []);
+
+				assert.ok(relativeFilter(relative));
+				assert.ok(!absoluteFilter(absolute));
+			});
+
+			it('should not index an absolute output path before its entry matches', () => {
+				const relative = tests.entry.builder().path('root/file.txt').file().build();
+				const absolute = tests.entry.builder().path(path.resolve(relative.path).replaceAll('\\', '/')).file().build();
+				const filterInstance = getEntryFilterInstance({ absolute: true });
+
+				const rejectedFilter = filterInstance.getFilter([relative.path], [relative.path]);
+				const acceptedFilter = filterInstance.getFilter([absolute.path], []);
+
+				assert.ok(!rejectedFilter(relative));
+				assert.ok(acceptedFilter(absolute));
+			});
 		});
 
 		describe('options.onlyFiles', () => {
