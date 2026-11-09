@@ -8,13 +8,22 @@ import type {
 	PatternRe,
 } from '../../types/index.js';
 
+type PatternsRegexGroup = {
+	all: PatternRe[];
+	/**
+	 * The subset of `all` whose patterns end with `/` or `/**`. Only these are
+	 * applied to a directory path with a trailing slash added; the others would
+	 * otherwise match the directory itself whenever their last segment can match
+	 * the empty string (`?(x)`, `*(x)`, `!(x)`).
+	 */
+	trailingSlash: PatternRe[];
+};
+
 type PatternsRegexSet = {
-	positive: {
-		all: PatternRe[];
-	};
+	positive: PatternsRegexGroup;
 	negative: {
-		absolute: PatternRe[];
-		relative: PatternRe[];
+		absolute: PatternsRegexGroup;
+		relative: PatternsRegexGroup;
 	};
 };
 
@@ -68,7 +77,7 @@ export default class EntryFilter {
 	}
 
 	#isMatchToPatternsSet(filepath: string, patterns: PatternsRegexSet, isDirectory: boolean): boolean {
-		const isMatched = this.#isMatchToPatterns(filepath, patterns.positive.all, isDirectory);
+		const isMatched = this.#isMatchToPatterns(filepath, patterns.positive, isDirectory);
 		if (!isMatched) {
 			return false;
 		}
@@ -82,8 +91,8 @@ export default class EntryFilter {
 		return !isMatchedByAbsoluteNegative;
 	}
 
-	#isMatchToAbsoluteNegative(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
-		if (patternsRe.length === 0) {
+	#isMatchToAbsoluteNegative(filepath: string, patternsRe: PatternsRegexGroup, isDirectory: boolean): boolean {
+		if (patternsRe.all.length === 0) {
 			return false;
 		}
 
@@ -92,33 +101,38 @@ export default class EntryFilter {
 		return this.#isMatchToPatterns(fullpath, patternsRe, isDirectory);
 	}
 
-	#isMatchToPatterns(filepath: string, patternsRe: PatternRe[], isDirectory: boolean): boolean {
-		if (patternsRe.length === 0) {
+	#isMatchToPatterns(filepath: string, patternsRe: PatternsRegexGroup, isDirectory: boolean): boolean {
+		if (patternsRe.all.length === 0) {
 			return false;
 		}
 
 		// Trying to match files and directories by patterns.
-		const isMatched = utils.pattern.isMatchAny(filepath, patternsRe);
+		const isMatched = utils.pattern.isMatchAny(filepath, patternsRe.all);
 
 		// A pattern with a trailling slash can be used for directory matching.
 		// To apply such pattern, we need to add a tralling slash to the path.
 		if (!isMatched && isDirectory) {
-			return utils.pattern.isMatchAny(`${filepath}/`, patternsRe);
+			return utils.pattern.isMatchAny(`${filepath}/`, patternsRe.trailingSlash);
 		}
 
 		return isMatched;
+	}
+
+	#convertPatternsToReGroup(patterns: Pattern[], options: MatcherOptions): PatternsRegexGroup {
+		return {
+			all: utils.pattern.convertPatternsToRe(patterns, options),
+			trailingSlash: utils.pattern.convertPatternsToRe(patterns.filter((pattern) => pattern.endsWith('/') || pattern.endsWith('/**')), options),
+		};
 	}
 
 	public getFilter(positive: Pattern[], negative: Pattern[]): EntryFilterFunction {
 		const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
 
 		const patterns: PatternsRegexSet = {
-			positive: {
-				all: utils.pattern.convertPatternsToRe(positive, this.#matcherOptions),
-			},
+			positive: this.#convertPatternsToReGroup(positive, this.#matcherOptions),
 			negative: {
-				absolute: utils.pattern.convertPatternsToRe(absoluteNegative, { ...this.#matcherOptions, dot: true }),
-				relative: utils.pattern.convertPatternsToRe(relativeNegative, { ...this.#matcherOptions, dot: true }),
+				absolute: this.#convertPatternsToReGroup(absoluteNegative, { ...this.#matcherOptions, dot: true }),
+				relative: this.#convertPatternsToReGroup(relativeNegative, { ...this.#matcherOptions, dot: true }),
 			},
 		};
 
