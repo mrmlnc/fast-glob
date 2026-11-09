@@ -270,6 +270,40 @@ describe('Providers → Filters → Entry', () => {
 				});
 			});
 
+			it('should apply only patterns with a trailing slash to the path with the trailing slash', () => {
+				// `?(x)` and `*(x)` match the empty string, so with the trailing slash
+				// added these patterns matched the directory itself.
+				reject(DIRECTORY_ENTRY, {
+					positive: ['root/directory/?(x)'],
+					options: { onlyFiles: false },
+				});
+				reject(DIRECTORY_ENTRY, {
+					positive: ['root/directory/*(x)'],
+					options: { onlyFiles: false },
+				});
+				accept(DIRECTORY_ENTRY, {
+					positive: ['root/directory/'],
+					options: { onlyFiles: false },
+				});
+				accept(DIRECTORY_ENTRY, {
+					positive: ['root/*/**'],
+					options: { onlyFiles: false },
+				});
+			});
+
+			it('should apply only negative patterns with a trailing slash to the path with the trailing slash', () => {
+				accept(DIRECTORY_ENTRY, {
+					positive: ['**'],
+					negative: ['root/directory/?(x)'],
+					options: { onlyFiles: false },
+				});
+				reject(DIRECTORY_ENTRY, {
+					positive: ['**'],
+					negative: ['root/directory/'],
+					options: { onlyFiles: false },
+				});
+			});
+
 			it('should reject a hidden entry by negative pattern even when the dot options is disabled', () => {
 				const entry = tests.entry.builder().path('root/files/.hidden.txt').file().build();
 
