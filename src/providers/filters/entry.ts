@@ -30,6 +30,8 @@ export default class EntryFilter {
 	}
 
 	#filter(entry: Entry, pattens: PatternsRegexSet): boolean {
+		this.#repairBrokenDirent(entry);
+
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
 		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
@@ -49,6 +51,32 @@ export default class EntryFilter {
 		}
 
 		return isMatched;
+	}
+
+	/**
+	 * The async provider of `@nodelib/fs.scandir` replaces the dirent of every
+	 * entry with a `DirentFromStats` whose `isDirectory` (and friends) always
+	 * return `false` (fixed upstream in nodelib/nodelib@00472f3e4186, not
+	 * released yet). When that happens, `@nodelib/fs.walk` never descends into
+	 * subdirectories, so `stats: true` silently drops nested files from async
+	 * and stream results (see #547).
+	 *
+	 * This restores a working dirent from the stats that were already collected.
+	 * It only runs when the stats and the dirent disagree about the entry being
+	 * a directory, so it is a no-op once the dependency is fixed upstream.
+	 * It is also skipped when symbolic links are not followed, so a symlinked
+	 * directory keeps reporting as a symbolic link.
+	 */
+	#repairBrokenDirent(entry: Entry): void {
+		if (!this.#settings.stats || !this.#settings.followSymbolicLinks) {
+			return;
+		}
+
+		if (entry.stats === undefined || !entry.stats.isDirectory() || entry.dirent.isDirectory()) {
+			return;
+		}
+
+		entry.dirent = utils.fs.createDirentFromStats(entry.name, entry.stats);
 	}
 
 	#isDuplicateEntry(filepath: string): boolean {
