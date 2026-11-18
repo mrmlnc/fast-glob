@@ -807,6 +807,6 @@ This software is released under the terms of the MIT license.
 [regular_expressions_brackets]: https://www.regular-expressions.info/brackets.html
 [unc_path]: https://learn.microsoft.com/openspecs/windows_protocols/ms-dtyp/62e862f4-2a51-452e-8eeb-dc4ff5ee33cc
 [wikipedia_case_sensitivity]: https://en.wikipedia.org/wiki/Case_sensitivity
-[nodejs_thread_pool]: https://nodejs.org/en/docs/guides/dont-block-the-event-loop
+[nodejs_thread_pool]: https://nodejs.org/learn/asynchronous-work/dont-block-the-event-loop
 [libuv_thread_pool]: http://docs.libuv.org/en/v1.x/threadpool.html
 [windows_naming_conventions]: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
