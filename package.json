@@ -55,7 +55,7 @@
     "@nodelib/fs.stat": "^4.0.0",
     "@nodelib/fs.walk": "^3.0.1",
     "braces": "^3.0.3",
-    "glob-parent": "^6.0.2",
+    "glob-parent": "^7.0.0",
     "merge2": "^1.4.1",
     "picomatch": "^4.0.7"
   },
