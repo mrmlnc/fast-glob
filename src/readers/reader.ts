@@ -36,7 +36,7 @@ export abstract class Reader<T> {
 		const entry: Entry = {
 			name: pattern,
 			path: pattern,
-			dirent: utils.fs.createDirentFromStats(pattern, stats),
+			dirent: utils.fs.createDirentFromStats(path.resolve(this.#settings.cwd, pattern), stats),
 		};
 
 		if (this.#settings.stats) {

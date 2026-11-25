@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import * as fs from 'node:fs';
 import { Stats, StatsMode } from '@nodelib/fs.macchiato';
 import { describe, it } from 'mocha';
 import * as util from './fs.js';
@@ -7,9 +8,11 @@ describe('Utils → FS', () => {
 	describe('.createDirentFromStats', () => {
 		it('should convert fs.Stats to fs.Dirent', () => {
 			const stats = new Stats({ mode: StatsMode.File });
-			const actual = util.createDirentFromStats('name', stats);
+			const actual = util.createDirentFromStats('/project/package.json', stats);
 
-			assert.strictEqual(actual.name, 'name');
+			assert.strictEqual(actual.constructor, fs.Dirent);
+			assert.strictEqual(actual.name, 'package.json');
+			assert.strictEqual(actual.parentPath, '/project');
 			assert.ok(!actual.isBlockDevice());
 			assert.ok(!actual.isCharacterDevice());
 			assert.ok(!actual.isDirectory());
