@@ -1,36 +1,21 @@
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import type { FsStats, FsDirent } from '../types/index.js';
 
-const _kStats = Symbol('stats');
+const direntConstants = fs.constants as unknown as Record<string, number>;
 
-type DirentStatsKeysIntersection = 'constructor' | keyof FsDirent & keyof FsStats;
-
-// Adapting an internal class in Node.js to mimic the behavior of `fs.Dirent` when creating it manually from `fs.Stats`.
-// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L199C1-L213
-export class DirentFromStats extends fs.Dirent {
-	private readonly [_kStats]: FsStats;
-
-	constructor(name: string, stats: FsStats) {
-		// @ts-expect-error The constructor has parameters, but they are not represented in types.
-		// https://github.com/nodejs/node/blob/a4cf6b204f0b160480153dc293ae748bf15225f9/lib/internal/fs/utils.js#L164
-		super(name, null);
-
-		this[_kStats] = stats;
-	}
+function direntType(stats: FsStats): number {
+	if (stats.isFile()) return direntConstants["UV_DIRENT_FILE"];
+	if (stats.isDirectory()) return direntConstants["UV_DIRENT_DIR"];
+	if (stats.isSymbolicLink()) return direntConstants["UV_DIRENT_LINK"];
+	if (stats.isFIFO()) return direntConstants["UV_DIRENT_FIFO"];
+	if (stats.isSocket()) return direntConstants["UV_DIRENT_SOCKET"];
+	if (stats.isCharacterDevice()) return direntConstants["UV_DIRENT_CHAR"];
+	if (stats.isBlockDevice()) return direntConstants["UV_DIRENT_BLOCK"];
+	return direntConstants["UV_DIRENT_UNKNOWN"];
 }
 
-for (const key of Reflect.ownKeys(fs.Dirent.prototype)) {
-	const name = key as 'constructor' | DirentStatsKeysIntersection;
-
-	if (name === 'constructor') {
-		continue;
-	}
-
-	DirentFromStats.prototype[name] = function () {
-		return this[_kStats][name]();
-	};
-}
-
-export function createDirentFromStats(name: string, stats: FsStats): FsDirent {
-	return new DirentFromStats(name, stats);
+export function createDirentFromStats(filepath: string, stats: FsStats): FsDirent {
+	// @ts-expect-error The constructor has parameters, but they are not represented in types.
+	return new fs.Dirent(path.basename(filepath), direntType(stats), path.dirname(filepath));
 }
