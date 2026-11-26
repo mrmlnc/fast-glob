@@ -88,6 +88,16 @@ describe('Providers → Filters → Entry', () => {
 				assert.ok(!isActual);
 			});
 
+			it('should reject a duplicate entry from another filter of the same instance', () => {
+				const filterInstance = getEntryFilterInstance();
+
+				const first = filterInstance.getFilter(['**/*'], []);
+				const second = filterInstance.getFilter(['**/*.txt'], []);
+
+				assert.ok(first(FILE_ENTRY));
+				assert.ok(!second(FILE_ENTRY));
+			});
+
 			it('should reject a duplicate entry when the two entries differ only by the leading dot segment', () => {
 				const first = tests.entry.builder().path('file.txt').file().build();
 				const second = tests.entry.builder().path('./file.txt').file().build();

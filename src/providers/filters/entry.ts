@@ -32,10 +32,6 @@ export default class EntryFilter {
 	#filter(entry: Entry, pattens: PatternsRegexSet): boolean {
 		const filepath = utils.path.removeLeadingDotSegment(entry.path);
 
-		if (this.#settings.unique && this.#isDuplicateEntry(filepath)) {
-			return false;
-		}
-
 		const isDirectory = entry.dirent.isDirectory();
 
 		if (this.#onlyFileFilter(isDirectory) || this.#onlyDirectoryFilter(isDirectory)) {
@@ -44,19 +40,20 @@ export default class EntryFilter {
 
 		const isMatched = this.#isMatchToPatternsSet(filepath, pattens, isDirectory);
 
+		// The index contains only matched entries, so only a matched entry can be a duplicate.
 		if (this.#settings.unique && isMatched) {
-			this.#createIndexRecord(filepath);
+			return this.#createIndexRecordIfUnique(filepath);
 		}
 
 		return isMatched;
 	}
 
-	#isDuplicateEntry(filepath: string): boolean {
-		return this.index.has(filepath);
-	}
+	#createIndexRecordIfUnique(filepath: string): boolean {
+		const { size } = this.index;
 
-	#createIndexRecord(filepath: string): void {
 		this.index.set(filepath, undefined);
+
+		return this.index.size !== size;
 	}
 
 	#onlyFileFilter(isDirectory: boolean): boolean {
